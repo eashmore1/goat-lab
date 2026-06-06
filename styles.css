@@ -61,6 +61,12 @@ button {
   width: auto;
   display: block;
   flex: 0 0 auto;
+  cursor: pointer;
+  transition: opacity 140ms ease;
+}
+
+.hero-logo:hover {
+  opacity: 0.82;
 }
 
 .kicker {
@@ -587,6 +593,47 @@ h1 {
 
 .result p:last-child {
   margin-bottom: 0;
+}
+
+/* Footer */
+.site-footer {
+  margin-top: 32px;
+  padding: 16px 0 8px;
+  border-top: 2px solid rgba(21, 20, 19, 0.18);
+}
+
+.footer-inner {
+  width: min(1260px, calc(100% - 20px));
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font: 400 0.68rem/1.4 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--muted);
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-links a {
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 140ms ease, border-color 140ms ease;
+}
+
+.footer-links a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+.footer-dot {
+  color: rgba(21, 20, 19, 0.3);
 }
 
 @media (max-width: 930px) {

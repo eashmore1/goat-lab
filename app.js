@@ -614,6 +614,7 @@ const prompt = document.querySelector("#prompt");
 const context = document.querySelector("#context");
 const modeLabel = document.querySelector("#modeLabel");
 const resetButton = document.querySelector("#resetButton");
+const logoHome = document.querySelector("#logoHome");
 const backButton = document.querySelector("#backButton");
 const helpButton = document.querySelector("#helpButton");
 const helpModal = document.querySelector("#helpModal");
@@ -908,6 +909,13 @@ function openShareModal() {
 function shareResult() {
   openShareModal();
 }
+
+logoHome.addEventListener("click", () => {
+  if (!gameGrid.hidden) goBack();
+});
+logoHome.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (!gameGrid.hidden) goBack(); }
+});
 
 modeButtons.forEach((button) => {
   button.addEventListener("click", () => startGame(button.dataset.mode));
