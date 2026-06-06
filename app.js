@@ -774,6 +774,8 @@ const shareModalClose = document.querySelector("#shareModalClose");
 const shareCardScore = document.querySelector("#shareCardScore");
 const shareCardTier = document.querySelector("#shareCardTier");
 const shareCardRows = document.querySelector("#shareCardRows");
+const shareBtnImage = document.querySelector("#shareBtnImage");
+const shareBtnText = document.querySelector("#shareBtnText");
 const shareBtnX = document.querySelector("#shareBtnX");
 const shareBtnCopy = document.querySelector("#shareBtnCopy");
 const result = document.querySelector("#result");
@@ -1021,6 +1023,140 @@ function goBack() {
   scoreEl.textContent = "--";
 }
 
+async function generateShareImage() {
+  await document.fonts.ready;
+
+  const score = calculateScore();
+  const tier = getTier(score);
+
+  const W = 600;
+  const HEADER_H = 86;
+  const ROW_H = 72;
+  const FOOTER_H = 52;
+  const H = HEADER_H + ROW_H * 9 + FOOTER_H;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext("2d");
+
+  const PAPER = "#f5ecd8";
+  const INK = "#151413";
+  const GOLD = "#e6b843";
+  const MUTED = "rgba(21,20,19,0.5)";
+  const COURT = "#c9673d";
+
+  // Background
+  ctx.fillStyle = PAPER;
+  ctx.fillRect(0, 0, W, H);
+
+  // Border
+  ctx.strokeStyle = INK;
+  ctx.lineWidth = 5;
+  ctx.strokeRect(2.5, 2.5, W - 5, H - 5);
+
+  // Header bar
+  ctx.fillStyle = INK;
+  ctx.fillRect(0, 0, W, HEADER_H);
+
+  // GOAT LAB label
+  ctx.fillStyle = "rgba(255,247,223,0.5)";
+  ctx.font = '700 11px "Space Mono", monospace';
+  ctx.fillText("GOAT LAB", 20, 34);
+
+  // Mode badge
+  ctx.fillStyle = "rgba(255,247,223,0.1)";
+  ctx.fillRect(20, 42, gameMode === "blind" ? 88 : 74, 18);
+  ctx.fillStyle = "rgba(255,247,223,0.55)";
+  ctx.font = '700 9px "Space Mono", monospace';
+  ctx.fillText(gameMode === "blind" ? "BLIND MODE" : "CLASSIC", 26, 55);
+
+  // Score (large, right-aligned)
+  ctx.fillStyle = GOLD;
+  ctx.font = '700 46px "Space Mono", monospace';
+  ctx.textAlign = "right";
+  ctx.fillText(score, W - 20, 58);
+
+  // Tier label
+  ctx.fillStyle = "rgba(255,247,223,0.5)";
+  ctx.font = '700 10px "Space Mono", monospace';
+  ctx.fillText(tier.toUpperCase(), W - 20, 76);
+  ctx.textAlign = "left";
+
+  // Draw logo (already loaded in the page)
+  const logoEl = document.querySelector("#logoHome");
+  if (logoEl && logoEl.complete) {
+    const lh = 62;
+    const lw = Math.round(lh * (506 / 460));
+    ctx.drawImage(logoEl, W / 2 - lw / 2 - 40, (HEADER_H - lh) / 2, lw, lh);
+  }
+
+  // Pick rows
+  const orderedValues = attributes.map((attr) => build[attr.key]);
+  orderedValues.forEach((pick, i) => {
+    if (!pick) return;
+    const y = HEADER_H + i * ROW_H;
+
+    // Alternate row tint
+    if (i % 2 === 1) {
+      ctx.fillStyle = "rgba(21,20,19,0.03)";
+      ctx.fillRect(0, y, W, ROW_H);
+    }
+
+    // Row divider
+    ctx.strokeStyle = "rgba(21,20,19,0.09)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(16, y + ROW_H);
+    ctx.lineTo(W - 16, y + ROW_H);
+    ctx.stroke();
+
+    // Attribute label
+    ctx.fillStyle = MUTED;
+    ctx.font = '700 9px "Space Mono", monospace';
+    ctx.fillText(pick.attribute.label.toUpperCase(), 20, y + 24);
+
+    // Player name
+    ctx.fillStyle = INK;
+    ctx.font = '700 17px "Playfair Display", Georgia, serif';
+    ctx.fillText(pick.player.name, 20, y + 46);
+
+    // Team/era
+    ctx.fillStyle = MUTED;
+    ctx.font = '400 10px "Space Mono", monospace';
+    ctx.fillText(`${pick.teamEra.era} ${pick.teamEra.team}`, 20, y + 62);
+
+    // Score circle
+    const scoreColor = pick.score >= 98 ? GOLD : pick.score >= 94 ? COURT : INK;
+    ctx.fillStyle = scoreColor;
+    ctx.beginPath();
+    ctx.arc(W - 32, y + ROW_H / 2, 22, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = pick.score >= 94 ? INK : PAPER;
+    ctx.font = '700 15px "Space Mono", monospace';
+    ctx.textAlign = "center";
+    ctx.fillText(pick.score, W - 32, y + ROW_H / 2 + 6);
+    ctx.textAlign = "left";
+  });
+
+  // Footer bar
+  const footerY = HEADER_H + ROW_H * 9;
+  ctx.fillStyle = INK;
+  ctx.fillRect(0, footerY, W, FOOTER_H);
+
+  ctx.fillStyle = PAPER;
+  ctx.font = '700 15px "Playfair Display", Georgia, serif';
+  ctx.fillText("Can you beat my build?", 20, footerY + 32);
+
+  ctx.fillStyle = GOLD;
+  ctx.font = '700 10px "Space Mono", monospace';
+  ctx.textAlign = "right";
+  ctx.fillText("goat-lab.vercel.app", W - 20, footerY + 32);
+  ctx.textAlign = "left";
+
+  return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+}
+
 function buildShareText(score, tier) {
   const picks = attributes
     .map((attr) => {
@@ -1081,11 +1217,51 @@ helpModal.addEventListener("click", (e) => { if (e.target === helpModal) helpMod
 shareModalClose.addEventListener("click", () => { shareModal.hidden = true; });
 shareModal.addEventListener("click", (e) => { if (e.target === shareModal) shareModal.hidden = true; });
 
+shareBtnImage.addEventListener("click", async () => {
+  const score = calculateScore();
+  const tier = getTier(score);
+  const text = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build?`;
+  const url = "https://goat-lab.vercel.app";
+  shareBtnImage.textContent = "Generating…";
+  try {
+    const blob = await generateShareImage();
+    const file = new File([blob], "goat-lab-build.png", { type: "image/png" });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], text, url });
+    } else {
+      // Desktop fallback: download the image
+      const objUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = objUrl;
+      a.download = "goat-lab-build.png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(objUrl);
+    }
+  } catch (err) {
+    if (err.name !== "AbortError") console.error(err);
+  }
+  shareBtnImage.textContent = "Share Image";
+});
+
+shareBtnText.addEventListener("click", () => {
+  const score = calculateScore();
+  const tier = getTier(score);
+  const msg = encodeURIComponent(
+    `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build? https://goat-lab.vercel.app`
+  );
+  window.open(`sms:?body=${msg}`, "_self");
+});
+
 shareBtnX.addEventListener("click", () => {
   const score = calculateScore();
   const tier = getTier(score);
   const tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build? Try to create the GOAT too 👉`;
-  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://goat-lab.vercel.app")}`, "_blank");
+  window.open(
+    `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://goat-lab.vercel.app")}`,
+    "_blank"
+  );
 });
 
 shareBtnCopy.addEventListener("click", async () => {
@@ -1094,10 +1270,10 @@ shareBtnCopy.addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(buildShareText(score, tier));
     shareBtnCopy.textContent = "Copied!";
-    setTimeout(() => { shareBtnCopy.textContent = "Copy Text"; }, 1400);
+    setTimeout(() => { shareBtnCopy.textContent = "Copy"; }, 1400);
   } catch {
     shareBtnCopy.textContent = "Failed";
-    setTimeout(() => { shareBtnCopy.textContent = "Copy Text"; }, 1400);
+    setTimeout(() => { shareBtnCopy.textContent = "Copy"; }, 1400);
   }
 });
 
