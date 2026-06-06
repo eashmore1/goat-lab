@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GOAT Lab</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="hero">
+        <img src="GOATLABLOGO.png" alt="GOAT Lab" class="hero-logo" />
+        <div>
+          <p class="kicker">GOAT Lab</p>
+          <h1>Build the perfect hooper from basketball history.</h1>
+        </div>
+        <div class="score-tile" aria-live="polite">
+          <span id="score">--</span>
+          <small>GOAT Score</small>
+        </div>
+      </header>
+
+      <section class="mode-screen" id="modeScreen" aria-label="Choose game mode">
+        <div class="mode-copy">
+          <p class="kicker">Choose Mode</p>
+          <h2>Start with the numbers, or trust your basketball brain.</h2>
+        </div>
+        <div class="mode-options">
+          <button class="mode-card" type="button" data-mode="classic">
+            <span class="mode-tag">Classic</span>
+            <strong>Show Attributes</strong>
+            <small>Player cards show the category score and supporting ratings before you pick.</small>
+          </button>
+          <button class="mode-card mode-card-blind" type="button" data-mode="blind">
+            <span class="mode-tag">Blind</span>
+            <strong>Hide Attributes</strong>
+            <small>Player cards hide the numbers. Pick from memory, reputation, and era knowledge.</small>
+          </button>
+        </div>
+      </section>
+
+      <section class="game-grid" id="gameGrid" hidden>
+        <section class="lab-panel" aria-label="Created player body diagram">
+          <div class="body-card">
+            <div class="halo"></div>
+            <div class="goat-body" aria-hidden="true">
+              <span class="part head" data-attribute="passing"></span>
+              <span class="part chest" data-attribute="defense"></span>
+              <span class="part heart" data-attribute="clutch"></span>
+              <span class="part left-arm" data-attribute="handles"></span>
+              <span class="part right-arm" data-attribute="shooting"></span>
+              <span class="part waist" data-attribute="height"></span>
+              <span class="part shoulders" data-attribute="rebounding"></span>
+              <span class="part left-leg" data-attribute="finishing"></span>
+              <span class="part right-leg" data-attribute="athleticism"></span>
+            </div>
+            <div class="body-label" id="bodyLabel">No attributes drafted yet</div>
+          </div>
+          <div id="buildList" class="build-list" aria-label="Current build"></div>
+        </section>
+
+        <section class="draft-panel" aria-label="Draft round">
+          <div class="round-card">
+            <div>
+              <p id="roundLabel" class="kicker">Round 1 of 9</p>
+              <h2 id="prompt">Roll loading...</h2>
+              <p id="context" class="context"></p>
+              <p id="modeLabel" class="mode-label"></p>
+            </div>
+            <button id="resetButton" type="button" title="Start a new run">New Run</button>
+          </div>
+
+          <section id="cards" class="cards" aria-label="Available players"></section>
+        </section>
+      </section>
+
+      <section class="result" id="result" hidden>
+        <div>
+          <p class="kicker">Final Build</p>
+          <h2 id="resultTitle">Your player is ready.</h2>
+          <p id="resultCopy"></p>
+        </div>
+        <button id="shareButton" type="button" title="Copy your build">Copy Result</button>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
