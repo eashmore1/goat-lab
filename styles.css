@@ -570,20 +570,19 @@ h1 {
 }
 
 .result {
-  position: fixed;
-  right: 10px;
-  bottom: 10px;
-  left: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  width: min(1260px, calc(100% - 20px));
-  margin: 0 auto;
-  padding: 10px 12px;
+  margin-top: 12px;
+  padding: 14px 16px;
   border: 3px solid var(--ink);
   background: var(--gold);
   box-shadow: var(--shadow);
+}
+
+.cards.is-result {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .result p:last-child {
@@ -595,10 +594,14 @@ h1 {
     overflow: auto;
   }
 
-  .hero,
-  .result {
+  .hero {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .result {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .score-tile {
@@ -764,6 +767,7 @@ h1 {
   }
 
   .cards,
+  .cards.is-result,
   .build-list {
     grid-template-columns: 1fr;
   }

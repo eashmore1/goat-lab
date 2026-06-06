@@ -792,16 +792,43 @@ function finish() {
   const weakSpot = [...values].sort((a, b) => a.score - b.score)[0];
 
   scoreEl.textContent = score;
-  cards.innerHTML = "";
   roundLabel.textContent = "Build complete";
-  prompt.textContent = "Your created player is ready";
-  context.textContent = "Start a new run to chase the perfect 100.";
+  prompt.textContent = `${score} — ${tier}`;
+  context.textContent =
+    score === 100
+      ? `You built the impossible player: ${archetype}.`
+      : `${archetype}. Weakest link: ${weakSpot.attribute.label} (${weakSpot.score}).`;
+
+  // Render all 9 picks as result cards
+  cards.className = "cards is-result";
+  cards.innerHTML = "";
+  attributes.forEach((attribute) => {
+    const pick = build[attribute.key];
+    if (!pick) return;
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="card-art">
+        <div class="jersey">${pick.player.number}</div>
+        <div class="attribute-score">
+          <span>${pick.score}</span>
+          ${pick.attribute.label}
+        </div>
+      </div>
+      <div class="card-body">
+        <h3>${pick.player.name}</h3>
+        <p class="meta">${pick.teamEra.era} ${pick.teamEra.team}</p>
+      </div>
+    `;
+    cards.appendChild(card);
+  });
+
   result.hidden = false;
   resultTitle.textContent = `${score}: ${tier}`;
   resultCopy.textContent =
     score === 100
-      ? `You built the impossible player: ${archetype}. No weak spots, no era can solve this.`
-      : `${archetype}. Your lowest category was ${weakSpot.attribute.label} from ${weakSpot.player.name} at ${weakSpot.score}, which keeps the chase alive.`;
+      ? `You built the impossible player: ${archetype}. No weak spots, no era can stop this.`
+      : `${archetype}. Your lowest was ${weakSpot.attribute.label} from ${weakSpot.player.name} at ${weakSpot.score}. Keep chasing.`;
 }
 
 function reset() {
@@ -812,6 +839,7 @@ function reset() {
   currentAttribute = null;
   result.hidden = true;
   scoreEl.textContent = "--";
+  cards.className = "cards";
   renderBuildList();
   updateBody(null);
   renderRound();
@@ -837,24 +865,27 @@ function goBack() {
 
 async function shareResult() {
   const score = calculateScore();
-  const picks = attributes
-    .map((attribute) => {
-      const pick = build[attribute.key];
-      return `${attribute.label}: ${pick.player.name} (${pick.score})`;
-    })
-    .join(" | ");
-  const text = `GOAT Lab: ${score} ${getTier(score)}. ${picks}`;
+  const tier = getTier(score);
+  const shareText = `I scored ${score} (${tier}) in GOAT Lab 🏀\nCan you build a 100?\n`;
+  const shareUrl = "https://goat-lab.vercel.app";
 
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: "GOAT Lab", text: shareText, url: shareUrl });
+      return;
+    } catch (err) {
+      if (err.name === "AbortError") return;
+    }
+  }
+
+  // Clipboard fallback
   try {
-    await navigator.clipboard.writeText(text);
-    shareButton.textContent = "Copied";
+    await navigator.clipboard.writeText(shareText + shareUrl);
+    shareButton.textContent = "Copied!";
   } catch {
     shareButton.textContent = "Copy failed";
   }
-
-  setTimeout(() => {
-    shareButton.textContent = "Copy Result";
-  }, 1200);
+  setTimeout(() => { shareButton.textContent = "Share"; }, 1400);
 }
 
 modeButtons.forEach((button) => {
