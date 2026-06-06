@@ -726,7 +726,7 @@ function renderRound() {
   currentTeamEra = pickTeamEra();
   roundLabel.textContent = `Round ${round + 1} of ${runAttributes.length}`;
   prompt.textContent = `${currentTeamEra.era} ${currentTeamEra.team} / ${currentAttribute.label}`;
-  context.textContent = currentTeamEra.note;
+  context.textContent = "";
   modeLabel.textContent = gameMode === "blind" ? "Blind mode: ratings reveal after your pick." : "Classic mode: ratings are visible before you pick.";
   cards.innerHTML = "";
 
