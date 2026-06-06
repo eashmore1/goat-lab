@@ -91,6 +91,33 @@
       </section>
     </main>
 
+    <div class="modal-overlay" id="shareModal" hidden>
+      <div class="modal share-modal" role="dialog" aria-modal="true" aria-label="Share your build">
+        <div class="modal-header">
+          <p class="kicker">Share Your Build</p>
+          <button id="shareModalClose" class="modal-close" type="button" aria-label="Close">&#x2715;</button>
+        </div>
+        <div class="share-card">
+          <div class="share-card-top">
+            <span class="share-card-label">GOAT Lab</span>
+            <div class="share-card-score-block">
+              <span class="share-card-score" id="shareCardScore">--</span>
+              <span class="share-card-tier" id="shareCardTier">--</span>
+            </div>
+          </div>
+          <div class="share-card-rows" id="shareCardRows"></div>
+          <div class="share-card-footer">
+            <span>Can you beat my build?</span>
+            <span class="share-card-url">goat-lab.vercel.app</span>
+          </div>
+        </div>
+        <div class="share-buttons">
+          <button class="share-btn share-btn-x" id="shareBtnX" type="button">X&thinsp;/&thinsp;Twitter</button>
+          <button class="share-btn share-btn-copy" id="shareBtnCopy" type="button">Copy Text</button>
+        </div>
+      </div>
+    </div>
+
     <div class="modal-overlay" id="helpModal" hidden>
       <div class="modal" role="dialog" aria-modal="true" aria-label="How to Play">
         <div class="modal-header">

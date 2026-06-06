@@ -650,6 +650,149 @@ h1 {
   box-shadow: 3px 3px 0 var(--ink);
 }
 
+/* Share modal */
+.share-modal {
+  width: min(500px, 100%);
+}
+
+.share-card {
+  margin: 0;
+  padding: 16px;
+  background: var(--ink);
+  color: var(--chalk);
+}
+
+.share-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 247, 223, 0.2);
+}
+
+.share-card-label {
+  font: 700 0.7rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 247, 223, 0.55);
+}
+
+.share-card-score-block {
+  text-align: right;
+}
+
+.share-card-score {
+  display: block;
+  font: 900 2.4rem/0.85 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--gold);
+}
+
+.share-card-tier {
+  display: block;
+  margin-top: 4px;
+  font: 700 0.65rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 247, 223, 0.55);
+}
+
+.share-card-rows {
+  display: grid;
+  gap: 2px;
+}
+
+.share-row {
+  display: grid;
+  grid-template-columns: 100px 1fr auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255, 247, 223, 0.07);
+  font-size: 0.78rem;
+}
+
+.share-row-attr {
+  font: 700 0.6rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 247, 223, 0.5);
+}
+
+.share-row-player {
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.share-row-meta {
+  font: 400 0.58rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: rgba(255, 247, 223, 0.45);
+  white-space: nowrap;
+}
+
+.share-row-score {
+  font: 700 0.82rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--gold);
+  min-width: 24px;
+  text-align: right;
+}
+
+.share-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 247, 223, 0.2);
+  font: 700 0.62rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.06em;
+  color: rgba(255, 247, 223, 0.55);
+  text-transform: uppercase;
+}
+
+.share-card-url {
+  color: var(--gold);
+}
+
+.share-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 14px 16px;
+  border-top: 3px solid var(--ink);
+  background: var(--chalk);
+}
+
+.share-btn {
+  padding: 12px 16px;
+  border: 2px solid var(--ink);
+  font: 700 0.78rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.share-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.share-btn-x {
+  background: #000;
+  color: #fff;
+}
+
+.share-btn-copy {
+  background: var(--gold);
+  color: var(--ink);
+}
+
 /* How to Play link */
 .help-link {
   display: inline-block;

@@ -618,6 +618,13 @@ const backButton = document.querySelector("#backButton");
 const helpButton = document.querySelector("#helpButton");
 const helpModal = document.querySelector("#helpModal");
 const helpClose = document.querySelector("#helpClose");
+const shareModal = document.querySelector("#shareModal");
+const shareModalClose = document.querySelector("#shareModalClose");
+const shareCardScore = document.querySelector("#shareCardScore");
+const shareCardTier = document.querySelector("#shareCardTier");
+const shareCardRows = document.querySelector("#shareCardRows");
+const shareBtnX = document.querySelector("#shareBtnX");
+const shareBtnCopy = document.querySelector("#shareBtnCopy");
 const result = document.querySelector("#result");
 const resultTitle = document.querySelector("#resultTitle");
 const resultCopy = document.querySelector("#resultCopy");
@@ -863,29 +870,43 @@ function goBack() {
   scoreEl.textContent = "--";
 }
 
-async function shareResult() {
+function buildShareText(score, tier) {
+  const picks = attributes
+    .map((attr) => {
+      const pick = build[attr.key];
+      return `${attr.label}: ${pick.player.name} (${pick.score}) — ${pick.teamEra.era} ${pick.teamEra.team}`;
+    })
+    .join("\n");
+  return `I scored ${score} (${tier}) in GOAT Lab 🏀\n\n${picks}\n\nCan you beat my build? Try to create the GOAT too 👉 https://goat-lab.vercel.app`;
+}
+
+function openShareModal() {
   const score = calculateScore();
   const tier = getTier(score);
-  const shareText = `I scored ${score} (${tier}) in GOAT Lab 🏀\nCan you build a 100?\n`;
-  const shareUrl = "https://goat-lab.vercel.app";
 
-  if (navigator.share) {
-    try {
-      await navigator.share({ title: "GOAT Lab", text: shareText, url: shareUrl });
-      return;
-    } catch (err) {
-      if (err.name === "AbortError") return;
-    }
-  }
+  shareCardScore.textContent = score;
+  shareCardTier.textContent = tier;
 
-  // Clipboard fallback
-  try {
-    await navigator.clipboard.writeText(shareText + shareUrl);
-    shareButton.textContent = "Copied!";
-  } catch {
-    shareButton.textContent = "Copy failed";
-  }
-  setTimeout(() => { shareButton.textContent = "Share"; }, 1400);
+  shareCardRows.innerHTML = "";
+  attributes.forEach((attr) => {
+    const pick = build[attr.key];
+    if (!pick) return;
+    const row = document.createElement("div");
+    row.className = "share-row";
+    row.innerHTML = `
+      <span class="share-row-attr">${attr.label}</span>
+      <span class="share-row-player">${pick.player.name}</span>
+      <span class="share-row-meta">${pick.teamEra.era} ${pick.teamEra.team}</span>
+      <span class="share-row-score">${pick.score}</span>
+    `;
+    shareCardRows.appendChild(row);
+  });
+
+  shareModal.hidden = false;
+}
+
+function shareResult() {
+  openShareModal();
 }
 
 modeButtons.forEach((button) => {
@@ -897,8 +918,29 @@ shareButton.addEventListener("click", shareResult);
 
 helpButton.addEventListener("click", () => { helpModal.hidden = false; });
 helpClose.addEventListener("click", () => { helpModal.hidden = true; });
-helpModal.addEventListener("click", (e) => {
-  if (e.target === helpModal) helpModal.hidden = true;
+helpModal.addEventListener("click", (e) => { if (e.target === helpModal) helpModal.hidden = true; });
+
+shareModalClose.addEventListener("click", () => { shareModal.hidden = true; });
+shareModal.addEventListener("click", (e) => { if (e.target === shareModal) shareModal.hidden = true; });
+
+shareBtnX.addEventListener("click", () => {
+  const score = calculateScore();
+  const tier = getTier(score);
+  const tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build? Try to create the GOAT too 👉`;
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://goat-lab.vercel.app")}`, "_blank");
+});
+
+shareBtnCopy.addEventListener("click", async () => {
+  const score = calculateScore();
+  const tier = getTier(score);
+  try {
+    await navigator.clipboard.writeText(buildShareText(score, tier));
+    shareBtnCopy.textContent = "Copied!";
+    setTimeout(() => { shareBtnCopy.textContent = "Copy Text"; }, 1400);
+  } catch {
+    shareBtnCopy.textContent = "Failed";
+    setTimeout(() => { shareBtnCopy.textContent = "Copy Text"; }, 1400);
+  }
 });
 
 renderBuildList();
