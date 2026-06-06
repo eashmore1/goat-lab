@@ -636,6 +636,21 @@ h1 {
   color: rgba(21, 20, 19, 0.3);
 }
 
+.footer-support {
+  padding: 4px 10px;
+  border: 1.5px solid var(--ink) !important;
+  color: var(--ink) !important;
+  border-bottom: 1.5px solid var(--ink) !important;
+  font-weight: 700;
+  transition: background 140ms ease, color 140ms ease !important;
+}
+
+.footer-support:hover {
+  background: var(--ink);
+  color: var(--chalk) !important;
+  border-bottom-color: var(--ink) !important;
+}
+
 @media (max-width: 930px) {
   body {
     overflow: auto;
