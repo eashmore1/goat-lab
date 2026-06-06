@@ -446,6 +446,156 @@ const teamEras = [
       player("Kosta Koufos", 7, 0, 41, { height: 98, shooting: 60, finishing: 72, handles: 48, passing: 60, defense: 78, rebounding: 80, athleticism: 56, clutch: 68 }),
     ],
   },
+  {
+    era: "1960s",
+    team: "Warriors",
+    note: "Wilt scored 100 points in a single game in 1962. The rest of the pool just tried to keep up.",
+    players: [
+      player("Wilt Chamberlain", 7, 1, 13, { height: 99, shooting: 72, finishing: 99, handles: 68, passing: 74, defense: 86, rebounding: 100, athleticism: 98, clutch: 80 }),
+      player("Nate Thurmond", 6, 11, 42, { height: 96, shooting: 72, finishing: 80, handles: 64, passing: 68, defense: 94, rebounding: 96, athleticism: 80, clutch: 78 }),
+      player("Paul Arizin", 6, 4, 11, { height: 77, shooting: 86, finishing: 82, handles: 72, passing: 72, defense: 72, rebounding: 68, athleticism: 78, clutch: 84 }),
+      player("Tom Meschery", 6, 6, 14, { height: 82, shooting: 74, finishing: 78, handles: 66, passing: 70, defense: 78, rebounding: 74, athleticism: 76, clutch: 74 }),
+      player("Guy Rodgers", 6, 0, 14, { height: 67, shooting: 74, finishing: 74, handles: 90, passing: 92, defense: 76, rebounding: 52, athleticism: 80, clutch: 76 }),
+      player("Al Attles", 6, 0, 1, { height: 67, shooting: 66, finishing: 72, handles: 80, passing: 78, defense: 84, rebounding: 56, athleticism: 82, clutch: 76 }),
+      player("Wayne Hightower", 6, 8, 8, { height: 88, shooting: 72, finishing: 76, handles: 66, passing: 66, defense: 70, rebounding: 78, athleticism: 78, clutch: 70 }),
+      player("Gary Phillips", 6, 3, 3, { height: 74, shooting: 68, finishing: 70, handles: 72, passing: 70, defense: 74, rebounding: 56, athleticism: 76, clutch: 68 }),
+    ],
+  },
+  {
+    era: "1970s",
+    team: "Lakers",
+    note: "33 straight wins. 69 victories. Wilt parked near the rim while Jerry West handled the rest.",
+    players: [
+      player("Jerry West", 6, 2, 44, { height: 72, shooting: 94, finishing: 88, handles: 92, passing: 90, defense: 90, rebounding: 66, athleticism: 84, clutch: 100 }),
+      player("Wilt Chamberlain", 7, 1, 13, { height: 99, shooting: 66, finishing: 94, handles: 66, passing: 80, defense: 90, rebounding: 100, athleticism: 86, clutch: 76 }),
+      player("Gail Goodrich", 6, 1, 25, { height: 68, shooting: 88, finishing: 84, handles: 86, passing: 80, defense: 76, rebounding: 54, athleticism: 82, clutch: 88 }),
+      player("Happy Hairston", 6, 7, 52, { height: 84, shooting: 70, finishing: 80, handles: 64, passing: 68, defense: 78, rebounding: 90, athleticism: 80, clutch: 74 }),
+      player("Jim McMillian", 6, 5, 5, { height: 80, shooting: 82, finishing: 80, handles: 76, passing: 76, defense: 76, rebounding: 66, athleticism: 78, clutch: 80 }),
+      player("Elgin Baylor", 6, 5, 22, { height: 80, shooting: 88, finishing: 92, handles: 86, passing: 86, defense: 80, rebounding: 88, athleticism: 94, clutch: 90 }),
+      player("Pat Riley", 6, 4, 42, { height: 77, shooting: 76, finishing: 74, handles: 74, passing: 74, defense: 74, rebounding: 60, athleticism: 76, clutch: 72 }),
+      player("Flynn Robinson", 6, 1, 11, { height: 68, shooting: 82, finishing: 76, handles: 78, passing: 72, defense: 70, rebounding: 52, athleticism: 78, clutch: 76 }),
+    ],
+  },
+  {
+    era: "1970s",
+    team: "Warriors",
+    note: "Swept the Bullets in four straight. Rick Barry shot free throws underhanded and didn't care what anyone thought.",
+    players: [
+      player("Rick Barry", 6, 7, 24, { height: 84, shooting: 92, finishing: 86, handles: 86, passing: 90, defense: 82, rebounding: 76, athleticism: 82, clutch: 92 }),
+      player("Jamaal Wilkes", 6, 6, 14, { height: 82, shooting: 84, finishing: 80, handles: 74, passing: 74, defense: 80, rebounding: 70, athleticism: 82, clutch: 82 }),
+      player("Phil Smith", 6, 4, 20, { height: 77, shooting: 82, finishing: 78, handles: 78, passing: 76, defense: 78, rebounding: 60, athleticism: 80, clutch: 80 }),
+      player("Clifford Ray", 6, 9, 15, { height: 90, shooting: 58, finishing: 72, handles: 56, passing: 68, defense: 84, rebounding: 88, athleticism: 76, clutch: 66 }),
+      player("Butch Beard", 6, 3, 10, { height: 74, shooting: 78, finishing: 74, handles: 80, passing: 78, defense: 78, rebounding: 56, athleticism: 78, clutch: 76 }),
+      player("Charles Johnson", 6, 3, 35, { height: 74, shooting: 76, finishing: 74, handles: 74, passing: 74, defense: 78, rebounding: 58, athleticism: 78, clutch: 74 }),
+      player("Derrek Dickey", 6, 7, 13, { height: 84, shooting: 66, finishing: 70, handles: 60, passing: 62, defense: 72, rebounding: 76, athleticism: 72, clutch: 64 }),
+      player("George Johnson", 6, 11, 24, { height: 96, shooting: 52, finishing: 68, handles: 48, passing: 60, defense: 82, rebounding: 80, athleticism: 68, clutch: 62 }),
+    ],
+  },
+  {
+    era: "1990s",
+    team: "Suns",
+    note: "Barkley dragged Phoenix to the 1993 Finals. KJ made sure nothing came easy on the perimeter.",
+    players: [
+      player("Charles Barkley", 6, 6, 34, { height: 82, shooting: 84, finishing: 88, handles: 78, passing: 86, defense: 80, rebounding: 96, athleticism: 94, clutch: 92 }),
+      player("Kevin Johnson", 6, 1, 7, { height: 68, shooting: 84, finishing: 86, handles: 94, passing: 92, defense: 80, rebounding: 56, athleticism: 92, clutch: 90 }),
+      player("Dan Majerle", 6, 6, 9, { height: 82, shooting: 88, finishing: 78, handles: 76, passing: 74, defense: 88, rebounding: 70, athleticism: 84, clutch: 86 }),
+      player("Danny Ainge", 6, 5, 22, { height: 80, shooting: 86, finishing: 76, handles: 82, passing: 82, defense: 78, rebounding: 58, athleticism: 74, clutch: 86 }),
+      player("Tom Chambers", 6, 10, 10, { height: 94, shooting: 82, finishing: 82, handles: 72, passing: 70, defense: 66, rebounding: 80, athleticism: 80, clutch: 82 }),
+      player("Cedric Ceballos", 6, 7, 23, { height: 84, shooting: 84, finishing: 84, handles: 72, passing: 66, defense: 68, rebounding: 80, athleticism: 82, clutch: 78 }),
+      player("Mark West", 6, 10, 41, { height: 94, shooting: 54, finishing: 70, handles: 50, passing: 56, defense: 82, rebounding: 82, athleticism: 72, clutch: 62 }),
+      player("Frank Johnson", 6, 1, 10, { height: 68, shooting: 72, finishing: 70, handles: 80, passing: 80, defense: 76, rebounding: 50, athleticism: 74, clutch: 72 }),
+    ],
+  },
+  {
+    era: "2000s",
+    team: "Mavericks",
+    note: "Before the 2011 title, Dirk and Nash invented a new kind of offense. A 7-footer pulling up from 25 feet changed the league.",
+    players: [
+      player("Dirk Nowitzki", 7, 0, 41, { height: 98, shooting: 98, finishing: 84, handles: 82, passing: 80, defense: 72, rebounding: 88, athleticism: 76, clutch: 98 }),
+      player("Steve Nash", 6, 3, 13, { height: 74, shooting: 90, finishing: 82, handles: 96, passing: 98, defense: 66, rebounding: 54, athleticism: 80, clutch: 90 }),
+      player("Michael Finley", 6, 7, 4, { height: 84, shooting: 88, finishing: 82, handles: 80, passing: 76, defense: 80, rebounding: 66, athleticism: 80, clutch: 86 }),
+      player("Jason Terry", 6, 2, 31, { height: 72, shooting: 88, finishing: 80, handles: 84, passing: 80, defense: 72, rebounding: 50, athleticism: 78, clutch: 90 }),
+      player("Antoine Walker", 6, 9, 8, { height: 90, shooting: 76, finishing: 80, handles: 78, passing: 78, defense: 70, rebounding: 82, athleticism: 78, clutch: 76 }),
+      player("Nick Van Exel", 6, 1, 6, { height: 68, shooting: 84, finishing: 78, handles: 88, passing: 86, defense: 66, rebounding: 52, athleticism: 78, clutch: 84 }),
+      player("Eduardo Najera", 6, 8, 14, { height: 88, shooting: 66, finishing: 70, handles: 64, passing: 64, defense: 82, rebounding: 78, athleticism: 80, clutch: 68 }),
+      player("Shawn Bradley", 7, 6, 44, { height: 100, shooting: 58, finishing: 66, handles: 50, passing: 60, defense: 76, rebounding: 76, athleticism: 56, clutch: 56 }),
+    ],
+  },
+  {
+    era: "2000s",
+    team: "Timberwolves",
+    note: "KG's MVP year dragged Minnesota to 58 wins. Cassell and Sprewell made the West Conference Finals feel inevitable.",
+    players: [
+      player("Kevin Garnett", 6, 11, 21, { height: 96, shooting: 82, finishing: 88, handles: 80, passing: 88, defense: 96, rebounding: 98, athleticism: 94, clutch: 90 }),
+      player("Sam Cassell", 6, 3, 19, { height: 74, shooting: 90, finishing: 86, handles: 88, passing: 86, defense: 70, rebounding: 56, athleticism: 70, clutch: 96 }),
+      player("Latrell Sprewell", 6, 5, 8, { height: 80, shooting: 84, finishing: 84, handles: 86, passing: 76, defense: 84, rebounding: 62, athleticism: 86, clutch: 86 }),
+      player("Wally Szczerbiak", 6, 7, 10, { height: 84, shooting: 88, finishing: 80, handles: 74, passing: 72, defense: 68, rebounding: 66, athleticism: 74, clutch: 80 }),
+      player("Troy Hudson", 6, 1, 3, { height: 68, shooting: 82, finishing: 76, handles: 82, passing: 78, defense: 64, rebounding: 50, athleticism: 76, clutch: 78 }),
+      player("Fred Hoiberg", 6, 4, 15, { height: 77, shooting: 88, finishing: 74, handles: 74, passing: 74, defense: 64, rebounding: 58, athleticism: 72, clutch: 78 }),
+      player("Mark Madsen", 6, 9, 34, { height: 90, shooting: 52, finishing: 64, handles: 52, passing: 58, defense: 76, rebounding: 80, athleticism: 72, clutch: 60 }),
+      player("Michael Olowokandi", 7, 0, 0, { height: 98, shooting: 54, finishing: 70, handles: 48, passing: 54, defense: 76, rebounding: 84, athleticism: 66, clutch: 56 }),
+    ],
+  },
+  {
+    era: "2010s",
+    team: "Spurs",
+    note: "The Kawhi-LaMarcus years. Same system, new stars. San Antonio made winning look like scheduled maintenance.",
+    players: [
+      player("Kawhi Leonard", 6, 7, 2, { height: 84, shooting: 90, finishing: 90, handles: 88, passing: 80, defense: 98, rebounding: 82, athleticism: 90, clutch: 92 }),
+      player("LaMarcus Aldridge", 6, 11, 12, { height: 96, shooting: 88, finishing: 90, handles: 74, passing: 74, defense: 82, rebounding: 92, athleticism: 76, clutch: 86 }),
+      player("Manu Ginobili", 6, 6, 20, { height: 82, shooting: 86, finishing: 84, handles: 86, passing: 84, defense: 78, rebounding: 60, athleticism: 82, clutch: 94 }),
+      player("Tony Parker", 6, 2, 9, { height: 72, shooting: 82, finishing: 90, handles: 92, passing: 88, defense: 76, rebounding: 52, athleticism: 84, clutch: 88 }),
+      player("Pau Gasol", 7, 0, 16, { height: 98, shooting: 80, finishing: 86, handles: 74, passing: 86, defense: 80, rebounding: 90, athleticism: 68, clutch: 80 }),
+      player("Danny Green", 6, 6, 14, { height: 82, shooting: 86, finishing: 74, handles: 74, passing: 72, defense: 88, rebounding: 62, athleticism: 80, clutch: 80 }),
+      player("Patty Mills", 6, 0, 8, { height: 67, shooting: 88, finishing: 76, handles: 82, passing: 78, defense: 72, rebounding: 48, athleticism: 80, clutch: 84 }),
+      player("Kyle Anderson", 6, 9, 1, { height: 90, shooting: 74, finishing: 78, handles: 76, passing: 80, defense: 80, rebounding: 76, athleticism: 66, clutch: 72 }),
+    ],
+  },
+  {
+    era: "2010s",
+    team: "Raptors",
+    note: "Before Kawhi, Lowry and DeRozan built a culture. Mid-range gospel, annual playoff heartbreak included.",
+    players: [
+      player("DeMar DeRozan", 6, 7, 10, { height: 84, shooting: 88, finishing: 88, handles: 82, passing: 80, defense: 76, rebounding: 68, athleticism: 82, clutch: 92 }),
+      player("Kyle Lowry", 6, 0, 7, { height: 67, shooting: 86, finishing: 80, handles: 88, passing: 88, defense: 86, rebounding: 64, athleticism: 80, clutch: 88 }),
+      player("Serge Ibaka", 6, 10, 9, { height: 94, shooting: 78, finishing: 80, handles: 68, passing: 68, defense: 90, rebounding: 86, athleticism: 82, clutch: 76 }),
+      player("Jonas Valanciunas", 7, 0, 17, { height: 98, shooting: 76, finishing: 84, handles: 54, passing: 64, defense: 84, rebounding: 94, athleticism: 68, clutch: 74 }),
+      player("Norman Powell", 6, 4, 24, { height: 77, shooting: 82, finishing: 82, handles: 78, passing: 72, defense: 78, rebounding: 62, athleticism: 84, clutch: 80 }),
+      player("Terrence Ross", 6, 6, 31, { height: 82, shooting: 84, finishing: 78, handles: 76, passing: 68, defense: 70, rebounding: 62, athleticism: 84, clutch: 74 }),
+      player("Patrick Patterson", 6, 9, 54, { height: 90, shooting: 80, finishing: 76, handles: 68, passing: 68, defense: 80, rebounding: 74, athleticism: 74, clutch: 74 }),
+      player("Bismack Biyombo", 6, 9, 8, { height: 90, shooting: 52, finishing: 68, handles: 50, passing: 56, defense: 86, rebounding: 86, athleticism: 80, clutch: 60 }),
+    ],
+  },
+  {
+    era: "2020s",
+    team: "Celtics",
+    note: "The 2024 champions. Tatum and Brown finally silenced every doubter with the deepest roster in the league.",
+    players: [
+      player("Jayson Tatum", 6, 8, 0, { height: 88, shooting: 92, finishing: 88, handles: 86, passing: 78, defense: 86, rebounding: 82, athleticism: 86, clutch: 92 }),
+      player("Jaylen Brown", 6, 6, 7, { height: 82, shooting: 88, finishing: 88, handles: 82, passing: 72, defense: 86, rebounding: 72, athleticism: 92, clutch: 88 }),
+      player("Kristaps Porzingis", 7, 2, 8, { height: 100, shooting: 88, finishing: 82, handles: 76, passing: 70, defense: 88, rebounding: 86, athleticism: 80, clutch: 78 }),
+      player("Jrue Holiday", 6, 4, 12, { height: 77, shooting: 82, finishing: 82, handles: 86, passing: 84, defense: 94, rebounding: 64, athleticism: 84, clutch: 86 }),
+      player("Al Horford", 6, 9, 42, { height: 90, shooting: 82, finishing: 80, handles: 72, passing: 80, defense: 88, rebounding: 82, athleticism: 70, clutch: 80 }),
+      player("Derrick White", 6, 4, 9, { height: 77, shooting: 84, finishing: 80, handles: 82, passing: 78, defense: 90, rebounding: 60, athleticism: 80, clutch: 82 }),
+      player("Payton Pritchard", 6, 1, 11, { height: 68, shooting: 88, finishing: 76, handles: 82, passing: 78, defense: 70, rebounding: 54, athleticism: 76, clutch: 84 }),
+      player("Sam Hauser", 6, 8, 30, { height: 88, shooting: 92, finishing: 74, handles: 70, passing: 70, defense: 68, rebounding: 66, athleticism: 72, clutch: 76 }),
+    ],
+  },
+  {
+    era: "2020s",
+    team: "Heat",
+    note: "Two Finals runs in three years on pure fourth-quarter will. Jimmy Butler does not take nights off.",
+    players: [
+      player("Jimmy Butler", 6, 7, 22, { height: 84, shooting: 84, finishing: 86, handles: 82, passing: 82, defense: 92, rebounding: 74, athleticism: 84, clutch: 98 }),
+      player("Bam Adebayo", 6, 9, 13, { height: 90, shooting: 76, finishing: 86, handles: 76, passing: 86, defense: 94, rebounding: 90, athleticism: 92, clutch: 84 }),
+      player("Tyler Herro", 6, 5, 14, { height: 80, shooting: 92, finishing: 84, handles: 82, passing: 78, defense: 68, rebounding: 58, athleticism: 78, clutch: 88 }),
+      player("Kyle Lowry", 6, 0, 7, { height: 67, shooting: 82, finishing: 76, handles: 84, passing: 86, defense: 82, rebounding: 58, athleticism: 72, clutch: 82 }),
+      player("Duncan Robinson", 6, 7, 55, { height: 84, shooting: 96, finishing: 74, handles: 70, passing: 70, defense: 64, rebounding: 60, athleticism: 72, clutch: 82 }),
+      player("Caleb Martin", 6, 5, 16, { height: 80, shooting: 78, finishing: 80, handles: 74, passing: 70, defense: 80, rebounding: 68, athleticism: 82, clutch: 80 }),
+      player("Victor Oladipo", 6, 4, 4, { height: 77, shooting: 82, finishing: 82, handles: 80, passing: 76, defense: 84, rebounding: 60, athleticism: 86, clutch: 80 }),
+      player("Udonis Haslem", 6, 8, 40, { height: 88, shooting: 72, finishing: 76, handles: 58, passing: 62, defense: 78, rebounding: 82, athleticism: 66, clutch: 76 }),
+    ],
+  },
 ];
 
 let round = 0;
@@ -464,6 +614,10 @@ const prompt = document.querySelector("#prompt");
 const context = document.querySelector("#context");
 const modeLabel = document.querySelector("#modeLabel");
 const resetButton = document.querySelector("#resetButton");
+const backButton = document.querySelector("#backButton");
+const helpButton = document.querySelector("#helpButton");
+const helpModal = document.querySelector("#helpModal");
+const helpClose = document.querySelector("#helpClose");
 const result = document.querySelector("#result");
 const resultTitle = document.querySelector("#resultTitle");
 const resultCopy = document.querySelector("#resultCopy");
@@ -670,6 +824,17 @@ function startGame(mode) {
   reset();
 }
 
+function goBack() {
+  gameGrid.hidden = true;
+  result.hidden = true;
+  modeScreen.hidden = false;
+  round = 0;
+  build = {};
+  currentTeamEra = null;
+  currentAttribute = null;
+  scoreEl.textContent = "--";
+}
+
 async function shareResult() {
   const score = calculateScore();
   const picks = attributes
@@ -696,6 +861,14 @@ modeButtons.forEach((button) => {
   button.addEventListener("click", () => startGame(button.dataset.mode));
 });
 resetButton.addEventListener("click", reset);
+backButton.addEventListener("click", goBack);
 shareButton.addEventListener("click", shareResult);
+
+helpButton.addEventListener("click", () => { helpModal.hidden = false; });
+helpClose.addEventListener("click", () => { helpModal.hidden = true; });
+helpModal.addEventListener("click", (e) => {
+  if (e.target === helpModal) helpModal.hidden = true;
+});
+
 renderBuildList();
 updateBody(null);

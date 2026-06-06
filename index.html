@@ -4,6 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>GOAT Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -24,6 +27,7 @@
         <div class="mode-copy">
           <p class="kicker">Choose Mode</p>
           <h2>Start with the numbers, or trust your basketball brain.</h2>
+          <button id="helpButton" class="help-link" type="button">How to Play</button>
         </div>
         <div class="mode-options">
           <button class="mode-card" type="button" data-mode="classic">
@@ -67,7 +71,10 @@
               <p id="context" class="context"></p>
               <p id="modeLabel" class="mode-label"></p>
             </div>
-            <button id="resetButton" type="button" title="Start a new run">New Run</button>
+            <div class="round-actions">
+              <button id="backButton" type="button" title="Return to mode select">Back</button>
+              <button id="resetButton" type="button" title="Start a new run">New Run</button>
+            </div>
           </div>
 
           <section id="cards" class="cards" aria-label="Available players"></section>
@@ -83,6 +90,45 @@
         <button id="shareButton" type="button" title="Copy your build">Copy Result</button>
       </section>
     </main>
+
+    <div class="modal-overlay" id="helpModal" hidden>
+      <div class="modal" role="dialog" aria-modal="true" aria-label="How to Play">
+        <div class="modal-header">
+          <p class="kicker">How to Play</p>
+          <button id="helpClose" class="modal-close" type="button" aria-label="Close">&#x2715;</button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-rule">
+            <span class="modal-num">01</span>
+            <div>
+              <strong>Pick a mode.</strong>
+              <p>Classic shows ratings before you pick. Blind hides them — trust your basketball knowledge.</p>
+            </div>
+          </div>
+          <div class="modal-rule">
+            <span class="modal-num">02</span>
+            <div>
+              <strong>9 rounds, 9 attributes.</strong>
+              <p>Each round assigns you a random team-era and a random attribute: Shooting, Finishing, Handles, Passing, Defense, Rebounding, Athleticism, Clutch, or Height. Pick one player from that roster.</p>
+            </div>
+          </div>
+          <div class="modal-rule">
+            <span class="modal-num">03</span>
+            <div>
+              <strong>Build your GOAT Score.</strong>
+              <p>Your final score is calculated from your nine picks. Elite ratings earn bonuses. Weak spots get penalized. A balanced build gets a bonus. Chase 100.</p>
+            </div>
+          </div>
+          <div class="modal-rule">
+            <span class="modal-num">04</span>
+            <div>
+              <strong>Hit the 100 gate.</strong>
+              <p>A true 100 requires all nine attributes rated 94+, five of them at 98+, at least one 100, and a height of 90 or above. It's rare. That's the point.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="app.js"></script>
   </body>
