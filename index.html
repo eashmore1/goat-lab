@@ -69,7 +69,7 @@
             <div class="goat-body" aria-hidden="true">
               <span class="part head" data-attribute="passing"></span>
               <span class="part chest" data-attribute="defense"></span>
-              <span class="part heart" data-attribute="clutch"></span>
+              <span class="part heart" data-attribute="iq"></span>
               <span class="part left-arm" data-attribute="handles"></span>
               <span class="part right-arm" data-attribute="shooting"></span>
               <span class="part waist" data-attribute="height"></span>
@@ -93,6 +93,24 @@
             <div class="round-actions">
               <button id="backButton" type="button" title="Return to mode select">Back</button>
               <button id="resetButton" type="button" title="Start a new run">New Run</button>
+            </div>
+          </div>
+
+          <div class="respins" id="respins" role="group" aria-label="One-time respins for this round">
+            <span class="respins-label">Respins</span>
+            <div class="respins-row">
+              <button class="respin-btn" id="respinEra" type="button" data-respin="era" title="Roll a different era (one use this round)">
+                <span class="respin-text">Era</span>
+                <span class="respin-token">1×</span>
+              </button>
+              <button class="respin-btn" id="respinTeam" type="button" data-respin="team" title="Roll a different team in this era (one use this round)">
+                <span class="respin-text">Team</span>
+                <span class="respin-token">1×</span>
+              </button>
+              <button class="respin-btn" id="respinAttr" type="button" data-respin="attribute" title="Roll a different stat (one use this round)">
+                <span class="respin-text">Stat</span>
+                <span class="respin-token">1×</span>
+              </button>
             </div>
           </div>
 
@@ -157,18 +175,25 @@
             <span class="modal-num">02</span>
             <div>
               <strong>9 rounds, 9 attributes.</strong>
-              <p>Each round assigns you a random team-era and a random attribute: Shooting, Finishing, Handles, Passing, Defense, Rebounding, Athleticism, Clutch, or Height. Pick one player from that roster.</p>
+              <p>Each round assigns you a random team-era and a random attribute: Shooting, Finishing, Handles, Passing, Defense, Rebounding, Athleticism, IQ, or Height. Pick one player from that roster.</p>
             </div>
           </div>
           <div class="modal-rule">
             <span class="modal-num">03</span>
+            <div>
+              <strong>Three respins per round.</strong>
+              <p>Don't love the roll? Each round gives you one Respin Era, one Respin Team, and one Respin Stat — single use each, and they reset every round. Use them to hunt a better matchup.</p>
+            </div>
+          </div>
+          <div class="modal-rule">
+            <span class="modal-num">04</span>
             <div>
               <strong>Build your GOAT Score.</strong>
               <p>Your final score is calculated from your nine picks. Elite ratings earn bonuses. Weak spots get penalized. A balanced build gets a bonus. Chase 100.</p>
             </div>
           </div>
           <div class="modal-rule">
-            <span class="modal-num">04</span>
+            <span class="modal-num">05</span>
             <div>
               <strong>Chase the 100.</strong>
               <p>Nobody has built a perfect player. Every run is a chance. Can you?</p>

@@ -798,6 +798,85 @@ h1 {
   box-shadow: 3px 3px 0 var(--ink);
 }
 
+/* One-time-per-round respins */
+.respins {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.respins-label {
+  font: 900 0.64rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.respins-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.respin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 11px;
+  border: 2px solid var(--ink);
+  background: var(--chalk);
+  color: var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  font: 900 0.78rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.12s ease;
+}
+
+.respin-btn::before {
+  content: "\21BB"; /* ↻ recycle/respin glyph */
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.respin-btn:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.respin-token {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 18px;
+  padding: 0 5px;
+  border: 1.5px solid var(--ink);
+  background: var(--gold);
+  font-size: 0.64rem;
+  font-weight: 900;
+}
+
+.respin-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+  box-shadow: none;
+  transform: none;
+}
+
+.respin-btn.is-used .respin-text {
+  text-decoration: line-through;
+}
+
+.respin-btn.is-used .respin-token {
+  background: transparent;
+  color: var(--muted);
+}
+
 /* Share modal */
 .share-modal {
   width: min(500px, 100%);
