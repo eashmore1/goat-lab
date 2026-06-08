@@ -2975,9 +2975,10 @@ function teamsInSameEra() {
   return teamEras.filter((t) => t.era === currentTeamEra.era && t !== currentTeamEra);
 }
 
-function erasAvailable() {
+// Respin Era keeps the same team, only swapping the decade (e.g. 2000s Bulls -> 1980s Bulls).
+function sameTeamOtherEras() {
   if (!currentTeamEra) return [];
-  return teamEras.filter((t) => t.era !== currentTeamEra.era);
+  return teamEras.filter((t) => t.team === currentTeamEra.team && t.era !== currentTeamEra.era);
 }
 
 // Stats not yet assigned this run (rounds still ahead of the current one).
@@ -2988,7 +2989,7 @@ function statPool() {
 function respinAvailable(type) {
   if (!roundLocked || respinsUsed[type]) return false;
   if (type === "team") return teamsInSameEra().length > 0;
-  if (type === "era") return erasAvailable().length > 0;
+  if (type === "era") return sameTeamOtherEras().length > 0;
   if (type === "attribute") return statPool().length > 0;
   return false;
 }
@@ -3015,7 +3016,7 @@ function pickRandom(list) {
 
 function respinEra() {
   if (!respinAvailable("era")) return;
-  currentTeamEra = pickRandom(erasAvailable());
+  currentTeamEra = pickRandom(sameTeamOtherEras());
   respinsUsed.era = true;
   relayRound();
 }
