@@ -2800,20 +2800,23 @@ function calculateScore() {
   const values = attributes.map((attribute) => build[attribute.key]?.score ?? 0);
   if (values.some((value) => value === 0)) return null;
 
+  // GOAT gate: meeting ALL of these conditions IS a perfect 100. Tuned to be
+  // extremely rare but reachable for a skilled player who spends respins well.
+  const goatGate =
+    values.every((value) => value >= 93) &&
+    values.filter((value) => value >= 97).length >= 5 &&
+    values.some((value) => value >= 99) &&
+    (build.height?.score ?? 0) >= 90;
+  if (goatGate) return 100;
+
   const average = values.reduce((sum, value) => sum + value, 0) / values.length;
   const weakPenalty = values.reduce((sum, value) => sum + Math.max(0, 88 - value) * 0.42, 0);
   const eliteBonus = values.filter((value) => value >= 98).length * 0.45;
   const balanceBonus = values.every((value) => value >= 90) ? 1.25 : 0;
-  let score = Math.round(average - weakPenalty + eliteBonus + balanceBonus);
+  const score = Math.round(average - weakPenalty + eliteBonus + balanceBonus);
 
-  const goatGate =
-    values.every((value) => value >= 94) &&
-    values.filter((value) => value >= 98).length >= 5 &&
-    values.some((value) => value === 100) &&
-    (build.height?.score ?? 0) >= 90;
-
-  if (!goatGate) score = Math.min(score, 99);
-  return Math.max(60, Math.min(100, score));
+  // Only a gate-passing build can show 100; everything else caps at 99.
+  return Math.max(60, Math.min(99, score));
 }
 
 function renderBar(label, value) {
