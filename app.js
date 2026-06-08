@@ -2802,8 +2802,16 @@ function calculateScore() {
 
   // GOAT gate: meeting ALL of these conditions IS a perfect 100. Tuned to be
   // extremely rare but reachable for a skilled player who spends respins well.
+  // Floor is 93, but a single 100 is worth one point more than the required 99,
+  // and that surplus point lets exactly ONE stat dip to 92. One exception only.
+  const sorted = [...values].sort((a, b) => a - b);
+  const lowest = sorted[0];
+  const secondLowest = sorted[1];
+  const hasHundred = values.some((value) => value === 100);
+  const floorOk = secondLowest >= 93 && (lowest >= 93 || (lowest === 92 && hasHundred));
+
   const goatGate =
-    values.every((value) => value >= 93) &&
+    floorOk &&
     values.filter((value) => value >= 97).length >= 5 &&
     values.some((value) => value >= 99) &&
     (build.height?.score ?? 0) >= 90;
