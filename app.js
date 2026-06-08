@@ -2847,26 +2847,29 @@ function updateBody(lastPick) {
   bodyLabel.textContent = `${lastPick.attribute.label}: ${lastPick.player.name} (${lastPick.score})`;
 }
 
-function renderRound() {
-  if (round >= runAttributes.length) {
-    finish();
-    return;
-  }
+let rollToken = 0;
 
-  currentAttribute = runAttributes[round];
-  currentTeamEra = pickTeamEra();
-  roundLabel.textContent = `Round ${round + 1} of ${runAttributes.length}`;
-  prompt.textContent = `${currentTeamEra.era} ${currentTeamEra.team} / ${currentAttribute.label}`;
-  context.textContent = "";
-  modeLabel.textContent = gameMode === "blind" ? "Blind mode: ratings reveal after your pick." : "Classic mode: ratings are visible before you pick.";
+function prefersReducedMotion() {
+  return Boolean(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+}
+
+function renderCards(animate) {
+  cards.classList.remove("is-rolling");
   cards.innerHTML = "";
 
-  currentTeamEra.players.forEach((playerData) => {
+  currentTeamEra.players.forEach((playerData, index) => {
     const score = playerData.ratings[currentAttribute.key];
     const isBlind = gameMode === "blind";
     const card = document.createElement("button");
-    card.className = "card";
+    card.className = animate ? "card is-dealing" : "card";
     card.type = "button";
+    if (animate) {
+      card.style.animationDelay = `${index * 45}ms`;
+      card.addEventListener("animationend", () => {
+        card.classList.remove("is-dealing");
+        card.style.animationDelay = "";
+      }, { once: true });
+    }
     card.innerHTML = `
       <div class="card-art">
         <span class="jersey">${playerData.number}</span>
@@ -2889,6 +2892,65 @@ function renderRound() {
     card.addEventListener("click", () => draft(playerData));
     cards.append(card);
   });
+}
+
+// Stamp the locked team/era + category into the prompt with a pop, then deal the cards in.
+function lockRound(token, animate) {
+  if (token !== rollToken) return;
+  prompt.classList.remove("is-rolling");
+  prompt.innerHTML =
+    `<span class="roll-team">${currentTeamEra.era} ${currentTeamEra.team}</span>` +
+    `<span class="roll-div">/</span>` +
+    `<span class="roll-attr">${currentAttribute.label}</span>`;
+  if (animate) {
+    prompt.classList.remove("is-locked");
+    void prompt.offsetWidth; // restart the stamp animation
+    prompt.classList.add("is-locked");
+  }
+  renderCards(animate);
+}
+
+function renderRound() {
+  if (round >= runAttributes.length) {
+    finish();
+    return;
+  }
+
+  currentAttribute = runAttributes[round];
+  currentTeamEra = pickTeamEra();
+  roundLabel.textContent = `Round ${round + 1} of ${runAttributes.length}`;
+  context.textContent = "";
+  modeLabel.textContent = gameMode === "blind" ? "Blind mode: ratings reveal after your pick." : "Classic mode: ratings are visible before you pick.";
+
+  const token = ++rollToken;
+
+  if (prefersReducedMotion()) {
+    prompt.classList.remove("is-rolling", "is-locked");
+    lockRound(token, false);
+    return;
+  }
+
+  // Slot-machine suspense: flicker through random team/era/category combos,
+  // decelerating, then stamp the real roll and deal the cards.
+  prompt.classList.remove("is-locked");
+  prompt.classList.add("is-rolling");
+  cards.classList.add("is-rolling");
+  cards.innerHTML = currentTeamEra.players.map(() => `<div class="card-skel" aria-hidden="true"></div>`).join("");
+
+  const steps = [50, 60, 75, 95, 125, 170, 230];
+  let i = 0;
+  const tick = () => {
+    if (token !== rollToken) return;
+    if (i >= steps.length) {
+      lockRound(token, true);
+      return;
+    }
+    const t = teamEras[(Math.random() * teamEras.length) | 0];
+    const a = attributes[(Math.random() * attributes.length) | 0];
+    prompt.textContent = `${t.era} ${t.team} / ${a.label}`;
+    setTimeout(tick, steps[i++]);
+  };
+  tick();
 }
 
 function draft(playerData) {

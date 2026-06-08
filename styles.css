@@ -465,6 +465,82 @@ h1 {
   margin-top: 8px;
 }
 
+/* ===== Roll suspense animation ===== */
+@keyframes rollFlicker {
+  0%, 100% { opacity: 0.5; transform: translateX(-1px) skewX(-2deg); }
+  50% { opacity: 0.88; transform: translateX(1px) skewX(2deg); }
+}
+@keyframes stampIn {
+  0% { transform: scale(1.45) rotate(-3deg); opacity: 0; }
+  55% { transform: scale(0.93) rotate(0.6deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+@keyframes cardDeal {
+  0% { transform: translateY(18px) scale(0.93); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+@keyframes skelPulse {
+  0%, 100% { opacity: 0.32; }
+  50% { opacity: 0.62; }
+}
+
+#prompt.is-rolling {
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  animation: rollFlicker 0.13s steps(1, end) infinite;
+}
+#prompt .roll-team,
+#prompt .roll-div,
+#prompt .roll-attr {
+  display: inline-block;
+}
+#prompt .roll-div {
+  margin: 0 0.28em;
+  color: var(--court);
+}
+#prompt .roll-attr {
+  padding-bottom: 2px;
+  background: linear-gradient(var(--gold), var(--gold)) left 94% / 100% 3px no-repeat;
+}
+#prompt.is-locked .roll-team {
+  animation: stampIn 0.32s cubic-bezier(0.2, 1.5, 0.4, 1) both;
+}
+#prompt.is-locked .roll-div {
+  animation: stampIn 0.3s cubic-bezier(0.2, 1.5, 0.4, 1) 0.08s both;
+}
+#prompt.is-locked .roll-attr {
+  animation: stampIn 0.36s cubic-bezier(0.2, 1.5, 0.4, 1) 0.18s both;
+}
+.card.is-dealing {
+  animation: cardDeal 0.34s cubic-bezier(0.2, 1, 0.3, 1) backwards;
+}
+.card-skel {
+  min-height: 154px;
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow);
+  background: repeating-linear-gradient(
+    45deg,
+    var(--chalk),
+    var(--chalk) 10px,
+    rgba(21, 20, 19, 0.07) 10px,
+    rgba(21, 20, 19, 0.07) 20px
+  );
+  animation: skelPulse 0.7s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #prompt.is-rolling,
+  #prompt.is-locked .roll-team,
+  #prompt.is-locked .roll-div,
+  #prompt.is-locked .roll-attr,
+  .card.is-dealing,
+  .card-skel {
+    animation: none;
+  }
+}
+
 .card {
   display: grid;
   min-height: 154px;
@@ -612,6 +688,16 @@ h1 {
   flex-wrap: wrap;
   font: 400 0.68rem/1.4 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   color: var(--muted);
+}
+
+.footer-disclaimer {
+  width: min(1260px, calc(100% - 20px));
+  margin: 10px auto 0;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(21, 20, 19, 0.18);
+  font: 400 0.62rem/1.45 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: rgba(21, 20, 19, 0.5);
+  text-align: center;
 }
 
 .footer-links {
