@@ -1846,7 +1846,7 @@ const teamEras = [
       player("Paul Millsap", 6, 8, 4, { height: 86, shooting: 78, finishing: 84, handles: 74, passing: 76, defense: 86, rebounding: 80, athleticism: 80, iq: 80 }),
       player("Jeff Teague", 6, 2, 0, { height: 71, shooting: 78, finishing: 82, handles: 88, passing: 84, defense: 78, rebounding: 54, athleticism: 86, iq: 80 }),
       player("Joe Johnson", 6, 7, 2, { height: 84, shooting: 84, finishing: 84, handles: 82, passing: 78, defense: 74, rebounding: 64, athleticism: 80, iq: 86 }),
-      player("Trae Young", 6, 1, 11, { height: 68, shooting: 84, finishing: 82, handles: 90, passing: 90, defense: 58, rebounding: 54, athleticism: 78, iq: 84 }),
+      player("Trae Young", 6, 1, 11, { height: 68, shooting: 88, finishing: 82, handles: 90, passing: 90, defense: 58, rebounding: 54, athleticism: 78, iq: 84 }),
       player("Josh Smith", 6, 9, 5, { height: 90, shooting: 66, finishing: 84, handles: 76, passing: 78, defense: 88, rebounding: 82, athleticism: 90, iq: 70 }),
       player("Kyle Korver", 6, 7, 26, { height: 84, shooting: 94, finishing: 72, handles: 72, passing: 72, defense: 72, rebounding: 56, athleticism: 68, iq: 84 }),
       player("John Collins", 6, 9, 20, { height: 90, shooting: 74, finishing: 86, handles: 68, passing: 66, defense: 70, rebounding: 82, athleticism: 90, iq: 76 }),
@@ -1864,7 +1864,7 @@ const teamEras = [
     team: "76ers",
     note: "From the Process tank to Embiid and Simmons leading the climb back — a young, athletic, defense-first core.",
     players: [
-      player("Joel Embiid", 7, 0, 21, { height: 98, shooting: 74, finishing: 88, handles: 68, passing: 72, defense: 92, rebounding: 88, athleticism: 84, iq: 82 }),
+      player("Joel Embiid", 7, 0, 21, { height: 98, shooting: 80, finishing: 88, handles: 68, passing: 72, defense: 92, rebounding: 88, athleticism: 84, iq: 82 }),
       player("Ben Simmons", 6, 10, 25, { height: 94, shooting: 54, finishing: 86, handles: 84, passing: 90, defense: 86, rebounding: 80, athleticism: 90, iq: 84 }),
       player("Jimmy Butler", 6, 7, 23, { height: 84, shooting: 78, finishing: 84, handles: 80, passing: 74, defense: 90, rebounding: 68, athleticism: 84, iq: 91 }),
       player("Jrue Holiday", 6, 4, 11, { height: 77, shooting: 78, finishing: 82, handles: 88, passing: 84, defense: 86, rebounding: 60, athleticism: 84, iq: 90 }),
@@ -1974,7 +1974,7 @@ const teamEras = [
     team: "Thunder",
     note: "SGA's MVP and the 2025 title — a young, switchable juggernaut around Holmgren and Jalen Williams.",
     players: [
-      player("Shai Gilgeous-Alexander", 6, 6, 2, { height: 82, shooting: 84, finishing: 92, handles: 94, passing: 84, defense: 84, rebounding: 62, athleticism: 88, iq: 92 }),
+      player("Shai Gilgeous-Alexander", 6, 6, 2, { height: 82, shooting: 89, finishing: 92, handles: 94, passing: 84, defense: 84, rebounding: 62, athleticism: 88, iq: 92 }),
       player("Jalen Williams", 6, 5, 8, { height: 80, shooting: 80, finishing: 86, handles: 82, passing: 80, defense: 86, rebounding: 66, athleticism: 86, iq: 82 }),
       player("Chet Holmgren", 7, 1, 7, { height: 100, shooting: 78, finishing: 84, handles: 66, passing: 70, defense: 92, rebounding: 82, athleticism: 82, iq: 78 }),
       player("Luguentz Dort", 6, 4, 5, { height: 77, shooting: 76, finishing: 78, handles: 70, passing: 64, defense: 92, rebounding: 60, athleticism: 86, iq: 74 }),
@@ -1997,7 +1997,7 @@ const teamEras = [
     note: "Anthony Edwards' ascent to superstardom and a 2024 conference finals run anchored by Gobert's defense.",
     players: [
       player("Anthony Edwards", 6, 4, 5, { height: 77, shooting: 82, finishing: 88, handles: 84, passing: 74, defense: 82, rebounding: 66, athleticism: 94, iq: 80 }),
-      player("Karl-Anthony Towns", 7, 0, 32, { height: 98, shooting: 84, finishing: 88, handles: 74, passing: 74, defense: 80, rebounding: 86, athleticism: 80, iq: 80 }),
+      player("Karl-Anthony Towns", 7, 0, 32, { height: 98, shooting: 90, finishing: 88, handles: 74, passing: 74, defense: 80, rebounding: 86, athleticism: 80, iq: 80 }),
       player("Rudy Gobert", 7, 1, 27, { height: 100, shooting: 54, finishing: 84, handles: 54, passing: 62, defense: 96, rebounding: 92, athleticism: 82, iq: 74 }),
       player("Mike Conley", 6, 1, 10, { height: 68, shooting: 80, finishing: 78, handles: 88, passing: 88, defense: 78, rebounding: 54, athleticism: 74, iq: 90 }),
       player("Jaden McDaniels", 6, 9, 3, { height: 90, shooting: 74, finishing: 80, handles: 72, passing: 66, defense: 92, rebounding: 66, athleticism: 88, iq: 74 }),
@@ -2018,7 +2018,7 @@ const teamEras = [
     team: "76ers",
     note: "Embiid's MVP peak with Maxey's rise and a stint of James Harden running the offense.",
     players: [
-      player("Joel Embiid", 7, 0, 21, { height: 98, shooting: 80, finishing: 90, handles: 74, passing: 78, defense: 90, rebounding: 88, athleticism: 82, iq: 84 }),
+      player("Joel Embiid", 7, 0, 21, { height: 98, shooting: 86, finishing: 90, handles: 74, passing: 78, defense: 90, rebounding: 88, athleticism: 82, iq: 84 }),
       player("Tyrese Maxey", 6, 2, 0, { height: 71, shooting: 84, finishing: 86, handles: 90, passing: 80, defense: 74, rebounding: 54, athleticism: 88, iq: 84 }),
       player("James Harden", 6, 5, 1, { height: 80, shooting: 82, finishing: 84, handles: 92, passing: 92, defense: 68, rebounding: 64, athleticism: 78, iq: 84 }),
       player("Paul George", 6, 8, 8, { height: 86, shooting: 82, finishing: 82, handles: 80, passing: 74, defense: 84, rebounding: 68, athleticism: 80, iq: 82 }),
@@ -2063,7 +2063,7 @@ const teamEras = [
     note: "Jalen Brunson's clutch shotmaking led a gritty defensive revival that reached the 2025 conference finals.",
     players: [
       player("Jalen Brunson", 6, 1, 11, { height: 68, shooting: 84, finishing: 88, handles: 90, passing: 84, defense: 70, rebounding: 54, athleticism: 78, iq: 90 }),
-      player("Karl-Anthony Towns", 7, 0, 32, { height: 98, shooting: 84, finishing: 88, handles: 74, passing: 74, defense: 78, rebounding: 88, athleticism: 78, iq: 80 }),
+      player("Karl-Anthony Towns", 7, 0, 32, { height: 98, shooting: 90, finishing: 88, handles: 74, passing: 74, defense: 78, rebounding: 88, athleticism: 78, iq: 80 }),
       player("Julius Randle", 6, 8, 30, { height: 86, shooting: 78, finishing: 86, handles: 80, passing: 78, defense: 78, rebounding: 84, athleticism: 80, iq: 78 }),
       player("Mikal Bridges", 6, 6, 25, { height: 82, shooting: 80, finishing: 82, handles: 76, passing: 70, defense: 88, rebounding: 60, athleticism: 86, iq: 80 }),
       player("OG Anunoby", 6, 7, 8, { height: 84, shooting: 80, finishing: 80, handles: 72, passing: 66, defense: 92, rebounding: 66, athleticism: 88, iq: 78 }),
