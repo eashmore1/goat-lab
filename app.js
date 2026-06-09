@@ -3411,9 +3411,9 @@ function formatHeight(player) {
 }
 
 // Odds that any given round is a rare "golden roll" landing on a USA Olympic
-// super-team instead of a normal franchise. ~1.5% per round => roughly a 1-in-8
+// super-team instead of a normal franchise. ~1.2% per round => roughly a 1-in-10
 // chance of seeing at least one across a full 9-round game.
-const GOLDEN_ODDS = 0.015;
+const GOLDEN_ODDS = 0.012;
 
 function pickTeamEra() {
   if (goldenTeams.length && Math.random() < GOLDEN_ODDS) {
