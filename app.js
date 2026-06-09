@@ -303,7 +303,7 @@ const teamEras = [
     note: "The modern cheat-code pool for shooting, defense, and small-ball IQ.",
     players: [
       player("Stephen Curry", 6, 2, 30, { height: 71, shooting: 100, finishing: 91, handles: 98, passing: 94, defense: 76, rebounding: 62, athleticism: 84, iq: 97 }),
-      player("Kevin Durant", 6, 11, 35, { height: 96, shooting: 98, finishing: 97, handles: 92, passing: 86, defense: 90, rebounding: 86, athleticism: 91, iq: 90 }),
+      player("Kevin Durant", 6, 11, 35, { height: 96, shooting: 98, finishing: 97, handles: 92, passing: 86, defense: 86, rebounding: 86, athleticism: 91, iq: 90 }),
       player("Klay Thompson", 6, 6, 11, { height: 82, shooting: 98, finishing: 82, handles: 78, passing: 74, defense: 90, rebounding: 66, athleticism: 80, iq: 82 }),
       player("Draymond Green", 6, 6, 23, { height: 82, shooting: 70, finishing: 78, handles: 76, passing: 92, defense: 97, rebounding: 88, athleticism: 80, iq: 96 }),
       player("Andre Iguodala", 6, 6, 9, { height: 82, shooting: 78, finishing: 84, handles: 82, passing: 84, defense: 92, rebounding: 72, athleticism: 88, iq: 88 }),
@@ -2040,7 +2040,7 @@ const teamEras = [
     team: "Cavaliers",
     note: "A 64-win 2025 team built on Mitchell's scoring, Garland's playmaking, and the Mobley–Allen frontcourt wall.",
     players: [
-      player("Donovan Mitchell", 6, 3, 45, { height: 74, shooting: 84, finishing: 88, handles: 88, passing: 78, defense: 78, rebounding: 58, athleticism: 88, iq: 88 }),
+      player("Donovan Mitchell", 6, 3, 45, { height: 74, shooting: 88, finishing: 88, handles: 88, passing: 78, defense: 78, rebounding: 58, athleticism: 88, iq: 88 }),
       player("Darius Garland", 6, 1, 10, { height: 68, shooting: 82, finishing: 84, handles: 90, passing: 86, defense: 66, rebounding: 52, athleticism: 80, iq: 82 }),
       player("Evan Mobley", 6, 11, 4, { height: 96, shooting: 70, finishing: 84, handles: 68, passing: 74, defense: 94, rebounding: 84, athleticism: 88, iq: 78 }),
       player("Jarrett Allen", 6, 10, 31, { height: 94, shooting: 56, finishing: 86, handles: 58, passing: 66, defense: 86, rebounding: 88, athleticism: 84, iq: 76 }),
@@ -2217,7 +2217,7 @@ const teamEras = [
     note: "From Hayward's prime to the Gobert–Mitchell rise — elite rim protection and a deep, disciplined system.",
     players: [
       player("Rudy Gobert", 7, 1, 27, { height: 100, shooting: 54, finishing: 84, handles: 54, passing: 62, defense: 96, rebounding: 92, athleticism: 82, iq: 74 }),
-      player("Donovan Mitchell", 6, 3, 45, { height: 74, shooting: 80, finishing: 88, handles: 88, passing: 74, defense: 78, rebounding: 56, athleticism: 90, iq: 86 }),
+      player("Donovan Mitchell", 6, 3, 45, { height: 74, shooting: 84, finishing: 88, handles: 88, passing: 74, defense: 78, rebounding: 56, athleticism: 90, iq: 86 }),
       player("Gordon Hayward", 6, 8, 20, { height: 86, shooting: 82, finishing: 84, handles: 82, passing: 78, defense: 74, rebounding: 66, athleticism: 78, iq: 82 }),
       player("Deron Williams", 6, 3, 8, { height: 74, shooting: 80, finishing: 84, handles: 90, passing: 90, defense: 72, rebounding: 58, athleticism: 82, iq: 84 }),
       player("Al Jefferson", 6, 10, 25, { height: 94, shooting: 72, finishing: 86, handles: 64, passing: 68, defense: 72, rebounding: 84, athleticism: 74, iq: 78 }),
