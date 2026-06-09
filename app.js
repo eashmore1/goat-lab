@@ -302,7 +302,7 @@ const teamEras = [
     team: "Warriors",
     note: "The modern cheat-code pool for shooting, defense, and small-ball IQ.",
     players: [
-      player("Stephen Curry", 6, 2, 30, { height: 71, shooting: 100, finishing: 91, handles: 98, passing: 94, defense: 76, rebounding: 62, athleticism: 84, iq: 97 }),
+      player("Stephen Curry", 6, 2, 30, { height: 71, shooting: 100, finishing: 94, handles: 98, passing: 94, defense: 76, rebounding: 62, athleticism: 84, iq: 97 }),
       player("Kevin Durant", 6, 11, 35, { height: 96, shooting: 98, finishing: 97, handles: 92, passing: 86, defense: 86, rebounding: 86, athleticism: 91, iq: 90 }),
       player("Klay Thompson", 6, 6, 11, { height: 82, shooting: 98, finishing: 82, handles: 78, passing: 74, defense: 90, rebounding: 66, athleticism: 80, iq: 82 }),
       player("Draymond Green", 6, 6, 23, { height: 82, shooting: 70, finishing: 78, handles: 76, passing: 92, defense: 97, rebounding: 88, athleticism: 80, iq: 96 }),
