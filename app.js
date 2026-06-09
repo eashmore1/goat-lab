@@ -1954,7 +1954,7 @@ const teamEras = [
     players: [
       player("LeBron James", 6, 9, 23, { height: 90, shooting: 80, finishing: 90, handles: 90, passing: 92, defense: 82, rebounding: 80, athleticism: 88, iq: 90 }),
       player("Anthony Davis", 6, 10, 3, { height: 94, shooting: 80, finishing: 90, handles: 72, passing: 74, defense: 94, rebounding: 88, athleticism: 88, iq: 84 }),
-      player("Luka Doncic", 6, 7, 77, { height: 84, shooting: 82, finishing: 88, handles: 92, passing: 92, defense: 70, rebounding: 78, athleticism: 80, iq: 88 }),
+      player("Luka Doncic", 6, 7, 77, { height: 84, shooting: 82, finishing: 88, handles: 92, passing: 97, defense: 70, rebounding: 78, athleticism: 80, iq: 88 }),
       player("Austin Reaves", 6, 5, 15, { height: 80, shooting: 82, finishing: 82, handles: 84, passing: 80, defense: 72, rebounding: 60, athleticism: 76, iq: 82 }),
       player("Rui Hachimura", 6, 8, 28, { height: 86, shooting: 80, finishing: 84, handles: 72, passing: 66, defense: 74, rebounding: 70, athleticism: 82, iq: 76 }),
       player("D'Angelo Russell", 6, 4, 1, { height: 77, shooting: 82, finishing: 80, handles: 88, passing: 84, defense: 62, rebounding: 54, athleticism: 76, iq: 80 }),
@@ -3280,6 +3280,73 @@ const teamEras = [
   },
 ];
 
+// --- GOLDEN ROLLS -----------------------------------------------------------
+// Three legendary USA Olympic super-rosters. NOT part of the normal teamEras
+// pool — they only surface on a rare "golden roll" (see pickTeamEra). Stacked
+// with the best players ever at peak form, so landing one is a jackpot.
+const goldenTeams = [
+  {
+    era: "1992",
+    team: "USA · Dream Team",
+    golden: true,
+    note: "The original. The greatest collection of talent ever assembled — Barcelona, untouchable.",
+    players: [
+      player("Michael Jordan", 6, 6, 9, { height: 82, shooting: 90, finishing: 99, handles: 95, passing: 88, defense: 97, rebounding: 78, athleticism: 99, iq: 96 }),
+      player("Magic Johnson", 6, 9, 15, { height: 90, shooting: 80, finishing: 88, handles: 92, passing: 100, defense: 82, rebounding: 85, athleticism: 82, iq: 99 }),
+      player("Larry Bird", 6, 9, 7, { height: 90, shooting: 96, finishing: 86, handles: 84, passing: 95, defense: 80, rebounding: 84, athleticism: 70, iq: 99 }),
+      player("Charles Barkley", 6, 6, 14, { height: 82, shooting: 78, finishing: 92, handles: 82, passing: 82, defense: 82, rebounding: 95, athleticism: 90, iq: 88 }),
+      player("Patrick Ewing", 7, 0, 6, { height: 98, shooting: 72, finishing: 88, handles: 60, passing: 64, defense: 94, rebounding: 92, athleticism: 84, iq: 84 }),
+      player("Scottie Pippen", 6, 8, 8, { height: 87, shooting: 80, finishing: 88, handles: 86, passing: 88, defense: 96, rebounding: 82, athleticism: 92, iq: 92 }),
+      player("Karl Malone", 6, 9, 11, { height: 90, shooting: 78, finishing: 92, handles: 72, passing: 78, defense: 86, rebounding: 92, athleticism: 90, iq: 84 }),
+      player("John Stockton", 6, 1, 12, { height: 68, shooting: 84, finishing: 78, handles: 90, passing: 99, defense: 86, rebounding: 60, athleticism: 74, iq: 97 }),
+      player("David Robinson", 7, 1, 5, { height: 100, shooting: 74, finishing: 90, handles: 66, passing: 72, defense: 96, rebounding: 94, athleticism: 94, iq: 88 }),
+      player("Clyde Drexler", 6, 7, 10, { height: 84, shooting: 80, finishing: 92, handles: 86, passing: 84, defense: 86, rebounding: 78, athleticism: 96, iq: 86 }),
+      player("Chris Mullin", 6, 6, 13, { height: 82, shooting: 92, finishing: 82, handles: 82, passing: 84, defense: 72, rebounding: 66, athleticism: 72, iq: 88 }),
+      player("Christian Laettner", 6, 11, 3, { height: 96, shooting: 78, finishing: 80, handles: 64, passing: 68, defense: 74, rebounding: 82, athleticism: 76, iq: 80 }),
+    ],
+  },
+  {
+    era: "2008",
+    team: "USA · Redeem Team",
+    golden: true,
+    note: "Beijing. Kobe and a hungry LeBron led the mission to take back the gold — and they did.",
+    players: [
+      player("Kobe Bryant", 6, 6, 10, { height: 82, shooting: 92, finishing: 95, handles: 92, passing: 84, defense: 92, rebounding: 72, athleticism: 94, iq: 92 }),
+      player("LeBron James", 6, 8, 6, { height: 87, shooting: 82, finishing: 99, handles: 90, passing: 96, defense: 94, rebounding: 88, athleticism: 99, iq: 96 }),
+      player("Dwyane Wade", 6, 4, 9, { height: 77, shooting: 78, finishing: 96, handles: 90, passing: 86, defense: 88, rebounding: 70, athleticism: 96, iq: 88 }),
+      player("Chris Paul", 6, 0, 13, { height: 66, shooting: 84, finishing: 84, handles: 96, passing: 98, defense: 88, rebounding: 64, athleticism: 82, iq: 98 }),
+      player("Carmelo Anthony", 6, 7, 15, { height: 84, shooting: 88, finishing: 90, handles: 84, passing: 76, defense: 74, rebounding: 80, athleticism: 84, iq: 80 }),
+      player("Dwight Howard", 6, 10, 11, { height: 93, shooting: 50, finishing: 92, handles: 58, passing: 64, defense: 96, rebounding: 98, athleticism: 96, iq: 74 }),
+      player("Jason Kidd", 6, 4, 5, { height: 77, shooting: 78, finishing: 78, handles: 90, passing: 97, defense: 90, rebounding: 82, athleticism: 82, iq: 96 }),
+      player("Deron Williams", 6, 3, 8, { height: 73, shooting: 84, finishing: 84, handles: 90, passing: 90, defense: 80, rebounding: 64, athleticism: 82, iq: 86 }),
+      player("Chris Bosh", 6, 11, 12, { height: 96, shooting: 80, finishing: 86, handles: 70, passing: 72, defense: 82, rebounding: 86, athleticism: 84, iq: 84 }),
+      player("Carlos Boozer", 6, 9, 7, { height: 90, shooting: 74, finishing: 86, handles: 66, passing: 72, defense: 74, rebounding: 88, athleticism: 80, iq: 78 }),
+      player("Tayshaun Prince", 6, 9, 4, { height: 90, shooting: 78, finishing: 80, handles: 76, passing: 78, defense: 90, rebounding: 74, athleticism: 82, iq: 84 }),
+      player("Michael Redd", 6, 6, 16, { height: 82, shooting: 90, finishing: 80, handles: 78, passing: 70, defense: 70, rebounding: 64, athleticism: 78, iq: 78 }),
+    ],
+  },
+  {
+    era: "2024",
+    team: "USA · The Avengers",
+    golden: true,
+    note: "Paris. LeBron, Steph and KD headline a roster of present-day superstars — the modern super-team.",
+    players: [
+      player("LeBron James", 6, 9, 6, { height: 90, shooting: 84, finishing: 96, handles: 90, passing: 96, defense: 88, rebounding: 86, athleticism: 92, iq: 99 }),
+      player("Stephen Curry", 6, 2, 4, { height: 71, shooting: 100, finishing: 88, handles: 98, passing: 92, defense: 74, rebounding: 60, athleticism: 80, iq: 97 }),
+      player("Kevin Durant", 6, 11, 7, { height: 96, shooting: 98, finishing: 92, handles: 86, passing: 82, defense: 84, rebounding: 80, athleticism: 84, iq: 90 }),
+      player("Joel Embiid", 7, 0, 11, { height: 98, shooting: 84, finishing: 92, handles: 78, passing: 80, defense: 92, rebounding: 92, athleticism: 84, iq: 86 }),
+      player("Anthony Davis", 6, 10, 14, { height: 93, shooting: 74, finishing: 92, handles: 68, passing: 72, defense: 97, rebounding: 94, athleticism: 90, iq: 84 }),
+      player("Jayson Tatum", 6, 8, 10, { height: 87, shooting: 88, finishing: 90, handles: 86, passing: 82, defense: 86, rebounding: 82, athleticism: 86, iq: 86 }),
+      player("Anthony Edwards", 6, 4, 5, { height: 77, shooting: 86, finishing: 92, handles: 86, passing: 78, defense: 86, rebounding: 72, athleticism: 98, iq: 82 }),
+      player("Devin Booker", 6, 5, 15, { height: 80, shooting: 92, finishing: 86, handles: 88, passing: 84, defense: 78, rebounding: 64, athleticism: 80, iq: 86 }),
+      player("Jrue Holiday", 6, 4, 12, { height: 77, shooting: 82, finishing: 82, handles: 84, passing: 86, defense: 94, rebounding: 70, athleticism: 84, iq: 90 }),
+      player("Bam Adebayo", 6, 9, 13, { height: 90, shooting: 70, finishing: 88, handles: 74, passing: 84, defense: 94, rebounding: 90, athleticism: 90, iq: 86 }),
+      player("Tyrese Haliburton", 6, 5, 9, { height: 80, shooting: 86, finishing: 80, handles: 90, passing: 96, defense: 76, rebounding: 64, athleticism: 80, iq: 94 }),
+      player("Derrick White", 6, 4, 8, { height: 77, shooting: 84, finishing: 82, handles: 82, passing: 84, defense: 90, rebounding: 66, athleticism: 82, iq: 88 }),
+    ],
+  },
+];
+
 let round = 0;
 let runAttributes = [];
 let currentTeamEra = null;
@@ -3343,7 +3410,15 @@ function formatHeight(player) {
   return `${player.feet}'${player.inches}"`;
 }
 
+// Odds that any given round is a rare "golden roll" landing on a USA Olympic
+// super-team instead of a normal franchise. ~1.5% per round => roughly a 1-in-8
+// chance of seeing at least one across a full 9-round game.
+const GOLDEN_ODDS = 0.015;
+
 function pickTeamEra() {
+  if (goldenTeams.length && Math.random() < GOLDEN_ODDS) {
+    return goldenTeams[(Math.random() * goldenTeams.length) | 0];
+  }
   return teamEras[Math.floor(Math.random() * teamEras.length)];
 }
 
@@ -3436,11 +3511,12 @@ function renderCards(animate) {
   cards.classList.remove("is-rolling");
   cards.innerHTML = "";
 
+  const golden = !!currentTeamEra.golden;
   currentTeamEra.players.forEach((playerData, index) => {
     const score = playerData.ratings[currentAttribute.key];
     const isBlind = gameMode === "blind";
     const card = document.createElement("button");
-    card.className = animate ? "card is-dealing" : "card";
+    card.className = (animate ? "card is-dealing" : "card") + (golden ? " is-golden" : "");
     card.type = "button";
     if (animate) {
       card.style.animationDelay = `${index * 45}ms`;
@@ -3476,8 +3552,12 @@ function renderCards(animate) {
 // Stamp the locked team/era + category into the prompt with a pop, then deal the cards in.
 function lockRound(token, animate) {
   if (token !== rollToken) return;
+  const golden = !!currentTeamEra.golden;
   prompt.classList.remove("is-rolling");
+  prompt.classList.toggle("is-golden", golden);
+  cards.classList.toggle("is-golden", golden);
   prompt.innerHTML =
+    (golden ? `<span class="golden-badge">✦ Golden Roll ✦</span>` : "") +
     `<span class="roll-team">${currentTeamEra.era} ${currentTeamEra.team}</span>` +
     `<span class="roll-div">/</span>` +
     `<span class="roll-attr">${currentAttribute.label}</span>`;
@@ -3639,6 +3719,8 @@ function finish() {
   roundLocked = false;
   if (respinBar) respinBar.hidden = true;
   updateRespinButtons();
+  prompt.classList.remove("is-golden");
+  cards.classList.remove("is-golden");
 
   const score = calculateScore();
   const values = attributes.map((attribute) => build[attribute.key]);
@@ -3661,7 +3743,7 @@ function finish() {
     const pick = build[attribute.key];
     if (!pick) return;
     const card = document.createElement("div");
-    card.className = "card";
+    card.className = "card" + (pick.teamEra.golden ? " is-golden" : "");
     card.innerHTML = `
       <div class="card-art">
         <div class="jersey">${pick.player.number}</div>
