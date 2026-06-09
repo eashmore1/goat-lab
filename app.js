@@ -3374,7 +3374,8 @@ function calculateScore() {
   const goatGate =
     floorOk &&
     values.filter((value) => value >= 97).length >= 5 &&
-    values.filter((value) => value >= 99).length >= 2 &&
+    values.filter((value) => value >= 99).length >= 1 &&
+    values.filter((value) => value >= 98).length >= 2 &&
     (build.height?.score ?? 0) >= 90;
   if (goatGate) return 100;
 
