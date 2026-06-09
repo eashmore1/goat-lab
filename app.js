@@ -2923,7 +2923,7 @@ const teamEras = [
     team: "Bucks",
     note: "The Greek Freak's ascent — a rangy, switchable Milwaukee core grew up around Giannis Antetokounmpo and Khris Middleton.",
     players: [
-      player("Giannis Antetokounmpo", 6, 11, 34, { height: 96, shooting: 68, finishing: 96, handles: 84, passing: 84, defense: 92, rebounding: 92, athleticism: 98, iq: 84 }),
+      player("Giannis Antetokounmpo", 6, 11, 34, { height: 96, shooting: 68, finishing: 96, handles: 84, passing: 84, defense: 95, rebounding: 92, athleticism: 98, iq: 84 }),
       player("Khris Middleton", 6, 7, 22, { height: 84, shooting: 88, finishing: 82, handles: 82, passing: 80, defense: 80, rebounding: 70, athleticism: 72, iq: 90 }),
       player("Jabari Parker", 6, 8, 12, { height: 86, shooting: 78, finishing: 86, handles: 78, passing: 72, defense: 64, rebounding: 72, athleticism: 82, iq: 74 }),
       player("Malcolm Brogdon", 6, 5, 13, { height: 80, shooting: 84, finishing: 82, handles: 82, passing: 82, defense: 80, rebounding: 66, athleticism: 78, iq: 84 }),
