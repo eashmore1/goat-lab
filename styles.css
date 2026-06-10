@@ -420,6 +420,13 @@ h1 {
   letter-spacing: 0.04em;
 }
 
+.body-label[data-empty="true"] {
+  color: rgba(56, 182, 255, 0.45);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
 /* Radar mini — bottom-left corner of body-card, above body-label */
 .radar-mini {
   position: absolute;
@@ -432,6 +439,13 @@ h1 {
 }
 
 /* Radar in result section */
+.result-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 .radar-result {
   flex: 0 0 auto;
   width: 96px;
@@ -825,8 +839,9 @@ h1 {
 }
 
 .legal a {
-  color: var(--blue);
+  color: var(--ink);
   text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .legal-updated {
@@ -1324,15 +1339,18 @@ h1 {
   align-items: center;
   justify-content: center;
   background: none;
-  border: 2px solid rgba(255, 247, 223, 0.4);
+  border: 2px solid rgba(255, 247, 223, 0.85);
   color: var(--chalk);
   font-size: 1rem;
   cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
 }
 
 .modal-close:hover {
   background: rgba(255, 247, 223, 0.12);
   border-color: var(--chalk);
+  transform: translate(2px, 2px);
+  box-shadow: none;
 }
 
 .modal-body {
@@ -1370,7 +1388,7 @@ h1 {
   margin: 0;
   color: var(--muted);
   font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   line-height: 1.5;
 }
 
@@ -1428,10 +1446,15 @@ h1 {
   }
 
   #backButton,
-  .respin-btn,
   .modal-close {
     min-height: 44px;
     min-width: 44px;
+  }
+
+  .respin-btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0 16px;
   }
 
   .body-card {

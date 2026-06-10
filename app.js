@@ -3586,9 +3586,11 @@ function updateBody(lastPick) {
   renderRadar();
 
   if (!lastPick) {
-    bodyLabel.textContent = "No attributes drafted yet";
+    bodyLabel.textContent = "— awaiting first pick —";
+    bodyLabel.dataset.empty = "true";
     return;
   }
+  delete bodyLabel.dataset.empty;
 
   // Shift is-current to the newly drafted part
   parts.forEach((p) => p.classList.remove("is-current"));
