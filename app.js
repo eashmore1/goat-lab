@@ -3513,9 +3513,13 @@ function buildRadarContent(size) {
     `<line x1="${cx.toFixed(2)}" y1="${cy.toFixed(2)}" x2="${pt(a, maxR).replace(",", '" y2="')}" stroke="rgba(56,182,255,0.18)" stroke-width="0.7"/>`
   ).join("");
 
+  // Remap scores from a floor of 56 so low scores cluster near center
+  // and elite scores reach the outer ring. 56→~0%, 90→77%, 100→100%.
+  const scoreR = (score) => Math.max(maxR * 0.04, ((score - 56) / 44) * maxR);
+
   const dataPoints = attributes.map((attr, i) => {
     const pick = build[attr.key];
-    return pt(angles[i], pick ? (pick.score / 100) * maxR : 0);
+    return pt(angles[i], pick ? scoreR(pick.score) : 0);
   }).join(" ");
 
   const poly = `<polygon points="${dataPoints}" fill="rgba(230,184,67,0.2)" stroke="rgba(230,184,67,0.75)" stroke-width="1.2" stroke-linejoin="round"/>`;
@@ -3523,7 +3527,7 @@ function buildRadarContent(size) {
   const dots = attributes.map((attr, i) => {
     const pick = build[attr.key];
     if (!pick) return "";
-    const [x, y] = pt(angles[i], (pick.score / 100) * maxR).split(",");
+    const [x, y] = pt(angles[i], scoreR(pick.score)).split(",");
     return `<circle cx="${x}" cy="${y}" r="${(size * 0.028).toFixed(1)}" fill="rgba(230,184,67,0.9)"/>`;
   }).join("");
 
