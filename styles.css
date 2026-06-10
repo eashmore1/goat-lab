@@ -1173,21 +1173,11 @@ h1 {
 
 .share-buttons {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
   padding: 14px 16px;
   border-top: 3px solid var(--ink);
   background: var(--chalk);
-}
-
-@media (max-width: 400px) {
-  .share-buttons {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .share-btn-image {
-    grid-column: 1 / -1;
-  }
 }
 
 .share-btn {
@@ -1224,9 +1214,15 @@ h1 {
   color: #fff;
 }
 
+.share-btn-instagram {
+  background: #c13584;
+  color: #fff;
+}
+
 .share-btn-copy {
   background: var(--gold);
   color: var(--ink);
+  grid-column: 1 / -1;
 }
 
 /* How to Play link */
