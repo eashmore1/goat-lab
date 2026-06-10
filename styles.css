@@ -239,9 +239,9 @@ h1 {
 
 .goat-body {
   position: relative;
-  width: 210px;
-  height: 326px;
-  transform: translateY(-4px) scale(0.78);
+  width: 240px;
+  height: 380px;
+  transform: translateY(-4px) scale(0.74);
   transform-origin: center;
 }
 
@@ -304,27 +304,38 @@ h1 {
 
 .head {
   left: 50%;
-  top: 18px;
-  width: 74px;
-  height: 74px;
+  top: 10px;
+  width: 68px;
+  height: 68px;
   --part-transform: translateX(-50%);
   border-radius: 50%;
 }
 
+/* Shoulders sit just below the head gap (neck space) */
+.shoulders {
+  left: 50%;
+  top: 84px;
+  width: 180px;
+  height: 40px;
+  --part-transform: translateX(-50%);
+  border-radius: 20px;
+}
+
+/* Chest starts just behind shoulders */
 .chest {
   left: 50%;
-  top: 110px;
-  width: 120px;
-  height: 132px;
+  top: 92px;
+  width: 108px;
+  height: 120px;
   --part-transform: translateX(-50%);
-  border-radius: 24px 24px 18px 18px;
+  border-radius: 22px 22px 14px 14px;
 }
 
 .heart {
   left: 50%;
-  top: 148px;
-  width: 34px;
-  height: 34px;
+  top: 134px;
+  width: 30px;
+  height: 30px;
   --part-transform: translateX(-50%) rotate(45deg);
   background: rgba(255, 247, 223, 0.44);
 }
@@ -333,74 +344,68 @@ h1 {
 .heart::after {
   content: "";
   position: absolute;
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: inherit;
 }
 
 .heart::before {
-  left: -17px;
+  left: -15px;
 }
 
 .heart::after {
-  top: -17px;
+  top: -15px;
 }
 
 .heart.filled {
   background: var(--red);
 }
 
-.shoulders {
-  left: 50%;
-  top: 103px;
-  width: 174px;
-  height: 44px;
-  --part-transform: translateX(-50%);
-  border-radius: 24px;
-}
-
+/* Arms pivot from the shoulder joint (top center) */
 .left-arm,
 .right-arm {
-  top: 130px;
-  width: 50px;
-  height: 165px;
-  border-radius: 26px;
+  top: 108px;
+  width: 44px;
+  height: 156px;
+  border-radius: 22px;
+  transform-origin: top center;
 }
 
 .left-arm {
-  left: 12px;
-  --part-transform: rotate(14deg);
+  left: 10px;
+  --part-transform: rotate(8deg);
 }
 
 .right-arm {
-  right: 12px;
-  --part-transform: rotate(-14deg);
+  right: 10px;
+  --part-transform: rotate(-8deg);
 }
 
 .waist {
   left: 50%;
-  top: 238px;
-  width: 108px;
-  height: 58px;
+  top: 210px;
+  width: 90px;
+  height: 50px;
   --part-transform: translateX(-50%);
-  border-radius: 14px;
+  border-radius: 12px;
 }
 
+/* Legs: left at 38px, right at 38px from edge — 60px gap between them */
 .left-leg,
 .right-leg {
-  top: 286px;
-  width: 58px;
-  height: 140px;
-  border-radius: 26px 26px 18px 18px;
+  top: 256px;
+  width: 52px;
+  height: 124px;
+  border-radius: 24px 24px 16px 16px;
 }
 
 .left-leg {
-  left: 71px;
+  left: 38px;
 }
 
 .right-leg {
-  right: 71px;
+  right: 38px;
 }
 
 .body-label {
