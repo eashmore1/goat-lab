@@ -4120,9 +4120,9 @@ async function generateShareImage() {
   ctx.fillStyle = INK;
   ctx.fillRect(0, 0, W, HEADER_H);
 
-  // Logo — cream base composited under so every edge blends with cream not dark
+  // Logo — light-mode pixel pass: darks → cream, edge alphas boosted so
+  // transitions fade cream→transparent instead of dark→transparent
   if (logoImg) {
-    // Round to exact SCALE multiples so logical pixels are whole numbers
     const lhPhys = Math.round(logoImg.naturalHeight * 0.96 / SCALE) * SCALE;
     const lwPhys = Math.round(logoImg.naturalWidth  * 0.96 / SCALE) * SCALE;
     const lh = lhPhys / SCALE;
@@ -4134,39 +4134,29 @@ async function generateShareImage() {
     const logoCtx = logoOff.getContext("2d");
     logoCtx.imageSmoothingEnabled = true;
     logoCtx.imageSmoothingQuality = "high";
-
-    // 1. Stamp logo alpha into canvas
     logoCtx.drawImage(logoImg, 0, 0, lwPhys, lhPhys);
 
-    // 2. Clip cream fill to logo's exact alpha mask — partial-alpha edge pixels
-    //    get partial cream, so antialiasing blends with cream instead of dark.
-    logoCtx.globalCompositeOperation = "source-in";
-    logoCtx.fillStyle = "#f5ecd8";
-    logoCtx.fillRect(0, 0, lwPhys, lhPhys);
-
-    // 3. Logo colours on top
-    logoCtx.globalCompositeOperation = "source-over";
-    logoCtx.drawImage(logoImg, 0, 0, lwPhys, lhPhys);
-
-    // Pixel-by-pixel edge smoothing pass: walk the alpha boundary and feather any
-    // remaining hard transitions so the logo blends cleanly into the dark header.
     const imgData = logoCtx.getImageData(0, 0, lwPhys, lhPhys);
     const d = imgData.data;
-    for (let y = 1; y < lhPhys - 1; y++) {
-      for (let x = 1; x < lwPhys - 1; x++) {
-        const i = (y * lwPhys + x) * 4;
-        const a = d[i + 3];
-        if (a === 0 || a === 255) continue; // fully transparent or fully opaque — skip
-        // Semi-transparent edge pixel: blend toward cream to soften the transition
-        const blend = a / 255;
-        d[i]     = Math.round(d[i]     * blend + 245 * (1 - blend));
-        d[i + 1] = Math.round(d[i + 1] * blend + 236 * (1 - blend));
-        d[i + 2] = Math.round(d[i + 2] * blend + 216 * (1 - blend));
+    for (let i = 0; i < d.length; i += 4) {
+      const a = d[i + 3];
+      if (a < 8) continue; // fully transparent — skip
+
+      // Convert dark fills to cream
+      const lum = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) / 255;
+      const t = Math.min(1, lum / 0.42);
+      d[i]     = Math.round(d[i]     * t + 245 * (1 - t));
+      d[i + 1] = Math.round(d[i + 1] * t + 236 * (1 - t));
+      d[i + 2] = Math.round(d[i + 2] * t + 216 * (1 - t));
+
+      // Boost alpha on semi-transparent edge pixels so the now-cream colour
+      // dominates at the edge instead of the dark header bleeding through
+      if (a < 240) {
+        d[i + 3] = Math.min(255, Math.round(a + (255 - a) * 0.72));
       }
     }
     logoCtx.putImageData(imgData, 0, 0);
 
-    // Pixel-perfect centered position
     const lx = Math.round((W - lw) / 2);
     const ly = Math.round((HEADER_H - lh) / 2);
     ctx.drawImage(logoOff, lx, ly, lw, lh);
