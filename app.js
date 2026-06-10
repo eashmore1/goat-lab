@@ -4510,7 +4510,7 @@ function updateDailyCard() {
   const isFranchise = isFranchiseDay(todayStr);
 
   if (entry) {
-    dailyStatusEl.textContent = `${entry.score} · ${getTier(entry.score)}`;
+    dailyStatusEl.innerHTML = `${entry.score} · ${getTier(entry.score)}<span class="daily-comeback">Come back tomorrow for a new challenge ↗</span>`;
     dailyStatusEl.dataset.done = "true";
     if (dailyCardBtn) dailyCardBtn.disabled = true;
   } else {
