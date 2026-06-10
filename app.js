@@ -3442,7 +3442,6 @@ function getTier(score) {
   if (score >= 71) return "End of Roster";
   if (score >= 68) return "Two-Way Contract";
   if (score >= 65) return "G League";
-  if (score >= 62) return "Camp Invite";
   return "Cut in Training Camp";
 }
 
