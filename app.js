@@ -3391,6 +3391,10 @@ const scoreEl = document.querySelector("#score");
 const bodyLabel = document.querySelector("#bodyLabel");
 const buildList = document.querySelector("#buildList");
 const parts = Array.from(document.querySelectorAll(".part"));
+const draftToast = document.querySelector("#draftToast");
+const draftToastDot = document.querySelector("#draftToastDot");
+const draftToastText = document.querySelector("#draftToastText");
+let draftToastTimer = null;
 
 function player(name, feet, inches, number, ratings) {
   return {
@@ -3496,6 +3500,28 @@ function scoreTier(score) {
   return "weak";
 }
 
+const tierColors = {
+  elite: "#f2c438",
+  great: "#d49628",
+  good:  "#b07828",
+  fair:  "#8a5f22",
+  weak:  "#6b4a1a",
+};
+
+function showDraftToast(pick) {
+  if (!window.matchMedia("(max-width: 930px)").matches) return;
+  const tier = scoreTier(pick.score);
+  draftToastDot.style.setProperty("--toast-dot-color", tierColors[tier]);
+  draftToastText.textContent = `${pick.attribute.label}: ${pick.player.name} · ${pick.score}`;
+  draftToast.hidden = false;
+  requestAnimationFrame(() => draftToast.classList.add("is-visible"));
+  clearTimeout(draftToastTimer);
+  draftToastTimer = setTimeout(() => {
+    draftToast.classList.remove("is-visible");
+    draftToastTimer = setTimeout(() => { draftToast.hidden = true; }, 200);
+  }, 2400);
+}
+
 function updateBody(lastPick) {
   parts.forEach((part) => {
     const pick = build[part.dataset.attribute];
@@ -3523,6 +3549,7 @@ function updateBody(lastPick) {
   }
 
   bodyLabel.textContent = `${lastPick.attribute.label}: ${lastPick.player.name} (${lastPick.score})`;
+  showDraftToast(lastPick);
 }
 
 let rollToken = 0;
@@ -3830,6 +3857,9 @@ function startGame(mode) {
     p.classList.remove("is-new", "is-current");
     delete p.dataset.tier;
   });
+  clearTimeout(draftToastTimer);
+  draftToast.classList.remove("is-visible");
+  draftToast.hidden = true;
   renderBuildList();
   updateBody(null);
 
