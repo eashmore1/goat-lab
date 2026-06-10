@@ -3992,6 +3992,8 @@ respinAttrBtn.addEventListener("click", respinAttribute);
 shareButton.addEventListener("click", shareResult);
 
 helpButton.addEventListener("click", () => { helpModal.hidden = false; });
+const helpButtonTop = document.querySelector("#helpButtonTop");
+if (helpButtonTop) helpButtonTop.addEventListener("click", () => { helpModal.hidden = false; });
 helpClose.addEventListener("click", () => { helpModal.hidden = true; });
 helpModal.addEventListener("click", (e) => { if (e.target === helpModal) helpModal.hidden = true; });
 
