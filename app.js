@@ -4120,12 +4120,11 @@ async function generateShareImage() {
   ctx.fillStyle = INK;
   ctx.fillRect(0, 0, W, HEADER_H);
 
-  // Logo — near 1:1 source resolution so every detail is sharp
+  // Logo — transparent PNG draws cleanly on the dark header
   if (logoImg) {
-    // Target physical size ≈ source size → no downscale blur
-    const lhPhys = Math.round(logoImg.naturalHeight * 0.96); // ~441px physical
-    const lwPhys = Math.round(logoImg.naturalWidth  * 0.96); // ~486px physical
-    const lh = lhPhys / SCALE; // logical pixels (SCALE=3 → ~147px)
+    const lhPhys = Math.round(logoImg.naturalHeight * 0.96);
+    const lwPhys = Math.round(logoImg.naturalWidth  * 0.96);
+    const lh = lhPhys / SCALE;
     const lw = lwPhys / SCALE;
 
     const logoOff = document.createElement("canvas");
@@ -4135,19 +4134,6 @@ async function generateShareImage() {
     logoCtx.imageSmoothingEnabled = true;
     logoCtx.imageSmoothingQuality = "high";
     logoCtx.drawImage(logoImg, 0, 0, lwPhys, lhPhys);
-
-    // Replace dark (navy/black) pixels with cream — light-mode treatment
-    const imgData = logoCtx.getImageData(0, 0, lwPhys, lhPhys);
-    const d = imgData.data;
-    for (let i = 0; i < d.length; i += 4) {
-      if (d[i + 3] < 20) continue;
-      const lum = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) / 255;
-      const t = Math.min(1, lum / 0.42);
-      d[i]     = Math.round(d[i]     * t + 245 * (1 - t));
-      d[i + 1] = Math.round(d[i + 1] * t + 236 * (1 - t));
-      d[i + 2] = Math.round(d[i + 2] * t + 216 * (1 - t));
-    }
-    logoCtx.putImageData(imgData, 0, 0);
 
     ctx.drawImage(logoOff, Math.round(W / 2 - lw / 2), Math.round((HEADER_H - lh) / 2), lw, lh);
   }
