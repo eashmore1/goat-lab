@@ -2128,7 +2128,7 @@ const teamEras = [
     team: "Hornets",
     note: "LaMelo Ball's flair and a young core of Brandon Miller and sharpshooting rookie Kon Knueppel.",
     players: [
-      player("LaMelo Ball", 6, 7, 1, { height: 84, shooting: 80, finishing: 84, handles: 92, passing: 92, defense: 64, rebounding: 68, athleticism: 84, iq: 82 }),
+      player("LaMelo Ball", 6, 7, 1, { height: 84, shooting: 85, finishing: 84, handles: 92, passing: 92, defense: 64, rebounding: 68, athleticism: 84, iq: 82 }),
       player("Brandon Miller", 6, 7, 24, { height: 84, shooting: 82, finishing: 84, handles: 80, passing: 72, defense: 78, rebounding: 66, athleticism: 86, iq: 80 }),
       player("Kon Knueppel", 6, 7, 7, { height: 84, shooting: 86, finishing: 80, handles: 76, passing: 74, defense: 72, rebounding: 62, athleticism: 74, iq: 80 }),
       player("Miles Bridges", 6, 7, 0, { height: 84, shooting: 78, finishing: 86, handles: 76, passing: 68, defense: 76, rebounding: 72, athleticism: 92, iq: 78 }),
