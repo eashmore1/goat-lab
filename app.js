@@ -4077,7 +4077,7 @@ async function generateShareImage() {
   const tier = getTier(score);
 
   const W = 600;
-  const HEADER_H = 86;
+  const HEADER_H = 112;
   const RADAR_H = 110;
   const ROW_H = 66;
   const FOOTER_H = 52;
@@ -4120,37 +4120,41 @@ async function generateShareImage() {
   ctx.fillStyle = INK;
   ctx.fillRect(0, 0, W, HEADER_H);
 
-  // GOAT LAB label
-  ctx.fillStyle = "rgba(255,247,223,0.5)";
-  ctx.font = '700 11px "Space Mono", monospace';
-  ctx.fillText("GOAT LAB", 20, 34);
+  // Logo — centered horizontally, centered vertically in header
+  if (logoImg) {
+    const lh = 92;
+    const lw = Math.round(lh * (logoImg.naturalWidth / logoImg.naturalHeight));
+    // Render into an offscreen canvas at exact physical size for maximum sharpness
+    const logoOff = document.createElement("canvas");
+    logoOff.width = lw * SCALE;
+    logoOff.height = lh * SCALE;
+    const logoCtx = logoOff.getContext("2d");
+    logoCtx.imageSmoothingEnabled = true;
+    logoCtx.imageSmoothingQuality = "high";
+    logoCtx.drawImage(logoImg, 0, 0, lw * SCALE, lh * SCALE);
+    ctx.drawImage(logoOff, W / 2 - lw / 2, (HEADER_H - lh) / 2, lw, lh);
+  }
 
-  // Mode badge — each mode gets a distinct color
+  // Score — top-right, large
+  ctx.fillStyle = GOLD;
+  ctx.font = '700 44px "Space Mono", monospace';
+  ctx.textAlign = "right";
+  ctx.fillText(score, W - 18, 52);
+
+  // Tier label — right, below score
+  ctx.fillStyle = "rgba(255,247,223,0.55)";
+  ctx.font = '700 9px "Space Mono", monospace';
+  ctx.fillText(tier.toUpperCase(), W - 18, 66);
+  ctx.textAlign = "left";
+
+  // Mode badge — bottom-left of header, distinct color per mode
   const modeLabel = gameMode === "daily" ? "DAILY" : gameMode === "blind" ? "BLIND MODE" : "CLASSIC MODE";
   const badgeW = gameMode === "classic" ? 104 : gameMode === "blind" ? 94 : 68;
   ctx.fillStyle = gameMode === "daily" ? GOLD : gameMode === "blind" ? COURT : "rgba(255,247,223,0.18)";
-  ctx.fillRect(20, 42, badgeW, 18);
+  ctx.fillRect(16, HEADER_H - 28, badgeW, 18);
   ctx.fillStyle = gameMode === "daily" ? INK : gameMode === "blind" ? PAPER : "rgba(255,247,223,0.7)";
   ctx.font = '700 9px "Space Mono", monospace';
-  ctx.fillText(modeLabel, 26, 55);
-
-  // Score (large, right-aligned)
-  ctx.fillStyle = GOLD;
-  ctx.font = '700 46px "Space Mono", monospace';
-  ctx.textAlign = "right";
-  ctx.fillText(score, W - 20, 58);
-
-  // Tier label
-  ctx.fillStyle = "rgba(255,247,223,0.5)";
-  ctx.font = '700 10px "Space Mono", monospace';
-  ctx.fillText(tier.toUpperCase(), W - 20, 76);
-  ctx.textAlign = "left";
-
-  if (logoImg) {
-    const lh = 62;
-    const lw = Math.round(lh * (logoImg.naturalWidth / logoImg.naturalHeight));
-    ctx.drawImage(logoImg, W / 2 - lw / 2 - 40, (HEADER_H - lh) / 2, lw, lh);
-  }
+  ctx.fillText(modeLabel, 22, HEADER_H - 14);
 
   // Radar section — dark navy, matches lab scan aesthetic
   const radarY = HEADER_H;
