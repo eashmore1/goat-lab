@@ -1,0 +1,22 @@
+{
+  "name": "GOAT Lab",
+  "short_name": "GOAT Lab",
+  "description": "Build the perfect hooper from basketball history. Can you score 100?",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5ecd8",
+  "theme_color": "#151413",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
