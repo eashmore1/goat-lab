@@ -172,8 +172,8 @@ h1 {
 }
 
 .mode-card:hover {
-  transform: translate(3px, 3px);
-  box-shadow: 5px 5px 0 var(--ink);
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0 var(--ink);
 }
 
 .mode-card-blind {
@@ -205,7 +205,7 @@ h1 {
 }
 
 .mode-card-blind small {
-  color: rgba(255, 247, 223, 0.72);
+  color: rgba(255, 247, 223, 0.88);
 }
 
 .lab-panel,
@@ -462,13 +462,13 @@ h1 {
 .build-list {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
+  gap: 8px;
   margin-top: 8px;
 }
 
 .build-chip {
   min-height: 54px;
-  padding: 7px;
+  padding: 9px;
   border: 2px solid var(--ink);
   background: var(--chalk);
   box-shadow: 3px 3px 0 var(--ink);
@@ -536,6 +536,7 @@ h1 {
   box-shadow: 5px 5px 0 var(--ink);
   font: 900 0.88rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   text-transform: uppercase;
+  transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
 #resetButton:hover,
@@ -932,11 +933,13 @@ h1 {
 
   .hero-logo {
     align-self: flex-start;
+    height: 80px;
   }
 
   .result {
     flex-direction: column;
     align-items: flex-start;
+    gap: 16px;
   }
 
   .score-tile {
@@ -955,6 +958,10 @@ h1 {
   .mode-copy,
   .mode-card {
     min-height: 260px;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -1121,7 +1128,7 @@ h1 {
   grid-template-columns: 90px 1fr auto auto;
   align-items: center;
   gap: 8px;
-  padding: 6px 0;
+  padding: 9px 0;
   border-bottom: 1px solid rgba(21, 20, 19, 0.08);
 }
 
@@ -1385,7 +1392,7 @@ h1 {
 /* Draft toast — mobile only, shows above thumb zone after each pick */
 .draft-toast {
   position: fixed;
-  bottom: 24px;
+  bottom: max(24px, env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%) translateY(8px);
   z-index: 200;
@@ -1450,5 +1457,29 @@ h1 {
   .body-card {
     height: auto;
     min-height: 300px;
+  }
+
+  .share-btn {
+    min-height: 44px;
+    font-size: 0.78rem;
+  }
+}
+
+/* Focus states — keyboard + accessibility */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.modal-close:focus-visible,
+.help-top:focus-visible,
+.help-link:focus-visible {
+  outline-color: var(--chalk);
+}
+
+/* Cards grid at tablet: 2 columns so cards stay readable */
+@media (min-width: 641px) and (max-width: 930px) {
+  .cards.is-result {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
