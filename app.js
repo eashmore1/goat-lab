@@ -4082,11 +4082,24 @@ async function generateShareImage() {
   const ROW_H = 66;
   const FOOTER_H = 52;
   const H = HEADER_H + RADAR_H + ROW_H * 9 + FOOTER_H;
+  const SCALE = 2;
 
   const canvas = document.createElement("canvas");
-  canvas.width = W;
-  canvas.height = H;
+  canvas.width = W * SCALE;
+  canvas.height = H * SCALE;
   const ctx = canvas.getContext("2d");
+  ctx.scale(SCALE, SCALE);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+
+  // Pre-load logo fresh so it renders crisply regardless of CSS state
+  const logoImg = await new Promise(res => {
+    const img = new Image();
+    img.onload = () => res(img);
+    img.onerror = () => res(null);
+    img.src = "GOATLABLOGO.png";
+    if (img.complete && img.naturalWidth > 0) res(img);
+  });
 
   const PAPER = "#f5ecd8";
   const INK = "#151413";
@@ -4133,12 +4146,10 @@ async function generateShareImage() {
   ctx.fillText(tier.toUpperCase(), W - 20, 76);
   ctx.textAlign = "left";
 
-  // Draw logo (already loaded in the page)
-  const logoEl = document.querySelector("#logoHome");
-  if (logoEl && logoEl.complete) {
+  if (logoImg) {
     const lh = 62;
-    const lw = Math.round(lh * (506 / 460));
-    ctx.drawImage(logoEl, W / 2 - lw / 2 - 40, (HEADER_H - lh) / 2, lw, lh);
+    const lw = Math.round(lh * (logoImg.naturalWidth / logoImg.naturalHeight));
+    ctx.drawImage(logoImg, W / 2 - lw / 2 - 40, (HEADER_H - lh) / 2, lw, lh);
   }
 
   // Radar section — dark navy, matches lab scan aesthetic
@@ -4243,7 +4254,7 @@ async function generateShareImage() {
   ctx.fillText("goat-lab.vercel.app", W - 20, footerY + 32);
   ctx.textAlign = "left";
 
-  return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+  return new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.93));
 }
 
 function buildShareText(score, tier) {
@@ -4358,7 +4369,7 @@ async function openAndDownload(btn, originalLabel, openFn) {
   btn.disabled = true;
   try {
     const blob = await getShareBlob();
-    downloadBlob(blob, "goat-lab-build.png");
+    downloadBlob(blob, "goat-lab-build.jpg");
   } catch (err) { console.error(err); }
   btn.textContent = originalLabel;
   btn.disabled = false;
@@ -4366,7 +4377,7 @@ async function openAndDownload(btn, originalLabel, openFn) {
 
 // Share Image: download on desktop, share sheet on mobile
 shareBtnImage.addEventListener("click", async () => {
-  const testFile = new File([], "t.png", { type: "image/png" });
+  const testFile = new File([], "t.jpg", { type: "image/jpeg" });
   if (typeof navigator.canShare === "function" && navigator.canShare({ files: [testFile] })) {
     shareBtnImage.textContent = _shareBlob ? "Opening…" : "Generating…";
     shareBtnImage.disabled = true;
@@ -4374,7 +4385,7 @@ shareBtnImage.addEventListener("click", async () => {
       const blob = await getShareBlob();
       const score = calculateScore();
       const tier = getTier(score);
-      const file = new File([blob], "goat-lab-build.png", { type: "image/png" });
+      const file = new File([blob], "goat-lab-build.jpg", { type: "image/jpeg" });
       await navigator.share({ files: [file], text: `I scored ${score} (${tier}) in GOAT Lab 🏀`, url: "https://goat-lab.vercel.app" });
     } catch (err) { if (err.name !== "AbortError") console.error(err); }
     shareBtnImage.textContent = "Share Image";
@@ -4382,7 +4393,7 @@ shareBtnImage.addEventListener("click", async () => {
   } else {
     shareBtnImage.textContent = "Generating…";
     shareBtnImage.disabled = true;
-    try { downloadBlob(await getShareBlob(), "goat-lab-build.png"); } catch (err) { console.error(err); }
+    try { downloadBlob(await getShareBlob(), "goat-lab-build.jpg"); } catch (err) { console.error(err); }
     shareBtnImage.textContent = "Share Image";
     shareBtnImage.disabled = false;
   }
@@ -4401,14 +4412,14 @@ shareBtnText.addEventListener("click", async () => {
   const score = calculateScore();
   const tier = getTier(score);
   const text = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build?`;
-  const testFile = new File([], "t.png", { type: "image/png" });
+  const testFile = new File([], "t.jpg", { type: "image/jpeg" });
   if (typeof navigator.canShare === "function" && navigator.canShare({ files: [testFile] })) {
     // Mobile: share sheet — image auto-attaches when user picks Messages
     shareBtnText.textContent = _shareBlob ? "Opening…" : "Generating…";
     shareBtnText.disabled = true;
     try {
       const blob = await getShareBlob();
-      const file = new File([blob], "goat-lab-build.png", { type: "image/png" });
+      const file = new File([blob], "goat-lab-build.jpg", { type: "image/jpeg" });
       await navigator.share({ files: [file], text, url: "https://goat-lab.vercel.app" });
     } catch (err) { if (err.name !== "AbortError") console.error(err); }
     shareBtnText.textContent = "Text";
