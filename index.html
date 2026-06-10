@@ -59,6 +59,15 @@
           <button id="helpButton" class="help-link" type="button">How to Play</button>
         </div>
         <div class="mode-options">
+          <button class="mode-card mode-card-daily" type="button" data-mode="daily">
+            <div class="daily-card-top">
+              <span class="mode-tag">Daily</span>
+              <span class="daily-streak" id="dailyStreak" hidden></span>
+            </div>
+            <strong>Today's Challenge</strong>
+            <small id="dailySubtitle">Blind · same draft for everyone · one attempt</small>
+            <div class="daily-status" id="dailyStatus">Play today →</div>
+          </button>
           <button class="mode-card" type="button" data-mode="classic">
             <span class="mode-tag">Classic</span>
             <strong>Show Attributes</strong>

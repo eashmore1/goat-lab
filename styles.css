@@ -181,6 +181,60 @@ h1 {
   color: var(--chalk);
 }
 
+.mode-card-daily {
+  grid-column: 1 / -1;
+  background: var(--court);
+  color: var(--chalk);
+}
+
+.mode-card-daily small {
+  color: rgba(255, 247, 223, 0.82);
+}
+
+.mode-card-daily[disabled] {
+  cursor: default;
+  opacity: 0.72;
+}
+
+.mode-card-daily[disabled]:hover {
+  transform: none;
+  box-shadow: var(--shadow);
+}
+
+.daily-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.daily-streak {
+  padding: 4px 8px;
+  background: rgba(255, 247, 223, 0.18);
+  border: 1px solid rgba(255, 247, 223, 0.3);
+  font: 700 0.62rem/1 "Space Mono", ui-monospace, monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--chalk);
+  white-space: nowrap;
+}
+
+.daily-status {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: rgba(21, 20, 19, 0.22);
+  border: 1px solid rgba(255, 247, 223, 0.25);
+  font: 700 0.78rem/1.2 "Space Mono", ui-monospace, monospace;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--chalk);
+}
+
+.daily-status[data-done="true"] {
+  background: rgba(21, 20, 19, 0.35);
+  color: var(--gold);
+}
+
 .mode-tag {
   width: max-content;
   padding: 7px 9px;

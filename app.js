@@ -3355,6 +3355,7 @@ let build = {};
 let gameMode = "classic";
 let respinsUsed = { era: false, team: false, attribute: false };
 let roundLocked = false;
+let dailyData = null;
 
 const modeScreen = document.querySelector("#modeScreen");
 const modeButtons = Array.from(document.querySelectorAll(".mode-card"));
@@ -3619,7 +3620,7 @@ function renderCards(animate) {
   const golden = !!currentTeamEra.golden;
   currentTeamEra.players.forEach((playerData, index) => {
     const score = playerData.ratings[currentAttribute.key];
-    const isBlind = gameMode === "blind";
+    const isBlind = gameMode === "blind" || gameMode === "daily";
     const card = document.createElement("button");
     card.className = (animate ? "card is-dealing" : "card") + (golden ? " is-golden" : "");
     card.type = "button";
@@ -3683,10 +3684,15 @@ function renderRound() {
   }
 
   currentAttribute = runAttributes[round];
-  currentTeamEra = pickTeamEra();
+  currentTeamEra = (gameMode === "daily" && dailyData)
+    ? dailyData.rounds[round].teamEra
+    : pickTeamEra();
   roundLabel.textContent = `Round ${round + 1} of ${runAttributes.length}`;
   context.textContent = "";
-  modeLabel.textContent = gameMode === "blind" ? "Blind mode: ratings reveal after your pick." : "Classic mode: ratings are visible before you pick.";
+  modeLabel.textContent = gameMode === "daily"
+    ? (dailyData?.franchise ? `Franchise Daily · ${dailyData.franchiseTeamName} · Blind` : "Daily Challenge · Blind")
+    : gameMode === "blind" ? "Blind mode: ratings reveal after your pick."
+    : "Classic mode: ratings are visible before you pick.";
 
   // Lock until the roll settles — respins do NOT recharge between rounds.
   roundLocked = false;
@@ -3866,11 +3872,24 @@ function finish() {
   });
 
   result.hidden = false;
-  resultTitle.textContent = `${score}: ${tier}`;
-  resultCopy.textContent =
-    score === 100
-      ? `You built the impossible player: ${archetype}. No weak spots, no era can stop this.`
-      : `${archetype}. Your lowest was ${weakSpot.attribute.label} from ${weakSpot.player.name} at ${weakSpot.score}. Keep chasing.`;
+
+  if (gameMode === "daily") {
+    const todayStr = getTodayStr();
+    saveDailyResult(todayStr, score, tier, dailyData?.franchise || false, dailyData?.franchiseTeamName || null);
+    updateDailyCard();
+    resultTitle.textContent = `Daily — ${score}: ${tier}`;
+    resultCopy.textContent = dailyData?.franchise
+      ? `${archetype}. Greatest ${dailyData.franchiseTeamName} build in the books. Come back tomorrow.`
+      : score === 100
+        ? `You built the impossible player: ${archetype}. Daily perfection.`
+        : `${archetype}. Daily complete. Come back tomorrow for a new challenge.`;
+  } else {
+    resultTitle.textContent = `${score}: ${tier}`;
+    resultCopy.textContent =
+      score === 100
+        ? `You built the impossible player: ${archetype}. No weak spots, no era can stop this.`
+        : `${archetype}. Your lowest was ${weakSpot.attribute.label} from ${weakSpot.player.name} at ${weakSpot.score}. Keep chasing.`;
+  }
 }
 
 function reset() {
@@ -3894,12 +3913,24 @@ function reset() {
 
 function startGame(mode) {
   gameMode = mode;
+
+  // Set up daily data before anything else
+  if (mode === "daily") {
+    const todayStr = getTodayStr();
+    const history = getDailyHistory();
+    if (history[todayStr]) return; // already completed today
+    dailyData = generateDailyData(todayStr);
+    runAttributes = dailyData.rounds.map(r => r.attribute);
+  } else {
+    dailyData = null;
+    runAttributes = shuffle(attributes);
+  }
+
   modeScreen.hidden = true;
   gameGrid.hidden = false;
 
   round = 0;
   build = {};
-  runAttributes = shuffle(attributes);
   currentTeamEra = null;
   currentAttribute = null;
   result.hidden = true;
@@ -3917,12 +3948,16 @@ function startGame(mode) {
   renderBuildList();
   updateBody(null);
 
+  // Hide team respin on franchise daily (team is locked)
+  if (respinTeamBtn) respinTeamBtn.hidden = mode === "daily" && dailyData?.franchise;
+
   roundLabel.textContent = `Round — of ${runAttributes.length}`;
   prompt.classList.remove("is-rolling", "is-locked");
   prompt.textContent = "Press New Run to begin";
   context.textContent = "";
-  modeLabel.textContent = gameMode === "blind"
-    ? "Blind mode: ratings reveal after your pick."
+  modeLabel.textContent = mode === "daily"
+    ? (dailyData?.franchise ? `Franchise Daily · ${dailyData.franchiseTeamName} · Blind` : "Daily Challenge · Blind")
+    : mode === "blind" ? "Blind mode: ratings reveal after your pick."
     : "Classic mode: ratings are visible before you pick.";
   if (respinBar) respinBar.hidden = true;
 }
@@ -3935,7 +3970,9 @@ function goBack() {
   build = {};
   currentTeamEra = null;
   currentAttribute = null;
+  dailyData = null;
   scoreEl.textContent = "--";
+  if (respinTeamBtn) respinTeamBtn.hidden = false;
 }
 
 function drawRadarOnCanvas(ctx, cx, cy, maxR) {
@@ -4046,10 +4083,10 @@ async function generateShareImage() {
 
   // Mode badge
   ctx.fillStyle = "rgba(255,247,223,0.1)";
-  ctx.fillRect(20, 42, gameMode === "blind" ? 88 : 74, 18);
+  ctx.fillRect(20, 42, gameMode === "blind" || gameMode === "daily" ? 88 : 74, 18);
   ctx.fillStyle = "rgba(255,247,223,0.55)";
   ctx.font = '700 9px "Space Mono", monospace';
-  ctx.fillText(gameMode === "blind" ? "BLIND MODE" : "CLASSIC", 26, 55);
+  ctx.fillText(gameMode === "daily" ? "DAILY" : gameMode === "blind" ? "BLIND MODE" : "CLASSIC", 26, 55);
 
   // Score (large, right-aligned)
   ctx.fillStyle = GOLD;
@@ -4183,6 +4220,14 @@ function buildShareText(score, tier) {
       return `${attr.label}: ${pick.player.name} (${pick.score}) — ${pick.teamEra.era} ${pick.teamEra.team}`;
     })
     .join("\n");
+  if (gameMode === "daily") {
+    const d = new Date();
+    const dateLabel = d.toLocaleDateString("en-US", { month: "long", day: "numeric" });
+    const prefix = dailyData?.franchise
+      ? `I scored ${score} building the greatest ${dailyData.franchiseTeamName} on the ${dateLabel} GOAT Lab Daily 🏀`
+      : `I scored ${score} on the ${dateLabel} GOAT Lab Daily 🏀`;
+    return `${prefix}\n\n${picks}\n\nCan you beat me? https://goat-lab.vercel.app`;
+  }
   return `I scored ${score} (${tier}) in GOAT Lab 🏀\n\n${picks}\n\nCan you beat my build? Try to create the GOAT too 👉 https://goat-lab.vercel.app`;
 }
 
@@ -4227,7 +4272,7 @@ logoHome.addEventListener("keydown", (e) => {
 modeButtons.forEach((button) => {
   button.addEventListener("click", () => startGame(button.dataset.mode));
 });
-resetButton.addEventListener("click", reset);
+resetButton.addEventListener("click", () => { if (gameMode === "daily") goBack(); else reset(); });
 backButton.addEventListener("click", goBack);
 respinEraBtn.addEventListener("click", respinEra);
 respinTeamBtn.addEventListener("click", respinTeam);
@@ -4347,6 +4392,138 @@ shareBtnCopy.addEventListener("click", async () => {
     setTimeout(() => { shareBtnCopy.textContent = "Copy"; }, 1400);
   }
 });
+
+// ===== DAILY CHALLENGE =====
+
+function mulberry32(seed) {
+  return function() {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function getTodayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function strToSeed(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = Math.imul(31, h) + str.charCodeAt(i) | 0;
+  return Math.abs(h) || 1;
+}
+
+function isFranchiseDay(dateStr) {
+  const d = new Date(dateStr + "T12:00:00");
+  const weekNum = Math.floor(d.getTime() / (7 * 24 * 60 * 60 * 1000));
+  return d.getDay() === (strToSeed("fw" + weekNum) % 7);
+}
+
+function seededShuffle(arr, rng) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function generateDailyData(dateStr) {
+  const rng = mulberry32(strToSeed(dateStr));
+  const franchise = isFranchiseDay(dateStr);
+
+  let franchiseTeamName = null;
+  let franchisePool = null;
+
+  if (franchise) {
+    const counts = {};
+    teamEras.forEach(t => { counts[t.team] = (counts[t.team] || 0) + 1; });
+    const eligible = Object.keys(counts).filter(n => counts[n] >= 2);
+    if (eligible.length) {
+      franchiseTeamName = eligible[Math.floor(rng() * eligible.length)];
+      franchisePool = seededShuffle(teamEras.filter(t => t.team === franchiseTeamName), rng);
+    }
+  }
+
+  const dailyAttrs = seededShuffle([...attributes], rng);
+
+  const rounds = dailyAttrs.map((attr, i) => ({
+    attribute: attr,
+    teamEra: franchise && franchisePool
+      ? franchisePool[i % franchisePool.length]
+      : teamEras[Math.floor(rng() * teamEras.length)],
+  }));
+
+  return { franchise: franchise && !!franchiseTeamName, franchiseTeamName, rounds };
+}
+
+const DAILY_KEY = "goatlab_daily";
+
+function getDailyHistory() {
+  try { return JSON.parse(localStorage.getItem(DAILY_KEY) || "{}"); } catch { return {}; }
+}
+
+function saveDailyResult(dateStr, score, tier, franchise, franchiseTeam) {
+  const h = getDailyHistory();
+  h[dateStr] = { score, tier, franchise, franchiseTeam: franchiseTeam || null };
+  try { localStorage.setItem(DAILY_KEY, JSON.stringify(h)); } catch {}
+}
+
+function getDailyStreak(history, todayStr) {
+  let streak = 0;
+  const d = new Date(todayStr + "T12:00:00");
+  while (true) {
+    const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    if (!history[k]) break;
+    streak++;
+    d.setDate(d.getDate() - 1);
+  }
+  return streak;
+}
+
+const dailyCardBtn    = document.querySelector("[data-mode='daily']");
+const dailyStatusEl   = document.querySelector("#dailyStatus");
+const dailyStreakEl   = document.querySelector("#dailyStreak");
+const dailySubtitleEl = document.querySelector("#dailySubtitle");
+
+function updateDailyCard() {
+  if (!dailyStatusEl) return;
+  const todayStr    = getTodayStr();
+  const history     = getDailyHistory();
+  const entry       = history[todayStr];
+  const streak      = getDailyStreak(history, todayStr);
+  const isFranchise = isFranchiseDay(todayStr);
+
+  if (entry) {
+    dailyStatusEl.textContent = `${entry.score} · ${entry.tier}`;
+    dailyStatusEl.dataset.done = "true";
+    if (dailyCardBtn) dailyCardBtn.disabled = true;
+  } else {
+    dailyStatusEl.textContent = "Play today →";
+    delete dailyStatusEl.dataset.done;
+    if (dailyCardBtn) dailyCardBtn.disabled = false;
+  }
+
+  if (dailyStreakEl) {
+    dailyStreakEl.textContent = `${streak}-day streak`;
+    dailyStreakEl.hidden = streak === 0;
+  }
+
+  if (dailySubtitleEl) {
+    if (isFranchise) {
+      const data = generateDailyData(todayStr);
+      dailySubtitleEl.textContent = data.franchiseTeamName
+        ? `Franchise · ${data.franchiseTeamName} · Blind · one attempt`
+        : "Franchise Challenge · Blind · one attempt";
+    } else {
+      dailySubtitleEl.textContent = "Blind · same draft for everyone · one attempt";
+    }
+  }
+}
+
+updateDailyCard();
 
 renderBuildList();
 updateBody(null);
