@@ -4300,54 +4300,38 @@ shareBtnImage.addEventListener("click", () => {
 shareBtnX.addEventListener("click", async () => {
   const score = calculateScore();
   const tier = getTier(score);
-  const testFile = new File([], "t.png", { type: "image/png" });
-  const canShare = typeof navigator.canShare === "function" && navigator.canShare({ files: [testFile] });
-
-  if (canShare) {
-    // Mobile: share sheet with image attached
-    await shareImageOrFallback(shareBtnX, "X / Twitter", () => {});
-  } else {
-    // Desktop: open Twitter NOW (still in sync user-gesture context), then download image
-    const tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build? Try to create the GOAT too 👉`;
-    window.open(
-      `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://goat-lab.vercel.app")}`,
-      "_blank"
-    );
-    shareBtnX.textContent = "Generating…";
-    shareBtnX.disabled = true;
-    try {
-      const blob = await getShareBlob();
-      downloadBlob(blob, "goat-lab-build.png");
-    } catch (err) { console.error(err); }
-    shareBtnX.textContent = "X / Twitter";
-    shareBtnX.disabled = false;
-  }
+  // Always open X directly (works on both mobile and desktop); destination is known
+  const tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build? Try to create the GOAT too 👉`;
+  window.open(
+    `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://goat-lab.vercel.app")}`,
+    "_blank"
+  );
+  shareBtnX.textContent = "Generating…";
+  shareBtnX.disabled = true;
+  try {
+    const blob = await getShareBlob();
+    downloadBlob(blob, "goat-lab-build.png");
+  } catch (err) { console.error(err); }
+  shareBtnX.textContent = "X / Twitter";
+  shareBtnX.disabled = false;
 });
 
 shareBtnText.addEventListener("click", async () => {
   const score = calculateScore();
   const tier = getTier(score);
-  const testFile = new File([], "t.png", { type: "image/png" });
-  const canShare = typeof navigator.canShare === "function" && navigator.canShare({ files: [testFile] });
-
-  if (canShare) {
-    // Mobile: share sheet with image attached (handles SMS natively)
-    await shareImageOrFallback(shareBtnText, "Text", () => {});
-  } else {
-    // Desktop: open SMS NOW (still in sync user-gesture context), then download image
-    const msg = encodeURIComponent(
-      `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build? https://goat-lab.vercel.app`
-    );
-    window.open(`sms:?body=${msg}`, "_self");
-    shareBtnText.textContent = "Generating…";
-    shareBtnText.disabled = true;
-    try {
-      const blob = await getShareBlob();
-      downloadBlob(blob, "goat-lab-build.png");
-    } catch (err) { console.error(err); }
-    shareBtnText.textContent = "Text";
-    shareBtnText.disabled = false;
-  }
+  // Always open Messages/SMS directly; destination is known
+  const msg = encodeURIComponent(
+    `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build? https://goat-lab.vercel.app`
+  );
+  window.open(`sms:?body=${msg}`, "_self");
+  shareBtnText.textContent = "Generating…";
+  shareBtnText.disabled = true;
+  try {
+    const blob = await getShareBlob();
+    downloadBlob(blob, "goat-lab-build.png");
+  } catch (err) { console.error(err); }
+  shareBtnText.textContent = "Text";
+  shareBtnText.disabled = false;
 });
 
 shareBtnCopy.addEventListener("click", async () => {
