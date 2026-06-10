@@ -1173,7 +1173,7 @@ h1 {
 
 .share-buttons {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   padding: 14px 16px;
   border-top: 3px solid var(--ink);
@@ -1211,11 +1211,6 @@ h1 {
 
 .share-btn-x {
   background: #000;
-  color: #fff;
-}
-
-.share-btn-instagram {
-  background: #c13584;
   color: #fff;
 }
 

@@ -3382,7 +3382,6 @@ const shareCardRows = document.querySelector("#shareCardRows");
 const shareBtnImage = document.querySelector("#shareBtnImage");
 const shareBtnText = document.querySelector("#shareBtnText");
 const shareBtnX = document.querySelector("#shareBtnX");
-const shareBtnInstagram = document.querySelector("#shareBtnInstagram");
 const shareBtnCopy = document.querySelector("#shareBtnCopy");
 const result = document.querySelector("#result");
 const resultTitle = document.querySelector("#resultTitle");
@@ -4313,20 +4312,27 @@ shareBtnX.addEventListener("click", () => {
   });
 });
 
-shareBtnText.addEventListener("click", () => {
+shareBtnText.addEventListener("click", async () => {
   const score = calculateScore();
   const tier = getTier(score);
-  const msg = encodeURIComponent(`I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build? https://goat-lab.vercel.app`);
-  openAndDownload(shareBtnText, "Text", () => {
-    window.open(`sms:?body=${msg}`, "_self");
-  });
-});
-
-shareBtnInstagram.addEventListener("click", () => {
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  openAndDownload(shareBtnInstagram, "Instagram", () => {
-    window.open(isMobile ? "instagram://" : "https://www.instagram.com/", "_blank");
-  });
+  const text = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build?`;
+  const testFile = new File([], "t.png", { type: "image/png" });
+  if (typeof navigator.canShare === "function" && navigator.canShare({ files: [testFile] })) {
+    // Mobile: share sheet — image auto-attaches when user picks Messages
+    shareBtnText.textContent = _shareBlob ? "Opening…" : "Generating…";
+    shareBtnText.disabled = true;
+    try {
+      const blob = await getShareBlob();
+      const file = new File([blob], "goat-lab-build.png", { type: "image/png" });
+      await navigator.share({ files: [file], text, url: "https://goat-lab.vercel.app" });
+    } catch (err) { if (err.name !== "AbortError") console.error(err); }
+    shareBtnText.textContent = "Text";
+    shareBtnText.disabled = false;
+  } else {
+    // Desktop: open SMS with text pre-filled, download image
+    const msg = encodeURIComponent(`${text} https://goat-lab.vercel.app`);
+    openAndDownload(shareBtnText, "Text", () => { window.open(`sms:?body=${msg}`, "_self"); });
+  }
 });
 
 shareBtnCopy.addEventListener("click", async () => {
