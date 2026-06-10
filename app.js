@@ -4587,6 +4587,13 @@ function tickCountdown() {
   if (el) el.textContent = getCountdownStr();
 }
 
+if (new URLSearchParams(location.search).has("resetDaily")) {
+  const h = getDailyHistory();
+  delete h[getTodayStr()];
+  try { localStorage.setItem(DAILY_KEY, JSON.stringify(h)); } catch {}
+  history.replaceState(null, "", location.pathname);
+}
+
 updateDailyCard();
 setInterval(tickCountdown, 60000);
 
