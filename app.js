@@ -3395,6 +3395,9 @@ const draftToast = document.querySelector("#draftToast");
 const draftToastDot = document.querySelector("#draftToastDot");
 const draftToastText = document.querySelector("#draftToastText");
 let draftToastTimer = null;
+const radarMini   = document.querySelector("#radarMini");
+const radarResult = document.querySelector("#radarResult");
+const radarShare  = document.querySelector("#radarShare");
 
 function player(name, feet, inches, number, ratings) {
   return {
@@ -3492,6 +3495,49 @@ function renderBuildList() {
   });
 }
 
+function buildRadarContent(size) {
+  const cx = size / 2, cy = size / 2;
+  const maxR = size * 0.4;
+  const n = attributes.length;
+  const angles = attributes.map((_, i) => -Math.PI / 2 + (i * 2 * Math.PI / n));
+
+  const pt = (a, r) =>
+    `${(cx + Math.cos(a) * r).toFixed(2)},${(cy + Math.sin(a) * r).toFixed(2)}`;
+
+  const rings = [0.33, 0.66, 1].map(f => {
+    const pts = angles.map(a => pt(a, maxR * f)).join(" ");
+    return `<polygon points="${pts}" fill="none" stroke="rgba(56,182,255,0.18)" stroke-width="0.7"/>`;
+  }).join("");
+
+  const spokes = angles.map(a =>
+    `<line x1="${cx.toFixed(2)}" y1="${cy.toFixed(2)}" x2="${pt(a, maxR).replace(",", '" y2="')}" stroke="rgba(56,182,255,0.18)" stroke-width="0.7"/>`
+  ).join("");
+
+  const dataPoints = attributes.map((attr, i) => {
+    const pick = build[attr.key];
+    return pt(angles[i], pick ? (pick.score / 100) * maxR : 0);
+  }).join(" ");
+
+  const poly = `<polygon points="${dataPoints}" fill="rgba(230,184,67,0.2)" stroke="rgba(230,184,67,0.75)" stroke-width="1.2" stroke-linejoin="round"/>`;
+
+  const dots = attributes.map((attr, i) => {
+    const pick = build[attr.key];
+    if (!pick) return "";
+    const [x, y] = pt(angles[i], (pick.score / 100) * maxR).split(",");
+    return `<circle cx="${x}" cy="${y}" r="${(size * 0.028).toFixed(1)}" fill="rgba(230,184,67,0.9)"/>`;
+  }).join("");
+
+  const center = `<circle cx="${cx}" cy="${cy}" r="1.5" fill="rgba(56,182,255,0.35)"/>`;
+
+  return rings + spokes + poly + dots + center;
+}
+
+function renderRadar() {
+  if (radarMini)   radarMini.innerHTML   = buildRadarContent(72);
+  if (radarResult) radarResult.innerHTML = buildRadarContent(96);
+  if (radarShare)  radarShare.innerHTML  = buildRadarContent(60);
+}
+
 function scoreTier(score) {
   if (score >= 90) return "elite";
   if (score >= 80) return "great";
@@ -3532,6 +3578,8 @@ function updateBody(lastPick) {
       part.dataset.tier = scoreTier(pick.score);
     }
   });
+
+  renderRadar();
 
   if (!lastPick) {
     bodyLabel.textContent = "No attributes drafted yet";
@@ -4034,6 +4082,7 @@ function openShareModal() {
 
   shareCardScore.textContent = score;
   shareCardTier.textContent = tier;
+  renderRadar();
 
   shareCardRows.innerHTML = "";
   attributes.forEach((attr) => {
