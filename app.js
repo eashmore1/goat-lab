@@ -4120,10 +4120,11 @@ async function generateShareImage() {
   ctx.fillStyle = INK;
   ctx.fillRect(0, 0, W, HEADER_H);
 
-  // Logo — cream base composited under the logo so edges are clean
+  // Logo — cream base composited under so every edge blends with cream not dark
   if (logoImg) {
-    const lhPhys = Math.round(logoImg.naturalHeight * 0.96);
-    const lwPhys = Math.round(logoImg.naturalWidth  * 0.96);
+    // Round to exact SCALE multiples so logical pixels are whole numbers
+    const lhPhys = Math.round(logoImg.naturalHeight * 0.96 / SCALE) * SCALE;
+    const lwPhys = Math.round(logoImg.naturalWidth  * 0.96 / SCALE) * SCALE;
     const lh = lhPhys / SCALE;
     const lw = lwPhys / SCALE;
 
@@ -4134,21 +4135,41 @@ async function generateShareImage() {
     logoCtx.imageSmoothingEnabled = true;
     logoCtx.imageSmoothingQuality = "high";
 
-    // 1. Draw logo to stamp its alpha shape into the canvas
+    // 1. Stamp logo alpha into canvas
     logoCtx.drawImage(logoImg, 0, 0, lwPhys, lhPhys);
 
-    // 2. source-in: fill cream clipped exactly to the logo's alpha mask.
-    //    Transparent pixels stay transparent. Antialiased edges get partial cream.
+    // 2. Clip cream fill to logo's exact alpha mask — partial-alpha edge pixels
+    //    get partial cream, so antialiasing blends with cream instead of dark.
     logoCtx.globalCompositeOperation = "source-in";
     logoCtx.fillStyle = "#f5ecd8";
     logoCtx.fillRect(0, 0, lwPhys, lhPhys);
 
-    // 3. Draw the actual logo on top with source-over so original colours show.
-    //    Edge pixels now blend logo colour with cream → smooth, clean edges.
+    // 3. Logo colours on top
     logoCtx.globalCompositeOperation = "source-over";
     logoCtx.drawImage(logoImg, 0, 0, lwPhys, lhPhys);
 
-    ctx.drawImage(logoOff, Math.round(W / 2 - lw / 2), Math.round((HEADER_H - lh) / 2), lw, lh);
+    // Pixel-by-pixel edge smoothing pass: walk the alpha boundary and feather any
+    // remaining hard transitions so the logo blends cleanly into the dark header.
+    const imgData = logoCtx.getImageData(0, 0, lwPhys, lhPhys);
+    const d = imgData.data;
+    for (let y = 1; y < lhPhys - 1; y++) {
+      for (let x = 1; x < lwPhys - 1; x++) {
+        const i = (y * lwPhys + x) * 4;
+        const a = d[i + 3];
+        if (a === 0 || a === 255) continue; // fully transparent or fully opaque — skip
+        // Semi-transparent edge pixel: blend toward cream to soften the transition
+        const blend = a / 255;
+        d[i]     = Math.round(d[i]     * blend + 245 * (1 - blend));
+        d[i + 1] = Math.round(d[i + 1] * blend + 236 * (1 - blend));
+        d[i + 2] = Math.round(d[i + 2] * blend + 216 * (1 - blend));
+      }
+    }
+    logoCtx.putImageData(imgData, 0, 0);
+
+    // Pixel-perfect centered position
+    const lx = Math.round((W - lw) / 2);
+    const ly = Math.round((HEADER_H - lh) / 2);
+    ctx.drawImage(logoOff, lx, ly, lw, lh);
   }
 
   // Score — vertically centered on right side of header
