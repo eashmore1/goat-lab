@@ -4501,6 +4501,16 @@ const dailyStatusEl   = document.querySelector("#dailyStatus");
 const dailyStreakEl   = document.querySelector("#dailyStreak");
 const dailySubtitleEl = document.querySelector("#dailySubtitle");
 
+function getCountdownStr() {
+  const now = new Date();
+  const midnight = new Date(now);
+  midnight.setHours(24, 0, 0, 0);
+  const totalMins = Math.floor((midnight - now) / 60000);
+  const h = Math.floor(totalMins / 60);
+  const m = totalMins % 60;
+  return h > 0 ? `${h}h ${m}m` : `${m}m`;
+}
+
 function updateDailyCard() {
   if (!dailyStatusEl) return;
   const todayStr    = getTodayStr();
@@ -4510,7 +4520,7 @@ function updateDailyCard() {
   const isFranchise = isFranchiseDay(todayStr);
 
   if (entry) {
-    dailyStatusEl.innerHTML = `${entry.score} · ${getTier(entry.score)}<span class="daily-comeback">Come back tomorrow for a new challenge ↗</span>`;
+    dailyStatusEl.innerHTML = `${entry.score} · ${getTier(entry.score)}<span class="daily-comeback">Next challenge in <span id="dailyCountdown">${getCountdownStr()}</span></span>`;
     dailyStatusEl.dataset.done = "true";
     if (dailyCardBtn) dailyCardBtn.disabled = true;
   } else {
@@ -4536,7 +4546,13 @@ function updateDailyCard() {
   }
 }
 
+function tickCountdown() {
+  const el = document.getElementById("dailyCountdown");
+  if (el) el.textContent = getCountdownStr();
+}
+
 updateDailyCard();
+setInterval(tickCountdown, 60000);
 
 renderBuildList();
 updateBody(null);
