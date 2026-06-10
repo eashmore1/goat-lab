@@ -4210,6 +4210,7 @@ function openShareModal() {
   });
 
   shareModal.hidden = false;
+  primeShareImage();
 }
 
 function shareResult() {
@@ -4242,51 +4243,79 @@ helpModal.addEventListener("click", (e) => { if (e.target === helpModal) helpMod
 shareModalClose.addEventListener("click", () => { shareModal.hidden = true; });
 shareModal.addEventListener("click", (e) => { if (e.target === shareModal) shareModal.hidden = true; });
 
-shareBtnImage.addEventListener("click", async () => {
-  const score = calculateScore();
-  const tier = getTier(score);
-  const text = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build?`;
-  const url = "https://goat-lab.vercel.app";
-  shareBtnImage.textContent = "Generating…";
+// ── Share infrastructure ────────────────────────────────────────────────────
+let _shareBlob = null;
+let _shareBlobPromise = null;
+
+function primeShareImage() {
+  _shareBlob = null;
+  _shareBlobPromise = generateShareImage().then(blob => { _shareBlob = blob; return blob; });
+}
+
+async function getShareBlob() {
+  if (_shareBlob) return _shareBlob;
+  if (_shareBlobPromise) return _shareBlobPromise;
+  return generateShareImage();
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+// Mobile: open native OS share sheet with image attached (works for WhatsApp,
+// iMessage, Twitter, Instagram, etc.). Desktop: download + platform fallback.
+async function shareImageOrFallback(btn, originalLabel, desktopFallback) {
+  btn.textContent = _shareBlob ? "Opening…" : "Generating…";
+  btn.disabled = true;
   try {
-    const blob = await generateShareImage();
+    const blob = await getShareBlob();
     const file = new File([blob], "goat-lab-build.png", { type: "image/png" });
+    const score = calculateScore();
+    const tier = getTier(score);
+    const text = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build?`;
+    const url = "https://goat-lab.vercel.app";
+
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       await navigator.share({ files: [file], text, url });
     } else {
-      // Desktop fallback: download the image
-      const objUrl = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = objUrl;
-      a.download = "goat-lab-build.png";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(objUrl);
+      desktopFallback(blob, score, tier);
     }
   } catch (err) {
     if (err.name !== "AbortError") console.error(err);
   }
-  shareBtnImage.textContent = "Share Image";
-});
+  btn.textContent = originalLabel;
+  btn.disabled = false;
+}
 
-shareBtnText.addEventListener("click", () => {
-  const score = calculateScore();
-  const tier = getTier(score);
-  const msg = encodeURIComponent(
-    `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build? https://goat-lab.vercel.app`
-  );
-  window.open(`sms:?body=${msg}`, "_self");
+shareBtnImage.addEventListener("click", () => {
+  shareImageOrFallback(shareBtnImage, "Share Image", (blob) => {
+    downloadBlob(blob, "goat-lab-build.png");
+  });
 });
 
 shareBtnX.addEventListener("click", () => {
-  const score = calculateScore();
-  const tier = getTier(score);
-  const tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build? Try to create the GOAT too 👉`;
-  window.open(
-    `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://goat-lab.vercel.app")}`,
-    "_blank"
-  );
+  shareImageOrFallback(shareBtnX, "X / Twitter", (blob, score, tier) => {
+    downloadBlob(blob, "goat-lab-build.png");
+    const tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build? Try to create the GOAT too 👉`;
+    window.open(
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://goat-lab.vercel.app")}`,
+      "_blank"
+    );
+  });
+});
+
+shareBtnText.addEventListener("click", () => {
+  shareImageOrFallback(shareBtnText, "Text", (blob, score, tier) => {
+    downloadBlob(blob, "goat-lab-build.png");
+    const msg = encodeURIComponent(
+      `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build? https://goat-lab.vercel.app`
+    );
+    window.open(`sms:?body=${msg}`, "_self");
+  });
 });
 
 shareBtnCopy.addEventListener("click", async () => {
