@@ -3938,6 +3938,70 @@ function goBack() {
   scoreEl.textContent = "--";
 }
 
+function drawRadarOnCanvas(ctx, cx, cy, maxR) {
+  const n = attributes.length;
+  const angles = attributes.map((_, i) => -Math.PI / 2 + (i * 2 * Math.PI / n));
+  const scoreR = (score) => Math.max(maxR * 0.04, ((score - 56) / 44) * maxR);
+
+  // Background rings
+  [0.33, 0.66, 1].forEach(frac => {
+    ctx.beginPath();
+    angles.forEach((a, i) => {
+      const x = cx + Math.cos(a) * maxR * frac;
+      const y = cy + Math.sin(a) * maxR * frac;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.closePath();
+    ctx.strokeStyle = "rgba(56,182,255,0.22)";
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+  });
+
+  // Spokes
+  angles.forEach(a => {
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(a) * maxR, cy + Math.sin(a) * maxR);
+    ctx.strokeStyle = "rgba(56,182,255,0.22)";
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+  });
+
+  // Data polygon
+  ctx.beginPath();
+  attributes.forEach((attr, i) => {
+    const pick = build[attr.key];
+    const r = pick ? scoreR(pick.score) : 0;
+    const x = cx + Math.cos(angles[i]) * r;
+    const y = cy + Math.sin(angles[i]) * r;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.closePath();
+  ctx.fillStyle = "rgba(230,184,67,0.22)";
+  ctx.fill();
+  ctx.strokeStyle = "rgba(230,184,67,0.8)";
+  ctx.lineWidth = 1.5;
+  ctx.lineJoin = "round";
+  ctx.stroke();
+
+  // Dots at drafted points
+  attributes.forEach((attr, i) => {
+    const pick = build[attr.key];
+    if (!pick) return;
+    const r = scoreR(pick.score);
+    ctx.beginPath();
+    ctx.arc(cx + Math.cos(angles[i]) * r, cy + Math.sin(angles[i]) * r, maxR * 0.06, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(230,184,67,0.9)";
+    ctx.fill();
+  });
+
+  // Center dot
+  ctx.beginPath();
+  ctx.arc(cx, cy, 2, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(56,182,255,0.5)";
+  ctx.fill();
+}
+
 async function generateShareImage() {
   await document.fonts.ready;
 
@@ -3946,9 +4010,10 @@ async function generateShareImage() {
 
   const W = 600;
   const HEADER_H = 86;
-  const ROW_H = 72;
+  const RADAR_H = 110;
+  const ROW_H = 66;
   const FOOTER_H = 52;
-  const H = HEADER_H + ROW_H * 9 + FOOTER_H;
+  const H = HEADER_H + RADAR_H + ROW_H * 9 + FOOTER_H;
 
   const canvas = document.createElement("canvas");
   canvas.width = W;
@@ -4006,11 +4071,50 @@ async function generateShareImage() {
     ctx.drawImage(logoEl, W / 2 - lw / 2 - 40, (HEADER_H - lh) / 2, lw, lh);
   }
 
+  // Radar section — dark navy, matches lab scan aesthetic
+  const radarY = HEADER_H;
+  ctx.fillStyle = "#091420";
+  ctx.fillRect(0, radarY, W, RADAR_H);
+
+  // Subtle grid lines on radar section
+  ctx.strokeStyle = "rgba(56,182,255,0.06)";
+  ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 28) {
+    ctx.beginPath(); ctx.moveTo(x, radarY); ctx.lineTo(x, radarY + RADAR_H); ctx.stroke();
+  }
+  for (let y = radarY; y < radarY + RADAR_H; y += 28) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+  }
+
+  // Radar chart centered
+  const radarCX = W / 2;
+  const radarCY = radarY + RADAR_H / 2;
+  drawRadarOnCanvas(ctx, radarCX, radarCY, 44);
+
+  // Attribute short labels around radar
+  ctx.fillStyle = "rgba(56,182,255,0.55)";
+  ctx.font = '700 8px "Space Mono", monospace';
+  ctx.textAlign = "center";
+  const labelR = 56;
+  attributes.forEach((attr, i) => {
+    const angle = -Math.PI / 2 + (i * 2 * Math.PI / attributes.length);
+    ctx.fillText(attr.short, radarCX + Math.cos(angle) * labelR, radarCY + Math.sin(angle) * labelR + 3);
+  });
+  ctx.textAlign = "left";
+
+  // Section divider
+  ctx.strokeStyle = "rgba(56,182,255,0.2)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, radarY + RADAR_H);
+  ctx.lineTo(W, radarY + RADAR_H);
+  ctx.stroke();
+
   // Pick rows
   const orderedValues = attributes.map((attr) => build[attr.key]);
   orderedValues.forEach((pick, i) => {
     if (!pick) return;
-    const y = HEADER_H + i * ROW_H;
+    const y = HEADER_H + RADAR_H + i * ROW_H;
 
     // Alternate row tint
     if (i % 2 === 1) {
@@ -4055,7 +4159,7 @@ async function generateShareImage() {
   });
 
   // Footer bar
-  const footerY = HEADER_H + ROW_H * 9;
+  const footerY = HEADER_H + RADAR_H + ROW_H * 9;
   ctx.fillStyle = INK;
   ctx.fillRect(0, footerY, W, FOOTER_H);
 
