@@ -412,7 +412,7 @@ h1 {
   bottom: 12px;
   left: 12px;
   padding: 7px 10px;
-  color: rgba(140, 215, 255, 0.9);
+  color: rgba(220, 240, 255, 1);
   background: rgba(9, 20, 32, 0.88);
   border: 1px solid rgba(56, 182, 255, 0.3);
   font: 700 0.72rem/1.25 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -471,7 +471,7 @@ h1 {
   padding: 9px;
   border: 2px solid var(--ink);
   background: var(--chalk);
-  box-shadow: 3px 3px 0 var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
 }
 
 .build-chip strong {
@@ -810,6 +810,10 @@ h1 {
   margin-bottom: 0;
 }
 
+.result .kicker {
+  margin-bottom: 10px;
+}
+
 /* Footer */
 .legal {
   width: min(760px, calc(100% - 20px));
@@ -903,7 +907,7 @@ h1 {
 }
 
 .footer-dot {
-  color: rgba(21, 20, 19, 0.3);
+  color: rgba(21, 20, 19, 0.5);
 }
 
 .footer-support {
@@ -1010,7 +1014,7 @@ h1 {
 
 .respins-row {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
@@ -1101,6 +1105,7 @@ h1 {
 
 .share-card-score-block {
   text-align: right;
+  padding-right: 4px;
 }
 
 .share-card-score {
@@ -1353,7 +1358,7 @@ h1 {
 .modal-body {
   padding: 16px;
   display: grid;
-  gap: 14px;
+  gap: 18px;
 }
 
 .modal-rule {
@@ -1462,6 +1467,20 @@ h1 {
   .share-btn {
     min-height: 44px;
     font-size: 0.78rem;
+  }
+
+  .help-top-text {
+    display: none;
+  }
+
+  .help-top {
+    padding: 8px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .share-buttons {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
