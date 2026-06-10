@@ -3488,14 +3488,38 @@ function renderBuildList() {
   });
 }
 
+function scoreTier(score) {
+  if (score >= 90) return "elite";
+  if (score >= 80) return "great";
+  if (score >= 70) return "good";
+  if (score >= 60) return "fair";
+  return "weak";
+}
+
 function updateBody(lastPick) {
   parts.forEach((part) => {
-    part.classList.toggle("filled", Boolean(build[part.dataset.attribute]));
+    const pick = build[part.dataset.attribute];
+    const wasFilled = part.classList.contains("filled");
+    part.classList.toggle("filled", Boolean(pick));
+
+    if (pick && !wasFilled) {
+      part.dataset.tier = scoreTier(pick.score);
+    }
   });
 
   if (!lastPick) {
     bodyLabel.textContent = "No attributes drafted yet";
     return;
+  }
+
+  // Shift is-current to the newly drafted part
+  parts.forEach((p) => p.classList.remove("is-current"));
+  const freshPart = parts.find((p) => p.dataset.attribute === lastPick.attribute.key);
+  if (freshPart) {
+    freshPart.classList.add("is-new", "is-current");
+    freshPart.addEventListener("animationend", () => {
+      freshPart.classList.remove("is-new");
+    }, { once: true });
   }
 
   bodyLabel.textContent = `${lastPick.attribute.label}: ${lastPick.player.name} (${lastPick.score})`;
@@ -3778,6 +3802,10 @@ function reset() {
   scoreEl.textContent = "--";
   cards.className = "cards";
   respinsUsed = { era: false, team: false, attribute: false };
+  parts.forEach((p) => {
+    p.classList.remove("is-new", "is-current");
+    delete p.dataset.tier;
+  });
   renderBuildList();
   updateBody(null);
   renderRound();

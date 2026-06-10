@@ -249,16 +249,57 @@ h1 {
   position: absolute;
   display: block;
   --part-transform: none;
+  --tier-color: var(--gold);
   background: rgba(255, 247, 223, 0.32);
   border: 3px solid var(--chalk);
   box-shadow: inset 0 0 0 2px rgba(21, 20, 19, 0.1);
   transform: var(--part-transform);
-  transition: background 180ms ease, transform 180ms ease;
+  transition: background 280ms ease, box-shadow 280ms ease;
 }
 
 .part.filled {
-  background: var(--gold);
-  transform: var(--part-transform) scale(1.035);
+  background: var(--tier-color);
+  transform: var(--part-transform);
+}
+
+/* Score tier colors */
+.part[data-tier="elite"]  { --tier-color: #f2c438; }
+.part[data-tier="great"]  { --tier-color: #d49628; }
+.part[data-tier="good"]   { --tier-color: #b07828; }
+.part[data-tier="fair"]   { --tier-color: #8a5f22; }
+.part[data-tier="weak"]   { --tier-color: #6b4a1a; }
+
+/* Heart stays red-toned */
+.heart[data-tier="elite"].filled  { background: #e8503a; }
+.heart[data-tier="great"].filled  { background: #cc4430; }
+.heart[data-tier="good"].filled   { background: #aa3828; }
+.heart[data-tier="fair"].filled   { background: #883020; }
+.heart[data-tier="weak"].filled   { background: #662818; }
+
+/* Last-drafted: subtle persistent ring */
+.part.is-current {
+  box-shadow: inset 0 0 0 2px rgba(21, 20, 19, 0.1), 0 0 0 3px rgba(255, 247, 223, 0.7);
+}
+
+/* Stamp-in animation for freshly drafted part */
+@keyframes partStamp {
+  0%   { transform: var(--part-transform) scale(0.45); opacity: 0; }
+  55%  { transform: var(--part-transform) scale(1.18); opacity: 1; }
+  75%  { transform: var(--part-transform) scale(0.96); }
+  100% { transform: var(--part-transform) scale(1); }
+}
+
+/* Outward glow ring that fades */
+@keyframes partGlow {
+  0%   { box-shadow: inset 0 0 0 2px rgba(21,20,19,0.1), 0 0 0 0   rgba(230,184,67,0.9), 0 0 0 3px rgba(255,247,223,0.7); }
+  60%  { box-shadow: inset 0 0 0 2px rgba(21,20,19,0.1), 0 0 0 14px rgba(230,184,67,0),   0 0 0 3px rgba(255,247,223,0.7); }
+  100% { box-shadow: inset 0 0 0 2px rgba(21,20,19,0.1), 0 0 0 14px rgba(230,184,67,0),   0 0 0 3px rgba(255,247,223,0.7); }
+}
+
+.part.is-new {
+  animation:
+    partStamp 440ms cubic-bezier(0.22, 1.4, 0.36, 1) forwards,
+    partGlow  600ms ease-out forwards;
 }
 
 .head {
@@ -587,7 +628,8 @@ h1 {
   #prompt.is-locked .roll-div,
   #prompt.is-locked .roll-attr,
   .card.is-dealing,
-  .card-skel {
+  .card-skel,
+  .part.is-new {
     animation: none;
   }
 }
