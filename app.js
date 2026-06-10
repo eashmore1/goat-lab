@@ -4120,11 +4120,12 @@ async function generateShareImage() {
   ctx.fillStyle = INK;
   ctx.fillRect(0, 0, W, HEADER_H);
 
-  // Logo — centered horizontally, centered vertically in header
+  // Logo — centered, light-mode treatment so it pops on the dark header
   if (logoImg) {
     const lh = 92;
     const lw = Math.round(lh * (logoImg.naturalWidth / logoImg.naturalHeight));
-    // Render into an offscreen canvas at exact physical size for maximum sharpness
+
+    // Draw at 2× physical pixels for sharpness
     const logoOff = document.createElement("canvas");
     logoOff.width = lw * SCALE;
     logoOff.height = lh * SCALE;
@@ -4132,6 +4133,20 @@ async function generateShareImage() {
     logoCtx.imageSmoothingEnabled = true;
     logoCtx.imageSmoothingQuality = "high";
     logoCtx.drawImage(logoImg, 0, 0, lw * SCALE, lh * SCALE);
+
+    // Replace dark (navy/black) pixels with cream so the logo is legible on dark bg
+    const imgData = logoCtx.getImageData(0, 0, logoOff.width, logoOff.height);
+    const d = imgData.data;
+    for (let i = 0; i < d.length; i += 4) {
+      if (d[i + 3] < 20) continue; // skip near-transparent
+      const lum = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) / 255;
+      const t = Math.min(1, lum / 0.38); // 0 = very dark → cream, 1 = mid+ → original
+      d[i]     = Math.round(d[i]     * t + 245 * (1 - t));
+      d[i + 1] = Math.round(d[i + 1] * t + 236 * (1 - t));
+      d[i + 2] = Math.round(d[i + 2] * t + 216 * (1 - t));
+    }
+    logoCtx.putImageData(imgData, 0, 0);
+
     ctx.drawImage(logoOff, W / 2 - lw / 2, (HEADER_H - lh) / 2, lw, lh);
   }
 
