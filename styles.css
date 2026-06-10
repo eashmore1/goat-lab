@@ -842,6 +842,10 @@ h1 {
     flex-direction: column;
   }
 
+  .hero-logo {
+    align-self: flex-start;
+  }
+
   .result {
     flex-direction: column;
     align-items: flex-start;
