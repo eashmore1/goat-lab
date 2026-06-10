@@ -244,6 +244,17 @@ h1 {
   letter-spacing: 0;
 }
 
+.daily-view-label {
+  display: block;
+  margin-top: 10px;
+  padding: 7px 0 0;
+  border-top: 1px solid rgba(255, 247, 223, 0.2);
+  font: 700 0.72rem/1 "Space Mono", ui-monospace, monospace;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .mode-tag {
   width: max-content;
   padding: 7px 9px;

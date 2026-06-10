@@ -3881,7 +3881,12 @@ function finish() {
 
   if (gameMode === "daily") {
     const todayStr = getTodayStr();
-    saveDailyResult(todayStr, score, tier, dailyData?.franchise || false, dailyData?.franchiseTeamName || null);
+    const dailyPicks = attributes.map(attr => {
+      const p = build[attr.key];
+      if (!p) return null;
+      return { attrKey: attr.key, attrLabel: attr.label, attrShort: attr.short, playerName: p.player.name, playerNumber: p.player.number, era: p.teamEra.era, team: p.teamEra.team, golden: p.teamEra.golden || false, score: p.score };
+    });
+    saveDailyResult(todayStr, score, tier, dailyData?.franchise || false, dailyData?.franchiseTeamName || null, dailyPicks);
     updateDailyCard();
     resultTitle.textContent = `Daily — ${score}: ${tier}`;
     resultCopy.textContent = dailyData?.franchise
@@ -3917,6 +3922,26 @@ function reset() {
   renderRound();
 }
 
+function openDailyResultView(entry) {
+  if (!entry?.picks) return;
+  // Reconstruct globals so the share modal and image work correctly
+  gameMode = "daily";
+  dailyData = { franchise: entry.franchise || false, franchiseTeamName: entry.franchiseTeam || null };
+  build = {};
+  entry.picks.forEach(p => {
+    if (!p) return;
+    const attr = attributes.find(a => a.key === p.attrKey);
+    if (!attr) return;
+    build[p.attrKey] = {
+      player: { name: p.playerName, number: p.playerNumber },
+      teamEra: { era: p.era, team: p.team, golden: p.golden },
+      score: p.score,
+      attribute: attr
+    };
+  });
+  openShareModal();
+}
+
 function startGame(mode) {
   gameMode = mode;
 
@@ -3924,7 +3949,7 @@ function startGame(mode) {
   if (mode === "daily") {
     const todayStr = getTodayStr();
     const history = getDailyHistory();
-    if (history[todayStr]) return; // already completed today
+    if (history[todayStr]) { openDailyResultView(history[todayStr]); return; }
     dailyData = generateDailyData(todayStr);
     runAttributes = dailyData.rounds.map(r => r.attribute);
   } else {
@@ -4087,12 +4112,14 @@ async function generateShareImage() {
   ctx.font = '700 11px "Space Mono", monospace';
   ctx.fillText("GOAT LAB", 20, 34);
 
-  // Mode badge
-  ctx.fillStyle = "rgba(255,247,223,0.1)";
-  ctx.fillRect(20, 42, gameMode === "blind" || gameMode === "daily" ? 88 : 74, 18);
-  ctx.fillStyle = "rgba(255,247,223,0.55)";
+  // Mode badge — each mode gets a distinct color
+  const modeLabel = gameMode === "daily" ? "DAILY" : gameMode === "blind" ? "BLIND MODE" : "CLASSIC MODE";
+  const badgeW = gameMode === "classic" ? 104 : gameMode === "blind" ? 94 : 68;
+  ctx.fillStyle = gameMode === "daily" ? GOLD : gameMode === "blind" ? COURT : "rgba(255,247,223,0.18)";
+  ctx.fillRect(20, 42, badgeW, 18);
+  ctx.fillStyle = gameMode === "daily" ? INK : gameMode === "blind" ? PAPER : "rgba(255,247,223,0.7)";
   ctx.font = '700 9px "Space Mono", monospace';
-  ctx.fillText(gameMode === "daily" ? "DAILY" : gameMode === "blind" ? "BLIND MODE" : "CLASSIC", 26, 55);
+  ctx.fillText(modeLabel, 26, 55);
 
   // Score (large, right-aligned)
   ctx.fillStyle = GOLD;
@@ -4478,9 +4505,9 @@ function getDailyHistory() {
   try { return JSON.parse(localStorage.getItem(DAILY_KEY) || "{}"); } catch { return {}; }
 }
 
-function saveDailyResult(dateStr, score, tier, franchise, franchiseTeam) {
+function saveDailyResult(dateStr, score, tier, franchise, franchiseTeam, picks) {
   const h = getDailyHistory();
-  h[dateStr] = { score, tier, franchise, franchiseTeam: franchiseTeam || null };
+  h[dateStr] = { score, tier, franchise, franchiseTeam: franchiseTeam || null, picks: picks || null };
   try { localStorage.setItem(DAILY_KEY, JSON.stringify(h)); } catch {}
 }
 
@@ -4522,7 +4549,16 @@ function updateDailyCard() {
   if (entry) {
     dailyStatusEl.innerHTML = `${entry.score} · ${getTier(entry.score)}<span class="daily-comeback">Next challenge in <span id="dailyCountdown">${getCountdownStr()}</span></span>`;
     dailyStatusEl.dataset.done = "true";
-    if (dailyCardBtn) dailyCardBtn.disabled = true;
+    if (dailyCardBtn) {
+      dailyCardBtn.disabled = false;
+      const viewBtn = dailyCardBtn.querySelector(".daily-view-label");
+      if (!viewBtn) {
+        const label = document.createElement("span");
+        label.className = "daily-view-label";
+        label.textContent = "View & Share →";
+        dailyCardBtn.appendChild(label);
+      }
+    }
   } else {
     dailyStatusEl.textContent = "Play today →";
     delete dailyStatusEl.dataset.done;
