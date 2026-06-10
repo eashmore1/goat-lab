@@ -1158,11 +1158,21 @@ h1 {
 
 .share-buttons {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   padding: 14px 16px;
   border-top: 3px solid var(--ink);
   background: var(--chalk);
+}
+
+@media (max-width: 400px) {
+  .share-buttons {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .share-btn-image {
+    grid-column: 1 / -1;
+  }
 }
 
 .share-btn {
@@ -1378,7 +1388,7 @@ h1 {
   border: 2px solid var(--ink);
   background: var(--ink);
   color: var(--chalk);
-  box-shadow: 4px 4px 0 rgba(21, 20, 19, 0.35);
+  box-shadow: 5px 5px 0 var(--ink);
   font: 700 0.7rem/1.2 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   text-transform: uppercase;
   white-space: nowrap;
