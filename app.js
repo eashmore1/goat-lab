@@ -3815,7 +3815,32 @@ function startGame(mode) {
   gameMode = mode;
   modeScreen.hidden = true;
   gameGrid.hidden = false;
-  reset();
+
+  round = 0;
+  build = {};
+  runAttributes = shuffle(attributes);
+  currentTeamEra = null;
+  currentAttribute = null;
+  result.hidden = true;
+  scoreEl.textContent = "--";
+  cards.className = "cards";
+  cards.innerHTML = "";
+  respinsUsed = { era: false, team: false, attribute: false };
+  parts.forEach((p) => {
+    p.classList.remove("is-new", "is-current");
+    delete p.dataset.tier;
+  });
+  renderBuildList();
+  updateBody(null);
+
+  roundLabel.textContent = `Round — of ${runAttributes.length}`;
+  prompt.classList.remove("is-rolling", "is-locked");
+  prompt.textContent = "Press New Run to begin";
+  context.textContent = "";
+  modeLabel.textContent = gameMode === "blind"
+    ? "Blind mode: ratings reveal after your pick."
+    : "Classic mode: ratings are visible before you pick.";
+  if (respinBar) respinBar.hidden = true;
 }
 
 function goBack() {
