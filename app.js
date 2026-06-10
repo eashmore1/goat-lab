@@ -3437,7 +3437,13 @@ function getTier(score) {
   if (score >= 90) return "Hall of Famer";
   if (score >= 86) return "Franchise Icon";
   if (score >= 80) return "All-Star";
-  return "Cult Hero";
+  if (score >= 77) return "Rotation Player";
+  if (score >= 74) return "Bench Warmer";
+  if (score >= 71) return "End of Roster";
+  if (score >= 68) return "Two-Way Contract";
+  if (score >= 65) return "G League";
+  if (score >= 62) return "Camp Invite";
+  return "Cut in Training Camp";
 }
 
 function calculateScore() {
