@@ -3442,7 +3442,8 @@ function getTier(score) {
   if (score >= 71) return "End of Roster";
   if (score >= 68) return "Two-Way Contract";
   if (score >= 65) return "G League";
-  return "Cut in Training Camp";
+  if (score >= 60) return "Cut in Training Camp";
+  return "Watching From the Stands";
 }
 
 function calculateScore() {
@@ -3474,7 +3475,7 @@ function calculateScore() {
   const score = Math.round(average - weakPenalty + eliteBonus + balanceBonus);
 
   // Only a gate-passing build can show 100; everything else caps at 99.
-  return Math.max(60, Math.min(99, score));
+  return Math.max(55, Math.min(99, score));
 }
 
 function renderBar(label, value) {
