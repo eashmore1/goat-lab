@@ -242,14 +242,14 @@ h1 {
 .body-card::before {
   top: 10px;
   left: 10px;
-  border-top: 2px solid rgba(56, 182, 255, 0.45);
-  border-left: 2px solid rgba(56, 182, 255, 0.45);
+  border-top: 2px solid rgba(56, 182, 255, 0.75);
+  border-left: 2px solid rgba(56, 182, 255, 0.75);
 }
 .body-card::after {
   bottom: 10px;
   right: 10px;
-  border-bottom: 2px solid rgba(56, 182, 255, 0.45);
-  border-right: 2px solid rgba(56, 182, 255, 0.45);
+  border-bottom: 2px solid rgba(56, 182, 255, 0.75);
+  border-right: 2px solid rgba(56, 182, 255, 0.75);
 }
 
 .halo {
@@ -457,6 +457,7 @@ h1 {
   padding: 7px;
   border: 2px solid var(--ink);
   background: var(--chalk);
+  box-shadow: 3px 3px 0 var(--ink);
 }
 
 .build-chip strong {
@@ -956,7 +957,7 @@ h1 {
   min-height: 36px;
   padding: 0 12px;
   border: 2px solid var(--ink);
-  background: var(--paper);
+  background: var(--chalk);
   color: var(--ink);
   box-shadow: 5px 5px 0 var(--ink);
   font: 700 0.78rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
