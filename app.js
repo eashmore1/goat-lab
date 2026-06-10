@@ -4272,7 +4272,14 @@ logoHome.addEventListener("keydown", (e) => {
 modeButtons.forEach((button) => {
   button.addEventListener("click", () => startGame(button.dataset.mode));
 });
-resetButton.addEventListener("click", () => { if (gameMode === "daily") goBack(); else reset(); });
+resetButton.addEventListener("click", () => {
+  if (gameMode === "daily") {
+    if (Object.keys(build).length === 0) renderRound(); // start first round
+    else goBack(); // mid-game: exit to mode select (daily re-locks once finished)
+  } else {
+    reset();
+  }
+});
 backButton.addEventListener("click", goBack);
 respinEraBtn.addEventListener("click", respinEra);
 respinTeamBtn.addEventListener("click", respinTeam);
