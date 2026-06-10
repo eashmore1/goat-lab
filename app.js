@@ -4077,12 +4077,12 @@ async function generateShareImage() {
   const tier = getTier(score);
 
   const W = 600;
-  const HEADER_H = 112;
+  const HEADER_H = 182;
   const RADAR_H = 110;
   const ROW_H = 66;
   const FOOTER_H = 52;
   const H = HEADER_H + RADAR_H + ROW_H * 9 + FOOTER_H;
-  const SCALE = 2;
+  const SCALE = 3;
 
   const canvas = document.createElement("canvas");
   canvas.width = W * SCALE;
@@ -4120,49 +4120,51 @@ async function generateShareImage() {
   ctx.fillStyle = INK;
   ctx.fillRect(0, 0, W, HEADER_H);
 
-  // Logo — centered, light-mode treatment so it pops on the dark header
+  // Logo — near 1:1 source resolution so every detail is sharp
   if (logoImg) {
-    const lh = 92;
-    const lw = Math.round(lh * (logoImg.naturalWidth / logoImg.naturalHeight));
+    // Target physical size ≈ source size → no downscale blur
+    const lhPhys = Math.round(logoImg.naturalHeight * 0.96); // ~441px physical
+    const lwPhys = Math.round(logoImg.naturalWidth  * 0.96); // ~486px physical
+    const lh = lhPhys / SCALE; // logical pixels (SCALE=3 → ~147px)
+    const lw = lwPhys / SCALE;
 
-    // Draw at 2× physical pixels for sharpness
     const logoOff = document.createElement("canvas");
-    logoOff.width = lw * SCALE;
-    logoOff.height = lh * SCALE;
+    logoOff.width  = lwPhys;
+    logoOff.height = lhPhys;
     const logoCtx = logoOff.getContext("2d");
     logoCtx.imageSmoothingEnabled = true;
     logoCtx.imageSmoothingQuality = "high";
-    logoCtx.drawImage(logoImg, 0, 0, lw * SCALE, lh * SCALE);
+    logoCtx.drawImage(logoImg, 0, 0, lwPhys, lhPhys);
 
-    // Replace dark (navy/black) pixels with cream so the logo is legible on dark bg
-    const imgData = logoCtx.getImageData(0, 0, logoOff.width, logoOff.height);
+    // Replace dark (navy/black) pixels with cream — light-mode treatment
+    const imgData = logoCtx.getImageData(0, 0, lwPhys, lhPhys);
     const d = imgData.data;
     for (let i = 0; i < d.length; i += 4) {
-      if (d[i + 3] < 20) continue; // skip near-transparent
+      if (d[i + 3] < 20) continue;
       const lum = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) / 255;
-      const t = Math.min(1, lum / 0.38); // 0 = very dark → cream, 1 = mid+ → original
+      const t = Math.min(1, lum / 0.42);
       d[i]     = Math.round(d[i]     * t + 245 * (1 - t));
       d[i + 1] = Math.round(d[i + 1] * t + 236 * (1 - t));
       d[i + 2] = Math.round(d[i + 2] * t + 216 * (1 - t));
     }
     logoCtx.putImageData(imgData, 0, 0);
 
-    ctx.drawImage(logoOff, W / 2 - lw / 2, (HEADER_H - lh) / 2, lw, lh);
+    ctx.drawImage(logoOff, Math.round(W / 2 - lw / 2), Math.round((HEADER_H - lh) / 2), lw, lh);
   }
 
-  // Score — top-right, large
+  // Score — vertically centered on right side of header
   ctx.fillStyle = GOLD;
   ctx.font = '700 44px "Space Mono", monospace';
   ctx.textAlign = "right";
-  ctx.fillText(score, W - 18, 52);
+  ctx.fillText(score, W - 18, HEADER_H / 2 + 6);
 
   // Tier label — right, below score
   ctx.fillStyle = "rgba(255,247,223,0.55)";
   ctx.font = '700 9px "Space Mono", monospace';
-  ctx.fillText(tier.toUpperCase(), W - 18, 66);
+  ctx.fillText(tier.toUpperCase(), W - 18, HEADER_H / 2 + 22);
   ctx.textAlign = "left";
 
-  // Mode badge — bottom-left of header, distinct color per mode
+  // Mode badge — bottom-left of header
   const modeLabel = gameMode === "daily" ? "DAILY" : gameMode === "blind" ? "BLIND MODE" : "CLASSIC MODE";
   const badgeW = gameMode === "classic" ? 104 : gameMode === "blind" ? 94 : 68;
   ctx.fillStyle = gameMode === "daily" ? GOLD : gameMode === "blind" ? COURT : "rgba(255,247,223,0.18)";
@@ -4273,7 +4275,7 @@ async function generateShareImage() {
   ctx.fillText("goat-lab.vercel.app", W - 20, footerY + 32);
   ctx.textAlign = "left";
 
-  return new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.93));
+  return new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.96));
 }
 
 function buildShareText(score, tier) {
