@@ -3470,8 +3470,10 @@ function calculateScore() {
 
   const average = values.reduce((sum, value) => sum + value, 0) / values.length;
   const weakPenalty = values.reduce((sum, value) => sum + Math.max(0, 72 - value) * 0.42, 0);
-  const eliteBonus = values.filter((value) => value >= 98).length * 0.45;
-  const balanceBonus = values.every((value) => value >= 90) ? 1.25 : 0;
+  const eliteBonus = values.filter((value) => value >= 99).length * 1.5
+                   + values.filter((value) => value >= 96 && value < 99).length * 0.5;
+  const minScore = Math.min(...values);
+  const balanceBonus = minScore >= 90 ? 2.0 : minScore >= 85 ? 1.0 : minScore >= 80 ? 0.5 : 0;
   const score = Math.round(average - weakPenalty + eliteBonus + balanceBonus);
 
   // Only a gate-passing build can show 100; everything else caps at 99.
@@ -4678,8 +4680,10 @@ if (new URLSearchParams(location.search).has("recalcDaily")) {
       } else {
         const avg = pickScores.reduce((s, v) => s + v, 0) / pickScores.length;
         const pen = pickScores.reduce((s, v) => s + Math.max(0, 72 - v) * 0.42, 0);
-        const elite = pickScores.filter(v => v >= 98).length * 0.45;
-        const bal = pickScores.every(v => v >= 90) ? 1.25 : 0;
+        const elite = pickScores.filter(v => v >= 99).length * 1.5
+                    + pickScores.filter(v => v >= 96 && v < 99).length * 0.5;
+        const minPick = Math.min(...pickScores);
+        const bal = minPick >= 90 ? 2.0 : minPick >= 85 ? 1.0 : minPick >= 80 ? 0.5 : 0;
         newScore = Math.max(55, Math.min(99, Math.round(avg - pen + elite + bal)));
       }
       h[todayStr] = { ...entry, score: newScore, tier: getTier(newScore) };
