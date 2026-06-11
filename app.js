@@ -4831,6 +4831,8 @@ if (_params.has("recalcDaily") || _params.has("recalcAll")) {
   if (_params.has("recalcAll")) {
     // Also clear Classic/Blind PBs since picks aren't stored for those
     try { localStorage.removeItem(PB_KEY); } catch {}
+    // Flag so syncDailyHistory treats local as authoritative (not cloud)
+    try { localStorage.setItem("goatlab_recalc_pending", "1"); } catch {}
   }
   history.replaceState(null, "", location.pathname);
 }
@@ -4890,19 +4892,24 @@ updateBody(null);
   async function syncDailyHistory() {
     if (!Auth.currentUser()) return;
     const local = getDailyHistory();
+    const recalcPending = localStorage.getItem("goatlab_recalc_pending");
     let cloud = {};
     try { cloud = await Auth.fetchDailyHistory(); } catch (e) { console.error(e); return; }
     const merged = { ...local };
-    for (const [date, entry] of Object.entries(cloud)) {
-      if (!merged[date] || (entry.score || 0) >= (merged[date].score || 0)) merged[date] = entry;
+    if (!recalcPending) {
+      // Normal sync: cloud wins if its score is higher (keeps best across devices)
+      for (const [date, entry] of Object.entries(cloud)) {
+        if (!merged[date] || (entry.score || 0) >= (merged[date].score || 0)) merged[date] = entry;
+      }
     }
+    // After recalc: local is authoritative — push everything local up to cloud
     try { localStorage.setItem("goatlab_daily", JSON.stringify(merged)); } catch (e) {}
-    // Push any day the cloud is missing (or where local beat the cloud).
     for (const [date, entry] of Object.entries(merged)) {
-      if (!cloud[date] || (entry.score || 0) > (cloud[date].score || 0)) {
+      if (recalcPending || !cloud[date] || (entry.score || 0) > (cloud[date].score || 0)) {
         Auth.putDailyHistory(date, entry).catch(console.error);
       }
     }
+    if (recalcPending) try { localStorage.removeItem("goatlab_recalc_pending"); } catch (e) {}
     try { updateDailyCard(); } catch (e) {}
   }
   window.GoatLeaderboard = { submitToday, showResultButton, pushDailyHistory };
