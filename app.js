@@ -4100,10 +4100,10 @@ async function generateShareImage() {
   const tier = getTier(score);
 
   const W        = 600;
-  const HEADER_H = 130;
+  const HEADER_H = 105;  // tighter header
   const RADAR_H  = 128;
-  const ROW_H    = 62;
-  const FOOTER_H = 44;
+  const ROW_H    = 64;   // more breathing room per row
+  const FOOTER_H = 48;
   const H = HEADER_H + RADAR_H + ROW_H * 9 + FOOTER_H;
   const SCALE = 3;
 
@@ -4119,12 +4119,21 @@ async function generateShareImage() {
   const INK   = "#151413";
   const GOLD  = "#e6b843";
   const CHALK = "#fff7df";
-  const MUTED = "rgba(21,20,19,0.45)";
+  const MUTED = "rgba(21,20,19,0.55)";
   const COURT = "#c9673d";
   const NAVY  = "#091420";
 
   const modeColor = gameMode === "daily" ? GOLD : gameMode === "blind" ? COURT : CHALK;
   const modeText  = gameMode === "daily" ? "DAILY CHALLENGE" : gameMode === "blind" ? "BLIND MODE" : "CLASSIC MODE";
+
+  // Truncate text to fit a pixel width
+  function clip(text, maxW, font) {
+    ctx.font = font;
+    if (ctx.measureText(text).width <= maxW) return text;
+    let t = text;
+    while (t.length > 1 && ctx.measureText(t + "…").width > maxW) t = t.slice(0, -1);
+    return t + "…";
+  }
 
   // ── Background + border ──────────────────────────────────────────────────
   ctx.fillStyle = PAPER;
@@ -4137,31 +4146,31 @@ async function generateShareImage() {
   ctx.fillStyle = INK;
   ctx.fillRect(0, 0, W, HEADER_H);
 
-  // Mode accent strip at top (4 px colored bar)
+  // Mode accent strip (4 px, colored per mode)
   ctx.fillStyle = modeColor;
   ctx.fillRect(0, 0, W, 4);
 
-  // Brand: "GOAT LAB"
-  ctx.fillStyle = CHALK;
-  ctx.font = '900 17px "Space Mono", monospace';
-  ctx.textAlign = "left";
-  ctx.fillText("GOAT LAB", 22, 44);
-
-  // Mode label below brand
-  ctx.fillStyle = modeColor;
-  ctx.font = '700 9px "Space Mono", monospace';
-  ctx.fillText(modeText, 22, 62);
-
-  // Score — large, right-aligned
+  // Score — left side, hero element
   ctx.fillStyle = GOLD;
-  ctx.font = '700 58px "Space Mono", monospace';
-  ctx.textAlign = "right";
-  ctx.fillText(score, W - 22, 112);
+  ctx.font = '700 52px "Space Mono", monospace';
+  ctx.textAlign = "left";
+  ctx.fillText(score, 22, 88);
 
-  // Tier — right, below score
-  ctx.fillStyle = "rgba(255,247,223,0.45)";
+  // Tier — left, below score
+  ctx.fillStyle = "rgba(255,247,223,0.5)";
   ctx.font = '700 9px "Space Mono", monospace';
-  ctx.fillText(tier.toUpperCase(), W - 22, 126);
+  ctx.fillText(tier.toUpperCase(), 22, 101);
+
+  // Brand — right side
+  ctx.fillStyle = CHALK;
+  ctx.font = '900 16px "Space Mono", monospace';
+  ctx.textAlign = "right";
+  ctx.fillText("GOAT LAB", W - 22, 40);
+
+  // Mode label — right, below brand
+  ctx.fillStyle = modeColor;
+  ctx.font = '700 10px "Space Mono", monospace';
+  ctx.fillText(modeText, W - 22, 57);
 
   ctx.textAlign = "left";
 
@@ -4174,9 +4183,9 @@ async function generateShareImage() {
   const radarCY = radarY + RADAR_H / 2;
   drawRadarOnCanvas(ctx, radarCX, radarCY, 46);
 
-  // Short-stat labels around radar
-  ctx.fillStyle = "rgba(56,182,255,0.65)";
-  ctx.font = '700 8px "Space Mono", monospace';
+  // Stat labels around radar — larger, crisper
+  ctx.fillStyle = "rgba(56,182,255,0.8)";
+  ctx.font = '700 9px "Space Mono", monospace';
   ctx.textAlign = "center";
   const labelR = 60;
   attributes.forEach((attr, i) => {
@@ -4185,8 +4194,8 @@ async function generateShareImage() {
   });
   ctx.textAlign = "left";
 
-  // Divider between radar and rows
-  ctx.strokeStyle = "rgba(56,182,255,0.15)";
+  // Divider
+  ctx.strokeStyle = "rgba(56,182,255,0.2)";
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(0, radarY + RADAR_H);
@@ -4194,49 +4203,55 @@ async function generateShareImage() {
   ctx.stroke();
 
   // ── Pick rows ────────────────────────────────────────────────────────────
+  const SCORE_CX = W - 38;
+  const SCORE_R  = 22;
+  const NAME_MAX = SCORE_CX - SCORE_R - 20 - 12;
+  const nameFont = '700 17px "Playfair Display", Georgia, serif';
+
   const orderedValues = attributes.map((attr) => build[attr.key]);
   orderedValues.forEach((pick, i) => {
     if (!pick) return;
     const y = HEADER_H + RADAR_H + i * ROW_H;
 
+    // Subtle alternate row tint
     if (i % 2 === 1) {
-      ctx.fillStyle = "rgba(21,20,19,0.035)";
+      ctx.fillStyle = "rgba(21,20,19,0.04)";
       ctx.fillRect(0, y, W, ROW_H);
     }
 
-    ctx.strokeStyle = "rgba(21,20,19,0.08)";
+    // Full-width row divider
+    ctx.strokeStyle = "rgba(21,20,19,0.1)";
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(16, y + ROW_H);
-    ctx.lineTo(W - 16, y + ROW_H);
+    ctx.moveTo(0, y + ROW_H);
+    ctx.lineTo(W, y + ROW_H);
     ctx.stroke();
 
-    // Attribute label (small, muted)
+    // Attribute label
     ctx.fillStyle = MUTED;
-    ctx.font = '700 8px "Space Mono", monospace';
-    ctx.fillText(pick.attribute.label.toUpperCase(), 20, y + 17);
+    ctx.font = '700 10px "Space Mono", monospace';
+    ctx.fillText(pick.attribute.label.toUpperCase(), 20, y + 18);
 
-    // Player name (serif, prominent)
+    // Player name (truncated to fit)
     ctx.fillStyle = INK;
-    ctx.font = '700 16px "Playfair Display", Georgia, serif';
-    ctx.fillText(pick.player.name, 20, y + 37);
+    ctx.fillText(clip(pick.player.name, NAME_MAX, nameFont), 20, y + 39);
 
-    // Team + era
+    // Team · era
     ctx.fillStyle = MUTED;
-    ctx.font = '400 9px "Space Mono", monospace';
-    ctx.fillText(`${pick.teamEra.era} ${pick.teamEra.team}`, 20, y + 53);
+    ctx.font = '400 10px "Space Mono", monospace';
+    ctx.fillText(`${pick.teamEra.era} · ${pick.teamEra.team}`, 20, y + 56);
 
-    // Score badge (circle)
+    // Score badge
     const scoreColor = pick.score >= 98 ? GOLD : pick.score >= 94 ? COURT : INK;
     const textColor  = pick.score >= 94 ? INK  : PAPER;
     ctx.fillStyle = scoreColor;
     ctx.beginPath();
-    ctx.arc(W - 34, y + ROW_H / 2, 20, 0, Math.PI * 2);
+    ctx.arc(SCORE_CX, y + ROW_H / 2, SCORE_R, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = textColor;
-    ctx.font = '700 14px "Space Mono", monospace';
+    ctx.font = '700 15px "Space Mono", monospace';
     ctx.textAlign = "center";
-    ctx.fillText(pick.score, W - 34, y + ROW_H / 2 + 5);
+    ctx.fillText(pick.score, SCORE_CX, y + ROW_H / 2 + 5);
     ctx.textAlign = "left";
   });
 
@@ -4246,16 +4261,16 @@ async function generateShareImage() {
   ctx.fillRect(0, footerY, W, FOOTER_H);
 
   ctx.fillStyle = CHALK;
-  ctx.font = '700 13px "Playfair Display", Georgia, serif';
-  ctx.fillText("Can you beat my build?", 20, footerY + 27);
+  ctx.font = '700 14px "Playfair Display", Georgia, serif';
+  ctx.fillText("Can you beat my build?", 22, footerY + 30);
 
   ctx.fillStyle = GOLD;
-  ctx.font = '700 9px "Space Mono", monospace';
+  ctx.font = '700 10px "Space Mono", monospace';
   ctx.textAlign = "right";
-  ctx.fillText("playgoatlab.com", W - 20, footerY + 27);
+  ctx.fillText("playgoatlab.com", W - 22, footerY + 30);
   ctx.textAlign = "left";
 
-  return new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.96));
+  return new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.97));
 }
 
 function buildShareText(score, tier) {
