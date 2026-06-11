@@ -3887,11 +3887,21 @@ function finish() {
   updatePBDisplay();
 
   if (resultBreakdown) {
-    if (score < 100) {
-      resultBreakdown.textContent = `Held back: ${weakSpot.attribute.label} (${weakSpot.score}) · Lifted by: ${bestPick.attribute.label} (${bestPick.score})`;
+    if (score === 100) {
+      resultBreakdown.textContent = `Perfect build. Nobody does this.`;
+      resultBreakdown.hidden = false;
+    } else if (score >= 94) {
+      resultBreakdown.textContent = `Held back: ${weakSpot.attribute.label} (${weakSpot.score}) · Lifted by: ${bestPick.attribute.label} (${bestPick.score}) · You're in rare air.`;
+      resultBreakdown.hidden = false;
+    } else if (score >= 86) {
+      resultBreakdown.textContent = `Held back: ${weakSpot.attribute.label} (${weakSpot.score}) · Lifted by: ${bestPick.attribute.label} (${bestPick.score}) · Solid build. Most don't get here.`;
+      resultBreakdown.hidden = false;
+    } else if (score >= 80) {
+      resultBreakdown.textContent = `Held back: ${weakSpot.attribute.label} (${weakSpot.score}) · Lifted by: ${bestPick.attribute.label} (${bestPick.score}) · A starting five player. Keep pushing.`;
       resultBreakdown.hidden = false;
     } else {
-      resultBreakdown.hidden = true;
+      resultBreakdown.textContent = `Held back: ${weakSpot.attribute.label} (${weakSpot.score}) · Lifted by: ${bestPick.attribute.label} (${bestPick.score})`;
+      resultBreakdown.hidden = false;
     }
   }
 
@@ -4004,18 +4014,19 @@ function startGame(mode) {
   // Hide team respin on franchise daily (team is locked)
   if (respinTeamBtn) respinTeamBtn.hidden = mode === "daily" && dailyData?.franchise;
 
-  roundLabel.textContent = `Round — of ${runAttributes.length}`;
-  prompt.classList.remove("is-rolling", "is-locked");
-  prompt.textContent = "Press New Run to begin";
-  context.textContent = "";
   modeLabel.textContent = mode === "daily"
     ? (dailyData?.franchise ? `Franchise Daily · ${dailyData.franchiseTeamName} · Blind` : "Daily Challenge · Blind")
     : mode === "blind" ? "Blind mode: ratings reveal after your pick."
     : "Classic mode: ratings are visible before you pick.";
-  if (respinBar) respinBar.hidden = true;
+  renderRound();
 }
 
 function goBack() {
+  if (!result.hidden) {
+    // Already finished — safe to go back, no confirm needed
+  } else if (round > 0 && !confirm("Leave this run? Your progress will be lost.")) {
+    return;
+  }
   gameGrid.hidden = true;
   result.hidden = true;
   modeScreen.hidden = false;
@@ -4343,6 +4354,17 @@ respinTeamBtn.addEventListener("click", respinTeam);
 respinAttrBtn.addEventListener("click", respinAttribute);
 shareButton.addEventListener("click", shareResult);
 
+const playAgainBtn = document.querySelector("#playAgainBtn");
+if (playAgainBtn) {
+  playAgainBtn.addEventListener("click", () => {
+    if (gameMode === "daily") {
+      goBack();
+    } else {
+      reset();
+    }
+  });
+}
+
 // ── Modal focus management ───────────────────────────────────────────────────
 function setupModal(modal, closeFn) {
   modal.addEventListener("keydown", (e) => {
@@ -4642,18 +4664,28 @@ function updateDailyCard() {
   }
 
   if (dailyStreakEl) {
-    dailyStreakEl.textContent = `${streak}-day streak`;
-    dailyStreakEl.hidden = streak === 0;
+    if (streak >= 2) {
+      dailyStreakEl.textContent = `🔥 ${streak}-day streak`;
+      dailyStreakEl.hidden = false;
+    } else if (streak === 1) {
+      dailyStreakEl.textContent = `🔥 1-day streak`;
+      dailyStreakEl.hidden = false;
+    } else if (entry) {
+      dailyStreakEl.textContent = `Start a streak tomorrow`;
+      dailyStreakEl.hidden = false;
+    } else {
+      dailyStreakEl.hidden = true;
+    }
   }
 
   if (dailySubtitleEl) {
     if (isFranchise) {
       const data = generateDailyData(todayStr);
       dailySubtitleEl.textContent = data.franchiseTeamName
-        ? `Franchise · ${data.franchiseTeamName} · Blind · one attempt`
-        : "Franchise Challenge · Blind · one attempt";
+        ? `Franchise · ${data.franchiseTeamName} · Blind · one shot`
+        : "Franchise Challenge · Blind · one shot";
     } else {
-      dailySubtitleEl.textContent = "Blind · same draft for everyone · one attempt";
+      dailySubtitleEl.textContent = "Blind · same draft for everyone · one shot";
     }
   }
 }

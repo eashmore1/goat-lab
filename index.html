@@ -32,7 +32,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=5" />
+    <link rel="stylesheet" href="styles.css?v=6" />
     <script src="error-monitor.js"></script>
 
     <!-- Structured data: helps Google show a richer search result -->
@@ -208,6 +208,7 @@
           <button id="viewLeaderboardBtn" type="button" title="See today's global leaderboard" hidden>Leaderboard</button>
           <button id="saveBuildButton" type="button" title="Save this build to My Builds" hidden>Save Build</button>
           <button id="shareButton" type="button" title="Share your build">Share</button>
+          <button id="playAgainBtn" type="button" class="play-again-btn" title="Start a new run">Play Again</button>
         </div>
       </section>
     </main>
@@ -266,22 +267,15 @@
           <div class="modal-rule">
             <span class="modal-num">03</span>
             <div>
-              <strong>Three respins, reset every round.</strong>
-              <p>Don't love the roll? Respin the Era, Team, or Stat — one of each per round, and they reset every new round. Use them freely.</p>
+              <strong>Respin the era, team, or stat — once each per round.</strong>
+              <p>Don't love the roll? Use your Era, Team, or Stat respin. One of each, and all three reset every new round. Use them freely.</p>
             </div>
           </div>
           <div class="modal-rule">
             <span class="modal-num">04</span>
             <div>
               <strong>Build your GOAT Score.</strong>
-              <p>Your final score is calculated from your nine picks. Elite ratings earn bonuses. Weak spots get penalized. A balanced build gets a bonus. Chase 100.</p>
-            </div>
-          </div>
-          <div class="modal-rule">
-            <span class="modal-num">05</span>
-            <div>
-              <strong>Chase the 100.</strong>
-              <p>Nobody has built a perfect player. Every run is a chance. Can you?</p>
+              <p>Elite ratings earn bonuses. Weak spots get penalized. A balanced build gets a bonus. Nobody has scored 100. Can you?</p>
             </div>
           </div>
         </div>
@@ -372,7 +366,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="firebase-init.js"></script>
     <noscript><p style="font-family:sans-serif;text-align:center;padding:2rem">GOAT Lab requires JavaScript. Please enable it in your browser settings.</p></noscript>
-    <script src="app.js?v=16"></script>
+    <script src="app.js?v=17"></script>
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
