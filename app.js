@@ -4395,7 +4395,7 @@ function hideModal(modal) {
 }
 
 setupModal(helpModal, () => hideModal(helpModal));
-setupModal(shareModal, () => hideModal(shareModal));
+setupModal(shareModal, closeShareModal);
 
 helpButton.addEventListener("click", () => showModal(helpModal, helpButton));
 const helpButtonTop = document.querySelector("#helpButtonTop");
@@ -4504,21 +4504,36 @@ shareBtnX.addEventListener("click", () => {
     const top = (b.picks || []).slice().sort((a, x) => x.score - a.score).slice(0, 2).map(p => p.player);
     const names = top.length ? ` Built around ${top.join(" & ")}.` : "";
     tweet = `I scored ${b.score} (${getTier(b.score)}) in GOAT Lab 🏀${names} Can you beat my build?`;
+    const tw = window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank");
+    if (tw) tw.opener = null;
   } else {
     const score = calculateScore();
     const tier = getTier(score);
     const top = attributes.map(a => build[a.key]).filter(Boolean).sort((a, b) => b.score - a.score).slice(0, 2).map(p => p.player.name);
     const names = top.length ? ` Built around ${top.join(" & ")}.` : "";
     tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀${names} Can you beat my build?`;
+    openAndDownload(shareBtnX, "X / Twitter", () => {
+      const tw = window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank");
+      if (tw) tw.opener = null;
+    });
   }
-  const tw = window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank");
-  if (tw) tw.opener = null;
 });
 
 shareBtnText.addEventListener("click", async () => {
   const score = _savedShareData ? _savedShareData.score : calculateScore();
   const tier = getTier(score);
   const text = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build?`;
+  const msg = encodeURIComponent(`${text} https://playgoatlab.com`);
+  if (_savedShareData) {
+    // Saved build — no canvas available, text-only share
+    if (typeof navigator.share === "function") {
+      try { await navigator.share({ text, url: "https://playgoatlab.com" }); }
+      catch (err) { if (err.name !== "AbortError") console.error(err); }
+    } else {
+      window.open(`sms:?body=${msg}`, "_self");
+    }
+    return;
+  }
   const testFile = new File([], "t.jpg", { type: "image/jpeg" });
   if (typeof navigator.canShare === "function" && navigator.canShare({ files: [testFile] })) {
     // Mobile: share sheet — image auto-attaches when user picks Messages
@@ -4533,7 +4548,6 @@ shareBtnText.addEventListener("click", async () => {
     shareBtnText.disabled = false;
   } else {
     // Desktop: open SMS with text pre-filled, download image
-    const msg = encodeURIComponent(`${text} https://playgoatlab.com`);
     openAndDownload(shareBtnText, "Text", () => { window.open(`sms:?body=${msg}`, "_self"); });
   }
 });
