@@ -3469,7 +3469,7 @@ function calculateScore() {
   if (goatGate) return 100;
 
   const average = values.reduce((sum, value) => sum + value, 0) / values.length;
-  const weakPenalty = values.reduce((sum, value) => sum + Math.max(0, 78 - value) * 0.42, 0);
+  const weakPenalty = values.reduce((sum, value) => sum + Math.max(0, 72 - value) * 0.42, 0);
   const eliteBonus = values.filter((value) => value >= 98).length * 0.45;
   const balanceBonus = values.every((value) => value >= 90) ? 1.25 : 0;
   const score = Math.round(average - weakPenalty + eliteBonus + balanceBonus);
