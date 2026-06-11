@@ -4403,12 +4403,43 @@ if (helpButtonTop) helpButtonTop.addEventListener("click", () => showModal(helpM
 helpClose.addEventListener("click", () => hideModal(helpModal));
 helpModal.addEventListener("click", (e) => { if (e.target === helpModal) hideModal(helpModal); });
 
-shareModalClose.addEventListener("click", () => hideModal(shareModal));
-shareModal.addEventListener("click", (e) => { if (e.target === shareModal) hideModal(shareModal); });
+function closeShareModal() {
+  _savedShareData = null;
+  shareBtnImage.hidden = false;
+  hideModal(shareModal);
+}
+shareModalClose.addEventListener("click", closeShareModal);
+shareModal.addEventListener("click", (e) => { if (e.target === shareModal) closeShareModal(); });
 
 // ── Share infrastructure ────────────────────────────────────────────────────
 let _shareBlob = null;
 let _shareBlobPromise = null;
+let _savedShareData = null; // set when sharing a saved build instead of live build
+
+function buildSavedShareText(b) {
+  const picks = (b.picks || []).map(p => `${p.stat}: ${p.player} (${p.score}) — ${p.era} ${p.team}`).join("\n");
+  return `I scored ${b.score} (${getTier(b.score)}) in GOAT Lab 🏀\n\n${picks}\n\nCan you beat my build? https://playgoatlab.com`;
+}
+
+function openShareModalFromSaved(b) {
+  _savedShareData = b;
+  shareCardScore.textContent = b.score;
+  shareCardTier.textContent = getTier(b.score);
+  shareCardRows.innerHTML = "";
+  (b.picks || []).forEach(p => {
+    const row = document.createElement("div");
+    row.className = "share-row";
+    row.innerHTML = `
+      <span class="share-row-attr">${esc(p.stat || p.statKey || "")}</span>
+      <span class="share-row-player">${esc(p.player || "—")}</span>
+      <span class="share-row-meta">${esc(p.era || "")} ${esc(p.team || "")}</span>
+      <span class="share-row-score">${esc(p.score)}</span>
+    `;
+    shareCardRows.appendChild(row);
+  });
+  shareBtnImage.hidden = true;
+  showModal(shareModal, document.activeElement instanceof HTMLElement ? document.activeElement : null);
+}
 
 function primeShareImage() {
   _shareBlob = null;
@@ -4467,19 +4498,25 @@ shareBtnImage.addEventListener("click", async () => {
 });
 
 shareBtnX.addEventListener("click", () => {
-  const score = calculateScore();
-  const tier = getTier(score);
-  const top = attributes.map(a => build[a.key]).filter(Boolean).sort((a, b) => b.score - a.score).slice(0, 2).map(p => p.player.name);
-  const names = top.length ? ` Built around ${top.join(" & ")}.` : "";
-  const tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀${names} Can you beat my build?`;
-  openAndDownload(shareBtnX, "X / Twitter", () => {
-    const tw = window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank");
-    if (tw) tw.opener = null;
-  });
+  let tweet;
+  if (_savedShareData) {
+    const b = _savedShareData;
+    const top = (b.picks || []).slice().sort((a, x) => x.score - a.score).slice(0, 2).map(p => p.player);
+    const names = top.length ? ` Built around ${top.join(" & ")}.` : "";
+    tweet = `I scored ${b.score} (${getTier(b.score)}) in GOAT Lab 🏀${names} Can you beat my build?`;
+  } else {
+    const score = calculateScore();
+    const tier = getTier(score);
+    const top = attributes.map(a => build[a.key]).filter(Boolean).sort((a, b) => b.score - a.score).slice(0, 2).map(p => p.player.name);
+    const names = top.length ? ` Built around ${top.join(" & ")}.` : "";
+    tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀${names} Can you beat my build?`;
+  }
+  const tw = window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank");
+  if (tw) tw.opener = null;
 });
 
 shareBtnText.addEventListener("click", async () => {
-  const score = calculateScore();
+  const score = _savedShareData ? _savedShareData.score : calculateScore();
   const tier = getTier(score);
   const text = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build?`;
   const testFile = new File([], "t.jpg", { type: "image/jpeg" });
@@ -4502,10 +4539,11 @@ shareBtnText.addEventListener("click", async () => {
 });
 
 shareBtnCopy.addEventListener("click", async () => {
-  const score = calculateScore();
+  const score = _savedShareData ? _savedShareData.score : calculateScore();
   const tier = getTier(score);
+  const text = _savedShareData ? buildSavedShareText(_savedShareData) : buildShareText(score, tier);
   try {
-    await navigator.clipboard.writeText(buildShareText(score, tier));
+    await navigator.clipboard.writeText(text);
     shareBtnCopy.textContent = "Copied!";
     setTimeout(() => { shareBtnCopy.textContent = "Copy"; }, 1400);
   } catch {
@@ -4997,9 +5035,9 @@ updateBody(null);
   saveNameInput.addEventListener("keydown", (e) => { if (e.key === "Enter") saveConfirmBtn.click(); });
 
   function fmtDate(ts) { try { return ts && ts.toDate ? ts.toDate().toLocaleDateString() : ""; } catch { return ""; } }
+  let builds = [];
   async function renderSaved() {
     savedList.innerHTML = '<p class="saved-empty">Loading…</p>';
-    let builds;
     try { builds = await Auth.listBuilds(); }
     catch (e) { console.error(e); savedList.innerHTML = '<p class="saved-empty">Couldn\'t load your builds.</p>'; return; }
     if (!builds.length) {
@@ -5032,6 +5070,7 @@ updateBody(null);
             </span>
             <span class="saved-row-caret" aria-hidden="true">▾</span>
           </button>
+          <button class="saved-row-share" data-share="${esc(b.id)}" type="button" aria-label="Share build" title="Share build">↗</button>
           <button class="saved-row-del" data-del="${esc(b.id)}" type="button" aria-label="Delete build">&#x2715;</button>
         </div>
         <div class="saved-row-detail" hidden>${detail}</div>
@@ -5045,9 +5084,18 @@ updateBody(null);
   savedList.addEventListener("click", async (e) => {
     const delBtn = e.target.closest("[data-del]");
     if (delBtn) {
+      if (!confirm("Delete this build? This can't be undone.")) return;
       delBtn.disabled = true;
       try { await Auth.deleteBuild(delBtn.getAttribute("data-del")); await renderSaved(); }
       catch (err) { console.error(err); delBtn.disabled = false; }
+      return;
+    }
+    const shareBtn = e.target.closest("[data-share]");
+    if (shareBtn) {
+      const id = shareBtn.getAttribute("data-share");
+      const row = shareBtn.closest(".saved-row");
+      const b = builds.find(x => x.id === id);
+      if (b) openShareModalFromSaved(b);
       return;
     }
     const head = e.target.closest("[data-toggle]");
