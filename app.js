@@ -4078,7 +4078,7 @@ async function generateShareImage() {
 
   const W = 600;
   const HEADER_H = 182;
-  const RADAR_H = 110;
+  const RADAR_H = 128;
   const ROW_H = 66;
   const FOOTER_H = 52;
   const H = HEADER_H + RADAR_H + ROW_H * 9 + FOOTER_H;
@@ -4120,8 +4120,7 @@ async function generateShareImage() {
   ctx.fillStyle = INK;
   ctx.fillRect(0, 0, W, HEADER_H);
 
-  // Logo — light-mode pixel pass: darks → cream, edge alphas boosted so
-  // transitions fade cream→transparent instead of dark→transparent
+  // Logo — drawn at near 1:1 (96% of source) via off-canvas for crisp rendering
   if (logoImg) {
     const lhPhys = Math.round(logoImg.naturalHeight * 0.96 / SCALE) * SCALE;
     const lwPhys = Math.round(logoImg.naturalWidth  * 0.96 / SCALE) * SCALE;
@@ -4135,63 +4134,6 @@ async function generateShareImage() {
     logoCtx.imageSmoothingEnabled = true;
     logoCtx.imageSmoothingQuality = "high";
     logoCtx.drawImage(logoImg, 0, 0, lwPhys, lhPhys);
-
-    const imgData = logoCtx.getImageData(0, 0, lwPhys, lhPhys);
-    const d = imgData.data;
-    const W2 = lwPhys;
-
-    // Pass 1 — dark fills → cream; edge alphas boosted so cream dominates
-    for (let i = 0; i < d.length; i += 4) {
-      const a = d[i + 3];
-      if (a < 8) continue;
-      const lum = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) / 255;
-      const t = Math.min(1, lum / 0.42);
-      d[i]     = Math.round(d[i]     * t + 245 * (1 - t));
-      d[i + 1] = Math.round(d[i + 1] * t + 236 * (1 - t));
-      d[i + 2] = Math.round(d[i + 2] * t + 216 * (1 - t));
-      if (a < 240) d[i + 3] = Math.min(255, Math.round(a + (255 - a) * 0.72));
-    }
-
-    // Pass 2 — Gaussian smooth the alpha channel on outer-edge pixels only.
-    // Kernel: 1 2 1 / 2 4 2 / 1 2 1 (sum 16). Only touches semi-transparent
-    // pixels adjacent to a transparent neighbour so interior text is untouched.
-    const gK = [1, 2, 1, 2, 4, 2, 1, 2, 1];
-    const smoothed = new Uint8ClampedArray(d.length);
-    smoothed.set(d);
-    for (let y = 1; y < lhPhys - 1; y++) {
-      for (let x = 1; x < W2 - 1; x++) {
-        const ci = (y * W2 + x) * 4;
-        const ca = d[ci + 3];
-        if (ca < 8 || ca > 247) continue;          // skip transparent + solid interior
-
-        // Is this pixel on the outer boundary (neighbour is transparent)?
-        let onEdge = false;
-        for (let dy = -1; dy <= 1 && !onEdge; dy++)
-          for (let dx = -1; dx <= 1 && !onEdge; dx++)
-            if (d[((y + dy) * W2 + (x + dx)) * 4 + 3] < 8) onEdge = true;
-        if (!onEdge) continue;
-
-        // Gaussian-weighted average of all four channels
-        let r = 0, g = 0, b = 0, a = 0, tw = 0;
-        for (let dy = -1, ki = 0; dy <= 1; dy++) {
-          for (let dx = -1; dx <= 1; dx++, ki++) {
-            const ni = ((y + dy) * W2 + (x + dx)) * 4;
-            const w = gK[ki];
-            r += d[ni] * w; g += d[ni + 1] * w;
-            b += d[ni + 2] * w; a += d[ni + 3] * w;
-            tw += w;
-          }
-        }
-        smoothed[ci]     = Math.round(r / tw);
-        smoothed[ci + 1] = Math.round(g / tw);
-        smoothed[ci + 2] = Math.round(b / tw);
-        smoothed[ci + 3] = Math.round(a / tw);
-      }
-    }
-    // Write the smoothed values back
-    for (let i = 0; i < d.length; i++) d[i] = smoothed[i];
-
-    logoCtx.putImageData(imgData, 0, 0);
 
     const lx = Math.round((W - lw) / 2);
     const ly = Math.round((HEADER_H - lh) / 2);
