@@ -4715,6 +4715,7 @@ updateBody(null);
   const accountBar = $("#accountBar");
   const signedOut = $("#accountSignedOut");
   const signedIn = $("#accountSignedIn");
+  const dangerZone = $("#accountDangerZone");
   const accountName = $("#accountName");
   const signInBtn = $("#signInBtn");
   const signOutBtn = $("#signOutBtn");
@@ -5007,6 +5008,7 @@ updateBody(null);
     if (user) {
       signedOut.hidden = true;
       signedIn.hidden = false;
+      dangerZone.hidden = false;
       accountName.textContent = user.displayName || user.email || "you";
       try {
         currentHandle = await Auth.getHandle();
@@ -5025,6 +5027,7 @@ updateBody(null);
     } else {
       signedOut.hidden = false;
       signedIn.hidden = true;
+      dangerZone.hidden = true;
       currentHandle = null;
       saveBuildButton.hidden = true;
     }
