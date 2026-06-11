@@ -3469,7 +3469,7 @@ function calculateScore() {
   if (goatGate) return 100;
 
   const average = values.reduce((sum, value) => sum + value, 0) / values.length;
-  const weakPenalty = values.reduce((sum, value) => sum + Math.max(0, 88 - value) * 0.42, 0);
+  const weakPenalty = values.reduce((sum, value) => sum + Math.max(0, 72 - value) * 0.42, 0);
   const eliteBonus = values.filter((value) => value >= 98).length * 0.45;
   const balanceBonus = values.every((value) => value >= 90) ? 1.25 : 0;
   const score = Math.round(average - weakPenalty + eliteBonus + balanceBonus);
@@ -4084,7 +4084,7 @@ async function generateShareImage() {
 
   const W = 600;
   const HEADER_H = 182;
-  const RADAR_H = 110;
+  const RADAR_H = 128;
   const ROW_H = 66;
   const FOOTER_H = 52;
   const H = HEADER_H + RADAR_H + ROW_H * 9 + FOOTER_H;
@@ -4126,8 +4126,7 @@ async function generateShareImage() {
   ctx.fillStyle = INK;
   ctx.fillRect(0, 0, W, HEADER_H);
 
-  // Logo — light-mode pixel pass: darks → cream, edge alphas boosted so
-  // transitions fade cream→transparent instead of dark→transparent
+  // Logo — drawn at near 1:1 (96% of source) via off-canvas for crisp rendering
   if (logoImg) {
     const lhPhys = Math.round(logoImg.naturalHeight * 0.96 / SCALE) * SCALE;
     const lwPhys = Math.round(logoImg.naturalWidth  * 0.96 / SCALE) * SCALE;
@@ -4141,63 +4140,6 @@ async function generateShareImage() {
     logoCtx.imageSmoothingEnabled = true;
     logoCtx.imageSmoothingQuality = "high";
     logoCtx.drawImage(logoImg, 0, 0, lwPhys, lhPhys);
-
-    const imgData = logoCtx.getImageData(0, 0, lwPhys, lhPhys);
-    const d = imgData.data;
-    const W2 = lwPhys;
-
-    // Pass 1 — dark fills → cream; edge alphas boosted so cream dominates
-    for (let i = 0; i < d.length; i += 4) {
-      const a = d[i + 3];
-      if (a < 8) continue;
-      const lum = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) / 255;
-      const t = Math.min(1, lum / 0.42);
-      d[i]     = Math.round(d[i]     * t + 245 * (1 - t));
-      d[i + 1] = Math.round(d[i + 1] * t + 236 * (1 - t));
-      d[i + 2] = Math.round(d[i + 2] * t + 216 * (1 - t));
-      if (a < 240) d[i + 3] = Math.min(255, Math.round(a + (255 - a) * 0.72));
-    }
-
-    // Pass 2 — Gaussian smooth the alpha channel on outer-edge pixels only.
-    // Kernel: 1 2 1 / 2 4 2 / 1 2 1 (sum 16). Only touches semi-transparent
-    // pixels adjacent to a transparent neighbour so interior text is untouched.
-    const gK = [1, 2, 1, 2, 4, 2, 1, 2, 1];
-    const smoothed = new Uint8ClampedArray(d.length);
-    smoothed.set(d);
-    for (let y = 1; y < lhPhys - 1; y++) {
-      for (let x = 1; x < W2 - 1; x++) {
-        const ci = (y * W2 + x) * 4;
-        const ca = d[ci + 3];
-        if (ca < 8 || ca > 247) continue;          // skip transparent + solid interior
-
-        // Is this pixel on the outer boundary (neighbour is transparent)?
-        let onEdge = false;
-        for (let dy = -1; dy <= 1 && !onEdge; dy++)
-          for (let dx = -1; dx <= 1 && !onEdge; dx++)
-            if (d[((y + dy) * W2 + (x + dx)) * 4 + 3] < 8) onEdge = true;
-        if (!onEdge) continue;
-
-        // Gaussian-weighted average of all four channels
-        let r = 0, g = 0, b = 0, a = 0, tw = 0;
-        for (let dy = -1, ki = 0; dy <= 1; dy++) {
-          for (let dx = -1; dx <= 1; dx++, ki++) {
-            const ni = ((y + dy) * W2 + (x + dx)) * 4;
-            const w = gK[ki];
-            r += d[ni] * w; g += d[ni + 1] * w;
-            b += d[ni + 2] * w; a += d[ni + 3] * w;
-            tw += w;
-          }
-        }
-        smoothed[ci]     = Math.round(r / tw);
-        smoothed[ci + 1] = Math.round(g / tw);
-        smoothed[ci + 2] = Math.round(b / tw);
-        smoothed[ci + 3] = Math.round(a / tw);
-      }
-    }
-    // Write the smoothed values back
-    for (let i = 0; i < d.length; i++) d[i] = smoothed[i];
-
-    logoCtx.putImageData(imgData, 0, 0);
 
     const lx = Math.round((W - lw) / 2);
     const ly = Math.round((HEADER_H - lh) / 2);
@@ -4345,7 +4287,7 @@ function buildShareText(score, tier) {
       : `I scored ${score} on the ${dateLabel} GOAT Lab Daily 🏀`;
     return `${prefix}\n\n${picks}\n\nCan you beat me? https://playgoatlab.com`;
   }
-  return `I scored ${score} (${tier}) in GOAT Lab 🏀\n\n${picks}\n\nCan you beat my build? Try to create the GOAT too 👉 https://playgoatlab.com`;
+  return `I scored ${score} (${tier}) in GOAT Lab 🏀\n\n${picks}\n\nCan you beat my build? https://playgoatlab.com`;
 }
 
 function openShareModal() {
@@ -4371,7 +4313,7 @@ function openShareModal() {
     shareCardRows.appendChild(row);
   });
 
-  shareModal.hidden = false;
+  showModal(shareModal, document.activeElement instanceof HTMLElement ? document.activeElement : shareButton);
   primeShareImage();
 }
 
@@ -4403,14 +4345,45 @@ respinTeamBtn.addEventListener("click", respinTeam);
 respinAttrBtn.addEventListener("click", respinAttribute);
 shareButton.addEventListener("click", shareResult);
 
-helpButton.addEventListener("click", () => { helpModal.hidden = false; });
-const helpButtonTop = document.querySelector("#helpButtonTop");
-if (helpButtonTop) helpButtonTop.addEventListener("click", () => { helpModal.hidden = false; });
-helpClose.addEventListener("click", () => { helpModal.hidden = true; });
-helpModal.addEventListener("click", (e) => { if (e.target === helpModal) helpModal.hidden = true; });
+// ── Modal focus management ───────────────────────────────────────────────────
+function setupModal(modal, closeFn) {
+  modal.addEventListener("keydown", (e) => {
+    if (modal.hidden) return;
+    if (e.key === "Escape") { e.stopPropagation(); closeFn(); return; }
+    if (e.key !== "Tab") return;
+    const sel = 'button:not([disabled]), [href], input, [tabindex]:not([tabindex="-1"])';
+    const els = [...modal.querySelectorAll(sel)];
+    if (!els.length) return;
+    const first = els[0], last = els[els.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+}
 
-shareModalClose.addEventListener("click", () => { shareModal.hidden = true; });
-shareModal.addEventListener("click", (e) => { if (e.target === shareModal) shareModal.hidden = true; });
+function showModal(modal, trigger) {
+  modal.hidden = false;
+  modal._focusTrigger = trigger instanceof HTMLElement ? trigger : null;
+  const sel = 'button:not([disabled]), [href], input, [tabindex]:not([tabindex="-1"])';
+  const first = modal.querySelector(sel);
+  if (first) first.focus();
+}
+
+function hideModal(modal) {
+  modal.hidden = true;
+  if (modal._focusTrigger) { modal._focusTrigger.focus(); modal._focusTrigger = null; }
+}
+
+setupModal(helpModal, () => hideModal(helpModal));
+setupModal(shareModal, () => hideModal(shareModal));
+
+helpButton.addEventListener("click", () => showModal(helpModal, helpButton));
+const helpButtonTop = document.querySelector("#helpButtonTop");
+if (helpButtonTop) helpButtonTop.addEventListener("click", () => showModal(helpModal, helpButtonTop));
+helpClose.addEventListener("click", () => hideModal(helpModal));
+helpModal.addEventListener("click", (e) => { if (e.target === helpModal) hideModal(helpModal); });
+
+shareModalClose.addEventListener("click", () => hideModal(shareModal));
+shareModal.addEventListener("click", (e) => { if (e.target === shareModal) hideModal(shareModal); });
 
 // ── Share infrastructure ────────────────────────────────────────────────────
 let _shareBlob = null;
@@ -4475,7 +4448,9 @@ shareBtnImage.addEventListener("click", async () => {
 shareBtnX.addEventListener("click", () => {
   const score = calculateScore();
   const tier = getTier(score);
-  const tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build? Try to create the GOAT too 👉`;
+  const top = attributes.map(a => build[a.key]).filter(Boolean).sort((a, b) => b.score - a.score).slice(0, 2).map(p => p.player.name);
+  const names = top.length ? ` Built around ${top.join(" & ")}.` : "";
+  const tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀${names} Can you beat my build?`;
   openAndDownload(shareBtnX, "X / Twitter", () => {
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank");
   });
@@ -4530,7 +4505,7 @@ function mulberry32(seed) {
 
 function getTodayStr() {
   const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
 }
 
 function strToSeed(str) {
@@ -4614,8 +4589,7 @@ const dailySubtitleEl = document.querySelector("#dailySubtitle");
 
 function getCountdownStr() {
   const now = new Date();
-  const midnight = new Date(now);
-  midnight.setHours(24, 0, 0, 0);
+  const midnight = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
   const totalMins = Math.floor((midnight - now) / 60000);
   const h = Math.floor(totalMins / 60);
   const m = totalMins % 60;
@@ -4677,6 +4651,13 @@ if (new URLSearchParams(location.search).has("resetDaily")) {
   try { localStorage.setItem(DAILY_KEY, JSON.stringify(h)); } catch {}
   history.replaceState(null, "", location.pathname);
 }
+
+window.addEventListener("beforeunload", (e) => {
+  if (!gameGrid.hidden && result.hidden && round > 0) {
+    e.preventDefault();
+    e.returnValue = "";
+  }
+});
 
 updateDailyCard();
 setInterval(tickCountdown, 60000);
