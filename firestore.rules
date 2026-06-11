@@ -19,7 +19,12 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    // Private saved builds (reserved for the "My Builds" feature).
+    // Private user profile (custom leaderboard handle). Owner only.
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Private saved builds ("My Builds"). Owner only.
     match /users/{uid}/builds/{buildId} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }

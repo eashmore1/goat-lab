@@ -4764,21 +4764,167 @@ updateBody(null);
   });
   signOutBtn.addEventListener("click", () => Auth.signOut());
 
-  // Auth state drives the UI. On sign-in, back-fill today's score if already played.
-  Auth.onChange((user) => {
+  // --- Custom handle (public leaderboard name) ---------------------------
+  let currentHandle = null;
+  const editHandleBtn = $("#editHandleBtn");
+  const handleModal = $("#handleModal");
+  const handleInput = $("#handleInput");
+  const handleStatus = $("#handleStatus");
+  const handleSaveBtn = $("#handleSaveBtn");
+  const handleClose = $("#handleModalClose");
+
+  editHandleBtn.addEventListener("click", () => {
+    handleInput.value = currentHandle || "";
+    handleStatus.textContent = "";
+    handleModal.hidden = false;
+    handleInput.focus();
+    handleInput.select();
+  });
+  handleClose.addEventListener("click", () => { handleModal.hidden = true; });
+  handleModal.addEventListener("click", (e) => { if (e.target === handleModal) handleModal.hidden = true; });
+  handleSaveBtn.addEventListener("click", async () => {
+    const name = handleInput.value.trim();
+    if (!name) { handleStatus.textContent = "Enter a name."; return; }
+    handleSaveBtn.disabled = true;
+    handleStatus.textContent = "Saving…";
+    try {
+      currentHandle = await Auth.setHandle(name);
+      accountName.textContent = currentHandle;
+      // Reflect the new name on today's leaderboard entry if already played.
+      const entry = getDailyHistory()[getTodayStr()];
+      if (entry) Auth.submitDailyScore(getTodayStr(), {
+        name: currentHandle, score: entry.score, tier: entry.tier || getTier(entry.score),
+        franchise: entry.franchise || false, franchiseTeam: entry.franchiseTeam || null,
+      }).catch(console.error);
+      handleStatus.textContent = "Saved ✓";
+      setTimeout(() => { handleModal.hidden = true; }, 700);
+    } catch (e) {
+      console.error(e);
+      handleStatus.textContent = "Couldn't save — try again.";
+    } finally { handleSaveBtn.disabled = false; }
+  });
+  handleInput.addEventListener("keydown", (e) => { if (e.key === "Enter") handleSaveBtn.click(); });
+
+  // --- Save Build (My Builds) --------------------------------------------
+  const saveBuildButton = $("#saveBuildButton");
+  const saveModal = $("#saveModal");
+  const saveModalClose = $("#saveModalClose");
+  const saveNameInput = $("#saveNameInput");
+  const saveConfirmBtn = $("#saveConfirmBtn");
+  const saveStatus = $("#saveStatus");
+  const myBuildsBtn = $("#myBuildsBtn");
+  const savedModal = $("#savedModal");
+  const savedModalClose = $("#savedModalClose");
+  const savedList = $("#savedList");
+
+  function buildComplete() { return attributes.every((a) => build[a.key]); }
+
+  function serializeBuild(name) {
+    const picks = attributes.map((a) => {
+      const p = build[a.key];
+      return {
+        statKey: a.key, stat: a.label,
+        player: p.player.name, number: p.player.number,
+        era: p.teamEra.era, team: p.teamEra.team,
+        golden: !!p.teamEra.golden, score: p.score,
+      };
+    });
+    return { name: name.slice(0, 40), score: calculateScore(), mode: gameMode, picks };
+  }
+
+  function refreshSaveBtn() {
+    saveBuildButton.hidden = !(Auth.currentUser() && !result.hidden && buildComplete());
+  }
+  // Reveal "Save Build" whenever a finished result is shown (any mode).
+  if (typeof finish === "function") {
+    const _finish = finish;
+    finish = function patchedFinish() { _finish.apply(this, arguments); refreshSaveBtn(); };
+    window.finish = finish;
+  }
+
+  function closeSave() { saveModal.hidden = true; saveStatus.textContent = ""; }
+  saveBuildButton.addEventListener("click", () => {
+    if (!Auth.currentUser()) return;
+    saveNameInput.value = `${calculateScore()} ${getTier(calculateScore())}`.slice(0, 40);
+    saveStatus.textContent = "";
+    saveModal.hidden = false;
+    saveNameInput.focus();
+    saveNameInput.select();
+  });
+  saveModalClose.addEventListener("click", closeSave);
+  saveModal.addEventListener("click", (e) => { if (e.target === saveModal) closeSave(); });
+  saveConfirmBtn.addEventListener("click", async () => {
+    const name = saveNameInput.value.trim() || `GOAT ${calculateScore()}`;
+    saveConfirmBtn.disabled = true;
+    saveStatus.textContent = "Saving…";
+    try {
+      await Auth.saveBuild(serializeBuild(name));
+      saveStatus.textContent = "Saved to My Builds ✓";
+      setTimeout(closeSave, 850);
+    } catch (e) {
+      console.error(e);
+      saveStatus.textContent = "Couldn't save — try again.";
+    } finally { saveConfirmBtn.disabled = false; }
+  });
+  saveNameInput.addEventListener("keydown", (e) => { if (e.key === "Enter") saveConfirmBtn.click(); });
+
+  function fmtDate(ts) { try { return ts && ts.toDate ? ts.toDate().toLocaleDateString() : ""; } catch { return ""; } }
+  async function renderSaved() {
+    savedList.innerHTML = '<p class="saved-empty">Loading…</p>';
+    let builds;
+    try { builds = await Auth.listBuilds(); }
+    catch (e) { console.error(e); savedList.innerHTML = '<p class="saved-empty">Couldn\'t load your builds.</p>'; return; }
+    if (!builds.length) {
+      savedList.innerHTML = '<p class="saved-empty">No saved builds yet. Finish a run and hit Save Build.</p>';
+      return;
+    }
+    savedList.innerHTML = builds.map((b) => `
+      <div class="saved-row">
+        <div class="saved-row-main">
+          <span class="saved-row-score">${esc(b.score)}</span>
+          <div class="saved-row-meta">
+            <strong>${esc(b.name || "Untitled build")}</strong>
+            <small>${esc((b.mode || "").toUpperCase())} · ${esc(fmtDate(b.createdAt))}</small>
+          </div>
+        </div>
+        <button class="saved-row-del" data-del="${esc(b.id)}" type="button" aria-label="Delete build">&#x2715;</button>
+      </div>`).join("");
+  }
+  myBuildsBtn.addEventListener("click", () => { savedModal.hidden = false; renderSaved(); });
+  savedModalClose.addEventListener("click", () => { savedModal.hidden = true; });
+  savedModal.addEventListener("click", (e) => { if (e.target === savedModal) savedModal.hidden = true; });
+  savedList.addEventListener("click", async (e) => {
+    const id = e.target.getAttribute("data-del");
+    if (!id) return;
+    e.target.disabled = true;
+    try { await Auth.deleteBuild(id); await renderSaved(); }
+    catch (err) { console.error(err); e.target.disabled = false; }
+  });
+
+  // Auth state drives the UI. Load handle, then back-fill today's score.
+  Auth.onChange(async (user) => {
     if (user) {
       signedOut.hidden = true;
       signedIn.hidden = false;
       accountName.textContent = user.displayName || user.email || "you";
       try {
+        currentHandle = await Auth.getHandle();
+        accountName.textContent = currentHandle;
+      } catch (e) { console.error(e); }
+      try {
         const todayStr = getTodayStr();
         const entry = getDailyHistory()[todayStr];
-        if (entry) submitToday(todayStr, entry.score, entry.tier || getTier(entry.score),
-          entry.franchise || false, entry.franchiseTeam || null);
+        if (entry) Auth.submitDailyScore(todayStr, {
+          name: currentHandle, score: entry.score, tier: entry.tier || getTier(entry.score),
+          franchise: entry.franchise || false, franchiseTeam: entry.franchiseTeam || null,
+        }).catch(console.error);
       } catch (e) { console.error(e); }
+      refreshSaveBtn();
     } else {
       signedOut.hidden = false;
       signedIn.hidden = true;
+      currentHandle = null;
+      saveBuildButton.hidden = true;
     }
   });
 })();

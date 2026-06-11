@@ -1,4 +1,5 @@
-// Firebase: optional Google sign-in + GLOBAL daily leaderboard (Firestore).
+// Firebase: optional Google sign-in, custom handle, GLOBAL daily leaderboard,
+// and private saved builds ("My Builds") — all on Firestore.
 // These config values are NOT secrets — they ship to every browser. Security is
 // enforced by Firestore rules (see firestore.rules), not by hiding the apiKey.
 const firebaseConfig = {
@@ -11,14 +12,13 @@ const firebaseConfig = {
   measurementId: "G-K66KP53VPS",
 };
 
-// Graceful fallback: if config/SDK is missing, account features hide themselves
-// and the game keeps working untouched.
 window.GoatAuth = (() => {
   const isPlaceholder = String(firebaseConfig.apiKey).startsWith("PASTE");
   let auth = null;
   let db = null;
   let user = null;
   let enabled = false;
+  let handleCache = null;
   const listeners = new Set();
 
   if (!isPlaceholder && typeof firebase !== "undefined") {
@@ -29,6 +29,7 @@ window.GoatAuth = (() => {
       enabled = true;
       auth.onAuthStateChanged((u) => {
         user = u;
+        handleCache = null; // reset on sign-in/out
         listeners.forEach((cb) => cb(u));
       });
     } catch (e) {
@@ -39,14 +40,14 @@ window.GoatAuth = (() => {
     console.info("[GoatAuth] Firebase not configured — account features hidden.");
   }
 
-  function entriesRef(dateStr) {
-    return db.collection("dailyLeaderboard").doc(dateStr).collection("entries");
-  }
+  const userDoc = () => db.collection("users").doc(user.uid);
+  const buildsRef = () => userDoc().collection("builds");
+  const entriesRef = (d) => db.collection("dailyLeaderboard").doc(d).collection("entries");
 
   return {
     get enabled() { return enabled; },
     currentUser: () => user,
-    displayName: () => (user && (user.displayName || user.email)) || "Anonymous",
+    displayName: () => (user && (user.displayName || user.email)) || "Player",
 
     onChange(cb) {
       listeners.add(cb);
@@ -60,16 +61,33 @@ window.GoatAuth = (() => {
       const res = await auth.signInWithPopup(provider);
       return res.user;
     },
+    async signOut() { if (enabled) await auth.signOut(); },
 
-    async signOut() {
-      if (enabled) await auth.signOut();
+    // --- Custom handle (leaderboard display name) --------------------------
+    async getHandle() {
+      if (!enabled || !user) return null;
+      if (handleCache != null) return handleCache;
+      try {
+        const doc = await userDoc().get();
+        handleCache = (doc.exists && doc.data().handle) || this.displayName();
+      } catch (e) {
+        console.error(e);
+        handleCache = this.displayName();
+      }
+      return handleCache;
+    },
+    async setHandle(name) {
+      if (!enabled || !user) return null;
+      const h = String(name).trim().slice(0, 40) || this.displayName();
+      await userDoc().set({ handle: h }, { merge: true });
+      handleCache = h;
+      return h;
     },
 
     // --- Global daily leaderboard ------------------------------------------
-    // One entry per user per day: dailyLeaderboard/{date}/entries/{uid}
     async submitDailyScore(dateStr, data) {
       if (!enabled || !user) return false;
-      const name = String(data.name || this.displayName()).slice(0, 40);
+      const name = String(data.name || handleCache || this.displayName()).slice(0, 40);
       await entriesRef(dateStr).doc(user.uid).set({
         name,
         score: Number(data.score) || 0,
@@ -80,15 +98,29 @@ window.GoatAuth = (() => {
       });
       return true;
     },
-
-    // Public read — works even when signed out.
     async getDailyLeaderboard(dateStr, topN = 100) {
       if (!enabled) return [];
-      const snap = await entriesRef(dateStr)
-        .orderBy("score", "desc")
-        .limit(topN)
-        .get();
+      const snap = await entriesRef(dateStr).orderBy("score", "desc").limit(topN).get();
       return snap.docs.map((d) => ({ uid: d.id, ...d.data() }));
+    },
+
+    // --- Private saved builds ("My Builds") --------------------------------
+    async saveBuild(data) {
+      if (!enabled || !user) throw new Error("not signed in");
+      const ref = await buildsRef().add({
+        ...data,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+      return ref.id;
+    },
+    async listBuilds() {
+      if (!enabled || !user) return [];
+      const snap = await buildsRef().orderBy("createdAt", "desc").get();
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    },
+    async deleteBuild(id) {
+      if (!enabled || !user) return;
+      await buildsRef().doc(id).delete();
     },
   };
 })();

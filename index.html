@@ -64,7 +64,9 @@
             </button>
           </div>
           <div class="account-signedin" id="accountSignedIn" hidden>
-            <span class="account-who">Signed in as <strong id="accountName">—</strong></span>
+            <span class="account-who">Playing as <strong id="accountName">—</strong></span>
+            <button id="editHandleBtn" class="account-btn account-btn-ghost" type="button">Edit name</button>
+            <button id="myBuildsBtn" class="account-btn account-btn-ghost" type="button">My Builds</button>
             <button id="signOutBtn" class="account-btn account-btn-ghost" type="button">Sign out</button>
           </div>
         </div>
@@ -170,6 +172,7 @@
         <div class="result-actions">
           <svg id="radarResult" class="radar-result" viewBox="0 0 96 96" aria-hidden="true"></svg>
           <button id="viewLeaderboardBtn" type="button" title="See today's global leaderboard" hidden>Leaderboard</button>
+          <button id="saveBuildButton" type="button" title="Save this build to My Builds" hidden>Save Build</button>
           <button id="shareButton" type="button" title="Share your build">Share</button>
         </div>
       </section>
@@ -251,6 +254,48 @@
       </div>
     </div>
 
+    <div class="modal-overlay" id="handleModal" hidden>
+      <div class="modal save-name-modal" role="dialog" aria-modal="true" aria-label="Set your leaderboard name">
+        <div class="modal-header">
+          <p class="kicker">Leaderboard Name</p>
+          <button id="handleModalClose" class="modal-close" type="button" aria-label="Close">&#x2715;</button>
+        </div>
+        <div class="modal-body">
+          <label class="save-name-label" for="handleInput">This name shows on the public leaderboard</label>
+          <input id="handleInput" class="save-name-input" type="text" maxlength="40" placeholder="e.g. HoopsHead23" />
+          <p class="save-status" id="handleStatus"></p>
+          <button id="handleSaveBtn" class="save-confirm-btn" type="button">Save name</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="saveModal" hidden>
+      <div class="modal save-name-modal" role="dialog" aria-modal="true" aria-label="Save your build">
+        <div class="modal-header">
+          <p class="kicker">Save Build</p>
+          <button id="saveModalClose" class="modal-close" type="button" aria-label="Close">&#x2715;</button>
+        </div>
+        <div class="modal-body">
+          <label class="save-name-label" for="saveNameInput">Name this build</label>
+          <input id="saveNameInput" class="save-name-input" type="text" maxlength="40" placeholder="e.g. Prime Wing GOAT" />
+          <p class="save-status" id="saveStatus"></p>
+          <button id="saveConfirmBtn" class="save-confirm-btn" type="button">Save to My Builds</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="savedModal" hidden>
+      <div class="modal saved-builds-modal" role="dialog" aria-modal="true" aria-label="My saved builds">
+        <div class="modal-header">
+          <p class="kicker">My Builds</p>
+          <button id="savedModalClose" class="modal-close" type="button" aria-label="Close">&#x2715;</button>
+        </div>
+        <div class="modal-body">
+          <div id="savedList" class="saved-list"></div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal-overlay" id="leaderboardModal" hidden>
       <div class="modal leaderboard-modal" role="dialog" aria-modal="true" aria-label="Daily leaderboard">
         <div class="modal-header">
@@ -292,7 +337,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="firebase-init.js"></script>
-    <script src="app.js?v=3"></script>
+    <script src="app.js?v=4"></script>
     <!-- Vercel Analytics — enable in Vercel dashboard to activate -->
     <script defer src="/_vercel/insights/script.js"></script>
   </body>
