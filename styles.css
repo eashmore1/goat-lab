@@ -295,7 +295,7 @@ h1 {
 .mode-pb {
   display: block;
   margin-top: 10px;
-  font: 700 0.6rem/1 "Space Mono", ui-monospace, monospace;
+  font: 700 0.72rem/1 "Space Mono", ui-monospace, monospace;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--gold);
@@ -1586,6 +1586,9 @@ h1 {
 @media (max-width: 480px) {
   .share-buttons {
     grid-template-columns: 1fr 1fr;
+  }
+  .share-btn-copy {
+    grid-column: 1 / -1;
   }
 }
 

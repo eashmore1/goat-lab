@@ -4099,191 +4099,160 @@ async function generateShareImage() {
   const score = calculateScore();
   const tier = getTier(score);
 
-  const W = 600;
-  const HEADER_H = 182;
-  const RADAR_H = 128;
-  const ROW_H = 66;
-  const FOOTER_H = 52;
+  const W        = 600;
+  const HEADER_H = 130;
+  const RADAR_H  = 128;
+  const ROW_H    = 62;
+  const FOOTER_H = 44;
   const H = HEADER_H + RADAR_H + ROW_H * 9 + FOOTER_H;
   const SCALE = 3;
 
   const canvas = document.createElement("canvas");
-  canvas.width = W * SCALE;
+  canvas.width  = W * SCALE;
   canvas.height = H * SCALE;
   const ctx = canvas.getContext("2d");
   ctx.scale(SCALE, SCALE);
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
 
-  // Pre-load logo fresh so it renders crisply regardless of CSS state
-  const logoImg = await new Promise(res => {
-    const img = new Image();
-    img.onload = () => res(img);
-    img.onerror = () => res(null);
-    img.src = "GOATLABLOGO.png";
-    if (img.complete && img.naturalWidth > 0) res(img);
-  });
-
   const PAPER = "#f5ecd8";
-  const INK = "#151413";
-  const GOLD = "#e6b843";
-  const MUTED = "rgba(21,20,19,0.5)";
+  const INK   = "#151413";
+  const GOLD  = "#e6b843";
+  const CHALK = "#fff7df";
+  const MUTED = "rgba(21,20,19,0.45)";
   const COURT = "#c9673d";
+  const NAVY  = "#091420";
 
-  // Background
+  const modeColor = gameMode === "daily" ? GOLD : gameMode === "blind" ? COURT : CHALK;
+  const modeText  = gameMode === "daily" ? "DAILY CHALLENGE" : gameMode === "blind" ? "BLIND MODE" : "CLASSIC MODE";
+
+  // ── Background + border ──────────────────────────────────────────────────
   ctx.fillStyle = PAPER;
   ctx.fillRect(0, 0, W, H);
-
-  // Border
   ctx.strokeStyle = INK;
   ctx.lineWidth = 5;
   ctx.strokeRect(2.5, 2.5, W - 5, H - 5);
 
-  // Header bar
+  // ── Header ───────────────────────────────────────────────────────────────
   ctx.fillStyle = INK;
   ctx.fillRect(0, 0, W, HEADER_H);
 
-  // Logo — drawn at near 1:1 (96% of source) via off-canvas for crisp rendering
-  if (logoImg) {
-    const lhPhys = Math.round(logoImg.naturalHeight * 0.96 / SCALE) * SCALE;
-    const lwPhys = Math.round(logoImg.naturalWidth  * 0.96 / SCALE) * SCALE;
-    const lh = lhPhys / SCALE;
-    const lw = lwPhys / SCALE;
+  // Mode accent strip at top (4 px colored bar)
+  ctx.fillStyle = modeColor;
+  ctx.fillRect(0, 0, W, 4);
 
-    const logoOff = document.createElement("canvas");
-    logoOff.width  = lwPhys;
-    logoOff.height = lhPhys;
-    const logoCtx = logoOff.getContext("2d");
-    logoCtx.imageSmoothingEnabled = true;
-    logoCtx.imageSmoothingQuality = "high";
-    logoCtx.drawImage(logoImg, 0, 0, lwPhys, lhPhys);
+  // Brand: "GOAT LAB"
+  ctx.fillStyle = CHALK;
+  ctx.font = '900 17px "Space Mono", monospace';
+  ctx.textAlign = "left";
+  ctx.fillText("GOAT LAB", 22, 44);
 
-    const lx = Math.round((W - lw) / 2);
-    const ly = Math.round((HEADER_H - lh) / 2);
-    ctx.drawImage(logoOff, lx, ly, lw, lh);
-  }
-
-  // Score — vertically centered on right side of header
-  ctx.fillStyle = GOLD;
-  ctx.font = '700 44px "Space Mono", monospace';
-  ctx.textAlign = "right";
-  ctx.fillText(score, W - 18, HEADER_H / 2 + 6);
-
-  // Tier label — right, below score
-  ctx.fillStyle = "rgba(255,247,223,0.55)";
+  // Mode label below brand
+  ctx.fillStyle = modeColor;
   ctx.font = '700 9px "Space Mono", monospace';
-  ctx.fillText(tier.toUpperCase(), W - 18, HEADER_H / 2 + 22);
+  ctx.fillText(modeText, 22, 62);
+
+  // Score — large, right-aligned
+  ctx.fillStyle = GOLD;
+  ctx.font = '700 58px "Space Mono", monospace';
+  ctx.textAlign = "right";
+  ctx.fillText(score, W - 22, 112);
+
+  // Tier — right, below score
+  ctx.fillStyle = "rgba(255,247,223,0.45)";
+  ctx.font = '700 9px "Space Mono", monospace';
+  ctx.fillText(tier.toUpperCase(), W - 22, 126);
+
   ctx.textAlign = "left";
 
-  // Mode badge — bottom-left of header
-  const modeLabel = gameMode === "daily" ? "DAILY" : gameMode === "blind" ? "BLIND MODE" : "CLASSIC MODE";
-  const badgeW = gameMode === "classic" ? 104 : gameMode === "blind" ? 94 : 68;
-  ctx.fillStyle = gameMode === "daily" ? GOLD : gameMode === "blind" ? COURT : "rgba(255,247,223,0.18)";
-  ctx.fillRect(16, HEADER_H - 28, badgeW, 18);
-  ctx.fillStyle = gameMode === "daily" ? INK : gameMode === "blind" ? PAPER : "rgba(255,247,223,0.7)";
-  ctx.font = '700 9px "Space Mono", monospace';
-  ctx.fillText(modeLabel, 22, HEADER_H - 14);
-
-  // Radar section — dark navy, matches lab scan aesthetic
+  // ── Radar section ────────────────────────────────────────────────────────
   const radarY = HEADER_H;
-  ctx.fillStyle = "#091420";
+  ctx.fillStyle = NAVY;
   ctx.fillRect(0, radarY, W, RADAR_H);
 
-  // Subtle grid lines on radar section
-  ctx.strokeStyle = "rgba(56,182,255,0.06)";
-  ctx.lineWidth = 1;
-  for (let x = 0; x < W; x += 28) {
-    ctx.beginPath(); ctx.moveTo(x, radarY); ctx.lineTo(x, radarY + RADAR_H); ctx.stroke();
-  }
-  for (let y = radarY; y < radarY + RADAR_H; y += 28) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-  }
-
-  // Radar chart centered
   const radarCX = W / 2;
   const radarCY = radarY + RADAR_H / 2;
-  drawRadarOnCanvas(ctx, radarCX, radarCY, 44);
+  drawRadarOnCanvas(ctx, radarCX, radarCY, 46);
 
-  // Attribute short labels around radar
-  ctx.fillStyle = "rgba(56,182,255,0.55)";
+  // Short-stat labels around radar
+  ctx.fillStyle = "rgba(56,182,255,0.65)";
   ctx.font = '700 8px "Space Mono", monospace';
   ctx.textAlign = "center";
-  const labelR = 56;
+  const labelR = 60;
   attributes.forEach((attr, i) => {
     const angle = -Math.PI / 2 + (i * 2 * Math.PI / attributes.length);
     ctx.fillText(attr.short, radarCX + Math.cos(angle) * labelR, radarCY + Math.sin(angle) * labelR + 3);
   });
   ctx.textAlign = "left";
 
-  // Section divider
-  ctx.strokeStyle = "rgba(56,182,255,0.2)";
+  // Divider between radar and rows
+  ctx.strokeStyle = "rgba(56,182,255,0.15)";
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(0, radarY + RADAR_H);
   ctx.lineTo(W, radarY + RADAR_H);
   ctx.stroke();
 
-  // Pick rows
+  // ── Pick rows ────────────────────────────────────────────────────────────
   const orderedValues = attributes.map((attr) => build[attr.key]);
   orderedValues.forEach((pick, i) => {
     if (!pick) return;
     const y = HEADER_H + RADAR_H + i * ROW_H;
 
-    // Alternate row tint
     if (i % 2 === 1) {
-      ctx.fillStyle = "rgba(21,20,19,0.03)";
+      ctx.fillStyle = "rgba(21,20,19,0.035)";
       ctx.fillRect(0, y, W, ROW_H);
     }
 
-    // Row divider
-    ctx.strokeStyle = "rgba(21,20,19,0.09)";
+    ctx.strokeStyle = "rgba(21,20,19,0.08)";
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(16, y + ROW_H);
     ctx.lineTo(W - 16, y + ROW_H);
     ctx.stroke();
 
-    // Attribute label
+    // Attribute label (small, muted)
     ctx.fillStyle = MUTED;
-    ctx.font = '700 9px "Space Mono", monospace';
-    ctx.fillText(pick.attribute.label.toUpperCase(), 20, y + 24);
+    ctx.font = '700 8px "Space Mono", monospace';
+    ctx.fillText(pick.attribute.label.toUpperCase(), 20, y + 17);
 
-    // Player name
+    // Player name (serif, prominent)
     ctx.fillStyle = INK;
-    ctx.font = '700 17px "Playfair Display", Georgia, serif';
-    ctx.fillText(pick.player.name, 20, y + 46);
+    ctx.font = '700 16px "Playfair Display", Georgia, serif';
+    ctx.fillText(pick.player.name, 20, y + 37);
 
-    // Team/era
+    // Team + era
     ctx.fillStyle = MUTED;
-    ctx.font = '400 10px "Space Mono", monospace';
-    ctx.fillText(`${pick.teamEra.era} ${pick.teamEra.team}`, 20, y + 62);
+    ctx.font = '400 9px "Space Mono", monospace';
+    ctx.fillText(`${pick.teamEra.era} ${pick.teamEra.team}`, 20, y + 53);
 
-    // Score circle
+    // Score badge (circle)
     const scoreColor = pick.score >= 98 ? GOLD : pick.score >= 94 ? COURT : INK;
+    const textColor  = pick.score >= 94 ? INK  : PAPER;
     ctx.fillStyle = scoreColor;
     ctx.beginPath();
-    ctx.arc(W - 32, y + ROW_H / 2, 22, 0, Math.PI * 2);
+    ctx.arc(W - 34, y + ROW_H / 2, 20, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = pick.score >= 94 ? INK : PAPER;
-    ctx.font = '700 15px "Space Mono", monospace';
+    ctx.fillStyle = textColor;
+    ctx.font = '700 14px "Space Mono", monospace';
     ctx.textAlign = "center";
-    ctx.fillText(pick.score, W - 32, y + ROW_H / 2 + 6);
+    ctx.fillText(pick.score, W - 34, y + ROW_H / 2 + 5);
     ctx.textAlign = "left";
   });
 
-  // Footer bar
+  // ── Footer ───────────────────────────────────────────────────────────────
   const footerY = HEADER_H + RADAR_H + ROW_H * 9;
   ctx.fillStyle = INK;
   ctx.fillRect(0, footerY, W, FOOTER_H);
 
-  ctx.fillStyle = PAPER;
-  ctx.font = '700 15px "Playfair Display", Georgia, serif';
-  ctx.fillText("Can you beat my build?", 20, footerY + 32);
+  ctx.fillStyle = CHALK;
+  ctx.font = '700 13px "Playfair Display", Georgia, serif';
+  ctx.fillText("Can you beat my build?", 20, footerY + 27);
 
   ctx.fillStyle = GOLD;
-  ctx.font = '700 10px "Space Mono", monospace';
+  ctx.font = '700 9px "Space Mono", monospace';
   ctx.textAlign = "right";
-  ctx.fillText("playgoatlab.com", W - 20, footerY + 32);
+  ctx.fillText("playgoatlab.com", W - 20, footerY + 27);
   ctx.textAlign = "left";
 
   return new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.96));
