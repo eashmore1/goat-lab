@@ -3888,6 +3888,11 @@ function finish() {
     });
     saveDailyResult(todayStr, score, tier, dailyData?.franchise || false, dailyData?.franchiseTeamName || null, dailyPicks);
     updateDailyCard();
+    // Submit to the global leaderboard (if signed in) + reveal the Leaderboard button.
+    if (window.GoatLeaderboard) {
+      window.GoatLeaderboard.submitToday(todayStr, score, tier, dailyData?.franchise || false, dailyData?.franchiseTeamName || null);
+      window.GoatLeaderboard.showResultButton();
+    }
     resultTitle.textContent = `Daily — ${score}: ${tier}`;
     resultCopy.textContent = dailyData?.franchise
       ? `${archetype}. Greatest ${dailyData.franchiseTeamName} build in the books. Come back tomorrow.`
@@ -4677,3 +4682,103 @@ setInterval(tickCountdown, 60000);
 
 renderBuildList();
 updateBody(null);
+
+// --- Accounts (optional Google login) + GLOBAL daily leaderboard ----------
+(function initAccountsAndLeaderboard() {
+  const Auth = window.GoatAuth;
+  if (!Auth || !Auth.enabled) return; // graceful: no Firebase -> features stay hidden
+
+  const $ = (id) => document.querySelector(id);
+  const accountBar = $("#accountBar");
+  const signedOut = $("#accountSignedOut");
+  const signedIn = $("#accountSignedIn");
+  const accountName = $("#accountName");
+  const signInBtn = $("#signInBtn");
+  const signOutBtn = $("#signOutBtn");
+  const leaderboardBtn = $("#leaderboardBtn");
+  const viewLeaderboardBtn = $("#viewLeaderboardBtn");
+  const lbModal = $("#leaderboardModal");
+  const lbClose = $("#leaderboardClose");
+  const lbList = $("#leaderboardList");
+  const lbHint = $("#lbHint");
+
+  accountBar.hidden = false;
+
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  // Submit today's daily score to the global leaderboard (no-op if signed out).
+  function submitToday(dateStr, score, tier, franchise, franchiseTeam) {
+    if (!Auth.currentUser()) return;
+    Auth.submitDailyScore(dateStr, { score, tier, franchise, franchiseTeam }).catch(console.error);
+  }
+  function showResultButton() {
+    if (viewLeaderboardBtn) viewLeaderboardBtn.hidden = false;
+  }
+  window.GoatLeaderboard = { submitToday, showResultButton };
+
+  // Render the global leaderboard for today.
+  async function renderLeaderboard() {
+    const me = Auth.currentUser();
+    lbHint.hidden = true;
+    lbList.innerHTML = '<p class="lb-empty">Loading today\'s board…</p>';
+    let rows;
+    try {
+      rows = await Auth.getDailyLeaderboard(getTodayStr(), 100);
+    } catch (e) {
+      console.error(e);
+      lbList.innerHTML = '<p class="lb-empty">Couldn\'t load the leaderboard.</p>';
+      return;
+    }
+    if (!rows.length) {
+      lbList.innerHTML = '<p class="lb-empty">No scores yet today. Be the first — play the Daily!</p>';
+    } else {
+      lbList.innerHTML = rows.map((r, i) => {
+        const mine = me && r.uid === me.uid;
+        const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}`;
+        return `
+          <div class="lb-row${mine ? " lb-row-me" : ""}">
+            <span class="lb-rank">${medal}</span>
+            <span class="lb-name">${esc(r.name || "Anonymous")}${mine ? " (you)" : ""}</span>
+            <span class="lb-score">${esc(r.score)}</span>
+          </div>`;
+      }).join("");
+    }
+    if (!me) {
+      lbHint.textContent = "Sign in and play today's Daily to claim your spot.";
+      lbHint.hidden = false;
+    }
+  }
+
+  function openLeaderboard() { lbModal.hidden = false; renderLeaderboard(); }
+  leaderboardBtn.addEventListener("click", openLeaderboard);
+  if (viewLeaderboardBtn) viewLeaderboardBtn.addEventListener("click", openLeaderboard);
+  lbClose.addEventListener("click", () => { lbModal.hidden = true; });
+  lbModal.addEventListener("click", (e) => { if (e.target === lbModal) lbModal.hidden = true; });
+
+  signInBtn.addEventListener("click", async () => {
+    signInBtn.textContent = "Opening Google…";
+    try { await Auth.signIn(); }
+    catch (e) { console.error(e); }
+    finally { signInBtn.innerHTML = '<span class="g-mark" aria-hidden="true">G</span> Sign in with Google'; }
+  });
+  signOutBtn.addEventListener("click", () => Auth.signOut());
+
+  // Auth state drives the UI. On sign-in, back-fill today's score if already played.
+  Auth.onChange((user) => {
+    if (user) {
+      signedOut.hidden = true;
+      signedIn.hidden = false;
+      accountName.textContent = user.displayName || user.email || "you";
+      try {
+        const todayStr = getTodayStr();
+        const entry = getDailyHistory()[todayStr];
+        if (entry) submitToday(todayStr, entry.score, entry.tier || getTier(entry.score),
+          entry.franchise || false, entry.franchiseTeam || null);
+      } catch (e) { console.error(e); }
+    } else {
+      signedOut.hidden = false;
+      signedIn.hidden = true;
+    }
+  });
+})();
