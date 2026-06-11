@@ -1761,3 +1761,19 @@ h1 {
 .bd-pscore { font: 950 0.92rem/1 "Space Mono", ui-monospace, monospace; text-align: right; }
 .bd-golden { color: #b8860b; }
 .bd-empty { font: 700 0.76rem/1.4 "Space Mono", ui-monospace, monospace; color: var(--muted); padding: 4px 0; }
+
+/* Subtle destructive account-delete link */
+.account-delete {
+  margin-left: 4px;
+  padding: 8px 10px;
+  background: none;
+  border: 1px solid rgba(214, 77, 58, 0.5);
+  color: var(--red);
+  font: 700 0.68rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+.account-delete:hover { background: var(--red); color: #fff; }
+.account-delete:disabled { opacity: 0.6; cursor: default; }

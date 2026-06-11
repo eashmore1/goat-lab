@@ -94,6 +94,7 @@ window.GoatAuth = (() => {
         tier: String(data.tier || ""),
         franchise: !!data.franchise,
         franchiseTeam: data.franchiseTeam || null,
+        picks: data.picks || null, // stored for auditability (detect/purge fake scores)
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
       return true;
@@ -134,6 +135,32 @@ window.GoatAuth = (() => {
     async putDailyHistory(dateStr, entry) {
       if (!enabled || !user) return;
       await userDoc().collection("dailyHistory").doc(dateStr).set(entry);
+    },
+
+    // --- Delete account + all associated data ------------------------------
+    async deleteAccount() {
+      if (!enabled || !user) return;
+      const uid = user.uid;
+      // Leaderboard entries exist only for days in dailyHistory — use those.
+      const dailySnap = await userDoc().collection("dailyHistory").get();
+      await Promise.all(dailySnap.docs.map((d) =>
+        db.collection("dailyLeaderboard").doc(d.id).collection("entries").doc(uid).delete().catch(() => {})));
+      // Delete daily history, saved builds, and the profile doc.
+      await Promise.all(dailySnap.docs.map((d) => d.ref.delete().catch(() => {})));
+      const buildsSnap = await buildsRef().get();
+      await Promise.all(buildsSnap.docs.map((d) => d.ref.delete().catch(() => {})));
+      await userDoc().delete().catch(() => {});
+      // Finally delete the auth user (re-auth if the session is too old).
+      try {
+        await user.delete();
+      } catch (e) {
+        if (e && e.code === "auth/requires-recent-login") {
+          await user.reauthenticateWithPopup(new firebase.auth.GoogleAuthProvider());
+          await user.delete();
+        } else {
+          throw e;
+        }
+      }
     },
   };
 })();

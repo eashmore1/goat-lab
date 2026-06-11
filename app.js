@@ -4711,7 +4711,8 @@ updateBody(null);
   // Submit today's daily score to the global leaderboard (no-op if signed out).
   function submitToday(dateStr, score, tier, franchise, franchiseTeam) {
     if (!Auth.currentUser()) return;
-    Auth.submitDailyScore(dateStr, { score, tier, franchise, franchiseTeam }).catch(console.error);
+    const picks = (getDailyHistory()[dateStr] || {}).picks || null;
+    Auth.submitDailyScore(dateStr, { score, tier, franchise, franchiseTeam, picks }).catch(console.error);
   }
   function showResultButton() {
     if (viewLeaderboardBtn) viewLeaderboardBtn.hidden = false;
@@ -4791,6 +4792,26 @@ updateBody(null);
   });
   signOutBtn.addEventListener("click", () => Auth.signOut());
 
+  const deleteAccountBtn = $("#deleteAccountBtn");
+  deleteAccountBtn.addEventListener("click", async () => {
+    if (!Auth.currentUser()) return;
+    if (!confirm("Delete your GOAT Lab account?\n\nThis permanently removes your saved builds, daily history & streak, leaderboard entries, and your sign-in. This cannot be undone.")) return;
+    if (!confirm("Are you absolutely sure? This is permanent.")) return;
+    deleteAccountBtn.disabled = true;
+    deleteAccountBtn.textContent = "Deleting…";
+    try {
+      await Auth.deleteAccount();
+      try { localStorage.removeItem("goatlab_daily"); } catch (e) {}
+      alert("Your account and all associated data have been deleted.");
+      location.reload();
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't fully delete the account. Please email ethan@momentumapps.net and we'll remove it.");
+      deleteAccountBtn.disabled = false;
+      deleteAccountBtn.textContent = "Delete account";
+    }
+  });
+
   // --- Custom handle (public leaderboard name) ---------------------------
   let currentHandle = null;
   const editHandleBtn = $("#editHandleBtn");
@@ -4821,7 +4842,7 @@ updateBody(null);
       const entry = getDailyHistory()[getTodayStr()];
       if (entry) Auth.submitDailyScore(getTodayStr(), {
         name: currentHandle, score: entry.score, tier: entry.tier || getTier(entry.score),
-        franchise: entry.franchise || false, franchiseTeam: entry.franchiseTeam || null,
+        franchise: entry.franchise || false, franchiseTeam: entry.franchiseTeam || null, picks: entry.picks || null,
       }).catch(console.error);
       handleStatus.textContent = "Saved ✓";
       setTimeout(() => { handleModal.hidden = true; }, 700);
@@ -4974,7 +4995,7 @@ updateBody(null);
         const entry = getDailyHistory()[todayStr];
         if (entry) Auth.submitDailyScore(todayStr, {
           name: currentHandle, score: entry.score, tier: entry.tier || getTier(entry.score),
-          franchise: entry.franchise || false, franchiseTeam: entry.franchiseTeam || null,
+          franchise: entry.franchise || false, franchiseTeam: entry.franchiseTeam || null, picks: entry.picks || null,
         }).catch(console.error);
       } catch (e) { console.error(e); }
       syncDailyHistory(); // merge cloud <-> local daily history + streak

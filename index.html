@@ -30,6 +30,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
+    <script src="error-monitor.js"></script>
   </head>
   <body>
     <main class="shell">
@@ -68,6 +69,7 @@
             <button id="editHandleBtn" class="account-btn account-btn-ghost" type="button">Edit name</button>
             <button id="myBuildsBtn" class="account-btn account-btn-ghost" type="button">My Builds</button>
             <button id="signOutBtn" class="account-btn account-btn-ghost" type="button">Sign out</button>
+            <button id="deleteAccountBtn" class="account-delete" type="button">Delete account</button>
           </div>
         </div>
       </div>
@@ -337,7 +339,14 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="firebase-init.js"></script>
-    <script src="app.js?v=6"></script>
+    <script src="app.js?v=7"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("/sw.js").catch(function () {});
+        });
+      }
+    </script>
     <!-- Vercel Analytics — enable in Vercel dashboard to activate -->
     <script defer src="/_vercel/insights/script.js"></script>
   </body>

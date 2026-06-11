@@ -16,7 +16,7 @@ service cloud.firestore {
         && request.resource.data.score <= 100
         && request.resource.data.name is string
         && request.resource.data.name.size() <= 40;
-      allow delete: if false;
+      allow delete: if request.auth != null && request.auth.uid == uid;
     }
 
     // Everything under a user's own space — profile (handle), saved builds,

@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /_vercel/
 
-Sitemap: https://goat-lab.vercel.app/sitemap.xml
+Sitemap: https://playgoatlab.com/sitemap.xml
