@@ -4450,7 +4450,8 @@ shareBtnX.addEventListener("click", () => {
   const names = top.length ? ` Built around ${top.join(" & ")}.` : "";
   const tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀${names} Can you beat my build?`;
   openAndDownload(shareBtnX, "X / Twitter", () => {
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank");
+    const tw = window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank");
+    if (tw) tw.opener = null;
   });
 });
 
