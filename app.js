@@ -4558,8 +4558,8 @@ function updatePBDisplay() {
   const pb = getPB();
   const pbClassic = document.querySelector("#pbClassic");
   const pbBlind = document.querySelector("#pbBlind");
-  if (pbClassic) { if (pb.classic) { pbClassic.textContent = `PB ${pb.classic}`; pbClassic.hidden = false; } else pbClassic.hidden = true; }
-  if (pbBlind)   { if (pb.blind)   { pbBlind.textContent   = `PB ${pb.blind}`;   pbBlind.hidden   = false; } else pbBlind.hidden   = true; }
+  if (pbClassic) { if (pb.classic) { pbClassic.textContent = `Personal Best ${pb.classic}`; pbClassic.hidden = false; } else pbClassic.hidden = true; }
+  if (pbBlind)   { if (pb.blind)   { pbBlind.textContent   = `Personal Best ${pb.blind}`;   pbBlind.hidden   = false; } else pbBlind.hidden   = true; }
 }
 
 function getDailyHistory() {

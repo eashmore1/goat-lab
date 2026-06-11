@@ -298,8 +298,13 @@ h1 {
   font: 700 0.72rem/1 "Space Mono", ui-monospace, monospace;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.55;
+}
+
+.mode-card-blind .mode-pb {
   color: var(--gold);
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 .lab-panel,
