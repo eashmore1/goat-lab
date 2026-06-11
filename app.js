@@ -4365,7 +4365,7 @@ function openShareModal() {
     shareCardRows.appendChild(row);
   });
 
-  shareModal.hidden = false;
+  showModal(shareModal, document.activeElement instanceof HTMLElement ? document.activeElement : shareButton);
   primeShareImage();
 }
 
@@ -4397,14 +4397,45 @@ respinTeamBtn.addEventListener("click", respinTeam);
 respinAttrBtn.addEventListener("click", respinAttribute);
 shareButton.addEventListener("click", shareResult);
 
-helpButton.addEventListener("click", () => { helpModal.hidden = false; });
-const helpButtonTop = document.querySelector("#helpButtonTop");
-if (helpButtonTop) helpButtonTop.addEventListener("click", () => { helpModal.hidden = false; });
-helpClose.addEventListener("click", () => { helpModal.hidden = true; });
-helpModal.addEventListener("click", (e) => { if (e.target === helpModal) helpModal.hidden = true; });
+// ── Modal focus management ───────────────────────────────────────────────────
+function setupModal(modal, closeFn) {
+  modal.addEventListener("keydown", (e) => {
+    if (modal.hidden) return;
+    if (e.key === "Escape") { e.stopPropagation(); closeFn(); return; }
+    if (e.key !== "Tab") return;
+    const sel = 'button:not([disabled]), [href], input, [tabindex]:not([tabindex="-1"])';
+    const els = [...modal.querySelectorAll(sel)];
+    if (!els.length) return;
+    const first = els[0], last = els[els.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+}
 
-shareModalClose.addEventListener("click", () => { shareModal.hidden = true; });
-shareModal.addEventListener("click", (e) => { if (e.target === shareModal) shareModal.hidden = true; });
+function showModal(modal, trigger) {
+  modal.hidden = false;
+  modal._focusTrigger = trigger instanceof HTMLElement ? trigger : null;
+  const sel = 'button:not([disabled]), [href], input, [tabindex]:not([tabindex="-1"])';
+  const first = modal.querySelector(sel);
+  if (first) first.focus();
+}
+
+function hideModal(modal) {
+  modal.hidden = true;
+  if (modal._focusTrigger) { modal._focusTrigger.focus(); modal._focusTrigger = null; }
+}
+
+setupModal(helpModal, () => hideModal(helpModal));
+setupModal(shareModal, () => hideModal(shareModal));
+
+helpButton.addEventListener("click", () => showModal(helpModal, helpButton));
+const helpButtonTop = document.querySelector("#helpButtonTop");
+if (helpButtonTop) helpButtonTop.addEventListener("click", () => showModal(helpModal, helpButtonTop));
+helpClose.addEventListener("click", () => hideModal(helpModal));
+helpModal.addEventListener("click", (e) => { if (e.target === helpModal) hideModal(helpModal); });
+
+shareModalClose.addEventListener("click", () => hideModal(shareModal));
+shareModal.addEventListener("click", (e) => { if (e.target === shareModal) hideModal(shareModal); });
 
 // ── Share infrastructure ────────────────────────────────────────────────────
 let _shareBlob = null;
@@ -4469,7 +4500,9 @@ shareBtnImage.addEventListener("click", async () => {
 shareBtnX.addEventListener("click", () => {
   const score = calculateScore();
   const tier = getTier(score);
-  const tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build? Try to create the GOAT too 👉`;
+  const top = attributes.map(a => build[a.key]).filter(Boolean).sort((a, b) => b.score - a.score).slice(0, 2).map(p => p.player.name);
+  const names = top.length ? ` Built around ${top.join(" & ")}.` : "";
+  const tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀${names} Can you beat my build?`;
   openAndDownload(shareBtnX, "X / Twitter", () => {
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://goat-lab.vercel.app")}`, "_blank");
   });
@@ -4524,7 +4557,7 @@ function mulberry32(seed) {
 
 function getTodayStr() {
   const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
 }
 
 function strToSeed(str) {
@@ -4608,8 +4641,7 @@ const dailySubtitleEl = document.querySelector("#dailySubtitle");
 
 function getCountdownStr() {
   const now = new Date();
-  const midnight = new Date(now);
-  midnight.setHours(24, 0, 0, 0);
+  const midnight = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
   const totalMins = Math.floor((midnight - now) / 60000);
   const h = Math.floor(totalMins / 60);
   const m = totalMins % 60;
@@ -4671,6 +4703,13 @@ if (new URLSearchParams(location.search).has("resetDaily")) {
   try { localStorage.setItem(DAILY_KEY, JSON.stringify(h)); } catch {}
   history.replaceState(null, "", location.pathname);
 }
+
+window.addEventListener("beforeunload", (e) => {
+  if (!gameGrid.hidden && result.hidden && round > 0) {
+    e.preventDefault();
+    e.returnValue = "";
+  }
+});
 
 updateDailyCard();
 setInterval(tickCountdown, 60000);
