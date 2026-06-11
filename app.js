@@ -4407,6 +4407,15 @@ helpModal.addEventListener("click", (e) => { if (e.target === helpModal) hideMod
 
 function closeShareModal() {
   _savedShareData = null;
+  if (_buildSnapshot !== null) {
+    Object.keys(build).forEach(k => delete build[k]);
+    Object.assign(build, _buildSnapshot);
+    _buildSnapshot = null;
+  }
+  if (_modeSnapshot !== null) {
+    gameMode = _modeSnapshot;
+    _modeSnapshot = null;
+  }
   shareBtnImage.hidden = false;
   hideModal(shareModal);
 }
@@ -4416,7 +4425,9 @@ shareModal.addEventListener("click", (e) => { if (e.target === shareModal) close
 // ── Share infrastructure ────────────────────────────────────────────────────
 let _shareBlob = null;
 let _shareBlobPromise = null;
-let _savedShareData = null; // set when sharing a saved build instead of live build
+let _savedShareData = null;
+let _buildSnapshot = null;   // saved build/gameMode so we can restore after sharing
+let _modeSnapshot = null;
 
 function buildSavedShareText(b) {
   const picks = (b.picks || []).map(p => `${p.stat}: ${p.player} (${p.score}) — ${p.era} ${p.team}`).join("\n");
@@ -4424,7 +4435,29 @@ function buildSavedShareText(b) {
 }
 
 function openShareModalFromSaved(b) {
+  // Close builds modal so only the share modal is visible
+  const savedModal = document.querySelector("#savedModal");
+  if (savedModal) hideModal(savedModal);
+
   _savedShareData = b;
+
+  // Snapshot live globals, then temporarily override them so generateShareImage
+  // draws this saved build (player names, scores, radar) correctly.
+  _buildSnapshot = Object.assign({}, build);
+  _modeSnapshot = gameMode;
+  Object.keys(build).forEach(k => delete build[k]);
+  (b.picks || []).forEach(p => {
+    const attr = attributes.find(a => a.key === p.statKey);
+    if (attr) build[attr.key] = {
+      attribute: attr,
+      player: { name: p.player || "—" },
+      teamEra: { era: p.era || "", team: p.team || "" },
+      score: p.score || 0,
+    };
+  });
+  gameMode = b.mode || "classic";
+
+  // Populate share card
   shareCardScore.textContent = b.score;
   shareCardTier.textContent = getTier(b.score);
   shareCardRows.innerHTML = "";
@@ -4439,8 +4472,9 @@ function openShareModalFromSaved(b) {
     `;
     shareCardRows.appendChild(row);
   });
-  shareBtnImage.hidden = true;
-  showModal(shareModal, document.activeElement instanceof HTMLElement ? document.activeElement : null);
+
+  showModal(shareModal, null);
+  primeShareImage();
 }
 
 function primeShareImage() {
