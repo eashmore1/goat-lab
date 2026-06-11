@@ -183,6 +183,8 @@ h1 {
 
 .mode-card-daily {
   grid-column: 1 / -1;
+  /* Full-width banner — doesn't need the tall side-card height on desktop. */
+  min-height: min(34vh, 300px);
   background: var(--court);
   color: var(--chalk);
 }
