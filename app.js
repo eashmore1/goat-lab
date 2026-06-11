@@ -4695,41 +4695,53 @@ function tickCountdown() {
   if (el) el.textContent = getCountdownStr();
 }
 
-if (new URLSearchParams(location.search).has("recalcDaily")) {
+function recalcEntryScore(entry) {
+  if (!entry || !Array.isArray(entry.picks) || entry.picks.length !== attributes.length) return null;
+  const pickScores = attributes.map(attr => {
+    const p = entry.picks.find(pk => pk.attrKey === attr.key);
+    return p ? p.score : 0;
+  });
+  if (!pickScores.every(s => s > 0)) return null;
+  const sorted = [...pickScores].sort((a, b) => a - b);
+  const lowest = sorted[0], secondLowest = sorted[1];
+  const hasHundred = pickScores.some(v => v === 100);
+  const floorOk = secondLowest >= 93 && (lowest >= 93 || (lowest === 92 && hasHundred));
+  const heightScore = (entry.picks.find(p => p.attrKey === "height") || {}).score || 0;
+  const goatGate = floorOk &&
+    pickScores.filter(v => v >= 97).length >= 5 &&
+    pickScores.filter(v => v >= 99).length >= 1 &&
+    pickScores.filter(v => v >= 98).length >= 2 &&
+    heightScore >= 90;
+  if (goatGate) return 100;
+  const avg = pickScores.reduce((s, v) => s + v, 0) / pickScores.length;
+  const pen = pickScores.reduce((s, v) => s + Math.max(0, 75 - v) * 0.42, 0);
+  const elite = pickScores.filter(v => v >= 99).length * 1.5
+              + pickScores.filter(v => v >= 96 && v < 99).length * 0.5;
+  const minPick = Math.min(...pickScores);
+  const bal = minPick >= 90 ? 2.0 : minPick >= 85 ? 1.0 : minPick >= 80 ? 0.5 : 0;
+  return Math.max(55, Math.min(99, Math.round(avg - 7 - pen + elite + bal)));
+}
+
+const _params = new URLSearchParams(location.search);
+if (_params.has("recalcDaily") || _params.has("recalcAll")) {
   const h = getDailyHistory();
   const todayStr = getTodayStr();
-  const entry = h[todayStr];
-  if (entry && Array.isArray(entry.picks) && entry.picks.length === attributes.length) {
-    const pickScores = attributes.map(attr => {
-      const p = entry.picks.find(pk => pk.attrKey === attr.key);
-      return p ? p.score : 0;
-    });
-    if (pickScores.every(s => s > 0)) {
-      const sorted = [...pickScores].sort((a, b) => a - b);
-      const lowest = sorted[0], secondLowest = sorted[1];
-      const hasHundred = pickScores.some(v => v === 100);
-      const floorOk = secondLowest >= 93 && (lowest >= 93 || (lowest === 92 && hasHundred));
-      const heightScore = (entry.picks.find(p => p.attrKey === "height") || {}).score || 0;
-      const goatGate = floorOk &&
-        pickScores.filter(v => v >= 97).length >= 5 &&
-        pickScores.filter(v => v >= 99).length >= 1 &&
-        pickScores.filter(v => v >= 98).length >= 2 &&
-        heightScore >= 90;
-      let newScore;
-      if (goatGate) {
-        newScore = 100;
-      } else {
-        const avg = pickScores.reduce((s, v) => s + v, 0) / pickScores.length;
-        const pen = pickScores.reduce((s, v) => s + Math.max(0, 75 - v) * 0.42, 0);
-        const elite = pickScores.filter(v => v >= 99).length * 1.5
-                    + pickScores.filter(v => v >= 96 && v < 99).length * 0.5;
-        const minPick = Math.min(...pickScores);
-        const bal = minPick >= 90 ? 2.0 : minPick >= 85 ? 1.0 : minPick >= 80 ? 0.5 : 0;
-        newScore = Math.max(55, Math.min(99, Math.round(avg - 7 - pen + elite + bal)));
-      }
-      h[todayStr] = { ...entry, score: newScore, tier: getTier(newScore) };
-      try { localStorage.setItem(DAILY_KEY, JSON.stringify(h)); } catch {}
+  const keys = _params.has("recalcAll") ? Object.keys(h) : [todayStr];
+  let changed = 0;
+  keys.forEach(dateStr => {
+    const entry = h[dateStr];
+    const newScore = recalcEntryScore(entry);
+    if (newScore !== null) {
+      h[dateStr] = { ...entry, score: newScore, tier: getTier(newScore) };
+      changed++;
     }
+  });
+  if (changed) {
+    try { localStorage.setItem(DAILY_KEY, JSON.stringify(h)); } catch {}
+  }
+  if (_params.has("recalcAll")) {
+    // Also clear Classic/Blind PBs since picks aren't stored for those
+    try { localStorage.removeItem(PB_KEY); } catch {}
   }
   history.replaceState(null, "", location.pathname);
 }
