@@ -3891,6 +3891,7 @@ function finish() {
     // Submit to the global leaderboard (if signed in) + reveal the Leaderboard button.
     if (window.GoatLeaderboard) {
       window.GoatLeaderboard.submitToday(todayStr, score, tier, dailyData?.franchise || false, dailyData?.franchiseTeamName || null);
+      window.GoatLeaderboard.pushDailyHistory(todayStr);
       window.GoatLeaderboard.showResultButton();
     }
     resultTitle.textContent = `Daily — ${score}: ${tier}`;
@@ -4715,7 +4716,33 @@ updateBody(null);
   function showResultButton() {
     if (viewLeaderboardBtn) viewLeaderboardBtn.hidden = false;
   }
-  window.GoatLeaderboard = { submitToday, showResultButton };
+  // Push one day's local daily result up to the cloud.
+  function pushDailyHistory(dateStr) {
+    if (!Auth.currentUser()) return;
+    const entry = getDailyHistory()[dateStr];
+    if (entry) Auth.putDailyHistory(dateStr, entry).catch(console.error);
+  }
+  // On sign-in: merge cloud daily history with local (so streak + history follow
+  // you across devices), write the union back to local, and push local-only days up.
+  async function syncDailyHistory() {
+    if (!Auth.currentUser()) return;
+    const local = getDailyHistory();
+    let cloud = {};
+    try { cloud = await Auth.fetchDailyHistory(); } catch (e) { console.error(e); return; }
+    const merged = { ...local };
+    for (const [date, entry] of Object.entries(cloud)) {
+      if (!merged[date] || (entry.score || 0) >= (merged[date].score || 0)) merged[date] = entry;
+    }
+    try { localStorage.setItem("goatlab_daily", JSON.stringify(merged)); } catch (e) {}
+    // Push any day the cloud is missing (or where local beat the cloud).
+    for (const [date, entry] of Object.entries(merged)) {
+      if (!cloud[date] || (entry.score || 0) > (cloud[date].score || 0)) {
+        Auth.putDailyHistory(date, entry).catch(console.error);
+      }
+    }
+    try { updateDailyCard(); } catch (e) {}
+  }
+  window.GoatLeaderboard = { submitToday, showResultButton, pushDailyHistory };
 
   // Render the global leaderboard for today.
   async function renderLeaderboard() {
@@ -4950,6 +4977,7 @@ updateBody(null);
           franchise: entry.franchise || false, franchiseTeam: entry.franchiseTeam || null,
         }).catch(console.error);
       } catch (e) { console.error(e); }
+      syncDailyHistory(); // merge cloud <-> local daily history + streak
       refreshSaveBtn();
     } else {
       signedOut.hidden = false;

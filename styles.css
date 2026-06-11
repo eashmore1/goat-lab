@@ -1761,32 +1761,3 @@ h1 {
 .bd-pscore { font: 950 0.92rem/1 "Space Mono", ui-monospace, monospace; text-align: right; }
 .bd-golden { color: #b8860b; }
 .bd-empty { font: 700 0.76rem/1.4 "Space Mono", ui-monospace, monospace; color: var(--muted); padding: 4px 0; }
-
-/* ===== Privacy / cookie notice bar ===== */
-.cookie-notice {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  z-index: 1000;
-  display: flex; align-items: center; justify-content: center;
-  gap: 14px; flex-wrap: wrap;
-  padding: 12px 16px;
-  background: var(--ink);
-  color: var(--chalk);
-  border-top: 3px solid var(--gold);
-  font: 700 0.76rem/1.45 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-}
-.cookie-text { max-width: 760px; }
-.cookie-text a { color: var(--gold); text-decoration: underline; }
-.cookie-accept {
-  flex: 0 0 auto;
-  padding: 8px 20px;
-  border: 2px solid var(--gold);
-  background: var(--gold);
-  color: var(--ink);
-  font: 900 0.78rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  transition: background 140ms ease;
-}
-.cookie-accept:hover { background: var(--chalk); }

@@ -122,5 +122,18 @@ window.GoatAuth = (() => {
       if (!enabled || !user) return;
       await buildsRef().doc(id).delete();
     },
+
+    // --- Daily history / streak (cloud-synced, one doc per date) ------------
+    async fetchDailyHistory() {
+      if (!enabled || !user) return {};
+      const snap = await userDoc().collection("dailyHistory").get();
+      const out = {};
+      snap.docs.forEach((d) => { out[d.id] = d.data(); });
+      return out;
+    },
+    async putDailyHistory(dateStr, entry) {
+      if (!enabled || !user) return;
+      await userDoc().collection("dailyHistory").doc(dateStr).set(entry);
+    },
   };
 })();
