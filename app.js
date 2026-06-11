@@ -4323,7 +4323,7 @@ async function generateShareImage() {
   ctx.fillStyle = GOLD;
   ctx.font = '700 10px "Space Mono", monospace';
   ctx.textAlign = "right";
-  ctx.fillText("goat-lab.vercel.app", W - 20, footerY + 32);
+  ctx.fillText("playgoatlab.com", W - 20, footerY + 32);
   ctx.textAlign = "left";
 
   return new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.96));
@@ -4342,9 +4342,9 @@ function buildShareText(score, tier) {
     const prefix = dailyData?.franchise
       ? `I scored ${score} building the greatest ${dailyData.franchiseTeamName} on the ${dateLabel} GOAT Lab Daily 🏀`
       : `I scored ${score} on the ${dateLabel} GOAT Lab Daily 🏀`;
-    return `${prefix}\n\n${picks}\n\nCan you beat me? https://goat-lab.vercel.app`;
+    return `${prefix}\n\n${picks}\n\nCan you beat me? https://playgoatlab.com`;
   }
-  return `I scored ${score} (${tier}) in GOAT Lab 🏀\n\n${picks}\n\nCan you beat my build? Try to create the GOAT too 👉 https://goat-lab.vercel.app`;
+  return `I scored ${score} (${tier}) in GOAT Lab 🏀\n\n${picks}\n\nCan you beat my build? Try to create the GOAT too 👉 https://playgoatlab.com`;
 }
 
 function openShareModal() {
@@ -4458,7 +4458,7 @@ shareBtnImage.addEventListener("click", async () => {
       const score = calculateScore();
       const tier = getTier(score);
       const file = new File([blob], "goat-lab-build.jpg", { type: "image/jpeg" });
-      await navigator.share({ files: [file], text: `I scored ${score} (${tier}) in GOAT Lab 🏀`, url: "https://goat-lab.vercel.app" });
+      await navigator.share({ files: [file], text: `I scored ${score} (${tier}) in GOAT Lab 🏀`, url: "https://playgoatlab.com" });
     } catch (err) { if (err.name !== "AbortError") console.error(err); }
     shareBtnImage.textContent = "Share Image";
     shareBtnImage.disabled = false;
@@ -4476,7 +4476,7 @@ shareBtnX.addEventListener("click", () => {
   const tier = getTier(score);
   const tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build? Try to create the GOAT too 👉`;
   openAndDownload(shareBtnX, "X / Twitter", () => {
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://goat-lab.vercel.app")}`, "_blank");
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank");
   });
 });
 
@@ -4492,13 +4492,13 @@ shareBtnText.addEventListener("click", async () => {
     try {
       const blob = await getShareBlob();
       const file = new File([blob], "goat-lab-build.jpg", { type: "image/jpeg" });
-      await navigator.share({ files: [file], text, url: "https://goat-lab.vercel.app" });
+      await navigator.share({ files: [file], text, url: "https://playgoatlab.com" });
     } catch (err) { if (err.name !== "AbortError") console.error(err); }
     shareBtnText.textContent = "Text";
     shareBtnText.disabled = false;
   } else {
     // Desktop: open SMS with text pre-filled, download image
-    const msg = encodeURIComponent(`${text} https://goat-lab.vercel.app`);
+    const msg = encodeURIComponent(`${text} https://playgoatlab.com`);
     openAndDownload(shareBtnText, "Text", () => { window.open(`sms:?body=${msg}`, "_self"); });
   }
 });
@@ -4878,27 +4878,58 @@ updateBody(null);
       savedList.innerHTML = '<p class="saved-empty">No saved builds yet. Finish a run and hit Save Build.</p>';
       return;
     }
-    savedList.innerHTML = builds.map((b) => `
-      <div class="saved-row">
-        <div class="saved-row-main">
-          <span class="saved-row-score">${esc(b.score)}</span>
-          <div class="saved-row-meta">
-            <strong>${esc(b.name || "Untitled build")}</strong>
-            <small>${esc((b.mode || "").toUpperCase())} · ${esc(fmtDate(b.createdAt))}</small>
-          </div>
+    const shortFor = (p) => {
+      const a = attributes.find((x) => x.key === p.statKey);
+      return (a && a.short) || p.stat || "";
+    };
+    savedList.innerHTML = builds.map((b) => {
+      const picks = Array.isArray(b.picks) ? b.picks : [];
+      const detail = picks.length
+        ? picks.map((p) => `
+            <div class="bd-pick">
+              <span class="bd-stat">${esc(shortFor(p))}</span>
+              <span class="bd-player">${esc(p.player || "—")}${p.golden ? ' <span class="bd-golden" title="Golden roll">✦</span>' : ""}</span>
+              <span class="bd-team">${esc(p.era || "")} ${esc(p.team || "")}</span>
+              <span class="bd-pscore">${esc(p.score)}</span>
+            </div>`).join("")
+        : '<p class="bd-empty">Pick details weren\'t saved for this build.</p>';
+      return `
+      <div class="saved-row" data-id="${esc(b.id)}">
+        <div class="saved-row-top">
+          <button class="saved-row-head" data-toggle="${esc(b.id)}" type="button" aria-expanded="false">
+            <span class="saved-row-score">${esc(b.score)}</span>
+            <span class="saved-row-meta">
+              <strong>${esc(b.name || "Untitled build")}</strong>
+              <small>${esc((b.mode || "").toUpperCase())} · ${esc(fmtDate(b.createdAt))} · tap to view</small>
+            </span>
+            <span class="saved-row-caret" aria-hidden="true">▾</span>
+          </button>
+          <button class="saved-row-del" data-del="${esc(b.id)}" type="button" aria-label="Delete build">&#x2715;</button>
         </div>
-        <button class="saved-row-del" data-del="${esc(b.id)}" type="button" aria-label="Delete build">&#x2715;</button>
-      </div>`).join("");
+        <div class="saved-row-detail" hidden>${detail}</div>
+      </div>`;
+    }).join("");
   }
   myBuildsBtn.addEventListener("click", () => { savedModal.hidden = false; renderSaved(); });
   savedModalClose.addEventListener("click", () => { savedModal.hidden = true; });
   savedModal.addEventListener("click", (e) => { if (e.target === savedModal) savedModal.hidden = true; });
   savedList.addEventListener("click", async (e) => {
-    const id = e.target.getAttribute("data-del");
-    if (!id) return;
-    e.target.disabled = true;
-    try { await Auth.deleteBuild(id); await renderSaved(); }
-    catch (err) { console.error(err); e.target.disabled = false; }
+    const delBtn = e.target.closest("[data-del]");
+    if (delBtn) {
+      delBtn.disabled = true;
+      try { await Auth.deleteBuild(delBtn.getAttribute("data-del")); await renderSaved(); }
+      catch (err) { console.error(err); delBtn.disabled = false; }
+      return;
+    }
+    const head = e.target.closest("[data-toggle]");
+    if (head) {
+      const row = head.closest(".saved-row");
+      const detail = row.querySelector(".saved-row-detail");
+      const open = detail.hidden;
+      detail.hidden = !open;
+      head.setAttribute("aria-expanded", String(open));
+      row.classList.toggle("is-open", open);
+    }
   });
 
   // Auth state drives the UI. Load handle, then back-fill today's score.
