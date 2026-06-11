@@ -774,7 +774,10 @@ h1 {
   #prompt.is-locked .roll-attr,
   .card.is-dealing,
   .card-skel,
-  .part.is-new {
+  .part.is-new,
+  .card.is-golden,
+  .golden-badge,
+  #prompt.is-golden .roll-team {
     animation: none;
   }
 }
