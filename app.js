@@ -4339,7 +4339,7 @@ function buildShareText(score, tier) {
       : `I scored ${score} on the ${dateLabel} GOAT Lab Daily 🏀`;
     return `${prefix}\n\n${picks}\n\nCan you beat me? https://goat-lab.vercel.app`;
   }
-  return `I scored ${score} (${tier}) in GOAT Lab 🏀\n\n${picks}\n\nCan you beat my build? Try to create the GOAT too 👉 https://goat-lab.vercel.app`;
+  return `I scored ${score} (${tier}) in GOAT Lab 🏀\n\n${picks}\n\nCan you beat my build? https://goat-lab.vercel.app`;
 }
 
 function openShareModal() {
