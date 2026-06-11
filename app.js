@@ -3474,8 +3474,9 @@ function calculateScore() {
   const eliteBonus = values.filter((value) => value >= 99).length * 1.5
                    + values.filter((value) => value >= 96 && value < 99).length * 0.5;
   const minScore = Math.min(...values);
-  const balanceBonus = minScore >= 90 ? 2.0 : minScore >= 85 ? 1.0 : minScore >= 80 ? 0.5 : 0;
-  const score = Math.round(average - 7 - weakPenalty + eliteBonus + balanceBonus);
+  const balanceBonus = minScore >= 90 ? 2.0 : minScore >= 87 ? 1.0 : minScore >= 82 ? 0.25 : 0;
+  const blindBonus = (gameMode === "blind" || gameMode === "daily") ? 1 : 0;
+  const score = Math.round(average - 7 - weakPenalty + eliteBonus + balanceBonus + blindBonus);
 
   // Only a gate-passing build can show 100; everything else caps at 99.
   return Math.max(55, Math.min(99, score));
@@ -4718,8 +4719,8 @@ function recalcEntryScore(entry) {
   const elite = pickScores.filter(v => v >= 99).length * 1.5
               + pickScores.filter(v => v >= 96 && v < 99).length * 0.5;
   const minPick = Math.min(...pickScores);
-  const bal = minPick >= 90 ? 2.0 : minPick >= 85 ? 1.0 : minPick >= 80 ? 0.5 : 0;
-  return Math.max(55, Math.min(99, Math.round(avg - 7 - pen + elite + bal)));
+  const bal = minPick >= 90 ? 2.0 : minPick >= 87 ? 1.0 : minPick >= 82 ? 0.25 : 0;
+  return Math.max(55, Math.min(99, Math.round(avg - 7 - pen + elite + bal + 1)));
 }
 
 const _params = new URLSearchParams(location.search);
