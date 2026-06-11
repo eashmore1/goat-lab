@@ -3387,6 +3387,7 @@ const shareBtnCopy = document.querySelector("#shareBtnCopy");
 const result = document.querySelector("#result");
 const resultTitle = document.querySelector("#resultTitle");
 const resultCopy = document.querySelector("#resultCopy");
+const resultBreakdown = document.querySelector("#resultBreakdown");
 const shareButton = document.querySelector("#shareButton");
 const scoreEl = document.querySelector("#score");
 const bodyLabel = document.querySelector("#bodyLabel");
@@ -3846,6 +3847,7 @@ function finish() {
   const tier = getTier(score);
   const archetype = makeArchetype(values);
   const weakSpot = [...values].sort((a, b) => a.score - b.score)[0];
+  const bestPick = [...values].sort((a, b) => b.score - a.score)[0];
 
   scoreEl.textContent = score;
   roundLabel.textContent = "Build complete";
@@ -3881,6 +3883,18 @@ function finish() {
 
   result.hidden = false;
 
+  if (gameMode !== "daily") savePB(gameMode, score);
+  updatePBDisplay();
+
+  if (resultBreakdown) {
+    if (score < 100) {
+      resultBreakdown.textContent = `Held back: ${weakSpot.attribute.label} (${weakSpot.score}) · Lifted by: ${bestPick.attribute.label} (${bestPick.score})`;
+      resultBreakdown.hidden = false;
+    } else {
+      resultBreakdown.hidden = true;
+    }
+  }
+
   if (gameMode === "daily") {
     const todayStr = getTodayStr();
     const dailyPicks = attributes.map(attr => {
@@ -3907,7 +3921,7 @@ function finish() {
     resultCopy.textContent =
       score === 100
         ? `You built the impossible player: ${archetype}. No weak spots, no era can stop this.`
-        : `${archetype}. Your lowest was ${weakSpot.attribute.label} from ${weakSpot.player.name} at ${weakSpot.score}. Keep chasing.`;
+        : `${archetype}. Keep chasing.`;
   }
 }
 
@@ -4012,6 +4026,7 @@ function goBack() {
   dailyData = null;
   scoreEl.textContent = "--";
   if (respinTeamBtn) respinTeamBtn.hidden = false;
+  updatePBDisplay();
 }
 
 function drawRadarOnCanvas(ctx, cx, cy, maxR) {
@@ -4326,9 +4341,6 @@ function shareResult() {
 logoHome.addEventListener("click", () => {
   if (!gameGrid.hidden) goBack();
 });
-logoHome.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (!gameGrid.hidden) goBack(); }
-});
 
 modeButtons.forEach((button) => {
   button.addEventListener("click", () => startGame(button.dataset.mode));
@@ -4561,6 +4573,25 @@ function generateDailyData(dateStr) {
 }
 
 const DAILY_KEY = "goatlab_daily";
+const PB_KEY = "goatlab_pb";
+
+function getPB() {
+  try { return JSON.parse(localStorage.getItem(PB_KEY) || "{}"); } catch { return {}; }
+}
+function savePB(mode, score) {
+  const pb = getPB();
+  if (!pb[mode] || score > pb[mode]) {
+    pb[mode] = score;
+    try { localStorage.setItem(PB_KEY, JSON.stringify(pb)); } catch {}
+  }
+}
+function updatePBDisplay() {
+  const pb = getPB();
+  const pbClassic = document.querySelector("#pbClassic");
+  const pbBlind = document.querySelector("#pbBlind");
+  if (pbClassic) { if (pb.classic) { pbClassic.textContent = `PB ${pb.classic}`; pbClassic.hidden = false; } else pbClassic.hidden = true; }
+  if (pbBlind)   { if (pb.blind)   { pbBlind.textContent   = `PB ${pb.blind}`;   pbBlind.hidden   = false; } else pbBlind.hidden   = true; }
+}
 
 function getDailyHistory() {
   try { return JSON.parse(localStorage.getItem(DAILY_KEY) || "{}"); } catch { return {}; }
@@ -4801,11 +4832,12 @@ updateBody(null);
     }
   }
 
-  function openLeaderboard() { lbModal.hidden = false; renderLeaderboard(); }
-  leaderboardBtn.addEventListener("click", openLeaderboard);
-  if (viewLeaderboardBtn) viewLeaderboardBtn.addEventListener("click", openLeaderboard);
-  lbClose.addEventListener("click", () => { lbModal.hidden = true; });
-  lbModal.addEventListener("click", (e) => { if (e.target === lbModal) lbModal.hidden = true; });
+  setupModal(lbModal, () => hideModal(lbModal));
+  function openLeaderboard(trigger) { showModal(lbModal, trigger); renderLeaderboard(); }
+  leaderboardBtn.addEventListener("click", () => openLeaderboard(leaderboardBtn));
+  if (viewLeaderboardBtn) viewLeaderboardBtn.addEventListener("click", () => openLeaderboard(viewLeaderboardBtn));
+  lbClose.addEventListener("click", () => hideModal(lbModal));
+  lbModal.addEventListener("click", (e) => { if (e.target === lbModal) hideModal(lbModal); });
 
   signInBtn.addEventListener("click", async () => {
     signInBtn.textContent = "Opening Google…";
@@ -4844,15 +4876,16 @@ updateBody(null);
   const handleSaveBtn = $("#handleSaveBtn");
   const handleClose = $("#handleModalClose");
 
+  setupModal(handleModal, () => hideModal(handleModal));
   editHandleBtn.addEventListener("click", () => {
     handleInput.value = currentHandle || "";
     handleStatus.textContent = "";
-    handleModal.hidden = false;
+    showModal(handleModal, editHandleBtn);
     handleInput.focus();
     handleInput.select();
   });
-  handleClose.addEventListener("click", () => { handleModal.hidden = true; });
-  handleModal.addEventListener("click", (e) => { if (e.target === handleModal) handleModal.hidden = true; });
+  handleClose.addEventListener("click", () => hideModal(handleModal));
+  handleModal.addEventListener("click", (e) => { if (e.target === handleModal) hideModal(handleModal); });
   handleSaveBtn.addEventListener("click", async () => {
     const name = handleInput.value.trim();
     if (!name) { handleStatus.textContent = "Enter a name."; return; }
@@ -4868,7 +4901,7 @@ updateBody(null);
         franchise: entry.franchise || false, franchiseTeam: entry.franchiseTeam || null, picks: entry.picks || null,
       }).catch(console.error);
       handleStatus.textContent = "Saved ✓";
-      setTimeout(() => { handleModal.hidden = true; }, 700);
+      setTimeout(() => hideModal(handleModal), 700);
     } catch (e) {
       console.error(e);
       handleStatus.textContent = "Couldn't save — try again.";
@@ -4913,12 +4946,13 @@ updateBody(null);
     window.finish = finish;
   }
 
-  function closeSave() { saveModal.hidden = true; saveStatus.textContent = ""; }
+  function closeSave() { hideModal(saveModal); saveStatus.textContent = ""; }
+  setupModal(saveModal, closeSave);
   saveBuildButton.addEventListener("click", () => {
     if (!Auth.currentUser()) return;
     saveNameInput.value = `${calculateScore()} ${getTier(calculateScore())}`.slice(0, 40);
     saveStatus.textContent = "";
-    saveModal.hidden = false;
+    showModal(saveModal, saveBuildButton);
     saveNameInput.focus();
     saveNameInput.select();
   });
@@ -4981,9 +5015,10 @@ updateBody(null);
       </div>`;
     }).join("");
   }
-  myBuildsBtn.addEventListener("click", () => { savedModal.hidden = false; renderSaved(); });
-  savedModalClose.addEventListener("click", () => { savedModal.hidden = true; });
-  savedModal.addEventListener("click", (e) => { if (e.target === savedModal) savedModal.hidden = true; });
+  setupModal(savedModal, () => hideModal(savedModal));
+  myBuildsBtn.addEventListener("click", () => { showModal(savedModal, myBuildsBtn); renderSaved(); });
+  savedModalClose.addEventListener("click", () => hideModal(savedModal));
+  savedModal.addEventListener("click", (e) => { if (e.target === savedModal) hideModal(savedModal); });
   savedList.addEventListener("click", async (e) => {
     const delBtn = e.target.closest("[data-del]");
     if (delBtn) {
@@ -5002,6 +5037,14 @@ updateBody(null);
       row.classList.toggle("is-open", open);
     }
   });
+
+  // First-time experience: auto-open How to Play once
+  if (!localStorage.getItem("goatlab_seen_help")) {
+    setTimeout(() => showModal(helpModal, null), 400);
+    try { localStorage.setItem("goatlab_seen_help", "1"); } catch {}
+  }
+
+  updatePBDisplay();
 
   // Auth state drives the UI. Load handle, then back-fill today's score.
   Auth.onChange(async (user) => {

@@ -57,16 +57,24 @@ button {
   border-bottom: 3px solid var(--ink);
 }
 
+.hero-logo-btn {
+  padding: 0;
+  background: none;
+  border: none;
+  flex: 0 0 auto;
+  cursor: pointer;
+  line-height: 0;
+}
+
 .hero-logo {
   height: 110px;
   width: auto;
   display: block;
-  flex: 0 0 auto;
-  cursor: pointer;
   transition: opacity 140ms ease;
 }
 
-.hero-logo:hover {
+.hero-logo-btn:hover .hero-logo,
+.hero-logo-btn:focus-visible .hero-logo {
   opacity: 0.82;
 }
 
@@ -282,6 +290,16 @@ h1 {
 
 .mode-card-blind small {
   color: rgba(255, 247, 223, 0.88);
+}
+
+.mode-pb {
+  display: block;
+  margin-top: 10px;
+  font: 700 0.6rem/1 "Space Mono", ui-monospace, monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.85;
 }
 
 .lab-panel,
@@ -886,6 +904,14 @@ h1 {
   margin-bottom: 0;
 }
 
+.result-breakdown {
+  margin: 6px 0 0;
+  font: 400 0.68rem/1.5 "Space Mono", ui-monospace, monospace;
+  color: var(--ink);
+  opacity: 0.6;
+  letter-spacing: 0.02em;
+}
+
 .result .kicker {
   margin-bottom: 10px;
 }
@@ -1011,8 +1037,11 @@ h1 {
     flex-direction: column;
   }
 
-  .hero-logo {
+  .hero-logo-btn {
     align-self: flex-start;
+  }
+
+  .hero-logo {
     height: 80px;
   }
 
