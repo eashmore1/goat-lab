@@ -1777,3 +1777,19 @@ h1 {
 }
 .account-delete:hover { background: var(--red); color: #fff; }
 .account-delete:disabled { opacity: 0.6; cursor: default; }
+
+/* ===== Goat silhouette — subtle GOAT watermark on the Choose Mode panel ===== */
+.mode-copy { position: relative; overflow: hidden; }
+.goat-mark {
+  position: absolute;
+  right: -22px;
+  bottom: -26px;
+  width: 210px;
+  height: 210px;
+  fill: var(--chalk);
+  opacity: 0.11;
+  pointer-events: none;
+}
+@media (max-width: 930px) {
+  .goat-mark { width: 150px; height: 150px; right: -16px; bottom: -18px; }
+}
