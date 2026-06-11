@@ -3375,6 +3375,8 @@ const respinAttrBtn = document.querySelector("#respinAttr");
 const helpButton = document.querySelector("#helpButton");
 const helpModal = document.querySelector("#helpModal");
 const helpClose = document.querySelector("#helpClose");
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const shareModal = document.querySelector("#shareModal");
 const shareModalClose = document.querySelector("#shareModalClose");
 const shareCardScore = document.querySelector("#shareCardScore");
@@ -4833,9 +4835,6 @@ updateBody(null);
   const lbHint = $("#lbHint");
 
   accountBar.hidden = false;
-
-  const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
-    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
   // Submit today's daily score to the global leaderboard (no-op if signed out).
   function submitToday(dateStr, score, tier, franchise, franchiseTeam) {
