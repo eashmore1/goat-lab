@@ -17,15 +17,15 @@ const teamEras = [
     note: "Russell's dynasty gives you defense, boards, and winner DNA.",
     players: [
       player("Bill Russell", 6, 11, 6, { height: 96, shooting: 58, finishing: 91, handles: 66, passing: 82, defense: 100, rebounding: 100, athleticism: 92, iq: 96 }),
-      player("John Havlicek", 6, 5, 17, { height: 80, shooting: 82, finishing: 88, handles: 83, passing: 86, defense: 91, rebounding: 78, athleticism: 90, iq: 94 }),
-      player("Sam Jones", 6, 4, 24, { height: 77, shooting: 88, finishing: 86, handles: 82, passing: 76, defense: 78, rebounding: 66, athleticism: 84, iq: 96 }),
-      player("K.C. Jones", 6, 1, 25, { height: 68, shooting: 62, finishing: 70, handles: 82, passing: 86, defense: 94, rebounding: 62, athleticism: 82, iq: 82 }),
+      player("John Havlicek", 6, 5, 17, { height: 80, shooting: 82, finishing: 83, handles: 83, passing: 80, defense: 86, rebounding: 78, athleticism: 90, iq: 88 }),
+      player("Sam Jones", 6, 4, 24, { height: 77, shooting: 83, finishing: 86, handles: 82, passing: 76, defense: 78, rebounding: 66, athleticism: 84, iq: 88 }),
+      player("K.C. Jones", 6, 1, 25, { height: 68, shooting: 62, finishing: 70, handles: 82, passing: 86, defense: 89, rebounding: 62, athleticism: 82, iq: 82 }),
       player("Tom Heinsohn", 6, 7, 15, { height: 84, shooting: 74, finishing: 86, handles: 65, passing: 72, defense: 76, rebounding: 88, athleticism: 78, iq: 84 }),
       player("Satch Sanders", 6, 6, 16, { height: 82, shooting: 66, finishing: 74, handles: 64, passing: 70, defense: 90, rebounding: 82, athleticism: 80, iq: 80 }),
       player("Bailey Howell", 6, 7, 18, { height: 84, shooting: 76, finishing: 84, handles: 66, passing: 72, defense: 78, rebounding: 86, athleticism: 76, iq: 82 }),
       player("Don Nelson", 6, 6, 19, { height: 82, shooting: 80, finishing: 76, handles: 70, passing: 74, defense: 78, rebounding: 72, athleticism: 72, iq: 86 }),
-      player("Bob Cousy", 6, 1, 14, { height: 68, shooting: 78, finishing: 82, handles: 96, passing: 99, defense: 78, rebounding: 64, athleticism: 86, iq: 92 }),
-      player("Bill Sharman", 6, 1, 21, { height: 68, shooting: 92, finishing: 80, handles: 80, passing: 78, defense: 78, rebounding: 58, athleticism: 78, iq: 90 }),
+      player("Bob Cousy", 6, 1, 14, { height: 68, shooting: 78, finishing: 82, handles: 91, passing: 99, defense: 78, rebounding: 64, athleticism: 86, iq: 86 }),
+      player("Bill Sharman", 6, 1, 21, { height: 68, shooting: 86, finishing: 80, handles: 80, passing: 78, defense: 78, rebounding: 58, athleticism: 78, iq: 90 }),
       player("Frank Ramsey", 6, 3, 23, { height: 74, shooting: 82, finishing: 84, handles: 80, passing: 76, defense: 80, rebounding: 66, athleticism: 80, iq: 90 }),
       player("Larry Siegfried", 6, 3, 20, { height: 74, shooting: 84, finishing: 78, handles: 82, passing: 80, defense: 82, rebounding: 60, athleticism: 78, iq: 84 }),
       player("Willie Naulls", 6, 6, 12, { height: 82, shooting: 84, finishing: 82, handles: 70, passing: 72, defense: 76, rebounding: 82, athleticism: 78, iq: 80 }),
@@ -38,8 +38,8 @@ const teamEras = [
     team: "Lakers",
     note: "Baylor and West dragged L.A. to the Finals again and again. Elite scoring, clutch, and athleticism.",
     players: [
-      player("Elgin Baylor", 6, 5, 22, { height: 80, shooting: 84, finishing: 94, handles: 86, passing: 84, defense: 80, rebounding: 88, athleticism: 94, iq: 92 }),
-      player("Jerry West", 6, 2, 44, { height: 71, shooting: 92, finishing: 92, handles: 90, passing: 88, defense: 90, rebounding: 70, athleticism: 90, iq: 98 }),
+      player("Elgin Baylor", 6, 5, 22, { height: 80, shooting: 84, finishing: 89, handles: 80, passing: 84, defense: 80, rebounding: 88, athleticism: 89, iq: 92 }),
+      player("Jerry West", 6, 2, 44, { height: 71, shooting: 92, finishing: 87, handles: 86, passing: 83, defense: 86, rebounding: 70, athleticism: 90, iq: 98 }),
       player("Gail Goodrich", 6, 1, 25, { height: 68, shooting: 86, finishing: 84, handles: 88, passing: 82, defense: 72, rebounding: 56, athleticism: 84, iq: 86 }),
       player("Rudy LaRusso", 6, 7, 35, { height: 84, shooting: 76, finishing: 82, handles: 68, passing: 72, defense: 84, rebounding: 82, athleticism: 80, iq: 80 }),
       player("Dick Barnett", 6, 4, 12, { height: 77, shooting: 84, finishing: 82, handles: 82, passing: 76, defense: 80, rebounding: 62, athleticism: 82, iq: 84 }),
@@ -60,8 +60,8 @@ const teamEras = [
     team: "Royals",
     note: "Cincinnati ran through Oscar Robertson — the original triple-double machine — and Jerry Lucas on the glass.",
     players: [
-      player("Oscar Robertson", 6, 5, 14, { height: 80, shooting: 86, finishing: 90, handles: 94, passing: 98, defense: 84, rebounding: 86, athleticism: 88, iq: 95 }),
-      player("Jerry Lucas", 6, 8, 16, { height: 86, shooting: 82, finishing: 84, handles: 66, passing: 80, defense: 80, rebounding: 94, athleticism: 78, iq: 84 }),
+      player("Oscar Robertson", 6, 5, 14, { height: 80, shooting: 86, finishing: 85, handles: 89, passing: 96, defense: 78, rebounding: 86, athleticism: 88, iq: 95 }),
+      player("Jerry Lucas", 6, 8, 16, { height: 86, shooting: 82, finishing: 78, handles: 66, passing: 80, defense: 80, rebounding: 90, athleticism: 78, iq: 84 }),
       player("Jack Twyman", 6, 6, 27, { height: 82, shooting: 86, finishing: 86, handles: 72, passing: 74, defense: 74, rebounding: 76, athleticism: 80, iq: 86 }),
       player("Wayne Embry", 6, 8, 15, { height: 86, shooting: 66, finishing: 82, handles: 60, passing: 74, defense: 84, rebounding: 88, athleticism: 78, iq: 78 }),
       player("Adrian Smith", 6, 1, 12, { height: 68, shooting: 82, finishing: 78, handles: 82, passing: 78, defense: 76, rebounding: 56, athleticism: 80, iq: 82 }),
@@ -83,7 +83,7 @@ const teamEras = [
     note: "St. Louis was a perennial contender — Pettit's scoring and boards, Wilkens running the show, Hudson and Caldwell on the wings.",
     players: [
       player("Bob Pettit", 6, 9, 9, { height: 90, shooting: 84, finishing: 90, handles: 70, passing: 74, defense: 82, rebounding: 94, athleticism: 84, iq: 92 }),
-      player("Lenny Wilkens", 6, 1, 22, { height: 68, shooting: 78, finishing: 82, handles: 90, passing: 92, defense: 86, rebounding: 62, athleticism: 84, iq: 92 }),
+      player("Lenny Wilkens", 6, 1, 22, { height: 68, shooting: 78, finishing: 82, handles: 84, passing: 86, defense: 86, rebounding: 62, athleticism: 84, iq: 92 }),
       player("Cliff Hagan", 6, 4, 16, { height: 77, shooting: 84, finishing: 86, handles: 78, passing: 76, defense: 76, rebounding: 74, athleticism: 82, iq: 86 }),
       player("Zelmo Beaty", 6, 9, 31, { height: 90, shooting: 74, finishing: 84, handles: 62, passing: 68, defense: 84, rebounding: 88, athleticism: 80, iq: 82 }),
       player("Bill Bridges", 6, 6, 32, { height: 82, shooting: 70, finishing: 80, handles: 64, passing: 72, defense: 86, rebounding: 90, athleticism: 82, iq: 80 }),
@@ -104,7 +104,7 @@ const teamEras = [
     team: "76ers",
     note: "The 1967 champs may be the best team of the decade — Wilt as a passing hub, Greer, Cunningham, Walker, and a deep, switchable roster.",
     players: [
-      player("Wilt Chamberlain", 7, 1, 13, { height: 100, shooting: 70, finishing: 98, handles: 70, passing: 90, defense: 95, rebounding: 100, athleticism: 96, iq: 88 }),
+      player("Wilt Chamberlain", 7, 1, 13, { height: 100, shooting: 70, finishing: 97, handles: 70, passing: 84, defense: 91, rebounding: 100, athleticism: 96, iq: 88 }),
       player("Hal Greer", 6, 2, 15, { height: 71, shooting: 88, finishing: 84, handles: 84, passing: 82, defense: 84, rebounding: 64, athleticism: 86, iq: 88 }),
       player("Billy Cunningham", 6, 6, 32, { height: 82, shooting: 80, finishing: 88, handles: 82, passing: 80, defense: 80, rebounding: 84, athleticism: 90, iq: 86 }),
       player("Chet Walker", 6, 6, 25, { height: 82, shooting: 84, finishing: 86, handles: 80, passing: 76, defense: 78, rebounding: 76, athleticism: 82, iq: 86 }),
@@ -126,14 +126,14 @@ const teamEras = [
     team: "Bucks",
     note: "A young Kareem plus Oscar makes this a top-heavy but dangerous roll.",
     players: [
-      player("Kareem Abdul-Jabbar", 7, 2, 33, { height: 100, shooting: 82, finishing: 100, handles: 70, passing: 82, defense: 95, rebounding: 96, athleticism: 88, iq: 94 }),
-      player("Oscar Robertson", 6, 5, 1, { height: 80, shooting: 86, finishing: 90, handles: 94, passing: 97, defense: 82, rebounding: 86, athleticism: 84, iq: 95 }),
-      player("Bob Dandridge", 6, 6, 10, { height: 82, shooting: 84, finishing: 87, handles: 80, passing: 78, defense: 84, rebounding: 78, athleticism: 84, iq: 88 }),
-      player("Lucius Allen", 6, 2, 7, { height: 71, shooting: 81, finishing: 82, handles: 86, passing: 84, defense: 76, rebounding: 60, athleticism: 84, iq: 80 }),
-      player("Jon McGlocklin", 6, 5, 14, { height: 80, shooting: 89, finishing: 76, handles: 72, passing: 76, defense: 70, rebounding: 62, athleticism: 68, iq: 84 }),
-      player("Brian Winters", 6, 4, 32, { height: 77, shooting: 87, finishing: 79, handles: 80, passing: 79, defense: 72, rebounding: 60, athleticism: 70, iq: 86 }),
+      player("Kareem Abdul-Jabbar", 7, 2, 33, { height: 100, shooting: 82, finishing: 100, handles: 70, passing: 82, defense: 90, rebounding: 91, athleticism: 88, iq: 94 }),
+      player("Oscar Robertson", 6, 5, 1, { height: 80, shooting: 86, finishing: 85, handles: 89, passing: 92, defense: 82, rebounding: 86, athleticism: 84, iq: 95 }),
+      player("Bob Dandridge", 6, 6, 10, { height: 82, shooting: 84, finishing: 82, handles: 80, passing: 78, defense: 78, rebounding: 78, athleticism: 84, iq: 88 }),
+      player("Lucius Allen", 6, 2, 7, { height: 71, shooting: 81, finishing: 82, handles: 80, passing: 78, defense: 76, rebounding: 60, athleticism: 84, iq: 80 }),
+      player("Jon McGlocklin", 6, 5, 14, { height: 80, shooting: 83, finishing: 76, handles: 72, passing: 76, defense: 70, rebounding: 62, athleticism: 68, iq: 84 }),
+      player("Brian Winters", 6, 4, 32, { height: 77, shooting: 82, finishing: 79, handles: 80, passing: 79, defense: 72, rebounding: 60, athleticism: 70, iq: 86 }),
       player("Junior Bridgeman", 6, 5, 2, { height: 80, shooting: 82, finishing: 82, handles: 78, passing: 76, defense: 76, rebounding: 64, athleticism: 78, iq: 82 }),
-      player("Marques Johnson", 6, 7, 8, { height: 84, shooting: 82, finishing: 91, handles: 82, passing: 80, defense: 80, rebounding: 82, athleticism: 88, iq: 88 }),
+      player("Marques Johnson", 6, 7, 8, { height: 84, shooting: 82, finishing: 85, handles: 82, passing: 80, defense: 80, rebounding: 82, athleticism: 82, iq: 88 }),
       player("Greg Smith", 6, 5, 4, { height: 80, shooting: 66, finishing: 78, handles: 66, passing: 72, defense: 82, rebounding: 80, athleticism: 82, iq: 74 }),
       player("Dick Cunningham", 6, 10, 34, { height: 94, shooting: 60, finishing: 74, handles: 54, passing: 64, defense: 80, rebounding: 84, athleticism: 70, iq: 70 }),
       player("Terry Driscoll", 6, 8, 25, { height: 86, shooting: 68, finishing: 76, handles: 60, passing: 66, defense: 78, rebounding: 80, athleticism: 74, iq: 72 }),
@@ -148,13 +148,13 @@ const teamEras = [
     team: "Lakers",
     note: "Showtime is packed with passing, finishing, size, and transition force.",
     players: [
-      player("Magic Johnson", 6, 9, 32, { height: 90, shooting: 84, finishing: 93, handles: 96, passing: 100, defense: 82, rebounding: 88, athleticism: 86, iq: 98 }),
-      player("Kareem Abdul-Jabbar", 7, 2, 33, { height: 100, shooting: 84, finishing: 98, handles: 70, passing: 82, defense: 91, rebounding: 91, athleticism: 78, iq: 94 }),
-      player("James Worthy", 6, 9, 42, { height: 90, shooting: 80, finishing: 94, handles: 82, passing: 78, defense: 82, rebounding: 78, athleticism: 91, iq: 85 }),
-      player("Byron Scott", 6, 3, 4, { height: 74, shooting: 88, finishing: 82, handles: 82, passing: 78, defense: 76, rebounding: 60, athleticism: 86, iq: 84 }),
-      player("Michael Cooper", 6, 5, 21, { height: 80, shooting: 82, finishing: 76, handles: 78, passing: 82, defense: 95, rebounding: 66, athleticism: 86, iq: 88 }),
-      player("A.C. Green", 6, 9, 45, { height: 90, shooting: 70, finishing: 82, handles: 62, passing: 68, defense: 84, rebounding: 89, athleticism: 80, iq: 78 }),
-      player("Norm Nixon", 6, 2, 10, { height: 71, shooting: 82, finishing: 84, handles: 90, passing: 88, defense: 74, rebounding: 56, athleticism: 86, iq: 84 }),
+      player("Magic Johnson", 6, 9, 32, { height: 90, shooting: 84, finishing: 88, handles: 91, passing: 100, defense: 76, rebounding: 82, athleticism: 80, iq: 98 }),
+      player("Kareem Abdul-Jabbar", 7, 2, 33, { height: 100, shooting: 84, finishing: 97, handles: 70, passing: 82, defense: 86, rebounding: 86, athleticism: 78, iq: 94 }),
+      player("James Worthy", 6, 9, 42, { height: 90, shooting: 80, finishing: 89, handles: 82, passing: 78, defense: 82, rebounding: 78, athleticism: 86, iq: 85 }),
+      player("Byron Scott", 6, 3, 4, { height: 74, shooting: 82, finishing: 82, handles: 82, passing: 78, defense: 76, rebounding: 60, athleticism: 86, iq: 84 }),
+      player("Michael Cooper", 6, 5, 21, { height: 80, shooting: 82, finishing: 76, handles: 78, passing: 82, defense: 90, rebounding: 66, athleticism: 86, iq: 88 }),
+      player("A.C. Green", 6, 9, 45, { height: 90, shooting: 70, finishing: 82, handles: 62, passing: 68, defense: 78, rebounding: 83, athleticism: 80, iq: 78 }),
+      player("Norm Nixon", 6, 2, 10, { height: 71, shooting: 82, finishing: 84, handles: 84, passing: 82, defense: 74, rebounding: 56, athleticism: 86, iq: 84 }),
       player("Mychal Thompson", 6, 10, 43, { height: 94, shooting: 72, finishing: 84, handles: 62, passing: 72, defense: 84, rebounding: 84, athleticism: 76, iq: 80 }),
       player("Jamaal Wilkes", 6, 6, 52, { height: 82, shooting: 84, finishing: 86, handles: 80, passing: 76, defense: 78, rebounding: 68, athleticism: 84, iq: 84 }),
       player("Bob McAdoo", 6, 9, 11, { height: 90, shooting: 84, finishing: 86, handles: 72, passing: 72, defense: 76, rebounding: 80, athleticism: 82, iq: 84 }),
@@ -170,15 +170,15 @@ const teamEras = [
     team: "Celtics",
     note: "Bird-era Boston is a cheat code for shooting, passing, rebounding, and IQ.",
     players: [
-      player("Larry Bird", 6, 9, 33, { height: 90, shooting: 98, finishing: 90, handles: 86, passing: 96, defense: 84, rebounding: 92, athleticism: 74, iq: 99 }),
-      player("Kevin McHale", 6, 10, 32, { height: 94, shooting: 84, finishing: 96, handles: 76, passing: 74, defense: 92, rebounding: 88, athleticism: 78, iq: 90 }),
-      player("Robert Parish", 7, 0, "00", { height: 98, shooting: 78, finishing: 90, handles: 62, passing: 70, defense: 88, rebounding: 92, athleticism: 76, iq: 86 }),
-      player("Dennis Johnson", 6, 4, 3, { height: 77, shooting: 78, finishing: 82, handles: 86, passing: 88, defense: 94, rebounding: 68, athleticism: 80, iq: 92 }),
-      player("Danny Ainge", 6, 4, 44, { height: 77, shooting: 88, finishing: 75, handles: 82, passing: 82, defense: 74, rebounding: 60, athleticism: 72, iq: 84 }),
+      player("Larry Bird", 6, 9, 33, { height: 90, shooting: 98, finishing: 86, handles: 86, passing: 91, defense: 84, rebounding: 87, athleticism: 74, iq: 99 }),
+      player("Kevin McHale", 6, 10, 32, { height: 94, shooting: 84, finishing: 93, handles: 76, passing: 74, defense: 87, rebounding: 86, athleticism: 78, iq: 90 }),
+      player("Robert Parish", 7, 0, "00", { height: 98, shooting: 78, finishing: 84, handles: 62, passing: 70, defense: 82, rebounding: 86, athleticism: 76, iq: 86 }),
+      player("Dennis Johnson", 6, 4, 3, { height: 77, shooting: 78, finishing: 82, handles: 86, passing: 82, defense: 89, rebounding: 68, athleticism: 80, iq: 92 }),
+      player("Danny Ainge", 6, 4, 44, { height: 77, shooting: 83, finishing: 75, handles: 82, passing: 82, defense: 74, rebounding: 60, athleticism: 72, iq: 84 }),
       player("Cedric Maxwell", 6, 8, 31, { height: 86, shooting: 76, finishing: 90, handles: 74, passing: 75, defense: 80, rebounding: 82, athleticism: 78, iq: 89 }),
       player("Bill Walton", 6, 11, 5, { height: 96, shooting: 74, finishing: 88, handles: 68, passing: 88, defense: 92, rebounding: 92, athleticism: 72, iq: 93 }),
       player("Scott Wedman", 6, 7, 8, { height: 84, shooting: 86, finishing: 78, handles: 72, passing: 72, defense: 74, rebounding: 68, athleticism: 72, iq: 82 }),
-      player("Nate Archibald", 6, 1, 7, { height: 68, shooting: 82, finishing: 82, handles: 92, passing: 90, defense: 72, rebounding: 54, athleticism: 82, iq: 84 }),
+      player("Nate Archibald", 6, 1, 7, { height: 68, shooting: 82, finishing: 82, handles: 87, passing: 85, defense: 72, rebounding: 54, athleticism: 82, iq: 84 }),
       player("Gerald Henderson", 6, 2, 43, { height: 71, shooting: 78, finishing: 80, handles: 84, passing: 80, defense: 82, rebounding: 56, athleticism: 84, iq: 82 }),
       player("M.L. Carr", 6, 6, 30, { height: 82, shooting: 76, finishing: 78, handles: 74, passing: 72, defense: 82, rebounding: 66, athleticism: 82, iq: 80 }),
       player("Rick Robey", 6, 11, 53, { height: 96, shooting: 68, finishing: 80, handles: 60, passing: 68, defense: 76, rebounding: 80, athleticism: 74, iq: 74 }),
@@ -192,14 +192,14 @@ const teamEras = [
     team: "Bulls",
     note: "The Jordan Bulls can solve almost any category if the roll breaks right.",
     players: [
-      player("Michael Jordan", 6, 6, 23, { height: 82, shooting: 94, finishing: 99, handles: 96, passing: 88, defense: 98, rebounding: 82, athleticism: 99, iq: 95 }),
-      player("Scottie Pippen", 6, 8, 33, { height: 86, shooting: 83, finishing: 91, handles: 88, passing: 90, defense: 98, rebounding: 86, athleticism: 94, iq: 92 }),
-      player("Dennis Rodman", 6, 7, 91, { height: 84, shooting: 52, finishing: 72, handles: 62, passing: 72, defense: 96, rebounding: 100, athleticism: 86, iq: 84 }),
-      player("Toni Kukoc", 6, 10, 7, { height: 94, shooting: 87, finishing: 83, handles: 82, passing: 88, defense: 72, rebounding: 76, athleticism: 76, iq: 86 }),
-      player("Ron Harper", 6, 6, 9, { height: 82, shooting: 76, finishing: 84, handles: 84, passing: 80, defense: 88, rebounding: 70, athleticism: 82, iq: 80 }),
-      player("Steve Kerr", 6, 3, 25, { height: 74, shooting: 95, finishing: 65, handles: 72, passing: 74, defense: 62, rebounding: 50, athleticism: 58, iq: 86 }),
+      player("Michael Jordan", 6, 6, 23, { height: 82, shooting: 92, finishing: 99, handles: 96, passing: 84, defense: 98, rebounding: 76, athleticism: 99, iq: 95 }),
+      player("Scottie Pippen", 6, 8, 33, { height: 86, shooting: 83, finishing: 87, handles: 88, passing: 87, defense: 90, rebounding: 86, athleticism: 86, iq: 92 }),
+      player("Dennis Rodman", 6, 7, 91, { height: 84, shooting: 52, finishing: 72, handles: 62, passing: 72, defense: 94, rebounding: 100, athleticism: 86, iq: 84 }),
+      player("Toni Kukoc", 6, 10, 7, { height: 90, shooting: 82, finishing: 83, handles: 82, passing: 84, defense: 72, rebounding: 76, athleticism: 76, iq: 86 }),
+      player("Ron Harper", 6, 6, 9, { height: 82, shooting: 76, finishing: 79, handles: 84, passing: 80, defense: 82, rebounding: 70, athleticism: 82, iq: 80 }),
+      player("Steve Kerr", 6, 3, 25, { height: 74, shooting: 93, finishing: 65, handles: 72, passing: 74, defense: 62, rebounding: 50, athleticism: 58, iq: 86 }),
       player("Luc Longley", 7, 2, 13, { height: 100, shooting: 68, finishing: 78, handles: 55, passing: 70, defense: 76, rebounding: 78, athleticism: 58, iq: 72 }),
-      player("Horace Grant", 6, 10, 54, { height: 94, shooting: 74, finishing: 84, handles: 62, passing: 72, defense: 86, rebounding: 88, athleticism: 82, iq: 80 }),
+      player("Horace Grant", 6, 10, 54, { height: 94, shooting: 74, finishing: 84, handles: 62, passing: 72, defense: 80, rebounding: 82, athleticism: 82, iq: 80 }),
       player("B.J. Armstrong", 6, 2, 10, { height: 71, shooting: 84, finishing: 78, handles: 84, passing: 80, defense: 74, rebounding: 52, athleticism: 78, iq: 82 }),
       player("John Paxson", 6, 2, 5, { height: 71, shooting: 88, finishing: 74, handles: 78, passing: 80, defense: 72, rebounding: 50, athleticism: 70, iq: 88 }),
       player("Bill Cartwright", 7, 1, 24, { height: 100, shooting: 66, finishing: 80, handles: 58, passing: 68, defense: 82, rebounding: 80, athleticism: 66, iq: 78 }),
@@ -215,16 +215,16 @@ const teamEras = [
     note: "Hakeem gives this pool legendary defense, post scoring, and big-man skill.",
     players: [
       player("Hakeem Olajuwon", 7, 0, 34, { height: 98, shooting: 82, finishing: 98, handles: 84, passing: 82, defense: 100, rebounding: 96, athleticism: 94, iq: 90 }),
-      player("Clyde Drexler", 6, 7, 22, { height: 84, shooting: 86, finishing: 94, handles: 88, passing: 86, defense: 84, rebounding: 82, athleticism: 94, iq: 92 }),
-      player("Kenny Smith", 6, 3, 30, { height: 74, shooting: 86, finishing: 78, handles: 84, passing: 86, defense: 68, rebounding: 55, athleticism: 80, iq: 84 }),
-      player("Robert Horry", 6, 10, 25, { height: 94, shooting: 86, finishing: 78, handles: 72, passing: 76, defense: 84, rebounding: 78, athleticism: 82, iq: 86 }),
-      player("Sam Cassell", 6, 3, 10, { height: 74, shooting: 84, finishing: 82, handles: 88, passing: 86, defense: 72, rebounding: 58, athleticism: 76, iq: 88 }),
+      player("Clyde Drexler", 6, 7, 22, { height: 84, shooting: 86, finishing: 89, handles: 88, passing: 86, defense: 78, rebounding: 82, athleticism: 88, iq: 92 }),
+      player("Kenny Smith", 6, 3, 30, { height: 74, shooting: 80, finishing: 78, handles: 84, passing: 86, defense: 68, rebounding: 55, athleticism: 80, iq: 84 }),
+      player("Robert Horry", 6, 10, 25, { height: 94, shooting: 80, finishing: 78, handles: 72, passing: 76, defense: 84, rebounding: 78, athleticism: 82, iq: 86 }),
+      player("Sam Cassell", 6, 3, 10, { height: 74, shooting: 84, finishing: 82, handles: 84, passing: 80, defense: 72, rebounding: 58, athleticism: 76, iq: 88 }),
       player("Otis Thorpe", 6, 10, 33, { height: 94, shooting: 65, finishing: 84, handles: 62, passing: 68, defense: 80, rebounding: 90, athleticism: 78, iq: 78 }),
-      player("Vernon Maxwell", 6, 4, 11, { height: 77, shooting: 84, finishing: 82, handles: 84, passing: 76, defense: 78, rebounding: 58, athleticism: 84, iq: 88 }),
+      player("Vernon Maxwell", 6, 4, 11, { height: 77, shooting: 78, finishing: 82, handles: 84, passing: 76, defense: 78, rebounding: 58, athleticism: 84, iq: 88 }),
       player("Mario Elie", 6, 5, 17, { height: 80, shooting: 82, finishing: 76, handles: 72, passing: 74, defense: 82, rebounding: 62, athleticism: 76, iq: 88 }),
-      player("Charles Barkley", 6, 6, 4, { height: 82, shooting: 78, finishing: 88, handles: 80, passing: 80, defense: 76, rebounding: 90, athleticism: 84, iq: 84 }),
-      player("Scottie Pippen", 6, 8, 33, { height: 86, shooting: 80, finishing: 86, handles: 86, passing: 88, defense: 94, rebounding: 82, athleticism: 90, iq: 92 }),
-      player("Eddie Johnson", 6, 7, 8, { height: 84, shooting: 86, finishing: 84, handles: 78, passing: 72, defense: 70, rebounding: 64, athleticism: 78, iq: 86 }),
+      player("Charles Barkley", 6, 6, 4, { height: 82, shooting: 78, finishing: 86, handles: 80, passing: 80, defense: 76, rebounding: 84, athleticism: 84, iq: 84 }),
+      player("Scottie Pippen", 6, 8, 33, { height: 86, shooting: 80, finishing: 86, handles: 86, passing: 87, defense: 90, rebounding: 82, athleticism: 86, iq: 92 }),
+      player("Eddie Johnson", 6, 7, 8, { height: 84, shooting: 80, finishing: 84, handles: 78, passing: 72, defense: 70, rebounding: 64, athleticism: 78, iq: 86 }),
       player("Matt Maloney", 6, 3, 4, { height: 74, shooting: 84, finishing: 74, handles: 80, passing: 80, defense: 74, rebounding: 52, athleticism: 72, iq: 80 }),
       player("Carl Herrera", 6, 9, 31, { height: 90, shooting: 70, finishing: 80, handles: 66, passing: 68, defense: 80, rebounding: 76, athleticism: 84, iq: 72 }),
       player("Chucky Brown", 6, 8, 52, { height: 86, shooting: 72, finishing: 80, handles: 66, passing: 66, defense: 78, rebounding: 74, athleticism: 80, iq: 72 }),
@@ -236,12 +236,12 @@ const teamEras = [
     team: "Lakers",
     note: "Shaq and Kobe create elite spikes, but the wrong category can still bite.",
     players: [
-      player("Kobe Bryant", 6, 6, 8, { height: 82, shooting: 94, finishing: 96, handles: 95, passing: 86, defense: 96, rebounding: 78, athleticism: 96, iq: 92 }),
+      player("Kobe Bryant", 6, 6, 8, { height: 82, shooting: 94, finishing: 96, handles: 90, passing: 82, defense: 96, rebounding: 68, athleticism: 96, iq: 92 }),
       player("Shaquille O'Neal", 7, 1, 34, { height: 99, shooting: 48, finishing: 100, handles: 64, passing: 78, defense: 92, rebounding: 96, athleticism: 90, iq: 92 }),
-      player("Pau Gasol", 7, 0, 16, { height: 98, shooting: 82, finishing: 92, handles: 76, passing: 86, defense: 84, rebounding: 90, athleticism: 72, iq: 88 }),
+      player("Pau Gasol", 7, 0, 16, { height: 98, shooting: 82, finishing: 87, handles: 76, passing: 82, defense: 84, rebounding: 90, athleticism: 72, iq: 88 }),
       player("Derek Fisher", 6, 1, 2, { height: 68, shooting: 84, finishing: 72, handles: 80, passing: 80, defense: 78, rebounding: 55, athleticism: 70, iq: 92 }),
-      player("Lamar Odom", 6, 10, 7, { height: 94, shooting: 78, finishing: 86, handles: 88, passing: 88, defense: 80, rebounding: 88, athleticism: 84, iq: 82 }),
-      player("Robert Horry", 6, 10, 5, { height: 94, shooting: 84, finishing: 76, handles: 70, passing: 76, defense: 82, rebounding: 76, athleticism: 76, iq: 86 }),
+      player("Lamar Odom", 6, 10, 7, { height: 94, shooting: 78, finishing: 86, handles: 82, passing: 82, defense: 80, rebounding: 82, athleticism: 84, iq: 82 }),
+      player("Robert Horry", 6, 10, 5, { height: 94, shooting: 78, finishing: 76, handles: 70, passing: 76, defense: 82, rebounding: 76, athleticism: 76, iq: 86 }),
       player("Rick Fox", 6, 7, 17, { height: 84, shooting: 80, finishing: 76, handles: 74, passing: 76, defense: 84, rebounding: 66, athleticism: 74, iq: 84 }),
       player("Andrew Bynum", 7, 0, 17, { height: 98, shooting: 58, finishing: 88, handles: 52, passing: 60, defense: 82, rebounding: 88, athleticism: 72, iq: 74 }),
       player("Ron Artest", 6, 7, 37, { height: 84, shooting: 74, finishing: 82, handles: 78, passing: 74, defense: 90, rebounding: 68, athleticism: 82, iq: 82 }),
@@ -259,11 +259,11 @@ const teamEras = [
     note: "A disciplined pool with Duncan's defense and Manu/Parker's creation.",
     players: [
       player("Tim Duncan", 6, 11, 21, { height: 96, shooting: 80, finishing: 95, handles: 72, passing: 84, defense: 99, rebounding: 98, athleticism: 80, iq: 96 }),
-      player("Manu Ginobili", 6, 6, 20, { height: 82, shooting: 88, finishing: 92, handles: 92, passing: 90, defense: 84, rebounding: 72, athleticism: 86, iq: 94 }),
-      player("Tony Parker", 6, 2, 9, { height: 71, shooting: 82, finishing: 96, handles: 91, passing: 88, defense: 70, rebounding: 52, athleticism: 90, iq: 88 }),
-      player("David Robinson", 7, 1, 50, { height: 99, shooting: 76, finishing: 92, handles: 68, passing: 76, defense: 96, rebounding: 94, athleticism: 90, iq: 86 }),
-      player("Bruce Bowen", 6, 7, 12, { height: 84, shooting: 82, finishing: 66, handles: 62, passing: 68, defense: 96, rebounding: 58, athleticism: 74, iq: 84 }),
-      player("Robert Horry", 6, 10, 5, { height: 94, shooting: 84, finishing: 76, handles: 70, passing: 76, defense: 82, rebounding: 76, athleticism: 76, iq: 86 }),
+      player("Manu Ginobili", 6, 6, 20, { height: 82, shooting: 88, finishing: 88, handles: 87, passing: 85, defense: 84, rebounding: 72, athleticism: 86, iq: 94 }),
+      player("Tony Parker", 6, 2, 9, { height: 71, shooting: 82, finishing: 91, handles: 86, passing: 85, defense: 70, rebounding: 52, athleticism: 90, iq: 88 }),
+      player("David Robinson", 7, 1, 50, { height: 99, shooting: 76, finishing: 88, handles: 68, passing: 76, defense: 92, rebounding: 94, athleticism: 90, iq: 86 }),
+      player("Bruce Bowen", 6, 7, 12, { height: 84, shooting: 82, finishing: 66, handles: 62, passing: 68, defense: 91, rebounding: 58, athleticism: 74, iq: 84 }),
+      player("Robert Horry", 6, 10, 5, { height: 94, shooting: 78, finishing: 76, handles: 70, passing: 76, defense: 82, rebounding: 76, athleticism: 76, iq: 86 }),
       player("Stephen Jackson", 6, 8, 3, { height: 86, shooting: 82, finishing: 82, handles: 82, passing: 78, defense: 82, rebounding: 68, athleticism: 82, iq: 86 }),
       player("Michael Finley", 6, 7, 4, { height: 84, shooting: 84, finishing: 82, handles: 78, passing: 76, defense: 74, rebounding: 66, athleticism: 78, iq: 84 }),
       player("Sean Elliott", 6, 8, 32, { height: 86, shooting: 84, finishing: 82, handles: 78, passing: 76, defense: 78, rebounding: 68, athleticism: 78, iq: 84 }),
@@ -280,17 +280,17 @@ const teamEras = [
     team: "Suns",
     note: "Seven Seconds or Less is a playground for shooting, passing, and athleticism.",
     players: [
-      player("Steve Nash", 6, 3, 13, { height: 74, shooting: 96, finishing: 84, handles: 94, passing: 99, defense: 60, rebounding: 52, athleticism: 76, iq: 97 }),
-      player("Amar'e Stoudemire", 6, 10, 32, { height: 94, shooting: 78, finishing: 97, handles: 72, passing: 68, defense: 74, rebounding: 88, athleticism: 97, iq: 78 }),
-      player("Shawn Marion", 6, 7, 31, { height: 84, shooting: 82, finishing: 88, handles: 76, passing: 74, defense: 90, rebounding: 92, athleticism: 94, iq: 82 }),
-      player("Joe Johnson", 6, 7, 2, { height: 84, shooting: 90, finishing: 86, handles: 88, passing: 84, defense: 78, rebounding: 70, athleticism: 82, iq: 88 }),
+      player("Steve Nash", 6, 3, 13, { height: 74, shooting: 91, finishing: 78, handles: 90, passing: 99, defense: 60, rebounding: 52, athleticism: 76, iq: 97 }),
+      player("Amar'e Stoudemire", 6, 10, 32, { height: 94, shooting: 78, finishing: 92, handles: 72, passing: 68, defense: 74, rebounding: 82, athleticism: 92, iq: 78 }),
+      player("Shawn Marion", 6, 7, 31, { height: 84, shooting: 82, finishing: 88, handles: 76, passing: 74, defense: 84, rebounding: 86, athleticism: 88, iq: 82 }),
+      player("Joe Johnson", 6, 7, 2, { height: 84, shooting: 84, finishing: 86, handles: 82, passing: 84, defense: 78, rebounding: 70, athleticism: 82, iq: 88 }),
       player("Leandro Barbosa", 6, 3, 10, { height: 74, shooting: 86, finishing: 86, handles: 84, passing: 76, defense: 70, rebounding: 55, athleticism: 94, iq: 80 }),
       player("Raja Bell", 6, 5, 19, { height: 80, shooting: 87, finishing: 72, handles: 70, passing: 72, defense: 88, rebounding: 58, athleticism: 76, iq: 82 }),
       player("Boris Diaw", 6, 8, 3, { height: 86, shooting: 80, finishing: 82, handles: 80, passing: 88, defense: 76, rebounding: 74, athleticism: 72, iq: 90 }),
       player("Quentin Richardson", 6, 6, 23, { height: 82, shooting: 86, finishing: 78, handles: 74, passing: 70, defense: 74, rebounding: 70, athleticism: 78, iq: 80 }),
       player("Grant Hill", 6, 8, 33, { height: 86, shooting: 80, finishing: 88, handles: 86, passing: 86, defense: 80, rebounding: 70, athleticism: 82, iq: 82 }),
       player("Jason Richardson", 6, 6, 23, { height: 82, shooting: 84, finishing: 86, handles: 80, passing: 72, defense: 74, rebounding: 66, athleticism: 92, iq: 80 }),
-      player("Stephon Marbury", 6, 2, 3, { height: 71, shooting: 82, finishing: 84, handles: 92, passing: 88, defense: 70, rebounding: 56, athleticism: 86, iq: 80 }),
+      player("Stephon Marbury", 6, 2, 3, { height: 71, shooting: 82, finishing: 84, handles: 92, passing: 90, defense: 70, rebounding: 56, athleticism: 86, iq: 80 }),
       player("Goran Dragic", 6, 3, 2, { height: 74, shooting: 78, finishing: 80, handles: 86, passing: 82, defense: 72, rebounding: 54, athleticism: 82, iq: 80 }),
       player("Channing Frye", 6, 11, 8, { height: 96, shooting: 84, finishing: 78, handles: 64, passing: 66, defense: 72, rebounding: 74, athleticism: 72, iq: 78 }),
       player("Kurt Thomas", 6, 9, 40, { height: 90, shooting: 74, finishing: 78, handles: 62, passing: 68, defense: 84, rebounding: 82, athleticism: 72, iq: 74 }),
@@ -302,11 +302,11 @@ const teamEras = [
     team: "Warriors",
     note: "The modern cheat-code pool for shooting, defense, and small-ball IQ.",
     players: [
-      player("Stephen Curry", 6, 2, 30, { height: 71, shooting: 100, finishing: 94, handles: 98, passing: 94, defense: 76, rebounding: 62, athleticism: 84, iq: 97 }),
-      player("Kevin Durant", 6, 11, 35, { height: 96, shooting: 98, finishing: 97, handles: 92, passing: 86, defense: 86, rebounding: 86, athleticism: 91, iq: 90 }),
-      player("Klay Thompson", 6, 6, 11, { height: 82, shooting: 98, finishing: 82, handles: 78, passing: 74, defense: 90, rebounding: 66, athleticism: 80, iq: 82 }),
-      player("Draymond Green", 6, 6, 23, { height: 82, shooting: 70, finishing: 78, handles: 76, passing: 92, defense: 97, rebounding: 88, athleticism: 80, iq: 96 }),
-      player("Andre Iguodala", 6, 6, 9, { height: 82, shooting: 78, finishing: 84, handles: 82, passing: 84, defense: 92, rebounding: 72, athleticism: 88, iq: 88 }),
+      player("Stephen Curry", 6, 2, 30, { height: 71, shooting: 100, finishing: 94, handles: 94, passing: 88, defense: 70, rebounding: 62, athleticism: 84, iq: 97 }),
+      player("Kevin Durant", 6, 11, 35, { height: 96, shooting: 94, finishing: 93, handles: 86, passing: 80, defense: 80, rebounding: 74, athleticism: 91, iq: 90 }),
+      player("Klay Thompson", 6, 6, 11, { height: 82, shooting: 94, finishing: 82, handles: 78, passing: 74, defense: 84, rebounding: 66, athleticism: 80, iq: 82 }),
+      player("Draymond Green", 6, 6, 23, { height: 82, shooting: 70, finishing: 78, handles: 76, passing: 86, defense: 92, rebounding: 88, athleticism: 80, iq: 90 }),
+      player("Andre Iguodala", 6, 6, 9, { height: 82, shooting: 78, finishing: 78, handles: 82, passing: 84, defense: 85, rebounding: 72, athleticism: 82, iq: 88 }),
       player("Andrew Bogut", 7, 0, 12, { height: 98, shooting: 52, finishing: 78, handles: 58, passing: 80, defense: 88, rebounding: 88, athleticism: 64, iq: 70 }),
       player("Shaun Livingston", 6, 7, 34, { height: 84, shooting: 78, finishing: 84, handles: 86, passing: 84, defense: 78, rebounding: 62, athleticism: 72, iq: 82 }),
       player("Harrison Barnes", 6, 8, 40, { height: 86, shooting: 82, finishing: 80, handles: 74, passing: 68, defense: 76, rebounding: 70, athleticism: 82, iq: 78 }),
@@ -324,10 +324,10 @@ const teamEras = [
     team: "Cavaliers",
     note: "LeBron's second Cleveland run gives you one of the best all-around picks in the game.",
     players: [
-      player("LeBron James", 6, 9, 23, { height: 90, shooting: 88, finishing: 100, handles: 94, passing: 98, defense: 92, rebounding: 90, athleticism: 98, iq: 97 }),
-      player("Kyrie Irving", 6, 2, 2, { height: 71, shooting: 94, finishing: 95, handles: 100, passing: 86, defense: 66, rebounding: 52, athleticism: 88, iq: 96 }),
-      player("Kevin Love", 6, 8, 0, { height: 86, shooting: 90, finishing: 84, handles: 70, passing: 82, defense: 70, rebounding: 94, athleticism: 68, iq: 84 }),
-      player("J.R. Smith", 6, 6, 5, { height: 82, shooting: 88, finishing: 84, handles: 82, passing: 72, defense: 74, rebounding: 64, athleticism: 88, iq: 74 }),
+      player("LeBron James", 6, 9, 23, { height: 90, shooting: 83, finishing: 100, handles: 94, passing: 94, defense: 92, rebounding: 84, athleticism: 98, iq: 97 }),
+      player("Kyrie Irving", 6, 2, 2, { height: 71, shooting: 94, finishing: 91, handles: 96, passing: 80, defense: 66, rebounding: 52, athleticism: 88, iq: 88 }),
+      player("Kevin Love", 6, 8, 0, { height: 86, shooting: 84, finishing: 84, handles: 70, passing: 82, defense: 70, rebounding: 88, athleticism: 68, iq: 84 }),
+      player("J.R. Smith", 6, 6, 5, { height: 82, shooting: 80, finishing: 84, handles: 82, passing: 72, defense: 74, rebounding: 64, athleticism: 82, iq: 74 }),
       player("Tristan Thompson", 6, 9, 13, { height: 90, shooting: 45, finishing: 82, handles: 58, passing: 62, defense: 82, rebounding: 92, athleticism: 82, iq: 78 }),
       player("Matthew Dellavedova", 6, 3, 8, { height: 74, shooting: 78, finishing: 62, handles: 76, passing: 78, defense: 80, rebounding: 52, athleticism: 62, iq: 78 }),
       player("Iman Shumpert", 6, 5, 4, { height: 80, shooting: 78, finishing: 76, handles: 78, passing: 70, defense: 84, rebounding: 60, athleticism: 84, iq: 78 }),
@@ -346,15 +346,15 @@ const teamEras = [
     team: "Nuggets",
     note: "Jokic makes passing and IQ-adjacent categories feel unfair from a center slot.",
     players: [
-      player("Nikola Jokic", 6, 11, 15, { height: 96, shooting: 92, finishing: 96, handles: 88, passing: 100, defense: 82, rebounding: 96, athleticism: 64, iq: 99 }),
-      player("Jamal Murray", 6, 4, 27, { height: 77, shooting: 91, finishing: 88, handles: 92, passing: 84, defense: 72, rebounding: 62, athleticism: 84, iq: 84 }),
-      player("Aaron Gordon", 6, 8, 50, { height: 86, shooting: 74, finishing: 92, handles: 78, passing: 78, defense: 88, rebounding: 84, athleticism: 96, iq: 82 }),
-      player("Michael Porter Jr.", 6, 10, 1, { height: 94, shooting: 92, finishing: 84, handles: 76, passing: 66, defense: 74, rebounding: 82, athleticism: 82, iq: 82 }),
+      player("Nikola Jokic", 6, 11, 15, { height: 96, shooting: 92, finishing: 96, handles: 88, passing: 100, defense: 76, rebounding: 96, athleticism: 58, iq: 99 }),
+      player("Jamal Murray", 6, 4, 27, { height: 77, shooting: 86, finishing: 83, handles: 87, passing: 84, defense: 72, rebounding: 62, athleticism: 84, iq: 84 }),
+      player("Aaron Gordon", 6, 8, 50, { height: 86, shooting: 74, finishing: 86, handles: 78, passing: 78, defense: 82, rebounding: 84, athleticism: 90, iq: 82 }),
+      player("Michael Porter Jr.", 6, 10, 1, { height: 94, shooting: 86, finishing: 79, handles: 76, passing: 66, defense: 74, rebounding: 76, athleticism: 82, iq: 82 }),
       player("Kentavious Caldwell-Pope", 6, 5, 5, { height: 80, shooting: 86, finishing: 76, handles: 74, passing: 72, defense: 88, rebounding: 58, athleticism: 80, iq: 84 }),
       player("Bruce Brown", 6, 4, 11, { height: 77, shooting: 78, finishing: 84, handles: 80, passing: 78, defense: 84, rebounding: 70, athleticism: 84, iq: 80 }),
       player("Christian Braun", 6, 6, 0, { height: 82, shooting: 78, finishing: 82, handles: 72, passing: 70, defense: 82, rebounding: 66, athleticism: 86, iq: 78 }),
       player("Will Barton", 6, 5, 5, { height: 80, shooting: 82, finishing: 84, handles: 84, passing: 76, defense: 72, rebounding: 68, athleticism: 86, iq: 80 }),
-      player("Russell Westbrook", 6, 3, 4, { height: 74, shooting: 70, finishing: 84, handles: 88, passing: 86, defense: 74, rebounding: 74, athleticism: 88, iq: 78 }),
+      player("Russell Westbrook", 6, 3, 4, { height: 74, shooting: 70, finishing: 84, handles: 88, passing: 86, defense: 74, rebounding: 74, athleticism: 90, iq: 78 }),
       player("Jerami Grant", 6, 8, 9, { height: 86, shooting: 78, finishing: 82, handles: 70, passing: 66, defense: 84, rebounding: 68, athleticism: 88, iq: 76 }),
       player("Monte Morris", 6, 2, 11, { height: 71, shooting: 80, finishing: 78, handles: 84, passing: 84, defense: 72, rebounding: 52, athleticism: 78, iq: 80 }),
       player("Paul Millsap", 6, 7, 4, { height: 84, shooting: 74, finishing: 80, handles: 70, passing: 74, defense: 84, rebounding: 76, athleticism: 74, iq: 78 }),
@@ -368,15 +368,15 @@ const teamEras = [
     team: "Bucks",
     note: "Giannis and Jrue make this a brutal defensive and athletic roll.",
     players: [
-      player("Giannis Antetokounmpo", 6, 11, 34, { height: 96, shooting: 70, finishing: 100, handles: 88, passing: 86, defense: 97, rebounding: 96, athleticism: 100, iq: 90 }),
-      player("Jrue Holiday", 6, 4, 21, { height: 77, shooting: 84, finishing: 84, handles: 88, passing: 88, defense: 97, rebounding: 70, athleticism: 84, iq: 90 }),
-      player("Khris Middleton", 6, 7, 22, { height: 84, shooting: 90, finishing: 84, handles: 84, passing: 82, defense: 80, rebounding: 72, athleticism: 74, iq: 92 }),
-      player("Brook Lopez", 7, 1, 11, { height: 99, shooting: 86, finishing: 86, handles: 58, passing: 66, defense: 90, rebounding: 82, athleticism: 58, iq: 78 }),
+      player("Giannis Antetokounmpo", 6, 11, 34, { height: 96, shooting: 62, finishing: 100, handles: 82, passing: 74, defense: 93, rebounding: 96, athleticism: 100, iq: 83 }),
+      player("Jrue Holiday", 6, 4, 21, { height: 77, shooting: 84, finishing: 84, handles: 83, passing: 82, defense: 92, rebounding: 70, athleticism: 84, iq: 90 }),
+      player("Khris Middleton", 6, 7, 22, { height: 84, shooting: 84, finishing: 79, handles: 84, passing: 82, defense: 80, rebounding: 72, athleticism: 74, iq: 84 }),
+      player("Brook Lopez", 7, 1, 11, { height: 99, shooting: 86, finishing: 86, handles: 58, passing: 66, defense: 84, rebounding: 82, athleticism: 58, iq: 78 }),
       player("Bobby Portis", 6, 10, 9, { height: 94, shooting: 82, finishing: 84, handles: 64, passing: 66, defense: 76, rebounding: 88, athleticism: 72, iq: 78 }),
       player("Pat Connaughton", 6, 5, 24, { height: 80, shooting: 82, finishing: 76, handles: 70, passing: 68, defense: 76, rebounding: 72, athleticism: 86, iq: 76 }),
       player("Donte DiVincenzo", 6, 4, 0, { height: 77, shooting: 82, finishing: 78, handles: 78, passing: 76, defense: 82, rebounding: 70, athleticism: 84, iq: 78 }),
       player("Grayson Allen", 6, 4, 12, { height: 77, shooting: 86, finishing: 76, handles: 74, passing: 72, defense: 72, rebounding: 58, athleticism: 76, iq: 80 }),
-      player("Damian Lillard", 6, 2, 0, { height: 71, shooting: 92, finishing: 84, handles: 90, passing: 82, defense: 66, rebounding: 56, athleticism: 80, iq: 90 }),
+      player("Damian Lillard", 6, 2, 0, { height: 71, shooting: 88, finishing: 84, handles: 86, passing: 82, defense: 66, rebounding: 56, athleticism: 80, iq: 90 }),
       player("Wesley Matthews", 6, 4, 23, { height: 77, shooting: 80, finishing: 76, handles: 72, passing: 68, defense: 82, rebounding: 56, athleticism: 74, iq: 78 }),
       player("P.J. Tucker", 6, 5, 17, { height: 80, shooting: 74, finishing: 74, handles: 66, passing: 64, defense: 88, rebounding: 66, athleticism: 76, iq: 76 }),
       player("George Hill", 6, 4, 3, { height: 77, shooting: 80, finishing: 78, handles: 80, passing: 78, defense: 80, rebounding: 56, athleticism: 74, iq: 80 }),
@@ -390,11 +390,11 @@ const teamEras = [
     team: "Knicks",
     note: "Old-school New York wins with ball movement, smarts, and team defense.",
     players: [
-      player("Walt Frazier", 6, 4, 10, { height: 77, shooting: 84, finishing: 86, handles: 90, passing: 90, defense: 94, rebounding: 70, athleticism: 86, iq: 94 }),
+      player("Walt Frazier", 6, 4, 10, { height: 77, shooting: 84, finishing: 86, handles: 86, passing: 84, defense: 90, rebounding: 70, athleticism: 86, iq: 94 }),
       player("Willis Reed", 6, 9, 19, { height: 90, shooting: 78, finishing: 86, handles: 62, passing: 72, defense: 90, rebounding: 88, athleticism: 80, iq: 86 }),
-      player("Earl Monroe", 6, 3, 15, { height: 74, shooting: 84, finishing: 90, handles: 94, passing: 82, defense: 74, rebounding: 58, athleticism: 86, iq: 90 }),
+      player("Earl Monroe", 6, 3, 15, { height: 74, shooting: 84, finishing: 84, handles: 89, passing: 82, defense: 74, rebounding: 58, athleticism: 86, iq: 90 }),
       player("Bill Bradley", 6, 5, 24, { height: 80, shooting: 86, finishing: 76, handles: 76, passing: 82, defense: 78, rebounding: 62, athleticism: 68, iq: 84 }),
-      player("Dave DeBusschere", 6, 6, 22, { height: 82, shooting: 78, finishing: 80, handles: 66, passing: 74, defense: 92, rebounding: 86, athleticism: 76, iq: 84 }),
+      player("Dave DeBusschere", 6, 6, 22, { height: 82, shooting: 78, finishing: 80, handles: 66, passing: 74, defense: 87, rebounding: 80, athleticism: 76, iq: 84 }),
       player("Jerry Lucas", 6, 8, 32, { height: 86, shooting: 80, finishing: 80, handles: 62, passing: 78, defense: 78, rebounding: 90, athleticism: 66, iq: 80 }),
       player("Dick Barnett", 6, 4, 12, { height: 77, shooting: 84, finishing: 80, handles: 78, passing: 74, defense: 80, rebounding: 58, athleticism: 76, iq: 82 }),
       player("Phil Jackson", 6, 8, 18, { height: 86, shooting: 66, finishing: 74, handles: 60, passing: 72, defense: 82, rebounding: 74, athleticism: 70, iq: 76 }),
@@ -412,15 +412,15 @@ const teamEras = [
     team: "76ers",
     note: "Doctor J and Moses bring high-flying scoring and dominant boards.",
     players: [
-      player("Julius Erving", 6, 7, 6, { height: 84, shooting: 80, finishing: 96, handles: 86, passing: 82, defense: 86, rebounding: 82, athleticism: 97, iq: 92 }),
-      player("Moses Malone", 6, 10, 2, { height: 94, shooting: 64, finishing: 90, handles: 58, passing: 64, defense: 86, rebounding: 99, athleticism: 84, iq: 88 }),
-      player("Maurice Cheeks", 6, 1, 10, { height: 68, shooting: 80, finishing: 82, handles: 88, passing: 90, defense: 90, rebounding: 58, athleticism: 82, iq: 90 }),
+      player("Julius Erving", 6, 7, 6, { height: 84, shooting: 80, finishing: 92, handles: 86, passing: 82, defense: 80, rebounding: 82, athleticism: 93, iq: 92 }),
+      player("Moses Malone", 6, 10, 2, { height: 94, shooting: 64, finishing: 85, handles: 58, passing: 64, defense: 86, rebounding: 96, athleticism: 84, iq: 88 }),
+      player("Maurice Cheeks", 6, 1, 10, { height: 68, shooting: 80, finishing: 82, handles: 83, passing: 85, defense: 85, rebounding: 58, athleticism: 82, iq: 90 }),
       player("Andrew Toney", 6, 3, 22, { height: 74, shooting: 88, finishing: 86, handles: 84, passing: 80, defense: 72, rebounding: 56, athleticism: 80, iq: 92 }),
       player("Bobby Jones", 6, 9, 24, { height: 90, shooting: 74, finishing: 84, handles: 66, passing: 74, defense: 94, rebounding: 78, athleticism: 84, iq: 84 }),
       player("Clint Richardson", 6, 3, 20, { height: 74, shooting: 76, finishing: 78, handles: 76, passing: 74, defense: 82, rebounding: 60, athleticism: 80, iq: 76 }),
       player("Marc Iavaroni", 6, 10, 5, { height: 94, shooting: 66, finishing: 76, handles: 56, passing: 64, defense: 80, rebounding: 78, athleticism: 64, iq: 74 }),
       player("Franklin Edwards", 6, 2, 11, { height: 71, shooting: 76, finishing: 78, handles: 82, passing: 80, defense: 72, rebounding: 52, athleticism: 80, iq: 74 }),
-      player("Charles Barkley", 6, 6, 34, { height: 82, shooting: 78, finishing: 90, handles: 82, passing: 80, defense: 80, rebounding: 92, athleticism: 92, iq: 86 }),
+      player("Charles Barkley", 6, 6, 34, { height: 82, shooting: 78, finishing: 86, handles: 82, passing: 80, defense: 80, rebounding: 88, athleticism: 88, iq: 86 }),
       player("Darryl Dawkins", 6, 11, 53, { height: 96, shooting: 70, finishing: 88, handles: 62, passing: 66, defense: 80, rebounding: 84, athleticism: 90, iq: 78 }),
       player("Caldwell Jones", 6, 11, 11, { height: 96, shooting: 64, finishing: 78, handles: 58, passing: 66, defense: 90, rebounding: 86, athleticism: 82, iq: 76 }),
       player("Steve Mix", 6, 7, 30, { height: 84, shooting: 80, finishing: 82, handles: 70, passing: 72, defense: 80, rebounding: 76, athleticism: 78, iq: 80 }),
@@ -434,9 +434,9 @@ const teamEras = [
     team: "Pistons",
     note: "Detroit's Bad Boys bully you with defense, toughness, and just enough scoring.",
     players: [
-      player("Isiah Thomas", 6, 1, 11, { height: 68, shooting: 84, finishing: 90, handles: 96, passing: 94, defense: 80, rebounding: 56, athleticism: 88, iq: 96 }),
-      player("Joe Dumars", 6, 3, 4, { height: 74, shooting: 86, finishing: 82, handles: 84, passing: 80, defense: 92, rebounding: 56, athleticism: 80, iq: 90 }),
-      player("Dennis Rodman", 6, 7, 10, { height: 84, shooting: 50, finishing: 70, handles: 60, passing: 68, defense: 96, rebounding: 96, athleticism: 88, iq: 80 }),
+      player("Isiah Thomas", 6, 1, 11, { height: 68, shooting: 84, finishing: 84, handles: 96, passing: 94, defense: 80, rebounding: 56, athleticism: 82, iq: 96 }),
+      player("Joe Dumars", 6, 3, 4, { height: 74, shooting: 82, finishing: 82, handles: 84, passing: 80, defense: 87, rebounding: 56, athleticism: 80, iq: 90 }),
+      player("Dennis Rodman", 6, 7, 10, { height: 84, shooting: 50, finishing: 70, handles: 60, passing: 68, defense: 94, rebounding: 96, athleticism: 88, iq: 80 }),
       player("Bill Laimbeer", 6, 11, 40, { height: 96, shooting: 80, finishing: 78, handles: 56, passing: 70, defense: 84, rebounding: 90, athleticism: 52, iq: 84 }),
       player("Vinnie Johnson", 6, 2, 15, { height: 71, shooting: 84, finishing: 84, handles: 82, passing: 74, defense: 72, rebounding: 60, athleticism: 80, iq: 90 }),
       player("Mark Aguirre", 6, 6, 24, { height: 82, shooting: 84, finishing: 86, handles: 78, passing: 76, defense: 68, rebounding: 70, athleticism: 74, iq: 82 }),
@@ -456,7 +456,7 @@ const teamEras = [
     team: "Knicks",
     note: "Ewing-era New York is mud-in-your-boots defense, rebounding, and grit.",
     players: [
-      player("Patrick Ewing", 7, 0, 33, { height: 98, shooting: 80, finishing: 90, handles: 64, passing: 70, defense: 94, rebounding: 92, athleticism: 84, iq: 88 }),
+      player("Patrick Ewing", 7, 0, 33, { height: 98, shooting: 80, finishing: 85, handles: 64, passing: 70, defense: 89, rebounding: 87, athleticism: 84, iq: 88 }),
       player("John Starks", 6, 5, 3, { height: 80, shooting: 84, finishing: 80, handles: 82, passing: 76, defense: 84, rebounding: 58, athleticism: 82, iq: 84 }),
       player("Charles Oakley", 6, 9, 34, { height: 90, shooting: 68, finishing: 78, handles: 60, passing: 72, defense: 90, rebounding: 92, athleticism: 74, iq: 80 }),
       player("Anthony Mason", 6, 7, 14, { height: 84, shooting: 66, finishing: 82, handles: 78, passing: 82, defense: 88, rebounding: 84, athleticism: 80, iq: 80 }),
@@ -464,13 +464,13 @@ const teamEras = [
       player("Charles Smith", 6, 10, 23, { height: 94, shooting: 74, finishing: 80, handles: 62, passing: 66, defense: 78, rebounding: 76, athleticism: 76, iq: 70 }),
       player("Greg Anthony", 6, 1, 50, { height: 68, shooting: 74, finishing: 74, handles: 84, passing: 82, defense: 80, rebounding: 52, athleticism: 80, iq: 76 }),
       player("Rolando Blackman", 6, 6, 55, { height: 82, shooting: 86, finishing: 80, handles: 78, passing: 74, defense: 76, rebounding: 60, athleticism: 74, iq: 86 }),
-      player("Allan Houston", 6, 6, 20, { height: 82, shooting: 88, finishing: 82, handles: 80, passing: 74, defense: 74, rebounding: 56, athleticism: 80, iq: 86 }),
-      player("Latrell Sprewell", 6, 5, 8, { height: 80, shooting: 80, finishing: 86, handles: 86, passing: 78, defense: 80, rebounding: 62, athleticism: 90, iq: 78 }),
+      player("Allan Houston", 6, 6, 20, { height: 82, shooting: 84, finishing: 82, handles: 80, passing: 74, defense: 74, rebounding: 56, athleticism: 80, iq: 86 }),
+      player("Latrell Sprewell", 6, 5, 8, { height: 80, shooting: 80, finishing: 86, handles: 80, passing: 78, defense: 80, rebounding: 62, athleticism: 84, iq: 78 }),
       player("Larry Johnson", 6, 6, 2, { height: 82, shooting: 78, finishing: 84, handles: 80, passing: 78, defense: 80, rebounding: 80, athleticism: 84, iq: 84 }),
       player("Charlie Ward", 6, 2, 21, { height: 71, shooting: 74, finishing: 76, handles: 84, passing: 84, defense: 84, rebounding: 56, athleticism: 82, iq: 78 }),
       player("Doc Rivers", 6, 4, 25, { height: 77, shooting: 78, finishing: 80, handles: 84, passing: 84, defense: 86, rebounding: 60, athleticism: 82, iq: 86 }),
       player("Herb Williams", 6, 11, 32, { height: 96, shooting: 66, finishing: 78, handles: 58, passing: 66, defense: 84, rebounding: 78, athleticism: 72, iq: 74 }),
-      player("Hubert Davis", 6, 5, 44, { height: 80, shooting: 88, finishing: 76, handles: 76, passing: 72, defense: 70, rebounding: 52, athleticism: 76, iq: 82 }),
+      player("Hubert Davis", 6, 5, 44, { height: 80, shooting: 90, finishing: 76, handles: 76, passing: 72, defense: 70, rebounding: 52, athleticism: 76, iq: 82 }),
     ],
   },
   {
@@ -478,20 +478,20 @@ const teamEras = [
     team: "SuperSonics",
     note: "Payton and Kemp bring lockdown defense and rim-rattling athleticism.",
     players: [
-      player("Gary Payton", 6, 4, 20, { height: 77, shooting: 84, finishing: 86, handles: 92, passing: 90, defense: 98, rebounding: 66, athleticism: 88, iq: 90 }),
-      player("Shawn Kemp", 6, 10, 40, { height: 94, shooting: 70, finishing: 94, handles: 70, passing: 70, defense: 84, rebounding: 90, athleticism: 97, iq: 76 }),
-      player("Detlef Schrempf", 6, 10, 11, { height: 94, shooting: 86, finishing: 84, handles: 80, passing: 86, defense: 78, rebounding: 82, athleticism: 74, iq: 84 }),
-      player("Hersey Hawkins", 6, 3, 33, { height: 74, shooting: 88, finishing: 78, handles: 78, passing: 78, defense: 84, rebounding: 62, athleticism: 76, iq: 82 }),
-      player("Sam Perkins", 6, 9, 14, { height: 90, shooting: 86, finishing: 80, handles: 62, passing: 70, defense: 80, rebounding: 80, athleticism: 64, iq: 84 }),
+      player("Gary Payton", 6, 4, 20, { height: 77, shooting: 84, finishing: 82, handles: 88, passing: 90, defense: 94, rebounding: 66, athleticism: 88, iq: 90 }),
+      player("Shawn Kemp", 6, 10, 40, { height: 94, shooting: 70, finishing: 89, handles: 70, passing: 70, defense: 84, rebounding: 85, athleticism: 93, iq: 76 }),
+      player("Detlef Schrempf", 6, 10, 11, { height: 94, shooting: 82, finishing: 84, handles: 80, passing: 86, defense: 72, rebounding: 82, athleticism: 74, iq: 84 }),
+      player("Hersey Hawkins", 6, 3, 33, { height: 74, shooting: 83, finishing: 78, handles: 78, passing: 78, defense: 84, rebounding: 62, athleticism: 76, iq: 82 }),
+      player("Sam Perkins", 6, 9, 14, { height: 90, shooting: 80, finishing: 80, handles: 62, passing: 70, defense: 80, rebounding: 80, athleticism: 64, iq: 84 }),
       player("Nate McMillan", 6, 5, 10, { height: 80, shooting: 72, finishing: 72, handles: 82, passing: 86, defense: 90, rebounding: 68, athleticism: 78, iq: 86 }),
       player("Vincent Askew", 6, 6, 14, { height: 82, shooting: 74, finishing: 80, handles: 76, passing: 76, defense: 82, rebounding: 64, athleticism: 80, iq: 76 }),
       player("Kendall Gill", 6, 5, 13, { height: 80, shooting: 78, finishing: 82, handles: 80, passing: 76, defense: 84, rebounding: 66, athleticism: 86, iq: 78 }),
       player("Vin Baker", 6, 11, 42, { height: 96, shooting: 76, finishing: 84, handles: 68, passing: 72, defense: 78, rebounding: 84, athleticism: 82, iq: 78 }),
-      player("Dale Ellis", 6, 7, 3, { height: 84, shooting: 90, finishing: 84, handles: 78, passing: 72, defense: 72, rebounding: 64, athleticism: 80, iq: 80 }),
+      player("Dale Ellis", 6, 7, 3, { height: 84, shooting: 84, finishing: 84, handles: 78, passing: 72, defense: 72, rebounding: 64, athleticism: 80, iq: 80 }),
       player("Ricky Pierce", 6, 4, 22, { height: 77, shooting: 86, finishing: 86, handles: 80, passing: 72, defense: 72, rebounding: 58, athleticism: 78, iq: 84 }),
       player("Michael Cage", 6, 9, 44, { height: 90, shooting: 64, finishing: 78, handles: 60, passing: 66, defense: 82, rebounding: 86, athleticism: 84, iq: 70 }),
       player("Derrick McKey", 6, 9, 30, { height: 90, shooting: 80, finishing: 82, handles: 76, passing: 74, defense: 86, rebounding: 72, athleticism: 84, iq: 78 }),
-      player("Dana Barros", 5, 11, 3, { height: 64, shooting: 88, finishing: 76, handles: 84, passing: 80, defense: 70, rebounding: 48, athleticism: 78, iq: 82 }),
+      player("Dana Barros", 5, 11, 3, { height: 64, shooting: 90, finishing: 76, handles: 84, passing: 80, defense: 70, rebounding: 48, athleticism: 78, iq: 82 }),
       player("David Wingate", 6, 5, 20, { height: 80, shooting: 72, finishing: 78, handles: 78, passing: 74, defense: 84, rebounding: 60, athleticism: 82, iq: 74 }),
     ],
   },
@@ -500,8 +500,8 @@ const teamEras = [
     team: "Pistons",
     note: "The 2004 champs win with five-man defense and zero ego.",
     players: [
-      player("Chauncey Billups", 6, 3, 1, { height: 74, shooting: 88, finishing: 82, handles: 86, passing: 84, defense: 82, rebounding: 60, athleticism: 78, iq: 94 }),
-      player("Rip Hamilton", 6, 7, 32, { height: 84, shooting: 88, finishing: 84, handles: 82, passing: 78, defense: 80, rebounding: 62, athleticism: 84, iq: 88 }),
+      player("Chauncey Billups", 6, 3, 1, { height: 74, shooting: 83, finishing: 82, handles: 86, passing: 84, defense: 82, rebounding: 60, athleticism: 78, iq: 88 }),
+      player("Rip Hamilton", 6, 7, 32, { height: 84, shooting: 83, finishing: 79, handles: 82, passing: 78, defense: 74, rebounding: 62, athleticism: 84, iq: 88 }),
       player("Ben Wallace", 6, 9, 3, { height: 90, shooting: 40, finishing: 72, handles: 50, passing: 60, defense: 100, rebounding: 96, athleticism: 88, iq: 78 }),
       player("Rasheed Wallace", 6, 11, 36, { height: 96, shooting: 84, finishing: 86, handles: 68, passing: 76, defense: 92, rebounding: 84, athleticism: 80, iq: 82 }),
       player("Tayshaun Prince", 6, 9, 22, { height: 90, shooting: 80, finishing: 80, handles: 74, passing: 78, defense: 90, rebounding: 70, athleticism: 82, iq: 82 }),
@@ -522,17 +522,17 @@ const teamEras = [
     team: "Heat",
     note: "Miami's Big Three is a transition nightmare with elite two-way wings.",
     players: [
-      player("LeBron James", 6, 9, 6, { height: 90, shooting: 84, finishing: 99, handles: 92, passing: 96, defense: 94, rebounding: 88, athleticism: 99, iq: 96 }),
-      player("Dwyane Wade", 6, 4, 3, { height: 77, shooting: 80, finishing: 96, handles: 90, passing: 86, defense: 88, rebounding: 66, athleticism: 96, iq: 88 }),
+      player("LeBron James", 6, 9, 6, { height: 90, shooting: 80, finishing: 97, handles: 92, passing: 93, defense: 90, rebounding: 82, athleticism: 96, iq: 96 }),
+      player("Dwyane Wade", 6, 4, 3, { height: 77, shooting: 80, finishing: 92, handles: 85, passing: 86, defense: 88, rebounding: 66, athleticism: 92, iq: 82 }),
       player("Chris Bosh", 6, 11, 1, { height: 96, shooting: 84, finishing: 86, handles: 72, passing: 74, defense: 82, rebounding: 84, athleticism: 80, iq: 86 }),
-      player("Ray Allen", 6, 5, 34, { height: 80, shooting: 99, finishing: 80, handles: 80, passing: 76, defense: 72, rebounding: 60, athleticism: 80, iq: 96 }),
+      player("Ray Allen", 6, 5, 34, { height: 80, shooting: 96, finishing: 80, handles: 80, passing: 76, defense: 72, rebounding: 60, athleticism: 80, iq: 90 }),
       player("Mario Chalmers", 6, 2, 15, { height: 71, shooting: 82, finishing: 76, handles: 80, passing: 78, defense: 80, rebounding: 56, athleticism: 80, iq: 82 }),
       player("Shane Battier", 6, 8, 31, { height: 86, shooting: 82, finishing: 70, handles: 64, passing: 72, defense: 90, rebounding: 66, athleticism: 70, iq: 88 }),
       player("Udonis Haslem", 6, 8, 40, { height: 86, shooting: 72, finishing: 76, handles: 58, passing: 64, defense: 82, rebounding: 84, athleticism: 72, iq: 80 }),
       player("Norris Cole", 6, 2, 30, { height: 71, shooting: 74, finishing: 76, handles: 82, passing: 78, defense: 78, rebounding: 54, athleticism: 82, iq: 76 }),
       player("Goran Dragic", 6, 3, 7, { height: 74, shooting: 80, finishing: 84, handles: 88, passing: 84, defense: 72, rebounding: 56, athleticism: 82, iq: 82 }),
       player("Hassan Whiteside", 7, 0, 21, { height: 98, shooting: 56, finishing: 84, handles: 52, passing: 54, defense: 86, rebounding: 88, athleticism: 84, iq: 70 }),
-      player("Bam Adebayo", 6, 9, 13, { height: 90, shooting: 64, finishing: 84, handles: 74, passing: 86, defense: 88, rebounding: 82, athleticism: 90, iq: 88 }),
+      player("Bam Adebayo", 6, 9, 13, { height: 90, shooting: 64, finishing: 84, handles: 74, passing: 82, defense: 84, rebounding: 82, athleticism: 84, iq: 88 }),
       player("Josh Richardson", 6, 6, 0, { height: 82, shooting: 80, finishing: 80, handles: 78, passing: 74, defense: 84, rebounding: 60, athleticism: 84, iq: 78 }),
       player("Justise Winslow", 6, 6, 20, { height: 82, shooting: 70, finishing: 80, handles: 80, passing: 80, defense: 84, rebounding: 70, athleticism: 84, iq: 74 }),
       player("Mike Miller", 6, 8, 13, { height: 86, shooting: 88, finishing: 78, handles: 74, passing: 76, defense: 68, rebounding: 66, athleticism: 72, iq: 82 }),
@@ -544,9 +544,9 @@ const teamEras = [
     team: "Thunder",
     note: "Young Durant, Westbrook, and Harden make this the scariest athletic roll in the game.",
     players: [
-      player("Kevin Durant", 6, 10, 35, { height: 94, shooting: 96, finishing: 94, handles: 88, passing: 82, defense: 84, rebounding: 82, athleticism: 90, iq: 90 }),
-      player("Russell Westbrook", 6, 3, 0, { height: 74, shooting: 78, finishing: 92, handles: 90, passing: 90, defense: 82, rebounding: 78, athleticism: 99, iq: 78 }),
-      player("James Harden", 6, 5, 13, { height: 80, shooting: 88, finishing: 86, handles: 92, passing: 88, defense: 70, rebounding: 66, athleticism: 82, iq: 88 }),
+      player("Kevin Durant", 6, 10, 35, { height: 94, shooting: 93, finishing: 90, handles: 83, passing: 82, defense: 78, rebounding: 82, athleticism: 90, iq: 90 }),
+      player("Russell Westbrook", 6, 3, 0, { height: 74, shooting: 78, finishing: 88, handles: 87, passing: 86, defense: 82, rebounding: 78, athleticism: 95, iq: 78 }),
+      player("James Harden", 6, 5, 13, { height: 80, shooting: 84, finishing: 86, handles: 87, passing: 84, defense: 70, rebounding: 66, athleticism: 82, iq: 88 }),
       player("Serge Ibaka", 6, 10, 9, { height: 94, shooting: 76, finishing: 84, handles: 58, passing: 62, defense: 92, rebounding: 82, athleticism: 88, iq: 78 }),
       player("Kendrick Perkins", 6, 10, 5, { height: 94, shooting: 40, finishing: 72, handles: 50, passing: 60, defense: 86, rebounding: 80, athleticism: 60, iq: 72 }),
       player("Thabo Sefolosha", 6, 7, 2, { height: 84, shooting: 74, finishing: 74, handles: 72, passing: 72, defense: 88, rebounding: 66, athleticism: 84, iq: 74 }),
@@ -566,9 +566,9 @@ const teamEras = [
     team: "Jazz",
     note: "Stockton-to-Malone is the purest two-man game ever built. Roll it and feel it.",
     players: [
-      player("John Stockton", 6, 1, 12, { height: 68, shooting: 80, finishing: 82, handles: 96, passing: 100, defense: 88, rebounding: 60, athleticism: 80, iq: 97 }),
-      player("Karl Malone", 6, 9, 32, { height: 90, shooting: 80, finishing: 94, handles: 76, passing: 78, defense: 86, rebounding: 92, athleticism: 92, iq: 84 }),
-      player("Jeff Hornacek", 6, 4, 14, { height: 77, shooting: 88, finishing: 80, handles: 82, passing: 82, defense: 80, rebounding: 60, athleticism: 70, iq: 88 }),
+      player("John Stockton", 6, 1, 12, { height: 68, shooting: 80, finishing: 82, handles: 96, passing: 100, defense: 82, rebounding: 60, athleticism: 74, iq: 97 }),
+      player("Karl Malone", 6, 9, 32, { height: 90, shooting: 80, finishing: 90, handles: 76, passing: 78, defense: 86, rebounding: 87, athleticism: 87, iq: 84 }),
+      player("Jeff Hornacek", 6, 4, 14, { height: 77, shooting: 83, finishing: 80, handles: 82, passing: 76, defense: 80, rebounding: 60, athleticism: 70, iq: 88 }),
       player("Bryon Russell", 6, 7, 3, { height: 84, shooting: 76, finishing: 76, handles: 72, passing: 68, defense: 84, rebounding: 68, athleticism: 78, iq: 76 }),
       player("Greg Ostertag", 7, 2, 00, { height: 100, shooting: 52, finishing: 72, handles: 48, passing: 58, defense: 84, rebounding: 82, athleticism: 52, iq: 66 }),
       player("Antoine Carr", 6, 9, 35, { height: 90, shooting: 72, finishing: 78, handles: 58, passing: 62, defense: 72, rebounding: 72, athleticism: 64, iq: 72 }),
@@ -589,9 +589,9 @@ const teamEras = [
     note: "Shaq and Penny were a once-in-a-generation pairing before it all fell apart.",
     players: [
       player("Shaquille O'Neal", 7, 1, 32, { height: 99, shooting: 48, finishing: 100, handles: 60, passing: 76, defense: 90, rebounding: 94, athleticism: 92, iq: 86 }),
-      player("Penny Hardaway", 6, 7, 1, { height: 84, shooting: 85, finishing: 88, handles: 90, passing: 88, defense: 84, rebounding: 68, athleticism: 90, iq: 88 }),
-      player("Nick Anderson", 6, 6, 25, { height: 82, shooting: 80, finishing: 82, handles: 78, passing: 70, defense: 78, rebounding: 66, athleticism: 84, iq: 76 }),
-      player("Horace Grant", 6, 10, 54, { height: 94, shooting: 72, finishing: 82, handles: 60, passing: 70, defense: 84, rebounding: 88, athleticism: 80, iq: 78 }),
+      player("Penny Hardaway", 6, 7, 1, { height: 84, shooting: 85, finishing: 83, handles: 85, passing: 85, defense: 84, rebounding: 68, athleticism: 90, iq: 88 }),
+      player("Nick Anderson", 6, 6, 25, { height: 82, shooting: 80, finishing: 76, handles: 78, passing: 70, defense: 78, rebounding: 66, athleticism: 84, iq: 76 }),
+      player("Horace Grant", 6, 10, 54, { height: 94, shooting: 72, finishing: 82, handles: 60, passing: 70, defense: 84, rebounding: 82, athleticism: 80, iq: 78 }),
       player("Dennis Scott", 6, 8, 3, { height: 86, shooting: 90, finishing: 72, handles: 64, passing: 66, defense: 68, rebounding: 60, athleticism: 70, iq: 80 }),
       player("Brian Shaw", 6, 6, 14, { height: 82, shooting: 74, finishing: 76, handles: 78, passing: 84, defense: 78, rebounding: 62, athleticism: 74, iq: 74 }),
       player("Anthony Bowie", 6, 6, 11, { height: 82, shooting: 74, finishing: 76, handles: 74, passing: 70, defense: 78, rebounding: 60, athleticism: 78, iq: 72 }),
@@ -610,7 +610,7 @@ const teamEras = [
     team: "Mavericks",
     note: "The Trio never quite clicked, but this pool is full of scoring options and young upside.",
     players: [
-      player("Jason Kidd", 6, 4, 5, { height: 77, shooting: 74, finishing: 82, handles: 96, passing: 98, defense: 88, rebounding: 74, athleticism: 88, iq: 95 }),
+      player("Jason Kidd", 6, 4, 5, { height: 77, shooting: 74, finishing: 82, handles: 90, passing: 93, defense: 82, rebounding: 74, athleticism: 88, iq: 95 }),
       player("Jim Jackson", 6, 6, 24, { height: 82, shooting: 84, finishing: 84, handles: 82, passing: 78, defense: 74, rebounding: 68, athleticism: 82, iq: 80 }),
       player("Jamal Mashburn", 6, 8, 32, { height: 86, shooting: 84, finishing: 86, handles: 82, passing: 76, defense: 70, rebounding: 72, athleticism: 80, iq: 82 }),
       player("Popeye Jones", 6, 8, 43, { height: 86, shooting: 62, finishing: 72, handles: 56, passing: 62, defense: 74, rebounding: 90, athleticism: 66, iq: 72 }),
@@ -632,9 +632,9 @@ const teamEras = [
     team: "Kings",
     note: "Sacramento's beautiful basketball — everyone touches the ball, everyone scores.",
     players: [
-      player("Chris Webber", 6, 10, 4, { height: 94, shooting: 82, finishing: 88, handles: 84, passing: 88, defense: 80, rebounding: 90, athleticism: 84, iq: 84 }),
-      player("Peja Stojakovic", 6, 10, 16, { height: 94, shooting: 96, finishing: 80, handles: 72, passing: 74, defense: 68, rebounding: 72, athleticism: 64, iq: 88 }),
-      player("Mike Bibby", 6, 2, 10, { height: 71, shooting: 86, finishing: 80, handles: 88, passing: 86, defense: 72, rebounding: 56, athleticism: 76, iq: 90 }),
+      player("Chris Webber", 6, 10, 4, { height: 94, shooting: 82, finishing: 88, handles: 84, passing: 84, defense: 80, rebounding: 85, athleticism: 78, iq: 84 }),
+      player("Peja Stojakovic", 6, 10, 16, { height: 94, shooting: 92, finishing: 80, handles: 72, passing: 74, defense: 68, rebounding: 72, athleticism: 64, iq: 88 }),
+      player("Mike Bibby", 6, 2, 10, { height: 71, shooting: 86, finishing: 80, handles: 83, passing: 81, defense: 72, rebounding: 56, athleticism: 76, iq: 90 }),
       player("Vlade Divac", 7, 1, 21, { height: 99, shooting: 74, finishing: 80, handles: 66, passing: 86, defense: 78, rebounding: 84, athleticism: 56, iq: 88 }),
       player("Doug Christie", 6, 6, 13, { height: 82, shooting: 78, finishing: 78, handles: 78, passing: 78, defense: 92, rebounding: 68, athleticism: 82, iq: 80 }),
       player("Bobby Jackson", 6, 1, 24, { height: 68, shooting: 82, finishing: 82, handles: 82, passing: 80, defense: 76, rebounding: 58, athleticism: 86, iq: 78 }),
@@ -654,10 +654,10 @@ const teamEras = [
     team: "Nets",
     note: "Kidd's Nets ran back-to-back Finals on pure playmaking and team defense.",
     players: [
-      player("Jason Kidd", 6, 4, 5, { height: 77, shooting: 74, finishing: 80, handles: 96, passing: 99, defense: 90, rebounding: 76, athleticism: 84, iq: 95 }),
-      player("Vince Carter", 6, 6, 15, { height: 82, shooting: 86, finishing: 90, handles: 82, passing: 76, defense: 72, rebounding: 66, athleticism: 92, iq: 84 }),
+      player("Jason Kidd", 6, 4, 5, { height: 77, shooting: 74, finishing: 80, handles: 90, passing: 99, defense: 84, rebounding: 76, athleticism: 84, iq: 95 }),
+      player("Vince Carter", 6, 6, 15, { height: 82, shooting: 86, finishing: 85, handles: 82, passing: 76, defense: 72, rebounding: 66, athleticism: 87, iq: 84 }),
       player("Richard Jefferson", 6, 7, 24, { height: 84, shooting: 78, finishing: 86, handles: 74, passing: 72, defense: 76, rebounding: 68, athleticism: 86, iq: 78 }),
-      player("Kenyon Martin", 6, 9, 6, { height: 90, shooting: 66, finishing: 82, handles: 62, passing: 64, defense: 88, rebounding: 86, athleticism: 88, iq: 76 }),
+      player("Kenyon Martin", 6, 9, 6, { height: 90, shooting: 66, finishing: 82, handles: 62, passing: 64, defense: 88, rebounding: 86, athleticism: 90, iq: 76 }),
       player("Kerry Kittles", 6, 5, 23, { height: 80, shooting: 82, finishing: 78, handles: 78, passing: 72, defense: 86, rebounding: 58, athleticism: 82, iq: 78 }),
       player("Lucious Harris", 6, 5, 20, { height: 80, shooting: 78, finishing: 76, handles: 72, passing: 70, defense: 74, rebounding: 56, athleticism: 74, iq: 74 }),
       player("Jason Collins", 7, 0, 98, { height: 98, shooting: 48, finishing: 66, handles: 48, passing: 56, defense: 82, rebounding: 74, athleticism: 52, iq: 66 }),
@@ -676,7 +676,7 @@ const teamEras = [
     team: "Pacers",
     note: "Indiana's suffocating defense and blue-collar identity made them the Warriors' kryptonite.",
     players: [
-      player("Paul George", 6, 8, 24, { height: 86, shooting: 88, finishing: 86, handles: 82, passing: 80, defense: 94, rebounding: 76, athleticism: 90, iq: 88 }),
+      player("Paul George", 6, 8, 24, { height: 86, shooting: 83, finishing: 86, handles: 82, passing: 80, defense: 89, rebounding: 76, athleticism: 84, iq: 88 }),
       player("Roy Hibbert", 7, 2, 55, { height: 100, shooting: 65, finishing: 80, handles: 48, passing: 62, defense: 92, rebounding: 84, athleticism: 54, iq: 76 }),
       player("David West", 6, 9, 21, { height: 90, shooting: 80, finishing: 84, handles: 66, passing: 74, defense: 86, rebounding: 82, athleticism: 74, iq: 86 }),
       player("Lance Stephenson", 6, 5, 1, { height: 80, shooting: 76, finishing: 82, handles: 82, passing: 80, defense: 86, rebounding: 72, athleticism: 84, iq: 76 }),
@@ -698,15 +698,15 @@ const teamEras = [
     team: "Clippers",
     note: "Lob City ran on CP3's genius and Griffin/Jordan's rim gravity. Style points required.",
     players: [
-      player("Chris Paul", 6, 0, 3, { height: 67, shooting: 86, finishing: 82, handles: 98, passing: 99, defense: 90, rebounding: 60, athleticism: 86, iq: 98 }),
-      player("Blake Griffin", 6, 10, 32, { height: 94, shooting: 74, finishing: 94, handles: 80, passing: 80, defense: 76, rebounding: 90, athleticism: 98, iq: 84 }),
+      player("Chris Paul", 6, 0, 3, { height: 67, shooting: 86, finishing: 76, handles: 93, passing: 99, defense: 85, rebounding: 60, athleticism: 86, iq: 98 }),
+      player("Blake Griffin", 6, 10, 32, { height: 94, shooting: 74, finishing: 89, handles: 80, passing: 80, defense: 76, rebounding: 84, athleticism: 93, iq: 84 }),
       player("DeAndre Jordan", 6, 11, 6, { height: 96, shooting: 38, finishing: 86, handles: 48, passing: 54, defense: 90, rebounding: 96, athleticism: 90, iq: 56 }),
       player("Jamal Crawford", 6, 5, 11, { height: 80, shooting: 86, finishing: 84, handles: 95, passing: 74, defense: 62, rebounding: 56, athleticism: 78, iq: 78 }),
       player("Caron Butler", 6, 7, 5, { height: 84, shooting: 80, finishing: 82, handles: 74, passing: 74, defense: 78, rebounding: 68, athleticism: 76, iq: 82 }),
       player("Matt Barnes", 6, 7, 22, { height: 84, shooting: 76, finishing: 76, handles: 72, passing: 70, defense: 82, rebounding: 70, athleticism: 78, iq: 76 }),
       player("Lamar Odom", 6, 10, 7, { height: 94, shooting: 74, finishing: 80, handles: 84, passing: 84, defense: 74, rebounding: 82, athleticism: 76, iq: 74 }),
       player("Randy Foye", 6, 4, 4, { height: 77, shooting: 80, finishing: 74, handles: 76, passing: 72, defense: 72, rebounding: 56, athleticism: 78, iq: 76 }),
-      player("JJ Redick", 6, 4, 4, { height: 77, shooting: 97, finishing: 78, handles: 76, passing: 72, defense: 70, rebounding: 54, athleticism: 74, iq: 84 }),
+      player("JJ Redick", 6, 4, 4, { height: 77, shooting: 92, finishing: 78, handles: 76, passing: 72, defense: 70, rebounding: 54, athleticism: 74, iq: 84 }),
       player("Lou Williams", 6, 1, 23, { height: 68, shooting: 84, finishing: 84, handles: 86, passing: 76, defense: 62, rebounding: 52, athleticism: 80, iq: 86 }),
       player("Tobias Harris", 6, 8, 34, { height: 86, shooting: 82, finishing: 84, handles: 78, passing: 72, defense: 72, rebounding: 74, athleticism: 78, iq: 80 }),
       player("Montrezl Harrell", 6, 7, 5, { height: 84, shooting: 58, finishing: 86, handles: 62, passing: 64, defense: 76, rebounding: 74, athleticism: 88, iq: 78 }),
@@ -720,10 +720,10 @@ const teamEras = [
     team: "Grizzlies",
     note: "Grit and Grind. The toughest points in the league — earned in the post, in the mud.",
     players: [
-      player("Marc Gasol", 7, 1, 33, { height: 99, shooting: 78, finishing: 88, handles: 70, passing: 86, defense: 94, rebounding: 86, athleticism: 66, iq: 88 }),
-      player("Zach Randolph", 6, 9, 50, { height: 90, shooting: 78, finishing: 88, handles: 70, passing: 70, defense: 72, rebounding: 96, athleticism: 66, iq: 82 }),
+      player("Marc Gasol", 7, 1, 33, { height: 99, shooting: 78, finishing: 88, handles: 70, passing: 80, defense: 89, rebounding: 86, athleticism: 66, iq: 88 }),
+      player("Zach Randolph", 6, 9, 50, { height: 90, shooting: 78, finishing: 83, handles: 70, passing: 70, defense: 72, rebounding: 92, athleticism: 66, iq: 82 }),
       player("Mike Conley", 6, 1, 11, { height: 68, shooting: 84, finishing: 82, handles: 90, passing: 88, defense: 84, rebounding: 56, athleticism: 82, iq: 90 }),
-      player("Tony Allen", 6, 4, 9, { height: 77, shooting: 66, finishing: 76, handles: 72, passing: 68, defense: 98, rebounding: 70, athleticism: 86, iq: 76 }),
+      player("Tony Allen", 6, 4, 9, { height: 77, shooting: 66, finishing: 76, handles: 72, passing: 68, defense: 94, rebounding: 70, athleticism: 86, iq: 76 }),
       player("Tayshaun Prince", 6, 9, 21, { height: 90, shooting: 78, finishing: 76, handles: 72, passing: 76, defense: 86, rebounding: 66, athleticism: 76, iq: 78 }),
       player("Vince Carter", 6, 6, 15, { height: 82, shooting: 84, finishing: 80, handles: 76, passing: 72, defense: 70, rebounding: 60, athleticism: 80, iq: 78 }),
       player("Courtney Lee", 6, 5, 5, { height: 80, shooting: 82, finishing: 76, handles: 74, passing: 70, defense: 82, rebounding: 58, athleticism: 80, iq: 78 }),
@@ -764,16 +764,16 @@ const teamEras = [
     team: "Lakers",
     note: "33 straight wins. 69 victories. Wilt parked near the rim while Jerry West handled the rest.",
     players: [
-      player("Jerry West", 6, 2, 44, { height: 72, shooting: 94, finishing: 88, handles: 92, passing: 90, defense: 90, rebounding: 66, athleticism: 84, iq: 100 }),
+      player("Jerry West", 6, 2, 44, { height: 72, shooting: 90, finishing: 88, handles: 87, passing: 85, defense: 86, rebounding: 66, athleticism: 84, iq: 97 }),
       player("Wilt Chamberlain", 7, 1, 13, { height: 99, shooting: 66, finishing: 94, handles: 66, passing: 80, defense: 90, rebounding: 100, athleticism: 86, iq: 76 }),
       player("Gail Goodrich", 6, 1, 25, { height: 68, shooting: 88, finishing: 84, handles: 86, passing: 80, defense: 76, rebounding: 54, athleticism: 82, iq: 88 }),
       player("Happy Hairston", 6, 7, 52, { height: 84, shooting: 70, finishing: 80, handles: 64, passing: 68, defense: 78, rebounding: 90, athleticism: 80, iq: 74 }),
       player("Jim McMillian", 6, 5, 5, { height: 80, shooting: 82, finishing: 80, handles: 76, passing: 76, defense: 76, rebounding: 66, athleticism: 78, iq: 80 }),
-      player("Elgin Baylor", 6, 5, 22, { height: 80, shooting: 88, finishing: 92, handles: 86, passing: 86, defense: 80, rebounding: 88, athleticism: 94, iq: 90 }),
+      player("Elgin Baylor", 6, 5, 22, { height: 80, shooting: 88, finishing: 92, handles: 80, passing: 86, defense: 80, rebounding: 88, athleticism: 89, iq: 90 }),
       player("Pat Riley", 6, 4, 42, { height: 77, shooting: 76, finishing: 74, handles: 74, passing: 74, defense: 74, rebounding: 60, athleticism: 76, iq: 72 }),
       player("Flynn Robinson", 6, 1, 11, { height: 68, shooting: 82, finishing: 76, handles: 78, passing: 72, defense: 70, rebounding: 52, athleticism: 78, iq: 76 }),
-      player("Kareem Abdul-Jabbar", 7, 2, 33, { height: 100, shooting: 84, finishing: 99, handles: 70, passing: 84, defense: 94, rebounding: 95, athleticism: 84, iq: 94 }),
-      player("Norm Nixon", 6, 2, 10, { height: 71, shooting: 82, finishing: 84, handles: 90, passing: 88, defense: 74, rebounding: 56, athleticism: 86, iq: 84 }),
+      player("Kareem Abdul-Jabbar", 7, 2, 33, { height: 100, shooting: 84, finishing: 97, handles: 70, passing: 84, defense: 94, rebounding: 90, athleticism: 84, iq: 94 }),
+      player("Norm Nixon", 6, 2, 10, { height: 71, shooting: 82, finishing: 84, handles: 84, passing: 82, defense: 74, rebounding: 56, athleticism: 86, iq: 84 }),
       player("Keith Erickson", 6, 5, 53, { height: 80, shooting: 78, finishing: 78, handles: 78, passing: 76, defense: 84, rebounding: 66, athleticism: 84, iq: 78 }),
       player("Kermit Washington", 6, 8, 42, { height: 86, shooting: 66, finishing: 80, handles: 60, passing: 66, defense: 86, rebounding: 86, athleticism: 84, iq: 74 }),
       player("Connie Hawkins", 6, 8, 42, { height: 86, shooting: 80, finishing: 88, handles: 84, passing: 82, defense: 78, rebounding: 78, athleticism: 90, iq: 82 }),
@@ -786,7 +786,7 @@ const teamEras = [
     team: "Warriors",
     note: "Swept the Bullets in four straight. Rick Barry shot free throws underhanded and didn't care what anyone thought.",
     players: [
-      player("Rick Barry", 6, 7, 24, { height: 84, shooting: 92, finishing: 86, handles: 86, passing: 90, defense: 82, rebounding: 76, athleticism: 82, iq: 92 }),
+      player("Rick Barry", 6, 7, 24, { height: 84, shooting: 87, finishing: 80, handles: 86, passing: 84, defense: 82, rebounding: 76, athleticism: 82, iq: 92 }),
       player("Jamaal Wilkes", 6, 6, 14, { height: 82, shooting: 84, finishing: 80, handles: 74, passing: 74, defense: 80, rebounding: 70, athleticism: 82, iq: 82 }),
       player("Phil Smith", 6, 4, 20, { height: 77, shooting: 82, finishing: 78, handles: 78, passing: 76, defense: 78, rebounding: 60, athleticism: 80, iq: 80 }),
       player("Clifford Ray", 6, 9, 15, { height: 90, shooting: 58, finishing: 72, handles: 56, passing: 68, defense: 84, rebounding: 88, athleticism: 76, iq: 66 }),
@@ -808,7 +808,7 @@ const teamEras = [
     team: "Suns",
     note: "Barkley dragged Phoenix to the 1993 Finals. KJ made sure nothing came easy on the perimeter.",
     players: [
-      player("Charles Barkley", 6, 6, 34, { height: 82, shooting: 84, finishing: 88, handles: 78, passing: 86, defense: 80, rebounding: 96, athleticism: 94, iq: 92 }),
+      player("Charles Barkley", 6, 6, 34, { height: 82, shooting: 84, finishing: 86, handles: 78, passing: 86, defense: 80, rebounding: 96, athleticism: 94, iq: 92 }),
       player("Kevin Johnson", 6, 1, 7, { height: 68, shooting: 84, finishing: 86, handles: 94, passing: 92, defense: 80, rebounding: 56, athleticism: 92, iq: 90 }),
       player("Dan Majerle", 6, 6, 9, { height: 82, shooting: 88, finishing: 78, handles: 76, passing: 74, defense: 88, rebounding: 70, athleticism: 84, iq: 86 }),
       player("Danny Ainge", 6, 5, 22, { height: 80, shooting: 86, finishing: 76, handles: 82, passing: 82, defense: 78, rebounding: 58, athleticism: 74, iq: 86 }),
@@ -816,10 +816,10 @@ const teamEras = [
       player("Cedric Ceballos", 6, 7, 23, { height: 84, shooting: 84, finishing: 84, handles: 72, passing: 66, defense: 68, rebounding: 80, athleticism: 82, iq: 78 }),
       player("Mark West", 6, 10, 41, { height: 94, shooting: 54, finishing: 70, handles: 50, passing: 56, defense: 82, rebounding: 82, athleticism: 72, iq: 62 }),
       player("Frank Johnson", 6, 1, 10, { height: 68, shooting: 72, finishing: 70, handles: 80, passing: 80, defense: 76, rebounding: 50, athleticism: 74, iq: 72 }),
-      player("Jason Kidd", 6, 4, 32, { height: 77, shooting: 74, finishing: 82, handles: 96, passing: 98, defense: 88, rebounding: 74, athleticism: 88, iq: 95 }),
+      player("Jason Kidd", 6, 4, 32, { height: 77, shooting: 74, finishing: 82, handles: 90, passing: 93, defense: 82, rebounding: 74, athleticism: 88, iq: 95 }),
       player("Danny Manning", 6, 10, 25, { height: 94, shooting: 80, finishing: 86, handles: 80, passing: 80, defense: 78, rebounding: 78, athleticism: 84, iq: 80 }),
-      player("Wesley Person", 6, 6, 7, { height: 82, shooting: 88, finishing: 80, handles: 76, passing: 72, defense: 74, rebounding: 62, athleticism: 82, iq: 80 }),
-      player("A.C. Green", 6, 9, 45, { height: 90, shooting: 70, finishing: 80, handles: 62, passing: 68, defense: 84, rebounding: 86, athleticism: 80, iq: 78 }),
+      player("Wesley Person", 6, 6, 7, { height: 82, shooting: 90, finishing: 80, handles: 76, passing: 72, defense: 74, rebounding: 62, athleticism: 82, iq: 80 }),
+      player("A.C. Green", 6, 9, 45, { height: 90, shooting: 70, finishing: 80, handles: 62, passing: 68, defense: 78, rebounding: 86, athleticism: 80, iq: 78 }),
       player("Rex Chapman", 6, 4, 3, { height: 77, shooting: 86, finishing: 82, handles: 82, passing: 74, defense: 72, rebounding: 56, athleticism: 86, iq: 84 }),
       player("Cliff Robinson", 6, 10, 3, { height: 94, shooting: 80, finishing: 82, handles: 74, passing: 70, defense: 84, rebounding: 74, athleticism: 84, iq: 78 }),
       player("Oliver Miller", 6, 9, 25, { height: 90, shooting: 66, finishing: 80, handles: 70, passing: 78, defense: 84, rebounding: 80, athleticism: 74, iq: 72 }),
@@ -833,14 +833,14 @@ const teamEras = [
       player("Dirk Nowitzki", 7, 0, 41, { height: 98, shooting: 98, finishing: 84, handles: 82, passing: 80, defense: 72, rebounding: 88, athleticism: 76, iq: 88 }),
       player("Steve Nash", 6, 3, 13, { height: 74, shooting: 90, finishing: 82, handles: 96, passing: 98, defense: 66, rebounding: 54, athleticism: 80, iq: 97 }),
       player("Michael Finley", 6, 7, 4, { height: 84, shooting: 88, finishing: 82, handles: 80, passing: 76, defense: 80, rebounding: 66, athleticism: 80, iq: 86 }),
-      player("Jason Terry", 6, 2, 31, { height: 72, shooting: 88, finishing: 80, handles: 84, passing: 80, defense: 72, rebounding: 50, athleticism: 78, iq: 90 }),
+      player("Jason Terry", 6, 2, 31, { height: 72, shooting: 90, finishing: 80, handles: 84, passing: 80, defense: 72, rebounding: 50, athleticism: 78, iq: 90 }),
       player("Antoine Walker", 6, 9, 8, { height: 90, shooting: 76, finishing: 80, handles: 78, passing: 78, defense: 70, rebounding: 82, athleticism: 78, iq: 74 }),
       player("Nick Van Exel", 6, 1, 6, { height: 68, shooting: 84, finishing: 78, handles: 88, passing: 86, defense: 66, rebounding: 52, athleticism: 78, iq: 84 }),
       player("Eduardo Najera", 6, 8, 14, { height: 88, shooting: 66, finishing: 70, handles: 64, passing: 64, defense: 82, rebounding: 78, athleticism: 80, iq: 68 }),
       player("Shawn Bradley", 7, 6, 44, { height: 100, shooting: 58, finishing: 66, handles: 50, passing: 60, defense: 76, rebounding: 76, athleticism: 56, iq: 56 }),
       player("Josh Howard", 6, 7, 5, { height: 84, shooting: 80, finishing: 84, handles: 78, passing: 72, defense: 82, rebounding: 72, athleticism: 86, iq: 80 }),
       player("Jason Kidd", 6, 4, 2, { height: 77, shooting: 78, finishing: 78, handles: 92, passing: 96, defense: 84, rebounding: 72, athleticism: 78, iq: 95 }),
-      player("Shawn Marion", 6, 7, 0, { height: 84, shooting: 74, finishing: 84, handles: 74, passing: 70, defense: 86, rebounding: 80, athleticism: 88, iq: 78 }),
+      player("Shawn Marion", 6, 7, 0, { height: 84, shooting: 74, finishing: 84, handles: 74, passing: 70, defense: 86, rebounding: 80, athleticism: 90, iq: 78 }),
       player("Jerry Stackhouse", 6, 6, 42, { height: 82, shooting: 80, finishing: 84, handles: 80, passing: 76, defense: 72, rebounding: 60, athleticism: 82, iq: 82 }),
       player("Erick Dampier", 6, 11, 25, { height: 96, shooting: 58, finishing: 80, handles: 54, passing: 60, defense: 82, rebounding: 84, athleticism: 78, iq: 70 }),
       player("Devin Harris", 6, 3, 34, { height: 74, shooting: 76, finishing: 82, handles: 88, passing: 80, defense: 78, rebounding: 52, athleticism: 88, iq: 80 }),
@@ -852,9 +852,9 @@ const teamEras = [
     team: "Timberwolves",
     note: "KG's MVP year dragged Minnesota to 58 wins. Cassell and Sprewell made the West Conference Finals feel inevitable.",
     players: [
-      player("Kevin Garnett", 6, 11, 21, { height: 96, shooting: 82, finishing: 88, handles: 80, passing: 88, defense: 96, rebounding: 98, athleticism: 94, iq: 94 }),
-      player("Sam Cassell", 6, 3, 19, { height: 74, shooting: 90, finishing: 86, handles: 88, passing: 86, defense: 70, rebounding: 56, athleticism: 70, iq: 88 }),
-      player("Latrell Sprewell", 6, 5, 8, { height: 80, shooting: 84, finishing: 84, handles: 86, passing: 76, defense: 84, rebounding: 62, athleticism: 86, iq: 78 }),
+      player("Kevin Garnett", 6, 11, 21, { height: 96, shooting: 73, finishing: 88, handles: 72, passing: 88, defense: 96, rebounding: 98, athleticism: 94, iq: 94 }),
+      player("Sam Cassell", 6, 3, 19, { height: 74, shooting: 90, finishing: 86, handles: 84, passing: 80, defense: 70, rebounding: 56, athleticism: 70, iq: 88 }),
+      player("Latrell Sprewell", 6, 5, 8, { height: 80, shooting: 84, finishing: 84, handles: 80, passing: 76, defense: 84, rebounding: 62, athleticism: 86, iq: 78 }),
       player("Wally Szczerbiak", 6, 7, 10, { height: 84, shooting: 88, finishing: 80, handles: 74, passing: 72, defense: 68, rebounding: 66, athleticism: 74, iq: 80 }),
       player("Troy Hudson", 6, 1, 3, { height: 68, shooting: 82, finishing: 76, handles: 82, passing: 78, defense: 64, rebounding: 50, athleticism: 76, iq: 78 }),
       player("Fred Hoiberg", 6, 4, 15, { height: 77, shooting: 88, finishing: 74, handles: 74, passing: 74, defense: 64, rebounding: 58, athleticism: 72, iq: 78 }),
@@ -877,8 +877,8 @@ const teamEras = [
       player("Kawhi Leonard", 6, 7, 2, { height: 84, shooting: 90, finishing: 90, handles: 88, passing: 80, defense: 98, rebounding: 82, athleticism: 90, iq: 92 }),
       player("LaMarcus Aldridge", 6, 11, 12, { height: 96, shooting: 88, finishing: 90, handles: 74, passing: 74, defense: 82, rebounding: 92, athleticism: 76, iq: 86 }),
       player("Manu Ginobili", 6, 6, 20, { height: 82, shooting: 86, finishing: 84, handles: 86, passing: 84, defense: 78, rebounding: 60, athleticism: 82, iq: 94 }),
-      player("Tony Parker", 6, 2, 9, { height: 72, shooting: 82, finishing: 94, handles: 92, passing: 88, defense: 76, rebounding: 52, athleticism: 84, iq: 88 }),
-      player("Pau Gasol", 7, 0, 16, { height: 98, shooting: 80, finishing: 86, handles: 74, passing: 86, defense: 80, rebounding: 90, athleticism: 68, iq: 80 }),
+      player("Tony Parker", 6, 2, 9, { height: 72, shooting: 82, finishing: 94, handles: 92, passing: 85, defense: 76, rebounding: 52, athleticism: 84, iq: 88 }),
+      player("Pau Gasol", 7, 0, 16, { height: 98, shooting: 80, finishing: 86, handles: 74, passing: 82, defense: 80, rebounding: 90, athleticism: 68, iq: 80 }),
       player("Danny Green", 6, 6, 14, { height: 82, shooting: 86, finishing: 74, handles: 74, passing: 72, defense: 88, rebounding: 62, athleticism: 80, iq: 80 }),
       player("Patty Mills", 6, 0, 8, { height: 67, shooting: 88, finishing: 76, handles: 82, passing: 78, defense: 72, rebounding: 48, athleticism: 80, iq: 84 }),
       player("Kyle Anderson", 6, 9, 1, { height: 90, shooting: 74, finishing: 78, handles: 76, passing: 80, defense: 80, rebounding: 76, athleticism: 66, iq: 72 }),
@@ -897,14 +897,14 @@ const teamEras = [
     note: "Before Kawhi, Lowry and DeRozan built a culture. Mid-range gospel, annual playoff heartbreak included.",
     players: [
       player("DeMar DeRozan", 6, 7, 10, { height: 84, shooting: 88, finishing: 88, handles: 82, passing: 80, defense: 76, rebounding: 68, athleticism: 82, iq: 92 }),
-      player("Kyle Lowry", 6, 0, 7, { height: 67, shooting: 86, finishing: 80, handles: 88, passing: 88, defense: 86, rebounding: 64, athleticism: 80, iq: 91 }),
+      player("Kyle Lowry", 6, 0, 7, { height: 67, shooting: 86, finishing: 80, handles: 88, passing: 90, defense: 86, rebounding: 64, athleticism: 80, iq: 91 }),
       player("Serge Ibaka", 6, 10, 9, { height: 94, shooting: 78, finishing: 80, handles: 68, passing: 68, defense: 90, rebounding: 86, athleticism: 82, iq: 76 }),
       player("Jonas Valanciunas", 7, 0, 17, { height: 98, shooting: 76, finishing: 84, handles: 54, passing: 64, defense: 84, rebounding: 94, athleticism: 68, iq: 74 }),
       player("Norman Powell", 6, 4, 24, { height: 77, shooting: 82, finishing: 82, handles: 78, passing: 72, defense: 78, rebounding: 62, athleticism: 84, iq: 80 }),
       player("Terrence Ross", 6, 6, 31, { height: 82, shooting: 84, finishing: 78, handles: 76, passing: 68, defense: 70, rebounding: 62, athleticism: 84, iq: 74 }),
       player("Patrick Patterson", 6, 9, 54, { height: 90, shooting: 80, finishing: 76, handles: 68, passing: 68, defense: 80, rebounding: 74, athleticism: 74, iq: 74 }),
       player("Bismack Biyombo", 6, 9, 8, { height: 90, shooting: 52, finishing: 68, handles: 50, passing: 56, defense: 86, rebounding: 86, athleticism: 80, iq: 60 }),
-      player("Kawhi Leonard", 6, 7, 2, { height: 84, shooting: 82, finishing: 88, handles: 82, passing: 74, defense: 94, rebounding: 74, athleticism: 86, iq: 90 }),
+      player("Kawhi Leonard", 6, 7, 2, { height: 84, shooting: 82, finishing: 90, handles: 82, passing: 74, defense: 94, rebounding: 74, athleticism: 86, iq: 90 }),
       player("Pascal Siakam", 6, 9, 43, { height: 90, shooting: 74, finishing: 84, handles: 78, passing: 72, defense: 84, rebounding: 76, athleticism: 88, iq: 78 }),
       player("Marc Gasol", 6, 11, 33, { height: 96, shooting: 78, finishing: 80, handles: 66, passing: 84, defense: 84, rebounding: 80, athleticism: 64, iq: 80 }),
       player("Fred VanVleet", 6, 1, 23, { height: 68, shooting: 80, finishing: 76, handles: 84, passing: 80, defense: 84, rebounding: 54, athleticism: 78, iq: 84 }),
@@ -941,7 +941,7 @@ const teamEras = [
     note: "Two Finals runs in three years on pure fourth-quarter will. Jimmy Butler does not take nights off.",
     players: [
       player("Jimmy Butler", 6, 7, 22, { height: 84, shooting: 84, finishing: 86, handles: 82, passing: 82, defense: 92, rebounding: 74, athleticism: 84, iq: 91 }),
-      player("Bam Adebayo", 6, 9, 13, { height: 90, shooting: 76, finishing: 86, handles: 76, passing: 86, defense: 94, rebounding: 90, athleticism: 92, iq: 88 }),
+      player("Bam Adebayo", 6, 9, 13, { height: 90, shooting: 76, finishing: 86, handles: 76, passing: 82, defense: 94, rebounding: 90, athleticism: 92, iq: 88 }),
       player("Tyler Herro", 6, 5, 14, { height: 80, shooting: 92, finishing: 84, handles: 82, passing: 78, defense: 68, rebounding: 58, athleticism: 78, iq: 88 }),
       player("Kyle Lowry", 6, 0, 7, { height: 67, shooting: 82, finishing: 76, handles: 84, passing: 86, defense: 82, rebounding: 58, athleticism: 72, iq: 91 }),
       player("Duncan Robinson", 6, 7, 55, { height: 84, shooting: 96, finishing: 74, handles: 70, passing: 70, defense: 64, rebounding: 60, athleticism: 72, iq: 82 }),
@@ -984,7 +984,7 @@ const teamEras = [
     team: "Celtics",
     note: "Cowens and Havlicek's two-title era — relentless defense, deep wings, and championship poise.",
     players: [
-      player("John Havlicek", 6, 5, 17, { height: 80, shooting: 84, finishing: 88, handles: 84, passing: 86, defense: 90, rebounding: 76, athleticism: 90, iq: 94 }),
+      player("John Havlicek", 6, 5, 17, { height: 80, shooting: 84, finishing: 83, handles: 84, passing: 80, defense: 90, rebounding: 76, athleticism: 90, iq: 88 }),
       player("Dave Cowens", 6, 9, 18, { height: 90, shooting: 80, finishing: 84, handles: 76, passing: 82, defense: 90, rebounding: 94, athleticism: 88, iq: 88 }),
       player("Jo Jo White", 6, 3, 10, { height: 74, shooting: 86, finishing: 84, handles: 86, passing: 84, defense: 82, rebounding: 60, athleticism: 86, iq: 88 }),
       player("Paul Silas", 6, 7, 35, { height: 84, shooting: 62, finishing: 76, handles: 60, passing: 72, defense: 88, rebounding: 92, athleticism: 82, iq: 82 }),
@@ -1028,7 +1028,7 @@ const teamEras = [
     team: "76ers",
     note: "Dr. J brings flight and finishing; McGinnis, Free, and Dawkins make this one of the most explosive rolls of the decade.",
     players: [
-      player("Julius Erving", 6, 7, 6, { height: 84, shooting: 80, finishing: 96, handles: 88, passing: 84, defense: 84, rebounding: 80, athleticism: 97, iq: 90 }),
+      player("Julius Erving", 6, 7, 6, { height: 84, shooting: 80, finishing: 92, handles: 88, passing: 84, defense: 84, rebounding: 80, athleticism: 93, iq: 90 }),
       player("George McGinnis", 6, 8, 30, { height: 86, shooting: 78, finishing: 86, handles: 78, passing: 78, defense: 78, rebounding: 86, athleticism: 86, iq: 82 }),
       player("Doug Collins", 6, 6, 20, { height: 82, shooting: 86, finishing: 84, handles: 82, passing: 78, defense: 78, rebounding: 62, athleticism: 86, iq: 84 }),
       player("World B. Free", 6, 2, 21, { height: 71, shooting: 84, finishing: 86, handles: 86, passing: 74, defense: 70, rebounding: 56, athleticism: 86, iq: 84 }),
@@ -1051,10 +1051,10 @@ const teamEras = [
     note: "Gus Williams' speed and Dennis Johnson's two-way defense drove Seattle to back-to-back Finals and the 1979 title.",
     players: [
       player("Gus Williams", 6, 2, 1, { height: 71, shooting: 84, finishing: 86, handles: 90, passing: 82, defense: 84, rebounding: 56, athleticism: 92, iq: 86 }),
-      player("Dennis Johnson", 6, 4, 24, { height: 77, shooting: 78, finishing: 84, handles: 84, passing: 80, defense: 94, rebounding: 68, athleticism: 90, iq: 90 }),
+      player("Dennis Johnson", 6, 4, 24, { height: 77, shooting: 78, finishing: 84, handles: 84, passing: 80, defense: 89, rebounding: 68, athleticism: 90, iq: 90 }),
       player("Jack Sikma", 6, 11, 43, { height: 96, shooting: 82, finishing: 82, handles: 66, passing: 78, defense: 84, rebounding: 88, athleticism: 78, iq: 84 }),
       player("Fred Brown", 6, 3, 32, { height: 74, shooting: 90, finishing: 80, handles: 84, passing: 80, defense: 74, rebounding: 58, athleticism: 80, iq: 88 }),
-      player("Spencer Haywood", 6, 8, 24, { height: 86, shooting: 82, finishing: 88, handles: 74, passing: 74, defense: 80, rebounding: 88, athleticism: 88, iq: 82 }),
+      player("Spencer Haywood", 6, 8, 24, { height: 86, shooting: 82, finishing: 88, handles: 74, passing: 74, defense: 80, rebounding: 88, athleticism: 90, iq: 82 }),
       player("Lonnie Shelton", 6, 8, 8, { height: 86, shooting: 70, finishing: 82, handles: 64, passing: 70, defense: 88, rebounding: 84, athleticism: 84, iq: 78 }),
       player("John Johnson", 6, 7, 27, { height: 84, shooting: 80, finishing: 82, handles: 80, passing: 84, defense: 82, rebounding: 74, athleticism: 80, iq: 80 }),
       player("Slick Watts", 6, 1, 13, { height: 68, shooting: 72, finishing: 78, handles: 88, passing: 88, defense: 88, rebounding: 56, athleticism: 88, iq: 78 }),
@@ -1146,7 +1146,7 @@ const teamEras = [
       player("Jack Sikma", 6, 11, 43, { height: 96, shooting: 82, finishing: 80, handles: 64, passing: 78, defense: 82, rebounding: 86, athleticism: 74, iq: 82 }),
       player("Ricky Pierce", 6, 4, 22, { height: 77, shooting: 86, finishing: 86, handles: 80, passing: 72, defense: 72, rebounding: 58, athleticism: 80, iq: 84 }),
       player("Junior Bridgeman", 6, 5, 2, { height: 80, shooting: 82, finishing: 82, handles: 78, passing: 76, defense: 76, rebounding: 64, athleticism: 78, iq: 82 }),
-      player("Brian Winters", 6, 4, 32, { height: 77, shooting: 87, finishing: 80, handles: 80, passing: 79, defense: 72, rebounding: 60, athleticism: 72, iq: 86 }),
+      player("Brian Winters", 6, 4, 32, { height: 77, shooting: 82, finishing: 80, handles: 80, passing: 79, defense: 72, rebounding: 60, athleticism: 72, iq: 86 }),
       player("Quinn Buckner", 6, 3, 6, { height: 74, shooting: 72, finishing: 78, handles: 84, passing: 84, defense: 90, rebounding: 60, athleticism: 82, iq: 78 }),
       player("Craig Hodges", 6, 2, 14, { height: 71, shooting: 90, finishing: 74, handles: 80, passing: 76, defense: 72, rebounding: 50, athleticism: 74, iq: 84 }),
       player("Alton Lister", 6, 11, 25, { height: 96, shooting: 62, finishing: 78, handles: 56, passing: 64, defense: 84, rebounding: 82, athleticism: 80, iq: 70 }),
@@ -1163,7 +1163,7 @@ const teamEras = [
       player("Hakeem Olajuwon", 7, 0, 34, { height: 98, shooting: 72, finishing: 90, handles: 74, passing: 74, defense: 96, rebounding: 92, athleticism: 96, iq: 90 }),
       player("Moses Malone", 6, 10, 24, { height: 94, shooting: 74, finishing: 88, handles: 64, passing: 66, defense: 84, rebounding: 98, athleticism: 86, iq: 86 }),
       player("Ralph Sampson", 7, 4, 50, { height: 100, shooting: 78, finishing: 86, handles: 74, passing: 78, defense: 86, rebounding: 88, athleticism: 84, iq: 80 }),
-      player("Calvin Murphy", 5, 9, 23, { height: 60, shooting: 88, finishing: 82, handles: 88, passing: 80, defense: 72, rebounding: 48, athleticism: 84, iq: 88 }),
+      player("Calvin Murphy", 5, 9, 23, { height: 60, shooting: 90, finishing: 82, handles: 88, passing: 80, defense: 72, rebounding: 48, athleticism: 84, iq: 88 }),
       player("Sleepy Floyd", 6, 3, 21, { height: 74, shooting: 82, finishing: 82, handles: 88, passing: 86, defense: 80, rebounding: 56, athleticism: 84, iq: 86 }),
       player("Robert Reid", 6, 8, 50, { height: 86, shooting: 78, finishing: 80, handles: 76, passing: 76, defense: 86, rebounding: 74, athleticism: 82, iq: 80 }),
       player("Rodney McCray", 6, 8, 24, { height: 86, shooting: 78, finishing: 82, handles: 80, passing: 82, defense: 86, rebounding: 78, athleticism: 82, iq: 80 }),
@@ -1209,11 +1209,11 @@ const teamEras = [
       player("Derek Harper", 6, 4, 12, { height: 77, shooting: 80, finishing: 82, handles: 90, passing: 86, defense: 90, rebounding: 58, athleticism: 86, iq: 84 }),
       player("Sam Perkins", 6, 9, 14, { height: 90, shooting: 82, finishing: 82, handles: 70, passing: 74, defense: 80, rebounding: 84, athleticism: 78, iq: 82 }),
       player("Brad Davis", 6, 3, 15, { height: 74, shooting: 82, finishing: 80, handles: 88, passing: 86, defense: 78, rebounding: 54, athleticism: 78, iq: 84 }),
-      player("Detlef Schrempf", 6, 10, 32, { height: 94, shooting: 82, finishing: 84, handles: 80, passing: 82, defense: 78, rebounding: 78, athleticism: 80, iq: 82 }),
+      player("Detlef Schrempf", 6, 10, 32, { height: 94, shooting: 82, finishing: 84, handles: 80, passing: 82, defense: 72, rebounding: 78, athleticism: 80, iq: 82 }),
       player("Roy Tarpley", 6, 11, 42, { height: 96, shooting: 74, finishing: 84, handles: 68, passing: 70, defense: 82, rebounding: 92, athleticism: 88, iq: 78 }),
       player("James Donaldson", 7, 2, 40, { height: 100, shooting: 62, finishing: 80, handles: 54, passing: 64, defense: 86, rebounding: 88, athleticism: 72, iq: 74 }),
       player("Jay Vincent", 6, 7, 31, { height: 84, shooting: 82, finishing: 84, handles: 74, passing: 72, defense: 70, rebounding: 72, athleticism: 78, iq: 80 }),
-      player("Dale Ellis", 6, 7, 3, { height: 84, shooting: 88, finishing: 84, handles: 78, passing: 72, defense: 74, rebounding: 66, athleticism: 84, iq: 80 }),
+      player("Dale Ellis", 6, 7, 3, { height: 84, shooting: 84, finishing: 84, handles: 78, passing: 72, defense: 74, rebounding: 66, athleticism: 84, iq: 80 }),
       player("Kurt Nimphius", 6, 10, 43, { height: 94, shooting: 66, finishing: 78, handles: 60, passing: 66, defense: 82, rebounding: 78, athleticism: 78, iq: 72 }),
       player("Bill Garnett", 6, 9, 50, { height: 90, shooting: 66, finishing: 76, handles: 62, passing: 66, defense: 78, rebounding: 78, athleticism: 78, iq: 70 }),
       player("Brad Wright", 6, 11, 34, { height: 96, shooting: 64, finishing: 76, handles: 56, passing: 62, defense: 76, rebounding: 76, athleticism: 68, iq: 68 }),
@@ -1275,7 +1275,7 @@ const teamEras = [
       player("Walter Davis", 6, 6, 6, { height: 82, shooting: 88, finishing: 88, handles: 84, passing: 80, defense: 74, rebounding: 64, athleticism: 90, iq: 86 }),
       player("Tom Chambers", 6, 10, 24, { height: 94, shooting: 84, finishing: 88, handles: 74, passing: 72, defense: 72, rebounding: 78, athleticism: 82, iq: 86 }),
       player("Alvan Adams", 6, 9, 33, { height: 90, shooting: 80, finishing: 84, handles: 78, passing: 84, defense: 80, rebounding: 82, athleticism: 80, iq: 82 }),
-      player("Eddie Johnson", 6, 7, 8, { height: 84, shooting: 86, finishing: 84, handles: 78, passing: 72, defense: 70, rebounding: 66, athleticism: 80, iq: 84 }),
+      player("Eddie Johnson", 6, 7, 8, { height: 84, shooting: 80, finishing: 84, handles: 78, passing: 72, defense: 70, rebounding: 66, athleticism: 80, iq: 84 }),
       player("Jeff Hornacek", 6, 4, 14, { height: 77, shooting: 86, finishing: 82, handles: 84, passing: 84, defense: 78, rebounding: 60, athleticism: 78, iq: 84 }),
       player("Maurice Lucas", 6, 9, 20, { height: 90, shooting: 74, finishing: 84, handles: 68, passing: 74, defense: 86, rebounding: 88, athleticism: 82, iq: 82 }),
       player("Kyle Macy", 6, 3, 4, { height: 74, shooting: 88, finishing: 78, handles: 84, passing: 82, defense: 78, rebounding: 54, athleticism: 74, iq: 84 }),
@@ -1292,7 +1292,7 @@ const teamEras = [
     team: "SuperSonics",
     note: "Dale Ellis, Xavier McDaniel, and Tom Chambers turned Seattle into a high-scoring 1987 conference finalist.",
     players: [
-      player("Dale Ellis", 6, 7, 3, { height: 84, shooting: 90, finishing: 86, handles: 80, passing: 72, defense: 72, rebounding: 66, athleticism: 84, iq: 80 }),
+      player("Dale Ellis", 6, 7, 3, { height: 84, shooting: 84, finishing: 86, handles: 80, passing: 72, defense: 72, rebounding: 66, athleticism: 84, iq: 80 }),
       player("Xavier McDaniel", 6, 7, 34, { height: 84, shooting: 78, finishing: 88, handles: 76, passing: 70, defense: 80, rebounding: 84, athleticism: 88, iq: 82 }),
       player("Tom Chambers", 6, 10, 24, { height: 94, shooting: 84, finishing: 88, handles: 74, passing: 72, defense: 72, rebounding: 80, athleticism: 82, iq: 84 }),
       player("Jack Sikma", 6, 11, 43, { height: 96, shooting: 82, finishing: 82, handles: 66, passing: 78, defense: 84, rebounding: 88, athleticism: 78, iq: 84 }),
@@ -1301,7 +1301,7 @@ const teamEras = [
       player("Nate McMillan", 6, 5, 10, { height: 80, shooting: 70, finishing: 76, handles: 88, passing: 90, defense: 90, rebounding: 66, athleticism: 82, iq: 86 }),
       player("Derrick McKey", 6, 9, 30, { height: 90, shooting: 80, finishing: 82, handles: 76, passing: 74, defense: 86, rebounding: 72, athleticism: 84, iq: 78 }),
       player("Lonnie Shelton", 6, 8, 8, { height: 86, shooting: 70, finishing: 82, handles: 64, passing: 70, defense: 88, rebounding: 84, athleticism: 84, iq: 78 }),
-      player("David Thompson", 6, 4, 33, { height: 77, shooting: 82, finishing: 88, handles: 82, passing: 76, defense: 74, rebounding: 62, athleticism: 96, iq: 82 }),
+      player("David Thompson", 6, 4, 33, { height: 77, shooting: 82, finishing: 90, handles: 82, passing: 76, defense: 74, rebounding: 62, athleticism: 96, iq: 82 }),
       player("Danny Vranes", 6, 7, 4, { height: 84, shooting: 64, finishing: 76, handles: 68, passing: 70, defense: 88, rebounding: 74, athleticism: 86, iq: 72 }),
       player("Alton Lister", 7, 0, 25, { height: 98, shooting: 62, finishing: 78, handles: 56, passing: 64, defense: 84, rebounding: 82, athleticism: 80, iq: 70 }),
       player("Reggie King", 6, 6, 43, { height: 82, shooting: 70, finishing: 80, handles: 68, passing: 72, defense: 82, rebounding: 82, athleticism: 80, iq: 74 }),
@@ -1314,13 +1314,13 @@ const teamEras = [
     team: "Trail Blazers",
     note: "Drexler was Jordan-adjacent in every way except one ring. Portland made two Finals on his back.",
     players: [
-      player("Clyde Drexler", 6, 7, 22, { height: 84, shooting: 88, finishing: 88, handles: 90, passing: 86, defense: 88, rebounding: 78, athleticism: 94, iq: 90 }),
+      player("Clyde Drexler", 6, 7, 22, { height: 84, shooting: 88, finishing: 88, handles: 90, passing: 86, defense: 88, rebounding: 78, athleticism: 88, iq: 84 }),
       player("Terry Porter", 6, 3, 30, { height: 74, shooting: 86, finishing: 80, handles: 88, passing: 90, defense: 80, rebounding: 56, athleticism: 80, iq: 88 }),
       player("Buck Williams", 6, 8, 14, { height: 88, shooting: 70, finishing: 78, handles: 62, passing: 66, defense: 86, rebounding: 92, athleticism: 78, iq: 74 }),
       player("Jerome Kersey", 6, 7, 25, { height: 84, shooting: 74, finishing: 82, handles: 72, passing: 70, defense: 84, rebounding: 82, athleticism: 88, iq: 76 }),
       player("Cliff Robinson", 6, 10, 1, { height: 94, shooting: 80, finishing: 80, handles: 74, passing: 70, defense: 80, rebounding: 76, athleticism: 80, iq: 76 }),
       player("Kevin Duckworth", 7, 0, 00, { height: 98, shooting: 70, finishing: 78, handles: 52, passing: 58, defense: 76, rebounding: 84, athleticism: 64, iq: 68 }),
-      player("Rod Strickland", 6, 3, 10, { height: 74, shooting: 80, finishing: 80, handles: 90, passing: 88, defense: 72, rebounding: 54, athleticism: 82, iq: 78 }),
+      player("Rod Strickland", 6, 3, 10, { height: 74, shooting: 80, finishing: 80, handles: 90, passing: 90, defense: 72, rebounding: 54, athleticism: 82, iq: 78 }),
       player("Danny Manning", 6, 10, 45, { height: 94, shooting: 80, finishing: 82, handles: 76, passing: 76, defense: 74, rebounding: 78, athleticism: 78, iq: 78 }),
       player("Arvydas Sabonis", 7, 3, 11, { height: 100, shooting: 78, finishing: 84, handles: 70, passing: 86, defense: 82, rebounding: 86, athleticism: 68, iq: 92 }),
       player("Rasheed Wallace", 6, 11, 30, { height: 96, shooting: 80, finishing: 86, handles: 74, passing: 74, defense: 88, rebounding: 82, athleticism: 88, iq: 80 }),
@@ -1344,7 +1344,7 @@ const teamEras = [
       player("Dale Davis", 6, 11, 34, { height: 96, shooting: 58, finishing: 74, handles: 52, passing: 58, defense: 88, rebounding: 94, athleticism: 82, iq: 68 }),
       player("Antonio Davis", 6, 9, 54, { height: 90, shooting: 64, finishing: 74, handles: 54, passing: 60, defense: 86, rebounding: 90, athleticism: 76, iq: 68 }),
       player("Travis Best", 5, 11, 10, { height: 60, shooting: 80, finishing: 76, handles: 84, passing: 80, defense: 76, rebounding: 46, athleticism: 78, iq: 80 }),
-      player("Detlef Schrempf", 6, 10, 32, { height: 94, shooting: 82, finishing: 84, handles: 80, passing: 82, defense: 78, rebounding: 78, athleticism: 80, iq: 82 }),
+      player("Detlef Schrempf", 6, 10, 32, { height: 94, shooting: 82, finishing: 84, handles: 80, passing: 82, defense: 72, rebounding: 78, athleticism: 80, iq: 82 }),
       player("Chris Mullin", 6, 7, 17, { height: 84, shooting: 92, finishing: 82, handles: 82, passing: 84, defense: 74, rebounding: 62, athleticism: 74, iq: 86 }),
       player("Vern Fleming", 6, 5, 10, { height: 80, shooting: 76, finishing: 80, handles: 84, passing: 84, defense: 80, rebounding: 60, athleticism: 80, iq: 78 }),
       player("Byron Scott", 6, 3, 4, { height: 74, shooting: 84, finishing: 80, handles: 80, passing: 76, defense: 74, rebounding: 56, athleticism: 80, iq: 82 }),
@@ -1358,7 +1358,7 @@ const teamEras = [
     team: "Spurs",
     note: "David Robinson's prime — an MVP, a DPOY, and then the 1999 title once Tim Duncan arrived to form the Twin Towers.",
     players: [
-      player("David Robinson", 7, 1, 50, { height: 100, shooting: 76, finishing: 90, handles: 70, passing: 78, defense: 96, rebounding: 92, athleticism: 94, iq: 86 }),
+      player("David Robinson", 7, 1, 50, { height: 100, shooting: 76, finishing: 90, handles: 70, passing: 78, defense: 92, rebounding: 92, athleticism: 94, iq: 86 }),
       player("Tim Duncan", 6, 11, 21, { height: 96, shooting: 80, finishing: 90, handles: 72, passing: 80, defense: 94, rebounding: 94, athleticism: 84, iq: 90 }),
       player("Sean Elliott", 6, 8, 32, { height: 86, shooting: 84, finishing: 82, handles: 78, passing: 76, defense: 78, rebounding: 68, athleticism: 80, iq: 84 }),
       player("Avery Johnson", 5, 11, 6, { height: 64, shooting: 76, finishing: 80, handles: 88, passing: 88, defense: 82, rebounding: 50, athleticism: 82, iq: 84 }),
@@ -1366,7 +1366,7 @@ const teamEras = [
       player("Vinny Del Negro", 6, 4, 15, { height: 77, shooting: 84, finishing: 80, handles: 82, passing: 80, defense: 76, rebounding: 58, athleticism: 78, iq: 82 }),
       player("Terry Cummings", 6, 9, 34, { height: 90, shooting: 78, finishing: 84, handles: 72, passing: 70, defense: 78, rebounding: 84, athleticism: 82, iq: 80 }),
       player("Willie Anderson", 6, 7, 40, { height: 84, shooting: 80, finishing: 82, handles: 82, passing: 80, defense: 82, rebounding: 66, athleticism: 84, iq: 78 }),
-      player("Dennis Rodman", 6, 7, 10, { height: 84, shooting: 52, finishing: 72, handles: 62, passing: 72, defense: 96, rebounding: 100, athleticism: 88, iq: 80 }),
+      player("Dennis Rodman", 6, 7, 10, { height: 84, shooting: 52, finishing: 72, handles: 62, passing: 72, defense: 94, rebounding: 100, athleticism: 88, iq: 80 }),
       player("Chuck Person", 6, 8, 45, { height: 86, shooting: 86, finishing: 80, handles: 74, passing: 72, defense: 72, rebounding: 68, athleticism: 76, iq: 84 }),
       player("Jaren Jackson", 6, 6, 11, { height: 82, shooting: 82, finishing: 76, handles: 78, passing: 72, defense: 80, rebounding: 58, athleticism: 78, iq: 78 }),
       player("Antonio Daniels", 6, 4, 33, { height: 77, shooting: 76, finishing: 80, handles: 84, passing: 82, defense: 78, rebounding: 56, athleticism: 84, iq: 76 }),
@@ -1433,7 +1433,7 @@ const teamEras = [
       player("Vlade Divac", 7, 1, 12, { height: 100, shooting: 74, finishing: 82, handles: 70, passing: 86, defense: 80, rebounding: 82, athleticism: 70, iq: 88 }),
       player("David Wesley", 6, 1, 7, { height: 68, shooting: 80, finishing: 80, handles: 84, passing: 80, defense: 82, rebounding: 54, athleticism: 82, iq: 82 }),
       player("Kendall Gill", 6, 5, 13, { height: 80, shooting: 78, finishing: 82, handles: 82, passing: 78, defense: 84, rebounding: 62, athleticism: 88, iq: 78 }),
-      player("Hersey Hawkins", 6, 3, 33, { height: 74, shooting: 88, finishing: 80, handles: 78, passing: 76, defense: 82, rebounding: 58, athleticism: 78, iq: 82 }),
+      player("Hersey Hawkins", 6, 3, 33, { height: 74, shooting: 83, finishing: 80, handles: 78, passing: 76, defense: 82, rebounding: 58, athleticism: 78, iq: 82 }),
       player("Scott Burrell", 6, 7, 24, { height: 84, shooting: 80, finishing: 80, handles: 74, passing: 72, defense: 80, rebounding: 66, athleticism: 84, iq: 76 }),
       player("Bobby Phills", 6, 5, 13, { height: 80, shooting: 78, finishing: 80, handles: 78, passing: 74, defense: 86, rebounding: 60, athleticism: 84, iq: 78 }),
       player("Kenny Gattison", 6, 8, 44, { height: 86, shooting: 68, finishing: 80, handles: 64, passing: 66, defense: 80, rebounding: 76, athleticism: 80, iq: 72 }),
@@ -1468,20 +1468,20 @@ const teamEras = [
     team: "Lakers",
     note: "From the post-Showtime years to the arrival of Shaq and a teenage Kobe — a franchise reloading into a dynasty.",
     players: [
-      player("Shaquille O'Neal", 7, 1, 34, { height: 100, shooting: 58, finishing: 96, handles: 68, passing: 76, defense: 88, rebounding: 92, athleticism: 96, iq: 84 }),
-      player("Kobe Bryant", 6, 6, 8, { height: 82, shooting: 84, finishing: 88, handles: 88, passing: 78, defense: 84, rebounding: 64, athleticism: 94, iq: 92 }),
+      player("Shaquille O'Neal", 7, 1, 34, { height: 100, shooting: 58, finishing: 96, handles: 68, passing: 76, defense: 90, rebounding: 92, athleticism: 96, iq: 84 }),
+      player("Kobe Bryant", 6, 6, 8, { height: 82, shooting: 84, finishing: 88, handles: 90, passing: 78, defense: 84, rebounding: 64, athleticism: 94, iq: 92 }),
       player("Eddie Jones", 6, 6, 6, { height: 82, shooting: 84, finishing: 84, handles: 80, passing: 78, defense: 88, rebounding: 64, athleticism: 90, iq: 80 }),
       player("Nick Van Exel", 6, 1, 9, { height: 68, shooting: 82, finishing: 80, handles: 90, passing: 86, defense: 72, rebounding: 54, athleticism: 80, iq: 84 }),
       player("Vlade Divac", 7, 1, 12, { height: 100, shooting: 72, finishing: 82, handles: 70, passing: 86, defense: 80, rebounding: 82, athleticism: 72, iq: 88 }),
       player("Sedale Threatt", 6, 2, 3, { height: 71, shooting: 82, finishing: 80, handles: 84, passing: 80, defense: 82, rebounding: 54, athleticism: 84, iq: 78 }),
-      player("James Worthy", 6, 9, 42, { height: 90, shooting: 80, finishing: 90, handles: 82, passing: 78, defense: 80, rebounding: 74, athleticism: 88, iq: 85 }),
+      player("James Worthy", 6, 9, 42, { height: 90, shooting: 80, finishing: 90, handles: 82, passing: 78, defense: 80, rebounding: 74, athleticism: 90, iq: 85 }),
       player("Elden Campbell", 6, 11, 41, { height: 96, shooting: 70, finishing: 82, handles: 64, passing: 68, defense: 84, rebounding: 80, athleticism: 82, iq: 74 }),
       player("Cedric Ceballos", 6, 7, 4, { height: 84, shooting: 80, finishing: 86, handles: 76, passing: 70, defense: 70, rebounding: 74, athleticism: 84, iq: 78 }),
       player("Robert Horry", 6, 9, 5, { height: 90, shooting: 80, finishing: 80, handles: 74, passing: 76, defense: 84, rebounding: 76, athleticism: 82, iq: 86 }),
       player("Rick Fox", 6, 7, 17, { height: 84, shooting: 78, finishing: 80, handles: 78, passing: 78, defense: 82, rebounding: 64, athleticism: 80, iq: 80 }),
       player("Sam Perkins", 6, 9, 14, { height: 90, shooting: 82, finishing: 80, handles: 70, passing: 74, defense: 78, rebounding: 80, athleticism: 74, iq: 82 }),
       player("Byron Scott", 6, 3, 4, { height: 74, shooting: 86, finishing: 82, handles: 80, passing: 78, defense: 76, rebounding: 58, athleticism: 82, iq: 84 }),
-      player("A.C. Green", 6, 9, 45, { height: 90, shooting: 70, finishing: 80, handles: 62, passing: 68, defense: 84, rebounding: 86, athleticism: 80, iq: 78 }),
+      player("A.C. Green", 6, 9, 45, { height: 90, shooting: 70, finishing: 80, handles: 62, passing: 68, defense: 78, rebounding: 86, athleticism: 80, iq: 78 }),
       player("Derek Fisher", 6, 1, 2, { height: 68, shooting: 80, finishing: 76, handles: 82, passing: 80, defense: 80, rebounding: 52, athleticism: 78, iq: 84 }),
     ],
   },
@@ -1490,7 +1490,7 @@ const teamEras = [
     team: "Cavaliers",
     note: "The Witness era. LeBron dragged a roster of role players to the 2007 Finals on pure will.",
     players: [
-      player("LeBron James", 6, 8, 23, { height: 88, shooting: 84, finishing: 96, handles: 92, passing: 96, defense: 88, rebounding: 86, athleticism: 98, iq: 92 }),
+      player("LeBron James", 6, 8, 23, { height: 88, shooting: 80, finishing: 96, handles: 92, passing: 93, defense: 88, rebounding: 80, athleticism: 98, iq: 92 }),
       player("Zydrunas Ilgauskas", 7, 3, 11, { height: 100, shooting: 76, finishing: 82, handles: 54, passing: 68, defense: 82, rebounding: 90, athleticism: 64, iq: 76 }),
       player("Daniel Gibson", 6, 2, 1, { height: 72, shooting: 84, finishing: 76, handles: 78, passing: 74, defense: 72, rebounding: 50, athleticism: 76, iq: 86 }),
       player("Larry Hughes", 6, 5, 4, { height: 80, shooting: 78, finishing: 80, handles: 80, passing: 74, defense: 82, rebounding: 58, athleticism: 84, iq: 74 }),
@@ -1512,7 +1512,7 @@ const teamEras = [
     team: "Raptors",
     note: "Half Man, Half Amazing. Vince Carter put the Raptors on the map and left a crater-shaped exit. The dunks live forever.",
     players: [
-      player("Vince Carter", 6, 6, 15, { height: 82, shooting: 88, finishing: 90, handles: 82, passing: 74, defense: 74, rebounding: 64, athleticism: 98, iq: 86 }),
+      player("Vince Carter", 6, 6, 15, { height: 82, shooting: 88, finishing: 85, handles: 82, passing: 74, defense: 74, rebounding: 64, athleticism: 98, iq: 86 }),
       player("Antonio Davis", 6, 9, 54, { height: 90, shooting: 64, finishing: 74, handles: 52, passing: 60, defense: 86, rebounding: 90, athleticism: 74, iq: 66 }),
       player("Morris Peterson", 6, 7, 24, { height: 84, shooting: 82, finishing: 80, handles: 72, passing: 70, defense: 76, rebounding: 64, athleticism: 82, iq: 78 }),
       player("Alvin Williams", 6, 5, 7, { height: 80, shooting: 78, finishing: 74, handles: 84, passing: 82, defense: 78, rebounding: 54, athleticism: 80, iq: 76 }),
@@ -1556,7 +1556,7 @@ const teamEras = [
     team: "Heat",
     note: "Wade and Shaq powered the 2006 title; Flash's relentless drives and a deep, physical roster defined the decade in Miami.",
     players: [
-      player("Dwyane Wade", 6, 4, 3, { height: 77, shooting: 80, finishing: 90, handles: 90, passing: 84, defense: 84, rebounding: 64, athleticism: 94, iq: 88 }),
+      player("Dwyane Wade", 6, 4, 3, { height: 77, shooting: 80, finishing: 90, handles: 85, passing: 84, defense: 84, rebounding: 64, athleticism: 94, iq: 82 }),
       player("Shaquille O'Neal", 7, 1, 32, { height: 100, shooting: 54, finishing: 94, handles: 64, passing: 74, defense: 86, rebounding: 86, athleticism: 88, iq: 82 }),
       player("Alonzo Mourning", 6, 10, 33, { height: 94, shooting: 72, finishing: 84, handles: 62, passing: 64, defense: 92, rebounding: 80, athleticism: 82, iq: 80 }),
       player("Eddie Jones", 6, 6, 6, { height: 82, shooting: 84, finishing: 82, handles: 80, passing: 76, defense: 86, rebounding: 62, athleticism: 88, iq: 80 }),
@@ -1578,9 +1578,9 @@ const teamEras = [
     team: "76ers",
     note: "Allen Iverson carried a defense-and-grit roster to the 2001 Finals; later Iguodala's two-way athleticism led the way.",
     players: [
-      player("Allen Iverson", 6, 0, 3, { height: 66, shooting: 82, finishing: 88, handles: 100, passing: 82, defense: 80, rebounding: 54, athleticism: 94, iq: 82 }),
+      player("Allen Iverson", 6, 0, 3, { height: 66, shooting: 82, finishing: 90, handles: 100, passing: 82, defense: 73, rebounding: 54, athleticism: 94, iq: 82 }),
       player("Dikembe Mutombo", 7, 2, 55, { height: 100, shooting: 54, finishing: 80, handles: 54, passing: 60, defense: 96, rebounding: 92, athleticism: 82, iq: 78 }),
-      player("Andre Iguodala", 6, 6, 9, { height: 82, shooting: 74, finishing: 84, handles: 82, passing: 82, defense: 90, rebounding: 70, athleticism: 92, iq: 78 }),
+      player("Andre Iguodala", 6, 6, 9, { height: 82, shooting: 74, finishing: 78, handles: 82, passing: 82, defense: 90, rebounding: 70, athleticism: 92, iq: 78 }),
       player("Andre Miller", 6, 2, 88, { height: 71, shooting: 74, finishing: 84, handles: 90, passing: 90, defense: 78, rebounding: 64, athleticism: 80, iq: 88 }),
       player("Aaron McKie", 6, 5, 8, { height: 80, shooting: 78, finishing: 78, handles: 82, passing: 82, defense: 84, rebounding: 64, athleticism: 78, iq: 78 }),
       player("Eric Snow", 6, 3, 20, { height: 74, shooting: 62, finishing: 74, handles: 84, passing: 84, defense: 86, rebounding: 56, athleticism: 80, iq: 76 }),
@@ -1592,7 +1592,7 @@ const teamEras = [
       player("Tyrone Hill", 6, 9, 4, { height: 90, shooting: 62, finishing: 78, handles: 60, passing: 64, defense: 82, rebounding: 86, athleticism: 80, iq: 72 }),
       player("George Lynch", 6, 8, 5, { height: 86, shooting: 68, finishing: 78, handles: 72, passing: 72, defense: 84, rebounding: 74, athleticism: 84, iq: 72 }),
       player("Willie Green", 6, 4, 33, { height: 77, shooting: 78, finishing: 80, handles: 78, passing: 70, defense: 72, rebounding: 56, athleticism: 84, iq: 76 }),
-      player("Toni Kukoc", 6, 10, 7, { height: 94, shooting: 84, finishing: 80, handles: 82, passing: 86, defense: 70, rebounding: 72, athleticism: 72, iq: 80 }),
+      player("Toni Kukoc", 6, 10, 7, { height: 90, shooting: 84, finishing: 80, handles: 82, passing: 86, defense: 70, rebounding: 72, athleticism: 72, iq: 80 }),
     ],
   },
   {
@@ -1601,7 +1601,7 @@ const teamEras = [
     note: "Dwight Howard's defense anchored the 2009 Finals run, with Hedo, Rashard Lewis, and Jameer spacing the floor; T-Mac scored early in the decade.",
     players: [
       player("Dwight Howard", 6, 11, 12, { height: 96, shooting: 54, finishing: 88, handles: 60, passing: 64, defense: 96, rebounding: 96, athleticism: 96, iq: 74 }),
-      player("Tracy McGrady", 6, 8, 1, { height: 86, shooting: 88, finishing: 90, handles: 88, passing: 82, defense: 78, rebounding: 72, athleticism: 92, iq: 84 }),
+      player("Tracy McGrady", 6, 8, 1, { height: 86, shooting: 88, finishing: 90, handles: 90, passing: 82, defense: 78, rebounding: 72, athleticism: 92, iq: 84 }),
       player("Rashard Lewis", 6, 10, 9, { height: 94, shooting: 88, finishing: 80, handles: 74, passing: 70, defense: 72, rebounding: 72, athleticism: 78, iq: 82 }),
       player("Hedo Turkoglu", 6, 10, 15, { height: 94, shooting: 82, finishing: 82, handles: 82, passing: 82, defense: 70, rebounding: 66, athleticism: 72, iq: 84 }),
       player("Jameer Nelson", 6, 0, 14, { height: 66, shooting: 82, finishing: 80, handles: 88, passing: 84, defense: 74, rebounding: 54, athleticism: 82, iq: 82 }),
@@ -1622,7 +1622,7 @@ const teamEras = [
     team: "Rockets",
     note: "Yao and T-Mac headlined a star-crossed contender; Battier and Scola added two-way toughness.",
     players: [
-      player("Tracy McGrady", 6, 8, 1, { height: 86, shooting: 88, finishing: 90, handles: 88, passing: 82, defense: 76, rebounding: 70, athleticism: 90, iq: 84 }),
+      player("Tracy McGrady", 6, 8, 1, { height: 86, shooting: 88, finishing: 90, handles: 90, passing: 82, defense: 76, rebounding: 70, athleticism: 90, iq: 84 }),
       player("Yao Ming", 7, 6, 11, { height: 100, shooting: 78, finishing: 88, handles: 60, passing: 72, defense: 84, rebounding: 88, athleticism: 70, iq: 82 }),
       player("Steve Francis", 6, 3, 3, { height: 74, shooting: 80, finishing: 86, handles: 90, passing: 84, defense: 74, rebounding: 64, athleticism: 92, iq: 82 }),
       player("Shane Battier", 6, 8, 31, { height: 86, shooting: 80, finishing: 76, handles: 70, passing: 74, defense: 90, rebounding: 66, athleticism: 78, iq: 88 }),
@@ -1668,9 +1668,9 @@ const teamEras = [
     players: [
       player("Chris Paul", 6, 0, 3, { height: 66, shooting: 82, finishing: 84, handles: 96, passing: 98, defense: 86, rebounding: 58, athleticism: 88, iq: 98 }),
       player("David West", 6, 9, 30, { height: 90, shooting: 82, finishing: 86, handles: 72, passing: 74, defense: 78, rebounding: 80, athleticism: 80, iq: 84 }),
-      player("Baron Davis", 6, 3, 1, { height: 74, shooting: 78, finishing: 84, handles: 92, passing: 88, defense: 80, rebounding: 62, athleticism: 90, iq: 82 }),
-      player("Peja Stojakovic", 6, 10, 16, { height: 94, shooting: 96, finishing: 78, handles: 72, passing: 72, defense: 66, rebounding: 70, athleticism: 64, iq: 84 }),
-      player("Tyson Chandler", 7, 1, 6, { height: 100, shooting: 50, finishing: 82, handles: 54, passing: 60, defense: 88, rebounding: 86, athleticism: 88, iq: 74 }),
+      player("Baron Davis", 6, 3, 1, { height: 74, shooting: 78, finishing: 84, handles: 92, passing: 90, defense: 80, rebounding: 62, athleticism: 90, iq: 82 }),
+      player("Peja Stojakovic", 6, 10, 16, { height: 94, shooting: 92, finishing: 78, handles: 72, passing: 72, defense: 66, rebounding: 70, athleticism: 64, iq: 84 }),
+      player("Tyson Chandler", 7, 1, 6, { height: 100, shooting: 50, finishing: 82, handles: 54, passing: 60, defense: 90, rebounding: 86, athleticism: 88, iq: 74 }),
       player("Jamal Mashburn", 6, 8, 24, { height: 86, shooting: 82, finishing: 86, handles: 82, passing: 80, defense: 72, rebounding: 72, athleticism: 78, iq: 82 }),
       player("Jamaal Magloire", 6, 11, 21, { height: 96, shooting: 60, finishing: 80, handles: 56, passing: 62, defense: 82, rebounding: 84, athleticism: 78, iq: 72 }),
       player("P.J. Brown", 6, 11, 42, { height: 96, shooting: 72, finishing: 80, handles: 64, passing: 70, defense: 86, rebounding: 82, athleticism: 80, iq: 78 }),
@@ -1689,12 +1689,12 @@ const teamEras = [
     note: "Carmelo's scoring and a 2009 conference finals run, supercharged when Chauncey Billups came home; Camby and Nene anchored the paint.",
     players: [
       player("Carmelo Anthony", 6, 7, 15, { height: 84, shooting: 88, finishing: 90, handles: 84, passing: 76, defense: 72, rebounding: 74, athleticism: 84, iq: 80 }),
-      player("Allen Iverson", 6, 0, 3, { height: 66, shooting: 82, finishing: 86, handles: 100, passing: 84, defense: 78, rebounding: 54, athleticism: 92, iq: 82 }),
+      player("Allen Iverson", 6, 0, 3, { height: 66, shooting: 82, finishing: 86, handles: 100, passing: 84, defense: 72, rebounding: 54, athleticism: 92, iq: 82 }),
       player("Chauncey Billups", 6, 3, 1, { height: 74, shooting: 84, finishing: 82, handles: 86, passing: 84, defense: 82, rebounding: 58, athleticism: 80, iq: 90 }),
       player("Marcus Camby", 6, 11, 23, { height: 96, shooting: 58, finishing: 78, handles: 60, passing: 70, defense: 92, rebounding: 90, athleticism: 86, iq: 72 }),
       player("Nene", 6, 11, 31, { height: 96, shooting: 64, finishing: 86, handles: 68, passing: 70, defense: 80, rebounding: 80, athleticism: 86, iq: 76 }),
       player("Kenyon Martin", 6, 9, 4, { height: 90, shooting: 64, finishing: 84, handles: 68, passing: 70, defense: 84, rebounding: 80, athleticism: 90, iq: 78 }),
-      player("J.R. Smith", 6, 6, 1, { height: 82, shooting: 84, finishing: 84, handles: 82, passing: 72, defense: 72, rebounding: 60, athleticism: 88, iq: 74 }),
+      player("J.R. Smith", 6, 6, 1, { height: 82, shooting: 84, finishing: 84, handles: 82, passing: 72, defense: 72, rebounding: 60, athleticism: 82, iq: 74 }),
       player("Andre Miller", 6, 2, 24, { height: 71, shooting: 74, finishing: 84, handles: 90, passing: 90, defense: 78, rebounding: 64, athleticism: 80, iq: 88 }),
       player("Earl Boykins", 5, 5, 11, { height: 52, shooting: 80, finishing: 78, handles: 88, passing: 84, defense: 64, rebounding: 42, athleticism: 80, iq: 80 }),
       player("Linas Kleiza", 6, 8, 44, { height: 86, shooting: 80, finishing: 82, handles: 72, passing: 68, defense: 70, rebounding: 70, athleticism: 78, iq: 76 }),
@@ -1711,14 +1711,14 @@ const teamEras = [
     note: "James Harden scored 60 points while barely leaving the three-point line. Nobody solved the step-back.",
     players: [
       player("James Harden", 6, 5, 13, { height: 80, shooting: 94, finishing: 88, handles: 96, passing: 92, defense: 68, rebounding: 74, athleticism: 82, iq: 94 }),
-      player("Chris Paul", 6, 0, 3, { height: 67, shooting: 86, finishing: 82, handles: 98, passing: 99, defense: 90, rebounding: 60, athleticism: 82, iq: 98 }),
+      player("Chris Paul", 6, 0, 3, { height: 67, shooting: 86, finishing: 76, handles: 93, passing: 99, defense: 85, rebounding: 60, athleticism: 82, iq: 98 }),
       player("Clint Capela", 6, 10, 15, { height: 94, shooting: 62, finishing: 84, handles: 54, passing: 58, defense: 88, rebounding: 96, athleticism: 90, iq: 70 }),
       player("Eric Gordon", 6, 4, 10, { height: 77, shooting: 88, finishing: 82, handles: 78, passing: 70, defense: 72, rebounding: 54, athleticism: 80, iq: 84 }),
       player("Trevor Ariza", 6, 8, 1, { height: 88, shooting: 80, finishing: 76, handles: 72, passing: 72, defense: 84, rebounding: 68, athleticism: 82, iq: 74 }),
       player("PJ Tucker", 6, 5, 17, { height: 80, shooting: 78, finishing: 74, handles: 66, passing: 66, defense: 88, rebounding: 76, athleticism: 80, iq: 76 }),
       player("Russell Westbrook", 6, 3, 0, { height: 74, shooting: 78, finishing: 88, handles: 92, passing: 86, defense: 82, rebounding: 82, athleticism: 98, iq: 78 }),
       player("Ryan Anderson", 6, 10, 33, { height: 94, shooting: 86, finishing: 72, handles: 64, passing: 66, defense: 64, rebounding: 78, athleticism: 68, iq: 74 }),
-      player("Dwight Howard", 6, 11, 12, { height: 96, shooting: 54, finishing: 86, handles: 58, passing: 62, defense: 88, rebounding: 90, athleticism: 88, iq: 74 }),
+      player("Dwight Howard", 6, 11, 12, { height: 96, shooting: 54, finishing: 86, handles: 58, passing: 62, defense: 90, rebounding: 90, athleticism: 88, iq: 74 }),
       player("Chandler Parsons", 6, 10, 25, { height: 94, shooting: 82, finishing: 82, handles: 78, passing: 76, defense: 70, rebounding: 70, athleticism: 78, iq: 78 }),
       player("Jeremy Lin", 6, 3, 7, { height: 74, shooting: 76, finishing: 82, handles: 84, passing: 80, defense: 72, rebounding: 56, athleticism: 82, iq: 80 }),
       player("Patrick Beverley", 6, 1, 2, { height: 68, shooting: 74, finishing: 74, handles: 78, passing: 72, defense: 90, rebounding: 58, athleticism: 82, iq: 74 }),
@@ -1754,7 +1754,7 @@ const teamEras = [
     team: "Mavericks",
     note: "The 2011 champions who toppled the Heat — Dirk's unstoppable fadeaway, Kidd's command, and Jason Terry off the bench; later, a teenage Luka.",
     players: [
-      player("Dirk Nowitzki", 7, 0, 41, { height: 98, shooting: 88, finishing: 84, handles: 78, passing: 76, defense: 68, rebounding: 78, athleticism: 70, iq: 88 }),
+      player("Dirk Nowitzki", 7, 0, 41, { height: 98, shooting: 90, finishing: 84, handles: 78, passing: 76, defense: 68, rebounding: 78, athleticism: 70, iq: 88 }),
       player("Luka Doncic", 6, 7, 77, { height: 84, shooting: 80, finishing: 86, handles: 90, passing: 90, defense: 70, rebounding: 74, athleticism: 80, iq: 86 }),
       player("Jason Kidd", 6, 4, 2, { height: 77, shooting: 78, finishing: 76, handles: 90, passing: 94, defense: 82, rebounding: 70, athleticism: 74, iq: 95 }),
       player("Jason Terry", 6, 2, 31, { height: 71, shooting: 86, finishing: 82, handles: 84, passing: 78, defense: 70, rebounding: 54, athleticism: 80, iq: 88 }),
@@ -1780,9 +1780,9 @@ const teamEras = [
       player("Pau Gasol", 7, 0, 16, { height: 98, shooting: 80, finishing: 86, handles: 68, passing: 82, defense: 80, rebounding: 86, athleticism: 70, iq: 82 }),
       player("Andrew Bynum", 7, 0, 17, { height: 98, shooting: 58, finishing: 88, handles: 54, passing: 62, defense: 84, rebounding: 88, athleticism: 74, iq: 76 }),
       player("Lamar Odom", 6, 10, 7, { height: 94, shooting: 74, finishing: 84, handles: 84, passing: 84, defense: 78, rebounding: 84, athleticism: 82, iq: 78 }),
-      player("Metta World Peace", 6, 7, 15, { height: 84, shooting: 72, finishing: 78, handles: 74, passing: 72, defense: 88, rebounding: 66, athleticism: 80, iq: 78 }),
-      player("Steve Nash", 6, 3, 10, { height: 74, shooting: 82, finishing: 78, handles: 88, passing: 90, defense: 60, rebounding: 52, athleticism: 68, iq: 97 }),
-      player("Dwight Howard", 6, 11, 12, { height: 96, shooting: 54, finishing: 86, handles: 58, passing: 62, defense: 88, rebounding: 90, athleticism: 90, iq: 74 }),
+      player("Metta World Peace", 6, 7, 15, { height: 84, shooting: 72, finishing: 78, handles: 74, passing: 72, defense: 90, rebounding: 66, athleticism: 80, iq: 78 }),
+      player("Steve Nash", 6, 3, 10, { height: 74, shooting: 82, finishing: 78, handles: 90, passing: 90, defense: 60, rebounding: 52, athleticism: 68, iq: 97 }),
+      player("Dwight Howard", 6, 11, 12, { height: 96, shooting: 54, finishing: 86, handles: 58, passing: 62, defense: 90, rebounding: 90, athleticism: 90, iq: 74 }),
       player("Derek Fisher", 6, 1, 2, { height: 68, shooting: 80, finishing: 74, handles: 80, passing: 78, defense: 78, rebounding: 52, athleticism: 72, iq: 86 }),
       player("Nick Young", 6, 7, 0, { height: 84, shooting: 82, finishing: 80, handles: 76, passing: 64, defense: 62, rebounding: 54, athleticism: 82, iq: 70 }),
       player("Jordan Clarkson", 6, 5, 6, { height: 80, shooting: 80, finishing: 82, handles: 84, passing: 72, defense: 66, rebounding: 56, athleticism: 84, iq: 78 }),
@@ -1800,7 +1800,7 @@ const teamEras = [
     players: [
       player("Paul Pierce", 6, 7, 34, { height: 84, shooting: 86, finishing: 86, handles: 82, passing: 80, defense: 78, rebounding: 66, athleticism: 78, iq: 90 }),
       player("Kevin Garnett", 6, 11, 5, { height: 96, shooting: 80, finishing: 84, handles: 72, passing: 80, defense: 92, rebounding: 86, athleticism: 80, iq: 94 }),
-      player("Kyrie Irving", 6, 2, 11, { height: 71, shooting: 88, finishing: 92, handles: 96, passing: 80, defense: 70, rebounding: 56, athleticism: 86, iq: 88 }),
+      player("Kyrie Irving", 6, 2, 11, { height: 71, shooting: 90, finishing: 92, handles: 96, passing: 80, defense: 70, rebounding: 56, athleticism: 86, iq: 88 }),
       player("Rajon Rondo", 6, 1, 9, { height: 68, shooting: 62, finishing: 82, handles: 94, passing: 96, defense: 88, rebounding: 68, athleticism: 88, iq: 94 }),
       player("Jayson Tatum", 6, 8, 0, { height: 86, shooting: 82, finishing: 84, handles: 80, passing: 72, defense: 80, rebounding: 70, athleticism: 84, iq: 82 }),
       player("Al Horford", 6, 10, 42, { height: 94, shooting: 80, finishing: 82, handles: 72, passing: 82, defense: 84, rebounding: 80, athleticism: 78, iq: 87 }),
@@ -1820,7 +1820,7 @@ const teamEras = [
     team: "Trail Blazers",
     note: "Lillard and McCollum's backcourt fireworks, built first around LaMarcus Aldridge and later anchored by Jusuf Nurkic.",
     players: [
-      player("Damian Lillard", 6, 2, 0, { height: 71, shooting: 92, finishing: 84, handles: 90, passing: 82, defense: 70, rebounding: 56, athleticism: 84, iq: 92 }),
+      player("Damian Lillard", 6, 2, 0, { height: 71, shooting: 88, finishing: 84, handles: 86, passing: 82, defense: 70, rebounding: 56, athleticism: 84, iq: 92 }),
       player("LaMarcus Aldridge", 6, 11, 12, { height: 96, shooting: 84, finishing: 86, handles: 72, passing: 72, defense: 80, rebounding: 84, athleticism: 78, iq: 84 }),
       player("CJ McCollum", 6, 3, 3, { height: 74, shooting: 86, finishing: 84, handles: 86, passing: 74, defense: 68, rebounding: 58, athleticism: 80, iq: 84 }),
       player("Nicolas Batum", 6, 8, 88, { height: 86, shooting: 80, finishing: 80, handles: 78, passing: 80, defense: 82, rebounding: 68, athleticism: 82, iq: 78 }),
@@ -1846,7 +1846,7 @@ const teamEras = [
       player("Paul Millsap", 6, 8, 4, { height: 86, shooting: 78, finishing: 84, handles: 74, passing: 76, defense: 86, rebounding: 80, athleticism: 80, iq: 80 }),
       player("Jeff Teague", 6, 2, 0, { height: 71, shooting: 78, finishing: 82, handles: 88, passing: 84, defense: 78, rebounding: 54, athleticism: 86, iq: 80 }),
       player("Joe Johnson", 6, 7, 2, { height: 84, shooting: 84, finishing: 84, handles: 82, passing: 78, defense: 74, rebounding: 64, athleticism: 80, iq: 86 }),
-      player("Trae Young", 6, 1, 11, { height: 68, shooting: 88, finishing: 82, handles: 90, passing: 90, defense: 58, rebounding: 54, athleticism: 78, iq: 84 }),
+      player("Trae Young", 6, 1, 11, { height: 68, shooting: 90, finishing: 82, handles: 90, passing: 90, defense: 58, rebounding: 54, athleticism: 78, iq: 84 }),
       player("Josh Smith", 6, 9, 5, { height: 90, shooting: 66, finishing: 84, handles: 76, passing: 78, defense: 88, rebounding: 82, athleticism: 90, iq: 70 }),
       player("Kyle Korver", 6, 7, 26, { height: 84, shooting: 94, finishing: 72, handles: 72, passing: 72, defense: 72, rebounding: 56, athleticism: 68, iq: 84 }),
       player("John Collins", 6, 9, 20, { height: 90, shooting: 74, finishing: 86, handles: 68, passing: 66, defense: 70, rebounding: 82, athleticism: 90, iq: 76 }),
@@ -1867,11 +1867,11 @@ const teamEras = [
       player("Joel Embiid", 7, 0, 21, { height: 98, shooting: 80, finishing: 88, handles: 68, passing: 72, defense: 94, rebounding: 88, athleticism: 84, iq: 82 }),
       player("Ben Simmons", 6, 10, 25, { height: 94, shooting: 54, finishing: 86, handles: 84, passing: 90, defense: 86, rebounding: 80, athleticism: 90, iq: 84 }),
       player("Jimmy Butler", 6, 7, 23, { height: 84, shooting: 78, finishing: 84, handles: 80, passing: 74, defense: 90, rebounding: 68, athleticism: 84, iq: 91 }),
-      player("Jrue Holiday", 6, 4, 11, { height: 77, shooting: 78, finishing: 82, handles: 88, passing: 84, defense: 86, rebounding: 60, athleticism: 84, iq: 90 }),
+      player("Jrue Holiday", 6, 4, 11, { height: 77, shooting: 78, finishing: 82, handles: 83, passing: 84, defense: 86, rebounding: 60, athleticism: 84, iq: 90 }),
       player("Tobias Harris", 6, 8, 12, { height: 86, shooting: 82, finishing: 84, handles: 78, passing: 72, defense: 72, rebounding: 74, athleticism: 78, iq: 80 }),
-      player("JJ Redick", 6, 4, 17, { height: 77, shooting: 97, finishing: 78, handles: 76, passing: 72, defense: 68, rebounding: 54, athleticism: 72, iq: 84 }),
-      player("Andre Iguodala", 6, 6, 9, { height: 82, shooting: 72, finishing: 84, handles: 82, passing: 84, defense: 88, rebounding: 70, athleticism: 90, iq: 78 }),
-      player("Robert Covington", 6, 7, 33, { height: 84, shooting: 80, finishing: 74, handles: 68, passing: 66, defense: 88, rebounding: 66, athleticism: 80, iq: 74 }),
+      player("JJ Redick", 6, 4, 17, { height: 77, shooting: 92, finishing: 78, handles: 76, passing: 72, defense: 68, rebounding: 54, athleticism: 72, iq: 84 }),
+      player("Andre Iguodala", 6, 6, 9, { height: 82, shooting: 72, finishing: 78, handles: 82, passing: 84, defense: 90, rebounding: 70, athleticism: 90, iq: 78 }),
+      player("Robert Covington", 6, 7, 33, { height: 84, shooting: 80, finishing: 74, handles: 68, passing: 66, defense: 90, rebounding: 66, athleticism: 80, iq: 74 }),
       player("Dario Saric", 6, 10, 9, { height: 94, shooting: 78, finishing: 80, handles: 74, passing: 78, defense: 68, rebounding: 76, athleticism: 70, iq: 76 }),
       player("Thaddeus Young", 6, 8, 21, { height: 86, shooting: 74, finishing: 82, handles: 74, passing: 70, defense: 80, rebounding: 74, athleticism: 86, iq: 74 }),
       player("Spencer Hawes", 7, 1, 0, { height: 100, shooting: 78, finishing: 78, handles: 64, passing: 72, defense: 70, rebounding: 76, athleticism: 62, iq: 72 }),
@@ -1908,8 +1908,8 @@ const teamEras = [
     team: "Mavericks",
     note: "Luka does things at 6'7 that shouldn't be possible. Adding Kyrie made the 2024 Finals run feel inevitable.",
     players: [
-      player("Luka Doncic", 6, 7, 77, { height: 84, shooting: 94, finishing: 90, handles: 96, passing: 98, defense: 72, rebounding: 86, athleticism: 82, iq: 96 }),
-      player("Kyrie Irving", 6, 2, 11, { height: 72, shooting: 94, finishing: 98, handles: 98, passing: 86, defense: 76, rebounding: 56, athleticism: 92, iq: 92 }),
+      player("Luka Doncic", 6, 7, 77, { height: 84, shooting: 94, finishing: 83, handles: 96, passing: 98, defense: 66, rebounding: 79, athleticism: 74, iq: 96 }),
+      player("Kyrie Irving", 6, 2, 11, { height: 72, shooting: 94, finishing: 98, handles: 98, passing: 80, defense: 76, rebounding: 56, athleticism: 92, iq: 92 }),
       player("PJ Washington", 6, 8, 25, { height: 88, shooting: 84, finishing: 80, handles: 70, passing: 70, defense: 82, rebounding: 80, athleticism: 80, iq: 78 }),
       player("Daniel Gafford", 6, 11, 12, { height: 96, shooting: 64, finishing: 82, handles: 52, passing: 58, defense: 90, rebounding: 88, athleticism: 90, iq: 70 }),
       player("Derrick Jones Jr.", 6, 7, 55, { height: 84, shooting: 76, finishing: 80, handles: 72, passing: 66, defense: 84, rebounding: 68, athleticism: 94, iq: 72 }),
@@ -1918,10 +1918,10 @@ const teamEras = [
       player("Josh Green", 6, 6, 8, { height: 82, shooting: 78, finishing: 78, handles: 74, passing: 70, defense: 82, rebounding: 64, athleticism: 86, iq: 72 }),
       player("Cooper Flagg", 6, 9, 32, { height: 90, shooting: 78, finishing: 86, handles: 80, passing: 78, defense: 88, rebounding: 78, athleticism: 90, iq: 80 }),
       player("Anthony Davis", 6, 10, 3, { height: 94, shooting: 78, finishing: 88, handles: 70, passing: 74, defense: 92, rebounding: 86, athleticism: 86, iq: 82 }),
-      player("Klay Thompson", 6, 5, 31, { height: 80, shooting: 88, finishing: 78, handles: 72, passing: 66, defense: 74, rebounding: 56, athleticism: 74, iq: 82 }),
+      player("Klay Thompson", 6, 5, 31, { height: 80, shooting: 90, finishing: 78, handles: 72, passing: 66, defense: 74, rebounding: 56, athleticism: 74, iq: 82 }),
       player("Spencer Dinwiddie", 6, 5, 26, { height: 80, shooting: 78, finishing: 82, handles: 86, passing: 80, defense: 68, rebounding: 56, athleticism: 80, iq: 80 }),
       player("Dorian Finney-Smith", 6, 7, 10, { height: 84, shooting: 78, finishing: 76, handles: 68, passing: 66, defense: 86, rebounding: 66, athleticism: 82, iq: 74 }),
-      player("Jalen Brunson", 6, 1, 13, { height: 68, shooting: 80, finishing: 84, handles: 88, passing: 84, defense: 70, rebounding: 54, athleticism: 78, iq: 84 }),
+      player("Jalen Brunson", 6, 1, 13, { height: 68, shooting: 80, finishing: 84, handles: 90, passing: 84, defense: 70, rebounding: 54, athleticism: 78, iq: 84 }),
       player("Reggie Bullock", 6, 6, 25, { height: 82, shooting: 82, finishing: 72, handles: 66, passing: 64, defense: 82, rebounding: 58, athleticism: 76, iq: 76 }),
     ],
   },
@@ -1932,14 +1932,14 @@ const teamEras = [
     players: [
       player("Stephen Curry", 6, 2, 30, { height: 71, shooting: 96, finishing: 84, handles: 94, passing: 88, defense: 70, rebounding: 56, athleticism: 80, iq: 96 }),
       player("Klay Thompson", 6, 5, 11, { height: 80, shooting: 90, finishing: 80, handles: 74, passing: 68, defense: 78, rebounding: 58, athleticism: 78, iq: 82 }),
-      player("Draymond Green", 6, 6, 23, { height: 82, shooting: 62, finishing: 78, handles: 80, passing: 90, defense: 96, rebounding: 80, athleticism: 82, iq: 96 }),
+      player("Draymond Green", 6, 6, 23, { height: 82, shooting: 62, finishing: 78, handles: 80, passing: 90, defense: 96, rebounding: 80, athleticism: 82, iq: 90 }),
       player("Andrew Wiggins", 6, 7, 22, { height: 84, shooting: 80, finishing: 84, handles: 76, passing: 68, defense: 84, rebounding: 66, athleticism: 90, iq: 80 }),
-      player("Jimmy Butler", 6, 7, 10, { height: 84, shooting: 76, finishing: 84, handles: 80, passing: 78, defense: 88, rebounding: 68, athleticism: 80, iq: 91 }),
+      player("Jimmy Butler", 6, 7, 10, { height: 84, shooting: 76, finishing: 84, handles: 80, passing: 78, defense: 90, rebounding: 68, athleticism: 80, iq: 91 }),
       player("Jordan Poole", 6, 4, 3, { height: 77, shooting: 82, finishing: 84, handles: 86, passing: 74, defense: 62, rebounding: 54, athleticism: 84, iq: 80 }),
       player("Jonathan Kuminga", 6, 7, 0, { height: 84, shooting: 70, finishing: 84, handles: 74, passing: 64, defense: 78, rebounding: 68, athleticism: 94, iq: 74 }),
       player("Kevon Looney", 6, 9, 5, { height: 90, shooting: 54, finishing: 78, handles: 58, passing: 72, defense: 80, rebounding: 84, athleticism: 72, iq: 72 }),
       player("Gary Payton II", 6, 2, 0, { height: 71, shooting: 70, finishing: 80, handles: 74, passing: 70, defense: 90, rebounding: 60, athleticism: 90, iq: 72 }),
-      player("Buddy Hield", 6, 4, 7, { height: 77, shooting: 88, finishing: 76, handles: 74, passing: 66, defense: 66, rebounding: 56, athleticism: 76, iq: 80 }),
+      player("Buddy Hield", 6, 4, 7, { height: 77, shooting: 90, finishing: 76, handles: 74, passing: 66, defense: 66, rebounding: 56, athleticism: 76, iq: 80 }),
       player("Brandin Podziemski", 6, 4, 2, { height: 77, shooting: 80, finishing: 78, handles: 78, passing: 78, defense: 78, rebounding: 68, athleticism: 78, iq: 76 }),
       player("Moses Moody", 6, 6, 4, { height: 82, shooting: 80, finishing: 78, handles: 70, passing: 66, defense: 82, rebounding: 60, athleticism: 82, iq: 74 }),
       player("Andre Iguodala", 6, 6, 9, { height: 82, shooting: 68, finishing: 76, handles: 78, passing: 82, defense: 84, rebounding: 64, athleticism: 76, iq: 78 }),
@@ -1953,7 +1953,7 @@ const teamEras = [
     note: "LeBron and AD's 2020 bubble title, then a reload that paired LeBron with a traded-in Luka Doncic.",
     players: [
       player("LeBron James", 6, 9, 23, { height: 90, shooting: 80, finishing: 90, handles: 90, passing: 92, defense: 82, rebounding: 80, athleticism: 88, iq: 90 }),
-      player("Anthony Davis", 6, 10, 3, { height: 94, shooting: 80, finishing: 90, handles: 72, passing: 74, defense: 94, rebounding: 88, athleticism: 88, iq: 84 }),
+      player("Anthony Davis", 6, 10, 3, { height: 94, shooting: 80, finishing: 90, handles: 72, passing: 74, defense: 94, rebounding: 88, athleticism: 90, iq: 84 }),
       player("Luka Doncic", 6, 7, 77, { height: 84, shooting: 82, finishing: 88, handles: 92, passing: 97, defense: 70, rebounding: 78, athleticism: 80, iq: 88 }),
       player("Austin Reaves", 6, 5, 15, { height: 80, shooting: 82, finishing: 82, handles: 84, passing: 80, defense: 72, rebounding: 60, athleticism: 76, iq: 82 }),
       player("Rui Hachimura", 6, 8, 28, { height: 86, shooting: 80, finishing: 84, handles: 72, passing: 66, defense: 74, rebounding: 70, athleticism: 82, iq: 76 }),
@@ -1996,7 +1996,7 @@ const teamEras = [
     team: "Timberwolves",
     note: "Anthony Edwards' ascent to superstardom and a 2024 conference finals run anchored by Gobert's defense.",
     players: [
-      player("Anthony Edwards", 6, 4, 5, { height: 77, shooting: 87, finishing: 88, handles: 84, passing: 74, defense: 82, rebounding: 66, athleticism: 94, iq: 80 }),
+      player("Anthony Edwards", 6, 4, 5, { height: 77, shooting: 87, finishing: 90, handles: 84, passing: 74, defense: 82, rebounding: 66, athleticism: 94, iq: 80 }),
       player("Karl-Anthony Towns", 7, 0, 32, { height: 98, shooting: 90, finishing: 88, handles: 74, passing: 74, defense: 80, rebounding: 86, athleticism: 80, iq: 80 }),
       player("Rudy Gobert", 7, 1, 27, { height: 100, shooting: 54, finishing: 84, handles: 54, passing: 62, defense: 98, rebounding: 92, athleticism: 82, iq: 74 }),
       player("Mike Conley", 6, 1, 10, { height: 68, shooting: 80, finishing: 78, handles: 88, passing: 88, defense: 78, rebounding: 54, athleticism: 74, iq: 90 }),
@@ -2020,7 +2020,7 @@ const teamEras = [
     players: [
       player("Joel Embiid", 7, 0, 21, { height: 98, shooting: 86, finishing: 90, handles: 74, passing: 78, defense: 94, rebounding: 88, athleticism: 82, iq: 84 }),
       player("Tyrese Maxey", 6, 2, 0, { height: 71, shooting: 84, finishing: 86, handles: 90, passing: 80, defense: 74, rebounding: 54, athleticism: 88, iq: 84 }),
-      player("James Harden", 6, 5, 1, { height: 80, shooting: 82, finishing: 84, handles: 92, passing: 92, defense: 68, rebounding: 64, athleticism: 78, iq: 84 }),
+      player("James Harden", 6, 5, 1, { height: 80, shooting: 82, finishing: 84, handles: 87, passing: 92, defense: 68, rebounding: 64, athleticism: 78, iq: 84 }),
       player("Paul George", 6, 8, 8, { height: 86, shooting: 82, finishing: 82, handles: 80, passing: 74, defense: 84, rebounding: 68, athleticism: 80, iq: 82 }),
       player("Tobias Harris", 6, 8, 12, { height: 86, shooting: 80, finishing: 84, handles: 78, passing: 72, defense: 74, rebounding: 74, athleticism: 76, iq: 78 }),
       player("Ben Simmons", 6, 10, 25, { height: 94, shooting: 54, finishing: 86, handles: 84, passing: 90, defense: 88, rebounding: 80, athleticism: 90, iq: 84 }),
@@ -2065,7 +2065,7 @@ const teamEras = [
       player("Jalen Brunson", 6, 1, 11, { height: 68, shooting: 84, finishing: 88, handles: 90, passing: 84, defense: 70, rebounding: 54, athleticism: 78, iq: 90 }),
       player("Karl-Anthony Towns", 7, 0, 32, { height: 98, shooting: 90, finishing: 88, handles: 74, passing: 74, defense: 78, rebounding: 88, athleticism: 78, iq: 80 }),
       player("Julius Randle", 6, 8, 30, { height: 86, shooting: 78, finishing: 86, handles: 80, passing: 78, defense: 78, rebounding: 84, athleticism: 80, iq: 78 }),
-      player("Mikal Bridges", 6, 6, 25, { height: 82, shooting: 80, finishing: 82, handles: 76, passing: 70, defense: 88, rebounding: 60, athleticism: 86, iq: 80 }),
+      player("Mikal Bridges", 6, 6, 25, { height: 82, shooting: 80, finishing: 82, handles: 76, passing: 70, defense: 90, rebounding: 60, athleticism: 86, iq: 80 }),
       player("OG Anunoby", 6, 7, 8, { height: 84, shooting: 80, finishing: 80, handles: 72, passing: 66, defense: 92, rebounding: 66, athleticism: 88, iq: 78 }),
       player("Josh Hart", 6, 5, 3, { height: 80, shooting: 74, finishing: 80, handles: 76, passing: 78, defense: 84, rebounding: 78, athleticism: 84, iq: 78 }),
       player("RJ Barrett", 6, 6, 9, { height: 82, shooting: 74, finishing: 84, handles: 80, passing: 72, defense: 74, rebounding: 66, athleticism: 82, iq: 78 }),
@@ -2090,11 +2090,11 @@ const teamEras = [
       player("Bennedict Mathurin", 6, 6, 0, { height: 82, shooting: 78, finishing: 86, handles: 78, passing: 68, defense: 72, rebounding: 64, athleticism: 88, iq: 80 }),
       player("Andrew Nembhard", 6, 5, 2, { height: 80, shooting: 78, finishing: 80, handles: 84, passing: 84, defense: 86, rebounding: 58, athleticism: 78, iq: 84 }),
       player("Aaron Nesmith", 6, 7, 23, { height: 84, shooting: 82, finishing: 80, handles: 70, passing: 66, defense: 88, rebounding: 66, athleticism: 86, iq: 80 }),
-      player("Domantas Sabonis", 6, 11, 11, { height: 96, shooting: 74, finishing: 86, handles: 72, passing: 82, defense: 74, rebounding: 88, athleticism: 74, iq: 88 }),
+      player("Domantas Sabonis", 6, 11, 11, { height: 96, shooting: 74, finishing: 86, handles: 72, passing: 82, defense: 74, rebounding: 90, athleticism: 74, iq: 88 }),
       player("Malcolm Brogdon", 6, 5, 7, { height: 80, shooting: 82, finishing: 82, handles: 84, passing: 82, defense: 76, rebounding: 64, athleticism: 74, iq: 82 }),
       player("T.J. McConnell", 6, 1, 9, { height: 68, shooting: 72, finishing: 80, handles: 86, passing: 86, defense: 82, rebounding: 58, athleticism: 74, iq: 86 }),
       player("Obi Toppin", 6, 9, 1, { height: 90, shooting: 78, finishing: 86, handles: 72, passing: 68, defense: 70, rebounding: 72, athleticism: 92, iq: 76 }),
-      player("Buddy Hield", 6, 4, 24, { height: 77, shooting: 88, finishing: 78, handles: 74, passing: 68, defense: 66, rebounding: 58, athleticism: 78, iq: 82 }),
+      player("Buddy Hield", 6, 4, 24, { height: 77, shooting: 90, finishing: 78, handles: 74, passing: 68, defense: 66, rebounding: 58, athleticism: 78, iq: 82 }),
       player("Caris LeVert", 6, 6, 22, { height: 82, shooting: 78, finishing: 82, handles: 84, passing: 78, defense: 74, rebounding: 62, athleticism: 82, iq: 78 }),
       player("Isaiah Jackson", 6, 10, 22, { height: 94, shooting: 54, finishing: 84, handles: 58, passing: 62, defense: 80, rebounding: 78, athleticism: 90, iq: 70 }),
       player("Jalen Smith", 6, 10, 25, { height: 94, shooting: 74, finishing: 82, handles: 62, passing: 64, defense: 74, rebounding: 80, athleticism: 80, iq: 72 }),
@@ -2106,7 +2106,7 @@ const teamEras = [
     team: "Spurs",
     note: "Victor Wembanyama's two-way unicorn era — paired with rookies Dylan Harper and Stephon Castle and a traded-in De'Aaron Fox.",
     players: [
-      player("Victor Wembanyama", 7, 4, 1, { height: 100, shooting: 84, finishing: 88, handles: 74, passing: 78, defense: 98, rebounding: 90, athleticism: 88, iq: 86 }),
+      player("Victor Wembanyama", 7, 4, 1, { height: 100, shooting: 84, finishing: 88, handles: 74, passing: 78, defense: 98, rebounding: 90, athleticism: 90, iq: 86 }),
       player("De'Aaron Fox", 6, 3, 4, { height: 74, shooting: 78, finishing: 88, handles: 92, passing: 84, defense: 78, rebounding: 56, athleticism: 92, iq: 86 }),
       player("Dylan Harper", 6, 6, 2, { height: 82, shooting: 80, finishing: 86, handles: 88, passing: 82, defense: 80, rebounding: 62, athleticism: 86, iq: 80 }),
       player("Stephon Castle", 6, 6, 5, { height: 82, shooting: 74, finishing: 84, handles: 84, passing: 78, defense: 86, rebounding: 62, athleticism: 88, iq: 80 }),
@@ -2150,7 +2150,7 @@ const teamEras = [
     team: "Nuggets",
     note: "George Karl's no-superstar, high-pace 57-win 2013 team — and the early bloom of Jokic and Murray.",
     players: [
-      player("Nikola Jokic", 6, 11, 15, { height: 96, shooting: 80, finishing: 86, handles: 74, passing: 92, defense: 74, rebounding: 88, athleticism: 64, iq: 99 }),
+      player("Nikola Jokic", 6, 11, 15, { height: 96, shooting: 80, finishing: 86, handles: 74, passing: 92, defense: 74, rebounding: 88, athleticism: 58, iq: 99 }),
       player("Carmelo Anthony", 6, 7, 15, { height: 84, shooting: 88, finishing: 90, handles: 84, passing: 76, defense: 72, rebounding: 74, athleticism: 84, iq: 80 }),
       player("Jamal Murray", 6, 4, 27, { height: 77, shooting: 82, finishing: 84, handles: 88, passing: 80, defense: 70, rebounding: 56, athleticism: 82, iq: 84 }),
       player("Ty Lawson", 5, 11, 3, { height: 64, shooting: 80, finishing: 84, handles: 90, passing: 86, defense: 70, rebounding: 52, athleticism: 86, iq: 80 }),
@@ -2158,7 +2158,7 @@ const teamEras = [
       player("Kenneth Faried", 6, 8, 35, { height: 86, shooting: 54, finishing: 84, handles: 60, passing: 62, defense: 74, rebounding: 86, athleticism: 92, iq: 74 }),
       player("Gary Harris", 6, 4, 14, { height: 77, shooting: 80, finishing: 80, handles: 76, passing: 70, defense: 86, rebounding: 56, athleticism: 84, iq: 78 }),
       player("Will Barton", 6, 5, 5, { height: 80, shooting: 80, finishing: 82, handles: 82, passing: 76, defense: 72, rebounding: 66, athleticism: 86, iq: 80 }),
-      player("Andre Iguodala", 6, 6, 9, { height: 82, shooting: 72, finishing: 82, handles: 82, passing: 84, defense: 88, rebounding: 68, athleticism: 90, iq: 78 }),
+      player("Andre Iguodala", 6, 6, 9, { height: 82, shooting: 72, finishing: 82, handles: 82, passing: 84, defense: 90, rebounding: 68, athleticism: 90, iq: 78 }),
       player("Wilson Chandler", 6, 8, 21, { height: 86, shooting: 78, finishing: 80, handles: 74, passing: 68, defense: 76, rebounding: 68, athleticism: 82, iq: 74 }),
       player("Paul Millsap", 6, 7, 4, { height: 84, shooting: 76, finishing: 82, handles: 72, passing: 74, defense: 84, rebounding: 78, athleticism: 76, iq: 78 }),
       player("Nene", 6, 11, 31, { height: 96, shooting: 64, finishing: 86, handles: 68, passing: 70, defense: 80, rebounding: 80, athleticism: 86, iq: 76 }),
@@ -2173,7 +2173,7 @@ const teamEras = [
     note: "Carmelo's scoring title and the 54-win 2013 team, plus the Linsanity spark and a young Porzingis.",
     players: [
       player("Carmelo Anthony", 6, 8, 7, { height: 86, shooting: 88, finishing: 88, handles: 82, passing: 72, defense: 70, rebounding: 74, athleticism: 80, iq: 80 }),
-      player("Amar'e Stoudemire", 6, 10, 1, { height: 94, shooting: 78, finishing: 88, handles: 70, passing: 66, defense: 66, rebounding: 78, athleticism: 84, iq: 78 }),
+      player("Amar'e Stoudemire", 6, 10, 1, { height: 94, shooting: 78, finishing: 90, handles: 70, passing: 66, defense: 66, rebounding: 78, athleticism: 84, iq: 78 }),
       player("Kristaps Porzingis", 7, 3, 6, { height: 100, shooting: 82, finishing: 84, handles: 68, passing: 64, defense: 84, rebounding: 78, athleticism: 78, iq: 78 }),
       player("Tyson Chandler", 7, 1, 6, { height: 100, shooting: 50, finishing: 84, handles: 54, passing: 60, defense: 90, rebounding: 88, athleticism: 84, iq: 76 }),
       player("J.R. Smith", 6, 6, 8, { height: 82, shooting: 82, finishing: 82, handles: 82, passing: 70, defense: 70, rebounding: 60, athleticism: 86, iq: 74 }),
@@ -2240,7 +2240,7 @@ const teamEras = [
     players: [
       player("Anthony Davis", 6, 10, 23, { height: 94, shooting: 74, finishing: 88, handles: 70, passing: 70, defense: 92, rebounding: 88, athleticism: 90, iq: 82 }),
       player("DeMarcus Cousins", 6, 11, 0, { height: 96, shooting: 74, finishing: 88, handles: 74, passing: 78, defense: 78, rebounding: 88, athleticism: 80, iq: 80 }),
-      player("Jrue Holiday", 6, 4, 11, { height: 77, shooting: 78, finishing: 82, handles: 88, passing: 84, defense: 88, rebounding: 60, athleticism: 84, iq: 90 }),
+      player("Jrue Holiday", 6, 4, 11, { height: 77, shooting: 78, finishing: 82, handles: 83, passing: 84, defense: 90, rebounding: 60, athleticism: 84, iq: 90 }),
       player("Eric Gordon", 6, 4, 10, { height: 77, shooting: 82, finishing: 82, handles: 80, passing: 72, defense: 74, rebounding: 56, athleticism: 82, iq: 80 }),
       player("Tyreke Evans", 6, 6, 1, { height: 82, shooting: 74, finishing: 86, handles: 88, passing: 80, defense: 72, rebounding: 66, athleticism: 86, iq: 80 }),
       player("Ryan Anderson", 6, 10, 33, { height: 94, shooting: 86, finishing: 72, handles: 64, passing: 64, defense: 62, rebounding: 78, athleticism: 68, iq: 78 }),
@@ -2263,7 +2263,7 @@ const teamEras = [
       player("Zion Williamson", 6, 6, 1, { height: 82, shooting: 70, finishing: 92, handles: 80, passing: 74, defense: 74, rebounding: 78, athleticism: 96, iq: 76 }),
       player("Brandon Ingram", 6, 8, 14, { height: 86, shooting: 80, finishing: 86, handles: 84, passing: 78, defense: 72, rebounding: 64, athleticism: 82, iq: 82 }),
       player("CJ McCollum", 6, 3, 3, { height: 74, shooting: 86, finishing: 84, handles: 86, passing: 76, defense: 66, rebounding: 58, athleticism: 78, iq: 84 }),
-      player("Jrue Holiday", 6, 4, 11, { height: 77, shooting: 78, finishing: 82, handles: 88, passing: 84, defense: 88, rebounding: 60, athleticism: 84, iq: 90 }),
+      player("Jrue Holiday", 6, 4, 11, { height: 77, shooting: 78, finishing: 82, handles: 83, passing: 84, defense: 90, rebounding: 60, athleticism: 84, iq: 90 }),
       player("Herbert Jones", 6, 7, 5, { height: 84, shooting: 74, finishing: 78, handles: 70, passing: 70, defense: 92, rebounding: 64, athleticism: 86, iq: 74 }),
       player("Trey Murphy III", 6, 8, 25, { height: 86, shooting: 84, finishing: 82, handles: 72, passing: 66, defense: 78, rebounding: 62, athleticism: 88, iq: 78 }),
       player("Jonas Valanciunas", 6, 11, 17, { height: 96, shooting: 64, finishing: 86, handles: 60, passing: 66, defense: 74, rebounding: 88, athleticism: 68, iq: 76 }),
@@ -2288,7 +2288,7 @@ const teamEras = [
       player("Tyrese Haliburton", 6, 5, 0, { height: 80, shooting: 82, finishing: 80, handles: 90, passing: 92, defense: 72, rebounding: 56, athleticism: 82, iq: 94 }),
       player("Malik Monk", 6, 3, 0, { height: 74, shooting: 82, finishing: 84, handles: 84, passing: 76, defense: 66, rebounding: 54, athleticism: 88, iq: 82 }),
       player("Keegan Murray", 6, 8, 13, { height: 86, shooting: 82, finishing: 80, handles: 70, passing: 66, defense: 80, rebounding: 70, athleticism: 84, iq: 76 }),
-      player("Buddy Hield", 6, 4, 24, { height: 77, shooting: 88, finishing: 78, handles: 74, passing: 68, defense: 64, rebounding: 58, athleticism: 78, iq: 82 }),
+      player("Buddy Hield", 6, 4, 24, { height: 77, shooting: 90, finishing: 78, handles: 74, passing: 68, defense: 64, rebounding: 58, athleticism: 78, iq: 82 }),
       player("Harrison Barnes", 6, 8, 40, { height: 86, shooting: 82, finishing: 80, handles: 74, passing: 66, defense: 74, rebounding: 66, athleticism: 76, iq: 82 }),
       player("Zach LaVine", 6, 5, 8, { height: 80, shooting: 88, finishing: 86, handles: 82, passing: 72, defense: 64, rebounding: 56, athleticism: 90, iq: 80 }),
       player("Kevin Huerter", 6, 7, 9, { height: 84, shooting: 84, finishing: 78, handles: 74, passing: 74, defense: 70, rebounding: 60, athleticism: 78, iq: 78 }),
@@ -2339,7 +2339,7 @@ const teamEras = [
       player("Santi Aldama", 6, 11, 7, { height: 96, shooting: 78, finishing: 78, handles: 68, passing: 70, defense: 78, rebounding: 74, athleticism: 76, iq: 74 }),
       player("Xavier Tillman", 6, 8, 2, { height: 86, shooting: 66, finishing: 78, handles: 66, passing: 72, defense: 84, rebounding: 74, athleticism: 78, iq: 72 }),
       player("Kyle Anderson", 6, 9, 1, { height: 90, shooting: 72, finishing: 78, handles: 78, passing: 82, defense: 82, rebounding: 74, athleticism: 64, iq: 74 }),
-      player("Luke Kennard", 6, 5, 10, { height: 80, shooting: 88, finishing: 74, handles: 72, passing: 72, defense: 64, rebounding: 54, athleticism: 68, iq: 80 }),
+      player("Luke Kennard", 6, 5, 10, { height: 80, shooting: 90, finishing: 74, handles: 72, passing: 72, defense: 64, rebounding: 54, athleticism: 68, iq: 80 }),
       player("Ziaire Williams", 6, 9, 8, { height: 90, shooting: 74, finishing: 78, handles: 72, passing: 66, defense: 76, rebounding: 60, athleticism: 84, iq: 72 }),
     ],
   },
@@ -2348,7 +2348,7 @@ const teamEras = [
     team: "Clippers",
     note: "A star-laden contender built on Kawhi Leonard and Paul George, later reloaded with James Harden.",
     players: [
-      player("Kawhi Leonard", 6, 7, 2, { height: 84, shooting: 84, finishing: 88, handles: 82, passing: 74, defense: 94, rebounding: 74, athleticism: 84, iq: 90 }),
+      player("Kawhi Leonard", 6, 7, 2, { height: 84, shooting: 84, finishing: 90, handles: 82, passing: 74, defense: 94, rebounding: 74, athleticism: 84, iq: 90 }),
       player("Paul George", 6, 8, 13, { height: 86, shooting: 84, finishing: 84, handles: 82, passing: 76, defense: 86, rebounding: 68, athleticism: 84, iq: 82 }),
       player("James Harden", 6, 5, 1, { height: 80, shooting: 82, finishing: 82, handles: 90, passing: 92, defense: 68, rebounding: 64, athleticism: 74, iq: 82 }),
       player("Norman Powell", 6, 3, 24, { height: 74, shooting: 84, finishing: 84, handles: 78, passing: 68, defense: 76, rebounding: 56, athleticism: 84, iq: 82 }),
@@ -2458,8 +2458,8 @@ const teamEras = [
     team: "Knicks",
     note: "Bernard King's scoring explosion gave way to a young Patrick Ewing — a bridge from the early '80s to the Garden's revival.",
     players: [
-      player("Bernard King", 6, 7, 30, { height: 84, shooting: 86, finishing: 94, handles: 82, passing: 72, defense: 72, rebounding: 70, athleticism: 88, iq: 82 }),
-      player("Patrick Ewing", 7, 0, 33, { height: 98, shooting: 74, finishing: 88, handles: 64, passing: 66, defense: 88, rebounding: 86, athleticism: 84, iq: 82 }),
+      player("Bernard King", 6, 7, 30, { height: 84, shooting: 86, finishing: 94, handles: 82, passing: 72, defense: 72, rebounding: 70, athleticism: 90, iq: 82 }),
+      player("Patrick Ewing", 7, 0, 33, { height: 98, shooting: 74, finishing: 88, handles: 64, passing: 66, defense: 90, rebounding: 86, athleticism: 84, iq: 82 }),
       player("Bill Cartwright", 7, 1, 25, { height: 100, shooting: 74, finishing: 84, handles: 60, passing: 68, defense: 80, rebounding: 82, athleticism: 68, iq: 80 }),
       player("Micheal Ray Richardson", 6, 5, 20, { height: 80, shooting: 74, finishing: 82, handles: 88, passing: 88, defense: 88, rebounding: 66, athleticism: 86, iq: 78 }),
       player("Mark Jackson", 6, 3, 13, { height: 74, shooting: 74, finishing: 80, handles: 88, passing: 90, defense: 74, rebounding: 62, athleticism: 78, iq: 88 }),
@@ -2469,7 +2469,7 @@ const teamEras = [
       player("Rory Sparrow", 6, 2, 2, { height: 71, shooting: 78, finishing: 78, handles: 84, passing: 84, defense: 80, rebounding: 54, athleticism: 80, iq: 78 }),
       player("Trent Tucker", 6, 5, 6, { height: 80, shooting: 86, finishing: 76, handles: 74, passing: 70, defense: 74, rebounding: 58, athleticism: 78, iq: 80 }),
       player("Louis Orr", 6, 8, 55, { height: 86, shooting: 74, finishing: 78, handles: 70, passing: 70, defense: 78, rebounding: 68, athleticism: 78, iq: 74 }),
-      player("Rod Strickland", 6, 3, 2, { height: 74, shooting: 74, finishing: 84, handles: 90, passing: 88, defense: 76, rebounding: 58, athleticism: 86, iq: 80 }),
+      player("Rod Strickland", 6, 3, 2, { height: 74, shooting: 74, finishing: 84, handles: 90, passing: 90, defense: 76, rebounding: 58, athleticism: 86, iq: 80 }),
       player("Sly Williams", 6, 7, 21, { height: 84, shooting: 76, finishing: 82, handles: 74, passing: 70, defense: 76, rebounding: 70, athleticism: 82, iq: 74 }),
       player("Johnny Newman", 6, 7, 25, { height: 84, shooting: 80, finishing: 82, handles: 74, passing: 68, defense: 76, rebounding: 60, athleticism: 84, iq: 78 }),
       player("Ken Bannister", 6, 9, 20, { height: 90, shooting: 62, finishing: 78, handles: 60, passing: 62, defense: 76, rebounding: 78, athleticism: 78, iq: 70 }),
@@ -2506,7 +2506,7 @@ const teamEras = [
       player("Purvis Short", 6, 7, 25, { height: 84, shooting: 84, finishing: 86, handles: 80, passing: 72, defense: 70, rebounding: 66, athleticism: 82, iq: 84 }),
       player("Sleepy Floyd", 6, 3, 21, { height: 74, shooting: 82, finishing: 84, handles: 88, passing: 86, defense: 78, rebounding: 56, athleticism: 84, iq: 86 }),
       player("World B. Free", 6, 2, 21, { height: 71, shooting: 84, finishing: 86, handles: 86, passing: 74, defense: 68, rebounding: 54, athleticism: 84, iq: 84 }),
-      player("Bernard King", 6, 7, 30, { height: 84, shooting: 84, finishing: 94, handles: 80, passing: 72, defense: 70, rebounding: 70, athleticism: 88, iq: 82 }),
+      player("Bernard King", 6, 7, 30, { height: 84, shooting: 84, finishing: 94, handles: 80, passing: 72, defense: 70, rebounding: 70, athleticism: 90, iq: 82 }),
       player("Joe Barry Carroll", 7, 0, 2, { height: 98, shooting: 74, finishing: 84, handles: 64, passing: 66, defense: 78, rebounding: 80, athleticism: 74, iq: 76 }),
       player("Larry Smith", 6, 8, 13, { height: 86, shooting: 54, finishing: 78, handles: 58, passing: 62, defense: 82, rebounding: 88, athleticism: 84, iq: 70 }),
       player("Ralph Sampson", 7, 4, 50, { height: 100, shooting: 74, finishing: 80, handles: 70, passing: 72, defense: 80, rebounding: 80, athleticism: 74, iq: 72 }),
@@ -2524,10 +2524,10 @@ const teamEras = [
     team: "Warriors",
     note: "Run TMC — Tim Hardaway, Mitch Richmond, and Chris Mullin firing up Don Nelson's track-meet offense, later sparked by Latrell Sprewell.",
     players: [
-      player("Tim Hardaway", 6, 0, 10, { height: 66, shooting: 82, finishing: 84, handles: 96, passing: 88, defense: 78, rebounding: 52, athleticism: 88, iq: 86 }),
+      player("Tim Hardaway", 6, 0, 10, { height: 66, shooting: 82, finishing: 84, handles: 96, passing: 90, defense: 78, rebounding: 52, athleticism: 88, iq: 86 }),
       player("Chris Mullin", 6, 7, 17, { height: 84, shooting: 92, finishing: 84, handles: 82, passing: 82, defense: 74, rebounding: 64, athleticism: 74, iq: 86 }),
-      player("Mitch Richmond", 6, 5, 23, { height: 80, shooting: 88, finishing: 86, handles: 82, passing: 74, defense: 78, rebounding: 64, athleticism: 86, iq: 84 }),
-      player("Latrell Sprewell", 6, 5, 15, { height: 80, shooting: 80, finishing: 86, handles: 86, passing: 78, defense: 82, rebounding: 62, athleticism: 90, iq: 78 }),
+      player("Mitch Richmond", 6, 5, 23, { height: 80, shooting: 90, finishing: 86, handles: 82, passing: 74, defense: 78, rebounding: 64, athleticism: 86, iq: 84 }),
+      player("Latrell Sprewell", 6, 5, 15, { height: 80, shooting: 80, finishing: 86, handles: 80, passing: 78, defense: 82, rebounding: 62, athleticism: 84, iq: 78 }),
       player("Chris Webber", 6, 10, 4, { height: 94, shooting: 78, finishing: 88, handles: 82, passing: 84, defense: 80, rebounding: 88, athleticism: 88, iq: 78 }),
       player("Sarunas Marciulionis", 6, 5, 13, { height: 80, shooting: 80, finishing: 84, handles: 82, passing: 74, defense: 70, rebounding: 54, athleticism: 82, iq: 80 }),
       player("Billy Owens", 6, 9, 30, { height: 90, shooting: 74, finishing: 84, handles: 80, passing: 80, defense: 74, rebounding: 76, athleticism: 82, iq: 76 }),
@@ -2547,7 +2547,7 @@ const teamEras = [
     note: "Dikembe Mutombo's wagging finger and Mahmoud Abdul-Rauf's shotmaking — the 1994 Nuggets were the first 8-seed to topple a 1-seed.",
     players: [
       player("Dikembe Mutombo", 7, 2, 55, { height: 100, shooting: 54, finishing: 80, handles: 54, passing: 62, defense: 96, rebounding: 94, athleticism: 84, iq: 76 }),
-      player("Mahmoud Abdul-Rauf", 6, 1, 1, { height: 68, shooting: 88, finishing: 84, handles: 90, passing: 80, defense: 66, rebounding: 50, athleticism: 84, iq: 84 }),
+      player("Mahmoud Abdul-Rauf", 6, 1, 1, { height: 68, shooting: 90, finishing: 84, handles: 90, passing: 80, defense: 66, rebounding: 50, athleticism: 84, iq: 84 }),
       player("Antonio McDyess", 6, 9, 24, { height: 90, shooting: 74, finishing: 86, handles: 66, passing: 68, defense: 80, rebounding: 84, athleticism: 90, iq: 76 }),
       player("LaPhonso Ellis", 6, 8, 20, { height: 86, shooting: 74, finishing: 84, handles: 70, passing: 70, defense: 78, rebounding: 82, athleticism: 84, iq: 76 }),
       player("Nick Van Exel", 6, 1, 9, { height: 68, shooting: 82, finishing: 80, handles: 90, passing: 86, defense: 70, rebounding: 54, athleticism: 80, iq: 84 }),
@@ -2557,7 +2557,7 @@ const teamEras = [
       player("Jalen Rose", 6, 8, 5, { height: 86, shooting: 76, finishing: 82, handles: 84, passing: 82, defense: 70, rebounding: 64, athleticism: 80, iq: 78 }),
       player("Brian Williams", 6, 11, 0, { height: 96, shooting: 68, finishing: 82, handles: 62, passing: 66, defense: 78, rebounding: 80, athleticism: 82, iq: 72 }),
       player("Rodney Rogers", 6, 7, 54, { height: 84, shooting: 80, finishing: 82, handles: 74, passing: 72, defense: 74, rebounding: 68, athleticism: 80, iq: 78 }),
-      player("Dale Ellis", 6, 7, 3, { height: 84, shooting: 88, finishing: 82, handles: 76, passing: 70, defense: 70, rebounding: 64, athleticism: 78, iq: 80 }),
+      player("Dale Ellis", 6, 7, 3, { height: 84, shooting: 84, finishing: 82, handles: 76, passing: 70, defense: 70, rebounding: 64, athleticism: 78, iq: 80 }),
       player("Mark Jackson", 6, 3, 13, { height: 74, shooting: 72, finishing: 78, handles: 88, passing: 92, defense: 72, rebounding: 64, athleticism: 72, iq: 88 }),
       player("Tom Hammonds", 6, 9, 20, { height: 90, shooting: 70, finishing: 80, handles: 64, passing: 64, defense: 74, rebounding: 74, athleticism: 84, iq: 72 }),
       player("Marcus Liberty", 6, 8, 34, { height: 86, shooting: 74, finishing: 80, handles: 74, passing: 68, defense: 72, rebounding: 66, athleticism: 82, iq: 72 }),
@@ -2569,7 +2569,7 @@ const teamEras = [
     note: "Early Minnesota grew up fast — Tony Campbell's scoring, then a young Kevin Garnett and Stephon Marbury powering the franchise's first playoff runs.",
     players: [
       player("Kevin Garnett", 6, 11, 21, { height: 96, shooting: 78, finishing: 84, handles: 78, passing: 82, defense: 90, rebounding: 86, athleticism: 90, iq: 94 }),
-      player("Stephon Marbury", 6, 2, 3, { height: 71, shooting: 80, finishing: 84, handles: 92, passing: 88, defense: 68, rebounding: 56, athleticism: 88, iq: 80 }),
+      player("Stephon Marbury", 6, 2, 3, { height: 71, shooting: 80, finishing: 84, handles: 92, passing: 90, defense: 68, rebounding: 56, athleticism: 88, iq: 80 }),
       player("Tom Gugliotta", 6, 10, 24, { height: 94, shooting: 78, finishing: 84, handles: 76, passing: 78, defense: 74, rebounding: 82, athleticism: 80, iq: 78 }),
       player("Wally Szczerbiak", 6, 7, 10, { height: 84, shooting: 84, finishing: 80, handles: 74, passing: 70, defense: 68, rebounding: 64, athleticism: 74, iq: 80 }),
       player("Isaiah Rider", 6, 5, 34, { height: 80, shooting: 84, finishing: 86, handles: 82, passing: 74, defense: 70, rebounding: 64, athleticism: 88, iq: 80 }),
@@ -2591,14 +2591,14 @@ const teamEras = [
     note: "The 'Big Three' of Allen, Robinson, and Cassell pushed the 2001 Bucks within a game of the Finals; Michael Redd later kept the scoring alive.",
     players: [
       player("Ray Allen", 6, 5, 34, { height: 80, shooting: 95, finishing: 84, handles: 82, passing: 78, defense: 76, rebounding: 62, athleticism: 86, iq: 88 }),
-      player("Michael Redd", 6, 6, 22, { height: 82, shooting: 88, finishing: 84, handles: 80, passing: 70, defense: 66, rebounding: 60, athleticism: 80, iq: 84 }),
-      player("Sam Cassell", 6, 3, 19, { height: 74, shooting: 82, finishing: 84, handles: 88, passing: 86, defense: 72, rebounding: 58, athleticism: 78, iq: 88 }),
+      player("Michael Redd", 6, 6, 22, { height: 82, shooting: 90, finishing: 84, handles: 80, passing: 70, defense: 66, rebounding: 60, athleticism: 80, iq: 84 }),
+      player("Sam Cassell", 6, 3, 19, { height: 74, shooting: 82, finishing: 84, handles: 84, passing: 80, defense: 72, rebounding: 58, athleticism: 78, iq: 88 }),
       player("Glenn Robinson", 6, 7, 13, { height: 84, shooting: 84, finishing: 88, handles: 80, passing: 74, defense: 70, rebounding: 72, athleticism: 80, iq: 84 }),
       player("Andrew Bogut", 7, 0, 6, { height: 98, shooting: 60, finishing: 84, handles: 62, passing: 78, defense: 84, rebounding: 84, athleticism: 74, iq: 74 }),
       player("Tim Thomas", 6, 10, 25, { height: 94, shooting: 82, finishing: 82, handles: 76, passing: 70, defense: 68, rebounding: 68, athleticism: 80, iq: 76 }),
       player("Mo Williams", 6, 1, 25, { height: 68, shooting: 84, finishing: 80, handles: 86, passing: 82, defense: 70, rebounding: 54, athleticism: 80, iq: 82 }),
       player("Desmond Mason", 6, 5, 24, { height: 80, shooting: 74, finishing: 84, handles: 74, passing: 66, defense: 80, rebounding: 64, athleticism: 92, iq: 74 }),
-      player("Toni Kukoc", 6, 10, 7, { height: 94, shooting: 82, finishing: 80, handles: 82, passing: 86, defense: 70, rebounding: 72, athleticism: 70, iq: 80 }),
+      player("Toni Kukoc", 6, 10, 7, { height: 90, shooting: 82, finishing: 80, handles: 82, passing: 86, defense: 70, rebounding: 72, athleticism: 70, iq: 80 }),
       player("Ervin Johnson", 6, 11, 45, { height: 96, shooting: 50, finishing: 76, handles: 54, passing: 62, defense: 84, rebounding: 84, athleticism: 78, iq: 68 }),
       player("T.J. Ford", 6, 0, 5, { height: 66, shooting: 74, finishing: 80, handles: 90, passing: 88, defense: 72, rebounding: 50, athleticism: 90, iq: 78 }),
       player("Charlie Bell", 6, 3, 4, { height: 74, shooting: 78, finishing: 78, handles: 80, passing: 74, defense: 80, rebounding: 56, athleticism: 80, iq: 76 }),
@@ -2681,16 +2681,16 @@ const teamEras = [
       player("Joe Johnson", 6, 7, 7, { height: 84, shooting: 84, finishing: 84, handles: 82, passing: 78, defense: 72, rebounding: 64, athleticism: 78, iq: 88 }),
       player("Deron Williams", 6, 3, 8, { height: 74, shooting: 78, finishing: 82, handles: 90, passing: 90, defense: 70, rebounding: 58, athleticism: 80, iq: 82 }),
       player("Brook Lopez", 7, 0, 11, { height: 98, shooting: 74, finishing: 86, handles: 60, passing: 64, defense: 80, rebounding: 78, athleticism: 72, iq: 78 }),
-      player("Kevin Garnett", 6, 11, 2, { height: 96, shooting: 76, finishing: 80, handles: 70, passing: 80, defense: 88, rebounding: 82, athleticism: 74, iq: 94 }),
+      player("Kevin Garnett", 6, 11, 2, { height: 96, shooting: 76, finishing: 80, handles: 70, passing: 80, defense: 90, rebounding: 82, athleticism: 74, iq: 94 }),
       player("Paul Pierce", 6, 7, 34, { height: 84, shooting: 84, finishing: 84, handles: 80, passing: 78, defense: 76, rebounding: 66, athleticism: 74, iq: 88 }),
       player("D'Angelo Russell", 6, 5, 1, { height: 80, shooting: 82, finishing: 82, handles: 88, passing: 84, defense: 62, rebounding: 56, athleticism: 78, iq: 84 }),
       player("Spencer Dinwiddie", 6, 5, 8, { height: 80, shooting: 78, finishing: 82, handles: 86, passing: 80, defense: 68, rebounding: 56, athleticism: 80, iq: 82 }),
       player("Jarrett Jack", 6, 3, 2, { height: 74, shooting: 78, finishing: 82, handles: 84, passing: 82, defense: 72, rebounding: 58, athleticism: 76, iq: 82 }),
       player("Shaun Livingston", 6, 7, 14, { height: 84, shooting: 74, finishing: 80, handles: 80, passing: 80, defense: 80, rebounding: 62, athleticism: 78, iq: 78 }),
-      player("Andrei Kirilenko", 6, 9, 47, { height: 90, shooting: 70, finishing: 80, handles: 72, passing: 78, defense: 88, rebounding: 72, athleticism: 80, iq: 74 }),
+      player("Andrei Kirilenko", 6, 9, 47, { height: 90, shooting: 70, finishing: 80, handles: 72, passing: 78, defense: 90, rebounding: 72, athleticism: 80, iq: 74 }),
       player("Thaddeus Young", 6, 8, 30, { height: 86, shooting: 74, finishing: 82, handles: 74, passing: 72, defense: 80, rebounding: 74, athleticism: 84, iq: 74 }),
       player("Bojan Bogdanovic", 6, 7, 44, { height: 84, shooting: 84, finishing: 80, handles: 72, passing: 66, defense: 64, rebounding: 60, athleticism: 70, iq: 80 }),
-      player("Gerald Wallace", 6, 7, 45, { height: 84, shooting: 70, finishing: 80, handles: 72, passing: 70, defense: 84, rebounding: 72, athleticism: 88, iq: 74 }),
+      player("Gerald Wallace", 6, 7, 45, { height: 84, shooting: 70, finishing: 80, handles: 72, passing: 70, defense: 84, rebounding: 72, athleticism: 90, iq: 74 }),
       player("Andray Blatche", 6, 11, 0, { height: 96, shooting: 68, finishing: 82, handles: 66, passing: 70, defense: 72, rebounding: 80, athleticism: 80, iq: 72 }),
       player("Mason Plumlee", 6, 11, 1, { height: 96, shooting: 58, finishing: 84, handles: 64, passing: 74, defense: 76, rebounding: 80, athleticism: 82, iq: 70 }),
     ],
@@ -2700,12 +2700,12 @@ const teamEras = [
     team: "Raptors",
     note: "The expansion Raptors found their identity fast — Damon Stoudamire's spark, then the high-flying arrival of Vince Carter and a teenage Tracy McGrady.",
     players: [
-      player("Vince Carter", 6, 6, 15, { height: 82, shooting: 82, finishing: 90, handles: 84, passing: 74, defense: 74, rebounding: 64, athleticism: 96, iq: 84 }),
+      player("Vince Carter", 6, 6, 15, { height: 82, shooting: 82, finishing: 85, handles: 84, passing: 74, defense: 74, rebounding: 64, athleticism: 96, iq: 84 }),
       player("Tracy McGrady", 6, 8, 1, { height: 86, shooting: 74, finishing: 84, handles: 82, passing: 78, defense: 74, rebounding: 68, athleticism: 92, iq: 78 }),
       player("Damon Stoudamire", 5, 10, 20, { height: 62, shooting: 80, finishing: 80, handles: 90, passing: 88, defense: 66, rebounding: 54, athleticism: 84, iq: 80 }),
       player("Doug Christie", 6, 6, 13, { height: 82, shooting: 78, finishing: 80, handles: 80, passing: 78, defense: 88, rebounding: 64, athleticism: 84, iq: 78 }),
       player("Marcus Camby", 6, 11, 21, { height: 96, shooting: 56, finishing: 80, handles: 60, passing: 68, defense: 90, rebounding: 82, athleticism: 88, iq: 72 }),
-      player("Charles Oakley", 6, 9, 34, { height: 90, shooting: 66, finishing: 78, handles: 64, passing: 72, defense: 84, rebounding: 88, athleticism: 74, iq: 78 }),
+      player("Charles Oakley", 6, 9, 34, { height: 90, shooting: 66, finishing: 78, handles: 64, passing: 72, defense: 84, rebounding: 90, athleticism: 74, iq: 78 }),
       player("Walt Williams", 6, 8, 42, { height: 86, shooting: 80, finishing: 80, handles: 76, passing: 72, defense: 72, rebounding: 66, athleticism: 80, iq: 76 }),
       player("Kevin Willis", 7, 0, 42, { height: 98, shooting: 74, finishing: 80, handles: 62, passing: 62, defense: 74, rebounding: 86, athleticism: 76, iq: 72 }),
       player("Dee Brown", 6, 1, 7, { height: 68, shooting: 80, finishing: 78, handles: 84, passing: 80, defense: 78, rebounding: 54, athleticism: 84, iq: 78 }),
@@ -2803,8 +2803,8 @@ const teamEras = [
     team: "Jazz",
     note: "Adrian Dantley's footwork and Mark Eaton's wall of defense gave way to the dawn of Stockton-to-Malone.",
     players: [
-      player("Karl Malone", 6, 9, 32, { height: 90, shooting: 76, finishing: 92, handles: 74, passing: 76, defense: 84, rebounding: 90, athleticism: 92, iq: 82 }),
-      player("John Stockton", 6, 1, 12, { height: 68, shooting: 78, finishing: 80, handles: 94, passing: 98, defense: 86, rebounding: 58, athleticism: 80, iq: 96 }),
+      player("Karl Malone", 6, 9, 32, { height: 90, shooting: 76, finishing: 92, handles: 74, passing: 76, defense: 84, rebounding: 90, athleticism: 87, iq: 82 }),
+      player("John Stockton", 6, 1, 12, { height: 68, shooting: 78, finishing: 80, handles: 94, passing: 98, defense: 86, rebounding: 58, athleticism: 74, iq: 96 }),
       player("Adrian Dantley", 6, 5, 4, { height: 80, shooting: 84, finishing: 92, handles: 80, passing: 76, defense: 70, rebounding: 74, athleticism: 80, iq: 86 }),
       player("Mark Eaton", 7, 4, 53, { height: 100, shooting: 46, finishing: 72, handles: 48, passing: 56, defense: 96, rebounding: 88, athleticism: 64, iq: 78 }),
       player("Darrell Griffith", 6, 4, 35, { height: 77, shooting: 84, finishing: 86, handles: 80, passing: 72, defense: 74, rebounding: 64, athleticism: 94, iq: 76 }),
@@ -2824,14 +2824,14 @@ const teamEras = [
     note: "After lean years, Cleveland's young core of Brad Daugherty, Mark Price, and Ron Harper looked like the next great thing.",
     players: [
       player("Brad Daugherty", 7, 0, 43, { height: 98, shooting: 74, finishing: 86, handles: 70, passing: 84, defense: 76, rebounding: 86, athleticism: 72, iq: 84 }),
-      player("Mark Price", 6, 0, 25, { height: 66, shooting: 88, finishing: 82, handles: 90, passing: 90, defense: 70, rebounding: 54, athleticism: 76, iq: 88 }),
+      player("Mark Price", 6, 0, 25, { height: 66, shooting: 90, finishing: 82, handles: 90, passing: 90, defense: 70, rebounding: 54, athleticism: 76, iq: 88 }),
       player("Ron Harper", 6, 6, 4, { height: 82, shooting: 78, finishing: 86, handles: 84, passing: 80, defense: 84, rebounding: 70, athleticism: 92, iq: 78 }),
       player("Larry Nance", 6, 10, 22, { height: 94, shooting: 80, finishing: 90, handles: 70, passing: 72, defense: 88, rebounding: 84, athleticism: 94, iq: 82 }),
       player("Hot Rod Williams", 6, 11, 18, { height: 96, shooting: 72, finishing: 82, handles: 64, passing: 70, defense: 88, rebounding: 80, athleticism: 84, iq: 76 }),
       player("Craig Ehlo", 6, 7, 3, { height: 84, shooting: 78, finishing: 80, handles: 78, passing: 78, defense: 82, rebounding: 68, athleticism: 80, iq: 78 }),
       player("Mike Sanders", 6, 6, 24, { height: 82, shooting: 74, finishing: 78, handles: 72, passing: 70, defense: 80, rebounding: 66, athleticism: 78, iq: 74 }),
       player("John Williams", 6, 8, 24, { height: 86, shooting: 70, finishing: 80, handles: 70, passing: 72, defense: 80, rebounding: 78, athleticism: 80, iq: 74 }),
-      player("Dell Curry", 6, 5, 30, { height: 80, shooting: 88, finishing: 80, handles: 80, passing: 72, defense: 72, rebounding: 58, athleticism: 80, iq: 78 }),
+      player("Dell Curry", 6, 5, 30, { height: 80, shooting: 90, finishing: 80, handles: 80, passing: 72, defense: 72, rebounding: 58, athleticism: 80, iq: 78 }),
       player("Phil Hubbard", 6, 8, 35, { height: 86, shooting: 68, finishing: 80, handles: 68, passing: 68, defense: 76, rebounding: 76, athleticism: 78, iq: 72 }),
       player("World B. Free", 6, 2, 21, { height: 71, shooting: 86, finishing: 84, handles: 84, passing: 74, defense: 66, rebounding: 56, athleticism: 84, iq: 74 }),
       player("Johnny Newman", 6, 7, 12, { height: 84, shooting: 80, finishing: 80, handles: 76, passing: 70, defense: 76, rebounding: 64, athleticism: 82, iq: 74 }),
@@ -2843,7 +2843,7 @@ const teamEras = [
     team: "76ers",
     note: "Allen Iverson crossed up the league as a rookie — a 165-pound scoring hurricane who dragged a thin Philadelphia roster into relevance.",
     players: [
-      player("Allen Iverson", 6, 0, 3, { height: 66, shooting: 84, finishing: 90, handles: 98, passing: 80, defense: 76, rebounding: 56, athleticism: 96, iq: 80 }),
+      player("Allen Iverson", 6, 0, 3, { height: 66, shooting: 84, finishing: 90, handles: 98, passing: 80, defense: 70, rebounding: 56, athleticism: 96, iq: 80 }),
       player("Jerry Stackhouse", 6, 6, 42, { height: 82, shooting: 78, finishing: 86, handles: 82, passing: 76, defense: 74, rebounding: 66, athleticism: 90, iq: 78 }),
       player("Theo Ratliff", 6, 10, 42, { height: 94, shooting: 56, finishing: 80, handles: 58, passing: 60, defense: 90, rebounding: 80, athleticism: 86, iq: 74 }),
       player("Derrick Coleman", 6, 10, 44, { height: 94, shooting: 78, finishing: 84, handles: 74, passing: 76, defense: 76, rebounding: 84, athleticism: 82, iq: 74 }),
@@ -2908,7 +2908,7 @@ const teamEras = [
       player("Shane Battier", 6, 8, 31, { height: 86, shooting: 80, finishing: 78, handles: 70, passing: 74, defense: 90, rebounding: 70, athleticism: 78, iq: 88 }),
       player("Jason Williams", 6, 1, 2, { height: 68, shooting: 78, finishing: 80, handles: 92, passing: 90, defense: 68, rebounding: 54, athleticism: 82, iq: 80 }),
       player("Bonzi Wells", 6, 5, 6, { height: 80, shooting: 78, finishing: 84, handles: 80, passing: 76, defense: 78, rebounding: 72, athleticism: 84, iq: 74 }),
-      player("Mike Bibby", 6, 1, 10, { height: 68, shooting: 82, finishing: 82, handles: 88, passing: 86, defense: 70, rebounding: 56, athleticism: 80, iq: 88 }),
+      player("Mike Bibby", 6, 1, 10, { height: 68, shooting: 82, finishing: 82, handles: 83, passing: 81, defense: 70, rebounding: 56, athleticism: 80, iq: 88 }),
       player("Lorenzen Wright", 6, 11, 42, { height: 96, shooting: 66, finishing: 80, handles: 60, passing: 64, defense: 80, rebounding: 84, athleticism: 80, iq: 72 }),
       player("Stromile Swift", 6, 9, 5, { height: 90, shooting: 64, finishing: 84, handles: 64, passing: 62, defense: 78, rebounding: 78, athleticism: 94, iq: 68 }),
       player("James Posey", 6, 8, 41, { height: 86, shooting: 78, finishing: 78, handles: 72, passing: 72, defense: 86, rebounding: 70, athleticism: 80, iq: 80 }),
@@ -2923,7 +2923,7 @@ const teamEras = [
     team: "Bucks",
     note: "The Greek Freak's ascent — a rangy, switchable Milwaukee core grew up around Giannis Antetokounmpo and Khris Middleton.",
     players: [
-      player("Giannis Antetokounmpo", 6, 11, 34, { height: 96, shooting: 68, finishing: 96, handles: 84, passing: 84, defense: 95, rebounding: 92, athleticism: 98, iq: 84 }),
+      player("Giannis Antetokounmpo", 6, 11, 34, { height: 96, shooting: 60, finishing: 96, handles: 84, passing: 78, defense: 95, rebounding: 92, athleticism: 98, iq: 78 }),
       player("Khris Middleton", 6, 7, 22, { height: 84, shooting: 88, finishing: 82, handles: 82, passing: 80, defense: 80, rebounding: 70, athleticism: 72, iq: 90 }),
       player("Jabari Parker", 6, 8, 12, { height: 86, shooting: 78, finishing: 86, handles: 78, passing: 72, defense: 64, rebounding: 72, athleticism: 82, iq: 74 }),
       player("Malcolm Brogdon", 6, 5, 13, { height: 80, shooting: 84, finishing: 82, handles: 82, passing: 82, defense: 80, rebounding: 66, athleticism: 78, iq: 84 }),
@@ -2963,11 +2963,11 @@ const teamEras = [
     team: "Nets",
     note: "A title-or-bust superteam — Kevin Durant, Kyrie Irving, and James Harden formed one of the most talented trios ever assembled.",
     players: [
-      player("Kevin Durant", 6, 11, 7, { height: 96, shooting: 96, finishing: 96, handles: 90, passing: 86, defense: 84, rebounding: 84, athleticism: 88, iq: 90 }),
-      player("Kyrie Irving", 6, 2, 11, { height: 71, shooting: 92, finishing: 96, handles: 100, passing: 84, defense: 74, rebounding: 56, athleticism: 90, iq: 92 }),
+      player("Kevin Durant", 6, 11, 7, { height: 96, shooting: 93, finishing: 96, handles: 90, passing: 80, defense: 78, rebounding: 78, athleticism: 88, iq: 90 }),
+      player("Kyrie Irving", 6, 2, 11, { height: 71, shooting: 92, finishing: 96, handles: 96, passing: 84, defense: 74, rebounding: 56, athleticism: 90, iq: 92 }),
       player("James Harden", 6, 5, 13, { height: 80, shooting: 90, finishing: 86, handles: 94, passing: 92, defense: 66, rebounding: 72, athleticism: 78, iq: 92 }),
       player("Joe Harris", 6, 6, 12, { height: 82, shooting: 90, finishing: 78, handles: 70, passing: 68, defense: 70, rebounding: 58, athleticism: 70, iq: 80 }),
-      player("DeAndre Jordan", 6, 11, 6, { height: 96, shooting: 46, finishing: 84, handles: 56, passing: 60, defense: 80, rebounding: 88, athleticism: 84, iq: 72 }),
+      player("DeAndre Jordan", 6, 11, 6, { height: 96, shooting: 46, finishing: 84, handles: 56, passing: 60, defense: 80, rebounding: 90, athleticism: 84, iq: 72 }),
       player("Blake Griffin", 6, 9, 2, { height: 90, shooting: 76, finishing: 82, handles: 76, passing: 80, defense: 70, rebounding: 78, athleticism: 78, iq: 80 }),
       player("Bruce Brown", 6, 4, 1, { height: 77, shooting: 72, finishing: 82, handles: 76, passing: 78, defense: 84, rebounding: 70, athleticism: 84, iq: 80 }),
       player("Patty Mills", 6, 0, 8, { height: 66, shooting: 86, finishing: 78, handles: 80, passing: 78, defense: 70, rebounding: 50, athleticism: 78, iq: 80 }),
@@ -2983,7 +2983,7 @@ const teamEras = [
     team: "Hawks",
     note: "Trae Young's deep-range wizardry and a fearless young core stormed to the 2021 Eastern Conference Finals.",
     players: [
-      player("Trae Young", 6, 1, 11, { height: 68, shooting: 88, finishing: 84, handles: 92, passing: 96, defense: 58, rebounding: 58, athleticism: 78, iq: 86 }),
+      player("Trae Young", 6, 1, 11, { height: 68, shooting: 90, finishing: 84, handles: 92, passing: 96, defense: 58, rebounding: 58, athleticism: 78, iq: 86 }),
       player("Dejounte Murray", 6, 4, 5, { height: 77, shooting: 78, finishing: 84, handles: 86, passing: 84, defense: 86, rebounding: 74, athleticism: 86, iq: 80 }),
       player("John Collins", 6, 9, 20, { height: 90, shooting: 78, finishing: 88, handles: 70, passing: 66, defense: 72, rebounding: 82, athleticism: 92, iq: 74 }),
       player("Clint Capela", 6, 10, 15, { height: 94, shooting: 46, finishing: 86, handles: 56, passing: 60, defense: 84, rebounding: 90, athleticism: 86, iq: 74 }),
@@ -3003,7 +3003,7 @@ const teamEras = [
     team: "Rockets",
     note: "Houston's youth movement grew up fast — Alperen Sengun's playmaking and a swarm of athletic young talent around veterans Fred VanVleet and Dillon Brooks.",
     players: [
-      player("Alperen Sengun", 6, 11, 28, { height: 96, shooting: 72, finishing: 86, handles: 74, passing: 88, defense: 74, rebounding: 84, athleticism: 72, iq: 84 }),
+      player("Alperen Sengun", 6, 11, 28, { height: 96, shooting: 72, finishing: 86, handles: 74, passing: 90, defense: 74, rebounding: 84, athleticism: 72, iq: 84 }),
       player("Jalen Green", 6, 4, 4, { height: 77, shooting: 80, finishing: 86, handles: 84, passing: 72, defense: 66, rebounding: 58, athleticism: 94, iq: 72 }),
       player("Fred VanVleet", 6, 0, 5, { height: 66, shooting: 82, finishing: 78, handles: 86, passing: 84, defense: 84, rebounding: 56, athleticism: 74, iq: 86 }),
       player("Dillon Brooks", 6, 6, 9, { height: 82, shooting: 78, finishing: 78, handles: 72, passing: 64, defense: 88, rebounding: 62, athleticism: 82, iq: 72 }),
@@ -3072,8 +3072,8 @@ const teamEras = [
       player("Harvey Grant", 6, 9, 54, { height: 90, shooting: 74, finishing: 80, handles: 70, passing: 70, defense: 80, rebounding: 74, athleticism: 80, iq: 74 }),
       player("Pervis Ellison", 6, 9, 43, { height: 90, shooting: 64, finishing: 80, handles: 62, passing: 66, defense: 82, rebounding: 80, athleticism: 80, iq: 72 }),
       player("Don MacLean", 6, 10, 34, { height: 94, shooting: 80, finishing: 80, handles: 66, passing: 66, defense: 64, rebounding: 72, athleticism: 66, iq: 72 }),
-      player("Mark Price", 6, 0, 25, { height: 66, shooting: 88, finishing: 80, handles: 88, passing: 88, defense: 68, rebounding: 54, athleticism: 74, iq: 88 }),
-      player("Tim Legler", 6, 4, 33, { height: 77, shooting: 88, finishing: 76, handles: 76, passing: 72, defense: 68, rebounding: 54, athleticism: 72, iq: 78 }),
+      player("Mark Price", 6, 0, 25, { height: 66, shooting: 90, finishing: 80, handles: 88, passing: 88, defense: 68, rebounding: 54, athleticism: 74, iq: 88 }),
+      player("Tim Legler", 6, 4, 33, { height: 77, shooting: 90, finishing: 76, handles: 76, passing: 72, defense: 68, rebounding: 54, athleticism: 72, iq: 78 }),
       player("Ledell Eackles", 6, 5, 12, { height: 80, shooting: 78, finishing: 78, handles: 76, passing: 70, defense: 70, rebounding: 60, athleticism: 80, iq: 72 }),
       player("Robert Pack", 6, 2, 3, { height: 71, shooting: 74, finishing: 80, handles: 86, passing: 82, defense: 70, rebounding: 54, athleticism: 86, iq: 74 }),
     ],
@@ -3090,7 +3090,7 @@ const teamEras = [
       player("Eddy Curry", 6, 11, 2, { height: 96, shooting: 62, finishing: 84, handles: 60, passing: 58, defense: 66, rebounding: 74, athleticism: 80, iq: 66 }),
       player("Andres Nocioni", 6, 7, 5, { height: 84, shooting: 78, finishing: 80, handles: 72, passing: 68, defense: 80, rebounding: 70, athleticism: 80, iq: 74 }),
       player("Ben Wallace", 6, 9, 3, { height: 90, shooting: 40, finishing: 76, handles: 54, passing: 60, defense: 98, rebounding: 94, athleticism: 86, iq: 80 }),
-      player("Joakim Noah", 6, 11, 13, { height: 96, shooting: 54, finishing: 80, handles: 66, passing: 82, defense: 88, rebounding: 86, athleticism: 82, iq: 84 }),
+      player("Joakim Noah", 6, 11, 13, { height: 96, shooting: 54, finishing: 80, handles: 66, passing: 82, defense: 90, rebounding: 86, athleticism: 82, iq: 84 }),
       player("Derrick Rose", 6, 3, 1, { height: 74, shooting: 78, finishing: 88, handles: 92, passing: 84, defense: 72, rebounding: 60, athleticism: 96, iq: 84 }),
       player("Chris Duhon", 6, 1, 21, { height: 68, shooting: 74, finishing: 76, handles: 82, passing: 82, defense: 78, rebounding: 54, athleticism: 78, iq: 78 }),
       player("Thabo Sefolosha", 6, 7, 2, { height: 84, shooting: 70, finishing: 78, handles: 72, passing: 68, defense: 84, rebounding: 64, athleticism: 84, iq: 74 }),
@@ -3131,7 +3131,7 @@ const teamEras = [
       player("Damon Stoudamire", 5, 10, 3, { height: 62, shooting: 80, finishing: 80, handles: 90, passing: 88, defense: 66, rebounding: 52, athleticism: 82, iq: 80 }),
       player("Bonzi Wells", 6, 5, 6, { height: 80, shooting: 78, finishing: 84, handles: 80, passing: 74, defense: 78, rebounding: 72, athleticism: 84, iq: 72 }),
       player("Steve Smith", 6, 8, 8, { height: 86, shooting: 84, finishing: 80, handles: 76, passing: 74, defense: 74, rebounding: 64, athleticism: 78, iq: 80 }),
-      player("Arvydas Sabonis", 7, 3, 11, { height: 100, shooting: 78, finishing: 84, handles: 70, passing: 88, defense: 82, rebounding: 84, athleticism: 60, iq: 92 }),
+      player("Arvydas Sabonis", 7, 3, 11, { height: 100, shooting: 78, finishing: 84, handles: 70, passing: 90, defense: 82, rebounding: 84, athleticism: 60, iq: 92 }),
       player("Joel Przybilla", 7, 1, 10, { height: 100, shooting: 46, finishing: 78, handles: 54, passing: 58, defense: 84, rebounding: 82, athleticism: 72, iq: 72 }),
       player("Travis Outlaw", 6, 9, 25, { height: 90, shooting: 76, finishing: 82, handles: 70, passing: 62, defense: 70, rebounding: 66, athleticism: 90, iq: 68 }),
       player("Ruben Patterson", 6, 5, 21, { height: 80, shooting: 74, finishing: 82, handles: 74, passing: 68, defense: 84, rebounding: 66, athleticism: 86, iq: 70 }),
@@ -3291,16 +3291,16 @@ const goldenTeams = [
     golden: true,
     note: "The original. The greatest collection of talent ever assembled — Barcelona, untouchable.",
     players: [
-      player("Michael Jordan", 6, 6, 9, { height: 82, shooting: 94, finishing: 100, handles: 99, passing: 92, defense: 100, rebounding: 82, athleticism: 100, iq: 100 }),
-      player("Magic Johnson", 6, 9, 15, { height: 90, shooting: 84, finishing: 92, handles: 96, passing: 100, defense: 86, rebounding: 89, athleticism: 86, iq: 100 }),
-      player("Larry Bird", 6, 9, 7, { height: 90, shooting: 100, finishing: 90, handles: 88, passing: 99, defense: 84, rebounding: 88, athleticism: 74, iq: 100 }),
-      player("Charles Barkley", 6, 6, 14, { height: 82, shooting: 82, finishing: 96, handles: 86, passing: 86, defense: 86, rebounding: 99, athleticism: 94, iq: 92 }),
+      player("Michael Jordan", 6, 6, 9, { height: 82, shooting: 92, finishing: 100, handles: 99, passing: 92, defense: 100, rebounding: 76, athleticism: 100, iq: 100 }),
+      player("Magic Johnson", 6, 9, 15, { height: 90, shooting: 84, finishing: 86, handles: 91, passing: 100, defense: 79, rebounding: 89, athleticism: 80, iq: 100 }),
+      player("Larry Bird", 6, 9, 7, { height: 90, shooting: 100, finishing: 86, handles: 88, passing: 99, defense: 84, rebounding: 90, athleticism: 74, iq: 100 }),
+      player("Charles Barkley", 6, 6, 14, { height: 82, shooting: 82, finishing: 86, handles: 86, passing: 86, defense: 86, rebounding: 99, athleticism: 94, iq: 92 }),
       player("Patrick Ewing", 7, 0, 6, { height: 98, shooting: 76, finishing: 92, handles: 64, passing: 68, defense: 98, rebounding: 96, athleticism: 88, iq: 88 }),
-      player("Scottie Pippen", 6, 8, 8, { height: 87, shooting: 84, finishing: 92, handles: 90, passing: 92, defense: 100, rebounding: 86, athleticism: 96, iq: 96 }),
+      player("Scottie Pippen", 6, 8, 8, { height: 87, shooting: 78, finishing: 92, handles: 84, passing: 87, defense: 100, rebounding: 86, athleticism: 96, iq: 90 }),
       player("Karl Malone", 6, 9, 11, { height: 90, shooting: 82, finishing: 96, handles: 76, passing: 82, defense: 90, rebounding: 96, athleticism: 94, iq: 88 }),
-      player("John Stockton", 6, 1, 12, { height: 68, shooting: 88, finishing: 82, handles: 94, passing: 100, defense: 90, rebounding: 64, athleticism: 78, iq: 100 }),
+      player("John Stockton", 6, 1, 12, { height: 68, shooting: 84, finishing: 80, handles: 94, passing: 100, defense: 82, rebounding: 60, athleticism: 76, iq: 96 }),
       player("David Robinson", 7, 1, 5, { height: 100, shooting: 78, finishing: 94, handles: 70, passing: 76, defense: 100, rebounding: 98, athleticism: 98, iq: 92 }),
-      player("Clyde Drexler", 6, 7, 10, { height: 84, shooting: 84, finishing: 96, handles: 90, passing: 88, defense: 90, rebounding: 82, athleticism: 100, iq: 90 }),
+      player("Clyde Drexler", 6, 7, 10, { height: 84, shooting: 84, finishing: 89, handles: 90, passing: 88, defense: 90, rebounding: 82, athleticism: 92, iq: 84 }),
       player("Chris Mullin", 6, 6, 13, { height: 82, shooting: 96, finishing: 86, handles: 86, passing: 88, defense: 76, rebounding: 70, athleticism: 76, iq: 92 }),
       player("Christian Laettner", 6, 11, 3, { height: 96, shooting: 82, finishing: 84, handles: 68, passing: 72, defense: 78, rebounding: 86, athleticism: 80, iq: 84 }),
     ],
@@ -3311,13 +3311,13 @@ const goldenTeams = [
     golden: true,
     note: "Beijing. Kobe and a hungry LeBron led the mission to take back the gold — and they did.",
     players: [
-      player("Kobe Bryant", 6, 6, 10, { height: 82, shooting: 96, finishing: 99, handles: 96, passing: 88, defense: 96, rebounding: 76, athleticism: 98, iq: 96 }),
-      player("LeBron James", 6, 8, 6, { height: 87, shooting: 86, finishing: 100, handles: 94, passing: 100, defense: 98, rebounding: 92, athleticism: 100, iq: 100 }),
-      player("Dwyane Wade", 6, 4, 9, { height: 77, shooting: 82, finishing: 100, handles: 94, passing: 90, defense: 92, rebounding: 74, athleticism: 100, iq: 92 }),
-      player("Chris Paul", 6, 0, 13, { height: 66, shooting: 88, finishing: 88, handles: 100, passing: 100, defense: 92, rebounding: 68, athleticism: 86, iq: 100 }),
-      player("Carmelo Anthony", 6, 7, 15, { height: 84, shooting: 92, finishing: 94, handles: 88, passing: 80, defense: 78, rebounding: 84, athleticism: 88, iq: 84 }),
+      player("Kobe Bryant", 6, 6, 10, { height: 82, shooting: 96, finishing: 99, handles: 96, passing: 82, defense: 96, rebounding: 70, athleticism: 98, iq: 96 }),
+      player("LeBron James", 6, 8, 6, { height: 87, shooting: 82, finishing: 100, handles: 94, passing: 100, defense: 98, rebounding: 80, athleticism: 100, iq: 100 }),
+      player("Dwyane Wade", 6, 4, 9, { height: 77, shooting: 82, finishing: 100, handles: 94, passing: 83, defense: 92, rebounding: 74, athleticism: 94, iq: 85 }),
+      player("Chris Paul", 6, 0, 13, { height: 66, shooting: 84, finishing: 83, handles: 100, passing: 100, defense: 84, rebounding: 62, athleticism: 82, iq: 96 }),
+      player("Carmelo Anthony", 6, 7, 15, { height: 84, shooting: 88, finishing: 88, handles: 84, passing: 70, defense: 72, rebounding: 80, athleticism: 84, iq: 80 }),
       player("Dwight Howard", 6, 10, 11, { height: 93, shooting: 54, finishing: 96, handles: 62, passing: 68, defense: 100, rebounding: 100, athleticism: 100, iq: 78 }),
-      player("Jason Kidd", 6, 4, 5, { height: 77, shooting: 82, finishing: 82, handles: 94, passing: 100, defense: 94, rebounding: 86, athleticism: 86, iq: 100 }),
+      player("Jason Kidd", 6, 4, 5, { height: 77, shooting: 82, finishing: 82, handles: 89, passing: 100, defense: 94, rebounding: 86, athleticism: 86, iq: 100 }),
       player("Deron Williams", 6, 3, 8, { height: 73, shooting: 88, finishing: 88, handles: 94, passing: 94, defense: 84, rebounding: 68, athleticism: 86, iq: 90 }),
       player("Chris Bosh", 6, 11, 12, { height: 96, shooting: 84, finishing: 90, handles: 74, passing: 76, defense: 86, rebounding: 90, athleticism: 88, iq: 88 }),
       player("Carlos Boozer", 6, 9, 7, { height: 90, shooting: 78, finishing: 90, handles: 70, passing: 76, defense: 78, rebounding: 92, athleticism: 84, iq: 82 }),
@@ -3331,16 +3331,16 @@ const goldenTeams = [
     golden: true,
     note: "Paris. LeBron, Steph and KD headline a roster of present-day superstars — the modern super-team.",
     players: [
-      player("LeBron James", 6, 9, 6, { height: 90, shooting: 88, finishing: 100, handles: 94, passing: 100, defense: 92, rebounding: 90, athleticism: 96, iq: 100 }),
-      player("Stephen Curry", 6, 2, 4, { height: 71, shooting: 100, finishing: 92, handles: 100, passing: 96, defense: 78, rebounding: 64, athleticism: 84, iq: 100 }),
-      player("Kevin Durant", 6, 11, 7, { height: 96, shooting: 100, finishing: 96, handles: 90, passing: 86, defense: 88, rebounding: 84, athleticism: 88, iq: 94 }),
-      player("Joel Embiid", 7, 0, 11, { height: 98, shooting: 88, finishing: 96, handles: 82, passing: 84, defense: 96, rebounding: 96, athleticism: 88, iq: 90 }),
+      player("LeBron James", 6, 9, 6, { height: 90, shooting: 83, finishing: 100, handles: 94, passing: 100, defense: 92, rebounding: 84, athleticism: 96, iq: 100 }),
+      player("Stephen Curry", 6, 2, 4, { height: 71, shooting: 100, finishing: 88, handles: 100, passing: 96, defense: 70, rebounding: 60, athleticism: 82, iq: 98 }),
+      player("Kevin Durant", 6, 11, 7, { height: 96, shooting: 100, finishing: 96, handles: 90, passing: 80, defense: 80, rebounding: 78, athleticism: 88, iq: 94 }),
+      player("Joel Embiid", 7, 0, 11, { height: 98, shooting: 88, finishing: 96, handles: 82, passing: 76, defense: 96, rebounding: 96, athleticism: 80, iq: 82 }),
       player("Anthony Davis", 6, 10, 14, { height: 93, shooting: 78, finishing: 96, handles: 72, passing: 76, defense: 100, rebounding: 98, athleticism: 94, iq: 88 }),
-      player("Jayson Tatum", 6, 8, 10, { height: 87, shooting: 92, finishing: 94, handles: 90, passing: 86, defense: 90, rebounding: 86, athleticism: 90, iq: 90 }),
+      player("Jayson Tatum", 6, 8, 10, { height: 87, shooting: 92, finishing: 86, handles: 84, passing: 79, defense: 82, rebounding: 86, athleticism: 90, iq: 84 }),
       player("Anthony Edwards", 6, 4, 5, { height: 77, shooting: 90, finishing: 96, handles: 90, passing: 82, defense: 90, rebounding: 76, athleticism: 100, iq: 86 }),
       player("Devin Booker", 6, 5, 15, { height: 80, shooting: 96, finishing: 90, handles: 92, passing: 88, defense: 82, rebounding: 68, athleticism: 84, iq: 90 }),
-      player("Jrue Holiday", 6, 4, 12, { height: 77, shooting: 86, finishing: 86, handles: 88, passing: 90, defense: 98, rebounding: 74, athleticism: 88, iq: 94 }),
-      player("Bam Adebayo", 6, 9, 13, { height: 90, shooting: 74, finishing: 92, handles: 78, passing: 88, defense: 98, rebounding: 94, athleticism: 94, iq: 90 }),
+      player("Jrue Holiday", 6, 4, 12, { height: 77, shooting: 86, finishing: 86, handles: 83, passing: 90, defense: 98, rebounding: 74, athleticism: 88, iq: 94 }),
+      player("Bam Adebayo", 6, 9, 13, { height: 90, shooting: 66, finishing: 92, handles: 78, passing: 80, defense: 98, rebounding: 94, athleticism: 94, iq: 90 }),
       player("Tyrese Haliburton", 6, 5, 9, { height: 80, shooting: 90, finishing: 84, handles: 94, passing: 100, defense: 80, rebounding: 68, athleticism: 84, iq: 98 }),
       player("Derrick White", 6, 4, 8, { height: 77, shooting: 88, finishing: 86, handles: 86, passing: 88, defense: 94, rebounding: 70, athleticism: 86, iq: 92 }),
     ],
@@ -3387,6 +3387,7 @@ const shareBtnCopy = document.querySelector("#shareBtnCopy");
 const result = document.querySelector("#result");
 const resultTitle = document.querySelector("#resultTitle");
 const resultCopy = document.querySelector("#resultCopy");
+const resultBreakdown = document.querySelector("#resultBreakdown");
 const shareButton = document.querySelector("#shareButton");
 const scoreEl = document.querySelector("#score");
 const bodyLabel = document.querySelector("#bodyLabel");
@@ -3469,10 +3470,12 @@ function calculateScore() {
   if (goatGate) return 100;
 
   const average = values.reduce((sum, value) => sum + value, 0) / values.length;
-  const weakPenalty = values.reduce((sum, value) => sum + Math.max(0, 72 - value) * 0.42, 0);
-  const eliteBonus = values.filter((value) => value >= 98).length * 0.45;
-  const balanceBonus = values.every((value) => value >= 90) ? 1.25 : 0;
-  const score = Math.round(average - weakPenalty + eliteBonus + balanceBonus);
+  const weakPenalty = values.reduce((sum, value) => sum + Math.max(0, 75 - value) * 0.42, 0);
+  const eliteBonus = values.filter((value) => value >= 99).length * 1.5
+                   + values.filter((value) => value >= 96 && value < 99).length * 0.5;
+  const minScore = Math.min(...values);
+  const balanceBonus = minScore >= 90 ? 2.0 : minScore >= 85 ? 1.0 : minScore >= 80 ? 0.5 : 0;
+  const score = Math.round(average - 7 - weakPenalty + eliteBonus + balanceBonus);
 
   // Only a gate-passing build can show 100; everything else caps at 99.
   return Math.max(55, Math.min(99, score));
@@ -3844,6 +3847,7 @@ function finish() {
   const tier = getTier(score);
   const archetype = makeArchetype(values);
   const weakSpot = [...values].sort((a, b) => a.score - b.score)[0];
+  const bestPick = [...values].sort((a, b) => b.score - a.score)[0];
 
   scoreEl.textContent = score;
   roundLabel.textContent = "Build complete";
@@ -3879,6 +3883,28 @@ function finish() {
 
   result.hidden = false;
 
+  if (gameMode !== "daily") savePB(gameMode, score);
+  updatePBDisplay();
+
+  if (resultBreakdown) {
+    if (score === 100) {
+      resultBreakdown.textContent = `Perfect build. Nobody does this.`;
+      resultBreakdown.hidden = false;
+    } else if (score >= 94) {
+      resultBreakdown.textContent = `Held back: ${weakSpot.attribute.label} (${weakSpot.score}) · Lifted by: ${bestPick.attribute.label} (${bestPick.score}) · You're in rare air.`;
+      resultBreakdown.hidden = false;
+    } else if (score >= 86) {
+      resultBreakdown.textContent = `Held back: ${weakSpot.attribute.label} (${weakSpot.score}) · Lifted by: ${bestPick.attribute.label} (${bestPick.score}) · Solid build. Most don't get here.`;
+      resultBreakdown.hidden = false;
+    } else if (score >= 80) {
+      resultBreakdown.textContent = `Held back: ${weakSpot.attribute.label} (${weakSpot.score}) · Lifted by: ${bestPick.attribute.label} (${bestPick.score}) · A starting five player. Keep pushing.`;
+      resultBreakdown.hidden = false;
+    } else {
+      resultBreakdown.textContent = `Held back: ${weakSpot.attribute.label} (${weakSpot.score}) · Lifted by: ${bestPick.attribute.label} (${bestPick.score})`;
+      resultBreakdown.hidden = false;
+    }
+  }
+
   if (gameMode === "daily") {
     const todayStr = getTodayStr();
     const dailyPicks = attributes.map(attr => {
@@ -3888,6 +3914,12 @@ function finish() {
     });
     saveDailyResult(todayStr, score, tier, dailyData?.franchise || false, dailyData?.franchiseTeamName || null, dailyPicks);
     updateDailyCard();
+    // Submit to the global leaderboard (if signed in) + reveal the Leaderboard button.
+    if (window.GoatLeaderboard) {
+      window.GoatLeaderboard.submitToday(todayStr, score, tier, dailyData?.franchise || false, dailyData?.franchiseTeamName || null);
+      window.GoatLeaderboard.pushDailyHistory(todayStr);
+      window.GoatLeaderboard.showResultButton();
+    }
     resultTitle.textContent = `Daily — ${score}: ${tier}`;
     resultCopy.textContent = dailyData?.franchise
       ? `${archetype}. Greatest ${dailyData.franchiseTeamName} build in the books. Come back tomorrow.`
@@ -3899,7 +3931,7 @@ function finish() {
     resultCopy.textContent =
       score === 100
         ? `You built the impossible player: ${archetype}. No weak spots, no era can stop this.`
-        : `${archetype}. Your lowest was ${weakSpot.attribute.label} from ${weakSpot.player.name} at ${weakSpot.score}. Keep chasing.`;
+        : `${archetype}. Keep chasing.`;
   }
 }
 
@@ -3982,18 +4014,19 @@ function startGame(mode) {
   // Hide team respin on franchise daily (team is locked)
   if (respinTeamBtn) respinTeamBtn.hidden = mode === "daily" && dailyData?.franchise;
 
-  roundLabel.textContent = `Round — of ${runAttributes.length}`;
-  prompt.classList.remove("is-rolling", "is-locked");
-  prompt.textContent = "Press New Run to begin";
-  context.textContent = "";
   modeLabel.textContent = mode === "daily"
     ? (dailyData?.franchise ? `Franchise Daily · ${dailyData.franchiseTeamName} · Blind` : "Daily Challenge · Blind")
     : mode === "blind" ? "Blind mode: ratings reveal after your pick."
     : "Classic mode: ratings are visible before you pick.";
-  if (respinBar) respinBar.hidden = true;
+  renderRound();
 }
 
 function goBack() {
+  if (!result.hidden) {
+    // Already finished — safe to go back, no confirm needed
+  } else if (round > 0 && !confirm("Leave this run? Your progress will be lost.")) {
+    return;
+  }
   gameGrid.hidden = true;
   result.hidden = true;
   modeScreen.hidden = false;
@@ -4004,6 +4037,7 @@ function goBack() {
   dailyData = null;
   scoreEl.textContent = "--";
   if (respinTeamBtn) respinTeamBtn.hidden = false;
+  updatePBDisplay();
 }
 
 function drawRadarOnCanvas(ctx, cx, cy, maxR) {
@@ -4076,123 +4110,102 @@ async function generateShareImage() {
   const score = calculateScore();
   const tier = getTier(score);
 
-  const W = 600;
-  const HEADER_H = 182;
-  const RADAR_H = 128;
-  const ROW_H = 66;
-  const FOOTER_H = 52;
+  const W        = 600;
+  const HEADER_H = 105;  // tighter header
+  const RADAR_H  = 128;
+  const ROW_H    = 64;   // more breathing room per row
+  const FOOTER_H = 48;
   const H = HEADER_H + RADAR_H + ROW_H * 9 + FOOTER_H;
   const SCALE = 3;
 
   const canvas = document.createElement("canvas");
-  canvas.width = W * SCALE;
+  canvas.width  = W * SCALE;
   canvas.height = H * SCALE;
   const ctx = canvas.getContext("2d");
   ctx.scale(SCALE, SCALE);
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
 
-  // Pre-load logo fresh so it renders crisply regardless of CSS state
-  const logoImg = await new Promise(res => {
-    const img = new Image();
-    img.onload = () => res(img);
-    img.onerror = () => res(null);
-    img.src = "GOATLABLOGO.png";
-    if (img.complete && img.naturalWidth > 0) res(img);
-  });
-
   const PAPER = "#f5ecd8";
-  const INK = "#151413";
-  const GOLD = "#e6b843";
-  const MUTED = "rgba(21,20,19,0.5)";
+  const INK   = "#151413";
+  const GOLD  = "#e6b843";
+  const CHALK = "#fff7df";
+  const MUTED = "rgba(21,20,19,0.55)";
   const COURT = "#c9673d";
+  const NAVY  = "#091420";
 
-  // Background
+  const modeColor = gameMode === "daily" ? GOLD : gameMode === "blind" ? COURT : CHALK;
+  const modeText  = gameMode === "daily" ? "DAILY CHALLENGE" : gameMode === "blind" ? "BLIND MODE" : "CLASSIC MODE";
+
+  // Truncate text to fit a pixel width
+  function clip(text, maxW, font) {
+    ctx.font = font;
+    if (ctx.measureText(text).width <= maxW) return text;
+    let t = text;
+    while (t.length > 1 && ctx.measureText(t + "…").width > maxW) t = t.slice(0, -1);
+    return t + "…";
+  }
+
+  // ── Background + border ──────────────────────────────────────────────────
   ctx.fillStyle = PAPER;
   ctx.fillRect(0, 0, W, H);
-
-  // Border
   ctx.strokeStyle = INK;
   ctx.lineWidth = 5;
   ctx.strokeRect(2.5, 2.5, W - 5, H - 5);
 
-  // Header bar
+  // ── Header ───────────────────────────────────────────────────────────────
   ctx.fillStyle = INK;
   ctx.fillRect(0, 0, W, HEADER_H);
 
-  // Logo — drawn at near 1:1 (96% of source) via off-canvas for crisp rendering
-  if (logoImg) {
-    const lhPhys = Math.round(logoImg.naturalHeight * 0.96 / SCALE) * SCALE;
-    const lwPhys = Math.round(logoImg.naturalWidth  * 0.96 / SCALE) * SCALE;
-    const lh = lhPhys / SCALE;
-    const lw = lwPhys / SCALE;
+  // Mode accent strip (4 px, colored per mode)
+  ctx.fillStyle = modeColor;
+  ctx.fillRect(0, 0, W, 4);
 
-    const logoOff = document.createElement("canvas");
-    logoOff.width  = lwPhys;
-    logoOff.height = lhPhys;
-    const logoCtx = logoOff.getContext("2d");
-    logoCtx.imageSmoothingEnabled = true;
-    logoCtx.imageSmoothingQuality = "high";
-    logoCtx.drawImage(logoImg, 0, 0, lwPhys, lhPhys);
-
-    const lx = Math.round((W - lw) / 2);
-    const ly = Math.round((HEADER_H - lh) / 2);
-    ctx.drawImage(logoOff, lx, ly, lw, lh);
-  }
-
-  // Score — vertically centered on right side of header
+  // Score — left side, hero element
   ctx.fillStyle = GOLD;
-  ctx.font = '700 44px "Space Mono", monospace';
-  ctx.textAlign = "right";
-  ctx.fillText(score, W - 18, HEADER_H / 2 + 6);
+  ctx.font = '700 52px "Space Mono", monospace';
+  ctx.textAlign = "left";
+  ctx.fillText(score, 22, 88);
 
-  // Tier label — right, below score
-  ctx.fillStyle = "rgba(255,247,223,0.55)";
+  // Tier — left, below score
+  ctx.fillStyle = "rgba(255,247,223,0.5)";
   ctx.font = '700 9px "Space Mono", monospace';
-  ctx.fillText(tier.toUpperCase(), W - 18, HEADER_H / 2 + 22);
+  ctx.fillText(tier.toUpperCase(), 22, 101);
+
+  // Brand — right side
+  ctx.fillStyle = CHALK;
+  ctx.font = '900 16px "Space Mono", monospace';
+  ctx.textAlign = "right";
+  ctx.fillText("GOAT LAB", W - 22, 40);
+
+  // Mode label — right, below brand
+  ctx.fillStyle = modeColor;
+  ctx.font = '700 10px "Space Mono", monospace';
+  ctx.fillText(modeText, W - 22, 57);
+
   ctx.textAlign = "left";
 
-  // Mode badge — bottom-left of header
-  const modeLabel = gameMode === "daily" ? "DAILY" : gameMode === "blind" ? "BLIND MODE" : "CLASSIC MODE";
-  const badgeW = gameMode === "classic" ? 104 : gameMode === "blind" ? 94 : 68;
-  ctx.fillStyle = gameMode === "daily" ? GOLD : gameMode === "blind" ? COURT : "rgba(255,247,223,0.18)";
-  ctx.fillRect(16, HEADER_H - 28, badgeW, 18);
-  ctx.fillStyle = gameMode === "daily" ? INK : gameMode === "blind" ? PAPER : "rgba(255,247,223,0.7)";
-  ctx.font = '700 9px "Space Mono", monospace';
-  ctx.fillText(modeLabel, 22, HEADER_H - 14);
-
-  // Radar section — dark navy, matches lab scan aesthetic
+  // ── Radar section ────────────────────────────────────────────────────────
   const radarY = HEADER_H;
-  ctx.fillStyle = "#091420";
+  ctx.fillStyle = NAVY;
   ctx.fillRect(0, radarY, W, RADAR_H);
 
-  // Subtle grid lines on radar section
-  ctx.strokeStyle = "rgba(56,182,255,0.06)";
-  ctx.lineWidth = 1;
-  for (let x = 0; x < W; x += 28) {
-    ctx.beginPath(); ctx.moveTo(x, radarY); ctx.lineTo(x, radarY + RADAR_H); ctx.stroke();
-  }
-  for (let y = radarY; y < radarY + RADAR_H; y += 28) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-  }
-
-  // Radar chart centered
   const radarCX = W / 2;
   const radarCY = radarY + RADAR_H / 2;
-  drawRadarOnCanvas(ctx, radarCX, radarCY, 44);
+  drawRadarOnCanvas(ctx, radarCX, radarCY, 46);
 
-  // Attribute short labels around radar
-  ctx.fillStyle = "rgba(56,182,255,0.55)";
-  ctx.font = '700 8px "Space Mono", monospace';
+  // Stat labels around radar — larger, crisper
+  ctx.fillStyle = "rgba(56,182,255,0.8)";
+  ctx.font = '700 9px "Space Mono", monospace';
   ctx.textAlign = "center";
-  const labelR = 56;
+  const labelR = 60;
   attributes.forEach((attr, i) => {
     const angle = -Math.PI / 2 + (i * 2 * Math.PI / attributes.length);
     ctx.fillText(attr.short, radarCX + Math.cos(angle) * labelR, radarCY + Math.sin(angle) * labelR + 3);
   });
   ctx.textAlign = "left";
 
-  // Section divider
+  // Divider
   ctx.strokeStyle = "rgba(56,182,255,0.2)";
   ctx.lineWidth = 1;
   ctx.beginPath();
@@ -4200,70 +4213,75 @@ async function generateShareImage() {
   ctx.lineTo(W, radarY + RADAR_H);
   ctx.stroke();
 
-  // Pick rows
+  // ── Pick rows ────────────────────────────────────────────────────────────
+  const SCORE_CX = W - 38;
+  const SCORE_R  = 22;
+  const NAME_MAX = SCORE_CX - SCORE_R - 20 - 12;
+  const nameFont = '700 17px "Playfair Display", Georgia, serif';
+
   const orderedValues = attributes.map((attr) => build[attr.key]);
   orderedValues.forEach((pick, i) => {
     if (!pick) return;
     const y = HEADER_H + RADAR_H + i * ROW_H;
 
-    // Alternate row tint
+    // Subtle alternate row tint
     if (i % 2 === 1) {
-      ctx.fillStyle = "rgba(21,20,19,0.03)";
+      ctx.fillStyle = "rgba(21,20,19,0.04)";
       ctx.fillRect(0, y, W, ROW_H);
     }
 
-    // Row divider
-    ctx.strokeStyle = "rgba(21,20,19,0.09)";
+    // Full-width row divider
+    ctx.strokeStyle = "rgba(21,20,19,0.1)";
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(16, y + ROW_H);
-    ctx.lineTo(W - 16, y + ROW_H);
+    ctx.moveTo(0, y + ROW_H);
+    ctx.lineTo(W, y + ROW_H);
     ctx.stroke();
 
     // Attribute label
     ctx.fillStyle = MUTED;
-    ctx.font = '700 9px "Space Mono", monospace';
-    ctx.fillText(pick.attribute.label.toUpperCase(), 20, y + 24);
+    ctx.font = '700 10px "Space Mono", monospace';
+    ctx.fillText(pick.attribute.label.toUpperCase(), 20, y + 18);
 
-    // Player name
+    // Player name (truncated to fit)
     ctx.fillStyle = INK;
-    ctx.font = '700 17px "Playfair Display", Georgia, serif';
-    ctx.fillText(pick.player.name, 20, y + 46);
+    ctx.fillText(clip(pick.player.name, NAME_MAX, nameFont), 20, y + 39);
 
-    // Team/era
+    // Team · era
     ctx.fillStyle = MUTED;
     ctx.font = '400 10px "Space Mono", monospace';
-    ctx.fillText(`${pick.teamEra.era} ${pick.teamEra.team}`, 20, y + 62);
+    ctx.fillText(`${pick.teamEra.era} · ${pick.teamEra.team}`, 20, y + 56);
 
-    // Score circle
+    // Score badge
     const scoreColor = pick.score >= 98 ? GOLD : pick.score >= 94 ? COURT : INK;
+    const textColor  = pick.score >= 94 ? INK  : PAPER;
     ctx.fillStyle = scoreColor;
     ctx.beginPath();
-    ctx.arc(W - 32, y + ROW_H / 2, 22, 0, Math.PI * 2);
+    ctx.arc(SCORE_CX, y + ROW_H / 2, SCORE_R, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = pick.score >= 94 ? INK : PAPER;
+    ctx.fillStyle = textColor;
     ctx.font = '700 15px "Space Mono", monospace';
     ctx.textAlign = "center";
-    ctx.fillText(pick.score, W - 32, y + ROW_H / 2 + 6);
+    ctx.fillText(pick.score, SCORE_CX, y + ROW_H / 2 + 5);
     ctx.textAlign = "left";
   });
 
-  // Footer bar
+  // ── Footer ───────────────────────────────────────────────────────────────
   const footerY = HEADER_H + RADAR_H + ROW_H * 9;
   ctx.fillStyle = INK;
   ctx.fillRect(0, footerY, W, FOOTER_H);
 
-  ctx.fillStyle = PAPER;
-  ctx.font = '700 15px "Playfair Display", Georgia, serif';
-  ctx.fillText("Can you beat my build?", 20, footerY + 32);
+  ctx.fillStyle = CHALK;
+  ctx.font = '700 14px "Playfair Display", Georgia, serif';
+  ctx.fillText("Can you beat my build?", 22, footerY + 30);
 
   ctx.fillStyle = GOLD;
   ctx.font = '700 10px "Space Mono", monospace';
   ctx.textAlign = "right";
-  ctx.fillText("goat-lab.vercel.app", W - 20, footerY + 32);
+  ctx.fillText("playgoatlab.com", W - 22, footerY + 30);
   ctx.textAlign = "left";
 
-  return new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.96));
+  return new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.97));
 }
 
 function buildShareText(score, tier) {
@@ -4279,9 +4297,9 @@ function buildShareText(score, tier) {
     const prefix = dailyData?.franchise
       ? `I scored ${score} building the greatest ${dailyData.franchiseTeamName} on the ${dateLabel} GOAT Lab Daily 🏀`
       : `I scored ${score} on the ${dateLabel} GOAT Lab Daily 🏀`;
-    return `${prefix}\n\n${picks}\n\nCan you beat me? https://goat-lab.vercel.app`;
+    return `${prefix}\n\n${picks}\n\nCan you beat me? https://playgoatlab.com`;
   }
-  return `I scored ${score} (${tier}) in GOAT Lab 🏀\n\n${picks}\n\nCan you beat my build? https://goat-lab.vercel.app`;
+  return `I scored ${score} (${tier}) in GOAT Lab 🏀\n\n${picks}\n\nCan you beat my build? https://playgoatlab.com`;
 }
 
 function openShareModal() {
@@ -4318,9 +4336,6 @@ function shareResult() {
 logoHome.addEventListener("click", () => {
   if (!gameGrid.hidden) goBack();
 });
-logoHome.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (!gameGrid.hidden) goBack(); }
-});
 
 modeButtons.forEach((button) => {
   button.addEventListener("click", () => startGame(button.dataset.mode));
@@ -4338,6 +4353,17 @@ respinEraBtn.addEventListener("click", respinEra);
 respinTeamBtn.addEventListener("click", respinTeam);
 respinAttrBtn.addEventListener("click", respinAttribute);
 shareButton.addEventListener("click", shareResult);
+
+const playAgainBtn = document.querySelector("#playAgainBtn");
+if (playAgainBtn) {
+  playAgainBtn.addEventListener("click", () => {
+    if (gameMode === "daily") {
+      goBack();
+    } else {
+      reset();
+    }
+  });
+}
 
 // ── Modal focus management ───────────────────────────────────────────────────
 function setupModal(modal, closeFn) {
@@ -4426,7 +4452,7 @@ shareBtnImage.addEventListener("click", async () => {
       const score = calculateScore();
       const tier = getTier(score);
       const file = new File([blob], "goat-lab-build.jpg", { type: "image/jpeg" });
-      await navigator.share({ files: [file], text: `I scored ${score} (${tier}) in GOAT Lab 🏀`, url: "https://goat-lab.vercel.app" });
+      await navigator.share({ files: [file], text: `I scored ${score} (${tier}) in GOAT Lab 🏀`, url: "https://playgoatlab.com" });
     } catch (err) { if (err.name !== "AbortError") console.error(err); }
     shareBtnImage.textContent = "Share Image";
     shareBtnImage.disabled = false;
@@ -4446,7 +4472,8 @@ shareBtnX.addEventListener("click", () => {
   const names = top.length ? ` Built around ${top.join(" & ")}.` : "";
   const tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀${names} Can you beat my build?`;
   openAndDownload(shareBtnX, "X / Twitter", () => {
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://goat-lab.vercel.app")}`, "_blank");
+    const tw = window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank");
+    if (tw) tw.opener = null;
   });
 });
 
@@ -4462,13 +4489,13 @@ shareBtnText.addEventListener("click", async () => {
     try {
       const blob = await getShareBlob();
       const file = new File([blob], "goat-lab-build.jpg", { type: "image/jpeg" });
-      await navigator.share({ files: [file], text, url: "https://goat-lab.vercel.app" });
+      await navigator.share({ files: [file], text, url: "https://playgoatlab.com" });
     } catch (err) { if (err.name !== "AbortError") console.error(err); }
     shareBtnText.textContent = "Text";
     shareBtnText.disabled = false;
   } else {
     // Desktop: open SMS with text pre-filled, download image
-    const msg = encodeURIComponent(`${text} https://goat-lab.vercel.app`);
+    const msg = encodeURIComponent(`${text} https://playgoatlab.com`);
     openAndDownload(shareBtnText, "Text", () => { window.open(`sms:?body=${msg}`, "_self"); });
   }
 });
@@ -4553,6 +4580,25 @@ function generateDailyData(dateStr) {
 }
 
 const DAILY_KEY = "goatlab_daily";
+const PB_KEY = "goatlab_pb";
+
+function getPB() {
+  try { return JSON.parse(localStorage.getItem(PB_KEY) || "{}"); } catch { return {}; }
+}
+function savePB(mode, score) {
+  const pb = getPB();
+  if (!pb[mode] || score > pb[mode]) {
+    pb[mode] = score;
+    try { localStorage.setItem(PB_KEY, JSON.stringify(pb)); } catch {}
+  }
+}
+function updatePBDisplay() {
+  const pb = getPB();
+  const pbClassic = document.querySelector("#pbClassic");
+  const pbBlind = document.querySelector("#pbBlind");
+  if (pbClassic) { if (pb.classic) { pbClassic.textContent = `Personal Best ${pb.classic}`; pbClassic.hidden = false; } else pbClassic.hidden = true; }
+  if (pbBlind)   { if (pb.blind)   { pbBlind.textContent   = `Personal Best ${pb.blind}`;   pbBlind.hidden   = false; } else pbBlind.hidden   = true; }
+}
 
 function getDailyHistory() {
   try { return JSON.parse(localStorage.getItem(DAILY_KEY) || "{}"); } catch { return {}; }
@@ -4618,18 +4664,28 @@ function updateDailyCard() {
   }
 
   if (dailyStreakEl) {
-    dailyStreakEl.textContent = `${streak}-day streak`;
-    dailyStreakEl.hidden = streak === 0;
+    if (streak >= 2) {
+      dailyStreakEl.textContent = `🔥 ${streak}-day streak`;
+      dailyStreakEl.hidden = false;
+    } else if (streak === 1) {
+      dailyStreakEl.textContent = `🔥 1-day streak`;
+      dailyStreakEl.hidden = false;
+    } else if (entry) {
+      dailyStreakEl.textContent = `Start a streak tomorrow`;
+      dailyStreakEl.hidden = false;
+    } else {
+      dailyStreakEl.hidden = true;
+    }
   }
 
   if (dailySubtitleEl) {
     if (isFranchise) {
       const data = generateDailyData(todayStr);
       dailySubtitleEl.textContent = data.franchiseTeamName
-        ? `Franchise · ${data.franchiseTeamName} · Blind · one attempt`
-        : "Franchise Challenge · Blind · one attempt";
+        ? `Franchise · ${data.franchiseTeamName} · Blind · one shot`
+        : "Franchise Challenge · Blind · one shot";
     } else {
-      dailySubtitleEl.textContent = "Blind · same draft for everyone · one attempt";
+      dailySubtitleEl.textContent = "Blind · same draft for everyone · one shot";
     }
   }
 }
@@ -4639,10 +4695,42 @@ function tickCountdown() {
   if (el) el.textContent = getCountdownStr();
 }
 
-if (new URLSearchParams(location.search).has("resetDaily")) {
+if (new URLSearchParams(location.search).has("recalcDaily")) {
   const h = getDailyHistory();
-  delete h[getTodayStr()];
-  try { localStorage.setItem(DAILY_KEY, JSON.stringify(h)); } catch {}
+  const todayStr = getTodayStr();
+  const entry = h[todayStr];
+  if (entry && Array.isArray(entry.picks) && entry.picks.length === attributes.length) {
+    const pickScores = attributes.map(attr => {
+      const p = entry.picks.find(pk => pk.attrKey === attr.key);
+      return p ? p.score : 0;
+    });
+    if (pickScores.every(s => s > 0)) {
+      const sorted = [...pickScores].sort((a, b) => a - b);
+      const lowest = sorted[0], secondLowest = sorted[1];
+      const hasHundred = pickScores.some(v => v === 100);
+      const floorOk = secondLowest >= 93 && (lowest >= 93 || (lowest === 92 && hasHundred));
+      const heightScore = (entry.picks.find(p => p.attrKey === "height") || {}).score || 0;
+      const goatGate = floorOk &&
+        pickScores.filter(v => v >= 97).length >= 5 &&
+        pickScores.filter(v => v >= 99).length >= 1 &&
+        pickScores.filter(v => v >= 98).length >= 2 &&
+        heightScore >= 90;
+      let newScore;
+      if (goatGate) {
+        newScore = 100;
+      } else {
+        const avg = pickScores.reduce((s, v) => s + v, 0) / pickScores.length;
+        const pen = pickScores.reduce((s, v) => s + Math.max(0, 75 - v) * 0.42, 0);
+        const elite = pickScores.filter(v => v >= 99).length * 1.5
+                    + pickScores.filter(v => v >= 96 && v < 99).length * 0.5;
+        const minPick = Math.min(...pickScores);
+        const bal = minPick >= 90 ? 2.0 : minPick >= 85 ? 1.0 : minPick >= 80 ? 0.5 : 0;
+        newScore = Math.max(55, Math.min(99, Math.round(avg - 7 - pen + elite + bal)));
+      }
+      h[todayStr] = { ...entry, score: newScore, tier: getTier(newScore) };
+      try { localStorage.setItem(DAILY_KEY, JSON.stringify(h)); } catch {}
+    }
+  }
   history.replaceState(null, "", location.pathname);
 }
 
@@ -4658,3 +4746,343 @@ setInterval(tickCountdown, 60000);
 
 renderBuildList();
 updateBody(null);
+
+// --- Accounts (optional Google login) + GLOBAL daily leaderboard ----------
+(function initAccountsAndLeaderboard() {
+  const Auth = window.GoatAuth;
+  if (!Auth || !Auth.enabled) return; // graceful: no Firebase -> features stay hidden
+
+  const $ = (id) => document.querySelector(id);
+  const accountBar = $("#accountBar");
+  const signedOut = $("#accountSignedOut");
+  const signedIn = $("#accountSignedIn");
+  const dangerZone = $("#accountDangerZone");
+  const accountName = $("#accountName");
+  const signInBtn = $("#signInBtn");
+  const signOutBtn = $("#signOutBtn");
+  const leaderboardBtn = $("#leaderboardBtn");
+  const viewLeaderboardBtn = $("#viewLeaderboardBtn");
+  const lbModal = $("#leaderboardModal");
+  const lbClose = $("#leaderboardClose");
+  const lbList = $("#leaderboardList");
+  const lbHint = $("#lbHint");
+
+  accountBar.hidden = false;
+
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  // Submit today's daily score to the global leaderboard (no-op if signed out).
+  function submitToday(dateStr, score, tier, franchise, franchiseTeam) {
+    if (!Auth.currentUser()) return;
+    const picks = (getDailyHistory()[dateStr] || {}).picks || null;
+    Auth.submitDailyScore(dateStr, { score, tier, franchise, franchiseTeam, picks }).catch(console.error);
+  }
+  function showResultButton() {
+    if (viewLeaderboardBtn) viewLeaderboardBtn.hidden = false;
+  }
+  // Push one day's local daily result up to the cloud.
+  function pushDailyHistory(dateStr) {
+    if (!Auth.currentUser()) return;
+    const entry = getDailyHistory()[dateStr];
+    if (entry) Auth.putDailyHistory(dateStr, entry).catch(console.error);
+  }
+  // On sign-in: merge cloud daily history with local (so streak + history follow
+  // you across devices), write the union back to local, and push local-only days up.
+  async function syncDailyHistory() {
+    if (!Auth.currentUser()) return;
+    const local = getDailyHistory();
+    let cloud = {};
+    try { cloud = await Auth.fetchDailyHistory(); } catch (e) { console.error(e); return; }
+    const merged = { ...local };
+    for (const [date, entry] of Object.entries(cloud)) {
+      if (!merged[date] || (entry.score || 0) >= (merged[date].score || 0)) merged[date] = entry;
+    }
+    try { localStorage.setItem("goatlab_daily", JSON.stringify(merged)); } catch (e) {}
+    // Push any day the cloud is missing (or where local beat the cloud).
+    for (const [date, entry] of Object.entries(merged)) {
+      if (!cloud[date] || (entry.score || 0) > (cloud[date].score || 0)) {
+        Auth.putDailyHistory(date, entry).catch(console.error);
+      }
+    }
+    try { updateDailyCard(); } catch (e) {}
+  }
+  window.GoatLeaderboard = { submitToday, showResultButton, pushDailyHistory };
+
+  // Render the global leaderboard for today.
+  async function renderLeaderboard() {
+    const me = Auth.currentUser();
+    lbHint.hidden = true;
+    lbList.innerHTML = '<p class="lb-empty">Loading today\'s board…</p>';
+    let rows;
+    try {
+      rows = await Auth.getDailyLeaderboard(getTodayStr(), 100);
+    } catch (e) {
+      console.error(e);
+      lbList.innerHTML = '<p class="lb-empty">Couldn\'t load the leaderboard.</p>';
+      return;
+    }
+    if (!rows.length) {
+      lbList.innerHTML = '<p class="lb-empty">No scores yet today. Be the first — play the Daily!</p>';
+    } else {
+      lbList.innerHTML = rows.map((r, i) => {
+        const mine = me && r.uid === me.uid;
+        const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}`;
+        return `
+          <div class="lb-row${mine ? " lb-row-me" : ""}">
+            <span class="lb-rank">${medal}</span>
+            <span class="lb-name">${esc(r.name || "Anonymous")}${mine ? " (you)" : ""}</span>
+            <span class="lb-score">${esc(r.score)}</span>
+          </div>`;
+      }).join("");
+    }
+    if (!me) {
+      lbHint.textContent = "Sign in and play today's Daily to claim your spot.";
+      lbHint.hidden = false;
+    }
+  }
+
+  setupModal(lbModal, () => hideModal(lbModal));
+  function openLeaderboard(trigger) { showModal(lbModal, trigger); renderLeaderboard(); }
+  leaderboardBtn.addEventListener("click", () => openLeaderboard(leaderboardBtn));
+  if (viewLeaderboardBtn) viewLeaderboardBtn.addEventListener("click", () => openLeaderboard(viewLeaderboardBtn));
+  lbClose.addEventListener("click", () => hideModal(lbModal));
+  lbModal.addEventListener("click", (e) => { if (e.target === lbModal) hideModal(lbModal); });
+
+  signInBtn.addEventListener("click", async () => {
+    signInBtn.textContent = "Opening Google…";
+    try { await Auth.signIn(); }
+    catch (e) { console.error(e); }
+    finally { signInBtn.innerHTML = '<span class="g-mark" aria-hidden="true">G</span> Sign in with Google'; }
+  });
+  signOutBtn.addEventListener("click", () => Auth.signOut());
+
+  const deleteAccountBtn = $("#deleteAccountBtn");
+  deleteAccountBtn.addEventListener("click", async () => {
+    if (!Auth.currentUser()) return;
+    if (!confirm("Delete your GOAT Lab account?\n\nThis permanently removes your saved builds, daily history & streak, leaderboard entries, and your sign-in. This cannot be undone.")) return;
+    if (!confirm("Are you absolutely sure? This is permanent.")) return;
+    deleteAccountBtn.disabled = true;
+    deleteAccountBtn.textContent = "Deleting…";
+    try {
+      await Auth.deleteAccount();
+      try { localStorage.removeItem("goatlab_daily"); } catch (e) {}
+      alert("Your account and all associated data have been deleted.");
+      location.reload();
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't fully delete the account. Please email ethan@momentumapps.net and we'll remove it.");
+      deleteAccountBtn.disabled = false;
+      deleteAccountBtn.textContent = "Delete account";
+    }
+  });
+
+  // --- Custom handle (public leaderboard name) ---------------------------
+  let currentHandle = null;
+  const editHandleBtn = $("#editHandleBtn");
+  const handleModal = $("#handleModal");
+  const handleInput = $("#handleInput");
+  const handleStatus = $("#handleStatus");
+  const handleSaveBtn = $("#handleSaveBtn");
+  const handleClose = $("#handleModalClose");
+
+  setupModal(handleModal, () => hideModal(handleModal));
+  editHandleBtn.addEventListener("click", () => {
+    handleInput.value = currentHandle || "";
+    handleStatus.textContent = "";
+    showModal(handleModal, editHandleBtn);
+    handleInput.focus();
+    handleInput.select();
+  });
+  handleClose.addEventListener("click", () => hideModal(handleModal));
+  handleModal.addEventListener("click", (e) => { if (e.target === handleModal) hideModal(handleModal); });
+  handleSaveBtn.addEventListener("click", async () => {
+    const name = handleInput.value.trim();
+    if (!name) { handleStatus.textContent = "Enter a name."; return; }
+    handleSaveBtn.disabled = true;
+    handleStatus.textContent = "Saving…";
+    try {
+      currentHandle = await Auth.setHandle(name);
+      accountName.textContent = currentHandle;
+      // Reflect the new name on today's leaderboard entry if already played.
+      const entry = getDailyHistory()[getTodayStr()];
+      if (entry) Auth.submitDailyScore(getTodayStr(), {
+        name: currentHandle, score: entry.score, tier: entry.tier || getTier(entry.score),
+        franchise: entry.franchise || false, franchiseTeam: entry.franchiseTeam || null, picks: entry.picks || null,
+      }).catch(console.error);
+      handleStatus.textContent = "Saved ✓";
+      setTimeout(() => hideModal(handleModal), 700);
+    } catch (e) {
+      console.error(e);
+      handleStatus.textContent = "Couldn't save — try again.";
+    } finally { handleSaveBtn.disabled = false; }
+  });
+  handleInput.addEventListener("keydown", (e) => { if (e.key === "Enter") handleSaveBtn.click(); });
+
+  // --- Save Build (My Builds) --------------------------------------------
+  const saveBuildButton = $("#saveBuildButton");
+  const saveModal = $("#saveModal");
+  const saveModalClose = $("#saveModalClose");
+  const saveNameInput = $("#saveNameInput");
+  const saveConfirmBtn = $("#saveConfirmBtn");
+  const saveStatus = $("#saveStatus");
+  const myBuildsBtn = $("#myBuildsBtn");
+  const savedModal = $("#savedModal");
+  const savedModalClose = $("#savedModalClose");
+  const savedList = $("#savedList");
+
+  function buildComplete() { return attributes.every((a) => build[a.key]); }
+
+  function serializeBuild(name) {
+    const picks = attributes.map((a) => {
+      const p = build[a.key];
+      return {
+        statKey: a.key, stat: a.label,
+        player: p.player.name, number: p.player.number,
+        era: p.teamEra.era, team: p.teamEra.team,
+        golden: !!p.teamEra.golden, score: p.score,
+      };
+    });
+    return { name: name.slice(0, 40), score: calculateScore(), mode: gameMode, picks };
+  }
+
+  function refreshSaveBtn() {
+    saveBuildButton.hidden = !(Auth.currentUser() && !result.hidden && buildComplete());
+  }
+  // Reveal "Save Build" whenever a finished result is shown (any mode).
+  if (typeof finish === "function") {
+    const _finish = finish;
+    finish = function patchedFinish() { _finish.apply(this, arguments); refreshSaveBtn(); };
+    window.finish = finish;
+  }
+
+  function closeSave() { hideModal(saveModal); saveStatus.textContent = ""; }
+  setupModal(saveModal, closeSave);
+  saveBuildButton.addEventListener("click", () => {
+    if (!Auth.currentUser()) return;
+    saveNameInput.value = `${calculateScore()} ${getTier(calculateScore())}`.slice(0, 40);
+    saveStatus.textContent = "";
+    showModal(saveModal, saveBuildButton);
+    saveNameInput.focus();
+    saveNameInput.select();
+  });
+  saveModalClose.addEventListener("click", closeSave);
+  saveModal.addEventListener("click", (e) => { if (e.target === saveModal) closeSave(); });
+  saveConfirmBtn.addEventListener("click", async () => {
+    const name = saveNameInput.value.trim() || `GOAT ${calculateScore()}`;
+    saveConfirmBtn.disabled = true;
+    saveStatus.textContent = "Saving…";
+    try {
+      await Auth.saveBuild(serializeBuild(name));
+      saveStatus.textContent = "Saved to My Builds ✓";
+      setTimeout(closeSave, 850);
+    } catch (e) {
+      console.error(e);
+      saveStatus.textContent = "Couldn't save — try again.";
+    } finally { saveConfirmBtn.disabled = false; }
+  });
+  saveNameInput.addEventListener("keydown", (e) => { if (e.key === "Enter") saveConfirmBtn.click(); });
+
+  function fmtDate(ts) { try { return ts && ts.toDate ? ts.toDate().toLocaleDateString() : ""; } catch { return ""; } }
+  async function renderSaved() {
+    savedList.innerHTML = '<p class="saved-empty">Loading…</p>';
+    let builds;
+    try { builds = await Auth.listBuilds(); }
+    catch (e) { console.error(e); savedList.innerHTML = '<p class="saved-empty">Couldn\'t load your builds.</p>'; return; }
+    if (!builds.length) {
+      savedList.innerHTML = '<p class="saved-empty">No saved builds yet. Finish a run and hit Save Build.</p>';
+      return;
+    }
+    const shortFor = (p) => {
+      const a = attributes.find((x) => x.key === p.statKey);
+      return (a && a.short) || p.stat || "";
+    };
+    savedList.innerHTML = builds.map((b) => {
+      const picks = Array.isArray(b.picks) ? b.picks : [];
+      const detail = picks.length
+        ? picks.map((p) => `
+            <div class="bd-pick">
+              <span class="bd-stat">${esc(shortFor(p))}</span>
+              <span class="bd-player">${esc(p.player || "—")}${p.golden ? ' <span class="bd-golden" title="Golden roll">✦</span>' : ""}</span>
+              <span class="bd-team">${esc(p.era || "")} ${esc(p.team || "")}</span>
+              <span class="bd-pscore">${esc(p.score)}</span>
+            </div>`).join("")
+        : '<p class="bd-empty">Pick details weren\'t saved for this build.</p>';
+      return `
+      <div class="saved-row" data-id="${esc(b.id)}">
+        <div class="saved-row-top">
+          <button class="saved-row-head" data-toggle="${esc(b.id)}" type="button" aria-expanded="false">
+            <span class="saved-row-score">${esc(b.score)}</span>
+            <span class="saved-row-meta">
+              <strong>${esc(b.name || "Untitled build")}</strong>
+              <small>${esc((b.mode || "").toUpperCase())} · ${esc(fmtDate(b.createdAt))} · tap to view</small>
+            </span>
+            <span class="saved-row-caret" aria-hidden="true">▾</span>
+          </button>
+          <button class="saved-row-del" data-del="${esc(b.id)}" type="button" aria-label="Delete build">&#x2715;</button>
+        </div>
+        <div class="saved-row-detail" hidden>${detail}</div>
+      </div>`;
+    }).join("");
+  }
+  setupModal(savedModal, () => hideModal(savedModal));
+  myBuildsBtn.addEventListener("click", () => { showModal(savedModal, myBuildsBtn); renderSaved(); });
+  savedModalClose.addEventListener("click", () => hideModal(savedModal));
+  savedModal.addEventListener("click", (e) => { if (e.target === savedModal) hideModal(savedModal); });
+  savedList.addEventListener("click", async (e) => {
+    const delBtn = e.target.closest("[data-del]");
+    if (delBtn) {
+      delBtn.disabled = true;
+      try { await Auth.deleteBuild(delBtn.getAttribute("data-del")); await renderSaved(); }
+      catch (err) { console.error(err); delBtn.disabled = false; }
+      return;
+    }
+    const head = e.target.closest("[data-toggle]");
+    if (head) {
+      const row = head.closest(".saved-row");
+      const detail = row.querySelector(".saved-row-detail");
+      const open = detail.hidden;
+      detail.hidden = !open;
+      head.setAttribute("aria-expanded", String(open));
+      row.classList.toggle("is-open", open);
+    }
+  });
+
+  // First-time experience: auto-open How to Play once
+  if (!localStorage.getItem("goatlab_seen_help")) {
+    setTimeout(() => showModal(helpModal, null), 400);
+    try { localStorage.setItem("goatlab_seen_help", "1"); } catch {}
+  }
+
+  updatePBDisplay();
+
+  // Auth state drives the UI. Load handle, then back-fill today's score.
+  Auth.onChange(async (user) => {
+    if (user) {
+      signedOut.hidden = true;
+      signedIn.hidden = false;
+      dangerZone.hidden = false;
+      accountName.textContent = user.displayName || user.email || "you";
+      try {
+        currentHandle = await Auth.getHandle();
+        accountName.textContent = currentHandle;
+      } catch (e) { console.error(e); }
+      try {
+        const todayStr = getTodayStr();
+        const entry = getDailyHistory()[todayStr];
+        if (entry) Auth.submitDailyScore(todayStr, {
+          name: currentHandle, score: entry.score, tier: entry.tier || getTier(entry.score),
+          franchise: entry.franchise || false, franchiseTeam: entry.franchiseTeam || null, picks: entry.picks || null,
+        }).catch(console.error);
+      } catch (e) { console.error(e); }
+      syncDailyHistory(); // merge cloud <-> local daily history + streak
+      refreshSaveBtn();
+    } else {
+      signedOut.hidden = false;
+      signedIn.hidden = true;
+      dangerZone.hidden = true;
+      currentHandle = null;
+      saveBuildButton.hidden = true;
+    }
+  });
+})();
