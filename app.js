@@ -4291,21 +4291,17 @@ async function generateShareImage() {
 }
 
 function buildShareText(score, tier) {
-  const picks = attributes
-    .map((attr) => {
-      const pick = build[attr.key];
-      return `${attr.label}: ${pick.player.name} (${pick.score}) — ${pick.teamEra.era} ${pick.teamEra.team}`;
-    })
-    .join("\n");
+  const best = attributes.map(a => build[a.key]).filter(Boolean).sort((a, b) => b.score - a.score)[0];
+  const bestStr = best ? ` My best pick was ${best.player.name} (${best.score}).` : "";
   if (gameMode === "daily") {
     const d = new Date();
     const dateLabel = d.toLocaleDateString("en-US", { month: "long", day: "numeric" });
     const prefix = dailyData?.franchise
       ? `I scored ${score} building the greatest ${dailyData.franchiseTeamName} on the ${dateLabel} GOAT Lab Daily 🏀`
       : `I scored ${score} on the ${dateLabel} GOAT Lab Daily 🏀`;
-    return `${prefix}\n\n${picks}\n\nCan you beat me? https://playgoatlab.com`;
+    return `${prefix}${bestStr} Can you beat me? https://playgoatlab.com`;
   }
-  return `I scored ${score} (${tier}) in GOAT Lab 🏀\n\n${picks}\n\nCan you beat my build? https://playgoatlab.com`;
+  return `I scored ${score} (${tier}) in GOAT Lab 🏀${bestStr} Can you beat my build? https://playgoatlab.com`;
 }
 
 function openShareModal() {
@@ -4433,8 +4429,9 @@ let _buildSnapshot = null;   // saved build/gameMode so we can restore after sha
 let _modeSnapshot = null;
 
 function buildSavedShareText(b) {
-  const picks = (b.picks || []).map(p => `${p.stat}: ${p.player} (${p.score}) — ${p.era} ${p.team}`).join("\n");
-  return `I scored ${b.score} (${getTier(b.score)}) in GOAT Lab 🏀\n\n${picks}\n\nCan you beat my build? https://playgoatlab.com`;
+  const best = (b.picks || []).slice().sort((a, x) => x.score - a.score)[0];
+  const bestStr = best ? ` My best pick was ${best.player} (${best.score}).` : "";
+  return `I scored ${b.score} (${getTier(b.score)}) in GOAT Lab 🏀${bestStr} Can you beat my build? https://playgoatlab.com`;
 }
 
 function openShareModalFromSaved(b) {
@@ -4543,12 +4540,16 @@ shareBtnX.addEventListener("click", () => {
   let tweet;
   if (_savedShareData) {
     const b = _savedShareData;
-    tweet = `I scored ${b.score} (${getTier(b.score)}) in GOAT Lab 🏀 Can you beat my build?`;
+    const best = (b.picks || []).slice().sort((a, x) => x.score - a.score)[0];
+    const bestStr = best ? ` My best pick was ${best.player} (${best.score}).` : "";
+    tweet = `I scored ${b.score} (${getTier(b.score)}) in GOAT Lab 🏀${bestStr} Can you beat my build?`;
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank", "noopener,noreferrer");
   } else {
     const score = calculateScore();
     const tier = getTier(score);
-    tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build?`;
+    const best = attributes.map(a => build[a.key]).filter(Boolean).sort((a, b) => b.score - a.score)[0];
+    const bestStr = best ? ` My best pick was ${best.player.name} (${best.score}).` : "";
+    tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀${bestStr} Can you beat my build?`;
     openAndDownload(shareBtnX, "X / Twitter", () => {
       window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank", "noopener,noreferrer");
     });
