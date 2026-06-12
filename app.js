@@ -3460,8 +3460,7 @@ function calculateScore() {
   const sorted = [...values].sort((a, b) => a - b);
   const lowest = sorted[0];
   const secondLowest = sorted[1];
-  const hasHundred = values.some((value) => value === 100);
-  const floorOk = secondLowest >= 93 && (lowest >= 93 || (lowest === 92 && hasHundred));
+  const floorOk = secondLowest >= 93 && lowest >= 92;
 
   const goatGate =
     floorOk &&
@@ -4793,8 +4792,7 @@ function recalcEntryScore(entry) {
   if (!pickScores.every(s => s > 0)) return null;
   const sorted = [...pickScores].sort((a, b) => a - b);
   const lowest = sorted[0], secondLowest = sorted[1];
-  const hasHundred = pickScores.some(v => v === 100);
-  const floorOk = secondLowest >= 93 && (lowest >= 93 || (lowest === 92 && hasHundred));
+  const floorOk = secondLowest >= 93 && lowest >= 92;
   const heightScore = (entry.picks.find(p => p.attrKey === "height") || {}).score || 0;
   const goatGate = floorOk &&
     pickScores.filter(v => v >= 97).length >= 5 &&
