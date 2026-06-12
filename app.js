@@ -3959,10 +3959,13 @@ function reset() {
 
 function openDailyResultView(entry) {
   if (!entry?.picks) return;
+  // Snapshot live globals so closeShareModal can restore them
+  _buildSnapshot = Object.assign({}, build);
+  _modeSnapshot = gameMode;
   // Reconstruct globals so the share modal and image work correctly
   gameMode = "daily";
   dailyData = { franchise: entry.franchise || false, franchiseTeamName: entry.franchiseTeam || null };
-  build = {};
+  Object.keys(build).forEach(k => delete build[k]);
   entry.picks.forEach(p => {
     if (!p) return;
     const attr = attributes.find(a => a.key === p.attrKey);
@@ -4320,10 +4323,10 @@ function openShareModal() {
     const row = document.createElement("div");
     row.className = "share-row";
     row.innerHTML = `
-      <span class="share-row-attr">${attr.label}</span>
-      <span class="share-row-player">${pick.player.name}</span>
-      <span class="share-row-meta">${pick.teamEra.era} ${pick.teamEra.team}</span>
-      <span class="share-row-score">${pick.score}</span>
+      <span class="share-row-attr">${esc(attr.label)}</span>
+      <span class="share-row-player">${esc(pick.player.name)}</span>
+      <span class="share-row-meta">${esc(pick.teamEra.era)} ${esc(pick.teamEra.team)}</span>
+      <span class="share-row-score">${esc(pick.score)}</span>
     `;
     shareCardRows.appendChild(row);
   });
@@ -4479,7 +4482,10 @@ function openShareModalFromSaved(b) {
 
 function primeShareImage() {
   _shareBlob = null;
-  _shareBlobPromise = generateShareImage().then(blob => { _shareBlob = blob; return blob; });
+  _shareBlobPromise = generateShareImage().then(
+    blob => { _shareBlob = blob; return blob; },
+    err  => { _shareBlobPromise = null; return Promise.reject(err); }
+  );
 }
 
 async function getShareBlob() {
@@ -4540,8 +4546,7 @@ shareBtnX.addEventListener("click", () => {
     const top = (b.picks || []).slice().sort((a, x) => x.score - a.score).slice(0, 2).map(p => p.player);
     const names = top.length ? ` Built around ${top.join(" & ")}.` : "";
     tweet = `I scored ${b.score} (${getTier(b.score)}) in GOAT Lab 🏀${names} Can you beat my build?`;
-    const tw = window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank");
-    if (tw) tw.opener = null;
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank", "noopener,noreferrer");
   } else {
     const score = calculateScore();
     const tier = getTier(score);
@@ -4549,8 +4554,7 @@ shareBtnX.addEventListener("click", () => {
     const names = top.length ? ` Built around ${top.join(" & ")}.` : "";
     tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀${names} Can you beat my build?`;
     openAndDownload(shareBtnX, "X / Twitter", () => {
-      const tw = window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank");
-      if (tw) tw.opener = null;
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank", "noopener,noreferrer");
     });
   }
 });
@@ -4701,12 +4705,12 @@ function saveDailyResult(dateStr, score, tier, franchise, franchiseTeam, picks) 
 
 function getDailyStreak(history, todayStr) {
   let streak = 0;
-  const d = new Date(todayStr + "T12:00:00");
+  const d = new Date(todayStr + "T12:00:00Z");
   while (true) {
-    const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const k = `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
     if (!history[k]) break;
     streak++;
-    d.setDate(d.getDate() - 1);
+    d.setUTCDate(d.getUTCDate() - 1);
   }
   return streak;
 }

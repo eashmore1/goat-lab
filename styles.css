@@ -1779,6 +1779,7 @@ h1 {
 .saved-row-del, .saved-row-share {
   flex: 0 0 auto;
   width: 30px; height: 30px;
+  min-width: 44px; min-height: 44px;
   border: 2px solid var(--ink);
   background: var(--chalk); color: var(--ink);
   font-weight: 900; cursor: pointer;
