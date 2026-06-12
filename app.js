@@ -4618,8 +4618,9 @@ function mulberry32(seed) {
 }
 
 function getTodayStr() {
+  // Local date so the daily rolls over at the player's own midnight, not UTC's.
   const d = new Date();
-  return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
 function strToSeed(str) {
@@ -4722,7 +4723,8 @@ const dailySubtitleEl = document.querySelector("#dailySubtitle");
 
 function getCountdownStr() {
   const now = new Date();
-  const midnight = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
+  // Local midnight tonight, matching getTodayStr's local rollover.
+  const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
   const totalMins = Math.floor((midnight - now) / 60000);
   const h = Math.floor(totalMins / 60);
   const m = totalMins % 60;
@@ -4863,16 +4865,34 @@ updateBody(null);
   const accountBar = $("#accountBar");
   const signedOut = $("#accountSignedOut");
   const signedIn = $("#accountSignedIn");
-  const dangerZone = $("#accountDangerZone");
   const accountName = $("#accountName");
   const signInBtn = $("#signInBtn");
   const signOutBtn = $("#signOutBtn");
+  const settingsBtn = $("#settingsBtn");
+  const settingsMenu = $("#settingsMenu");
   const leaderboardBtn = $("#leaderboardBtn");
   const viewLeaderboardBtn = $("#viewLeaderboardBtn");
-  const lbModal = $("#leaderboardModal");
-  const lbClose = $("#leaderboardClose");
+  const lbPage = $("#leaderboardPage");
+  const lbBackBtn = $("#lbBackBtn");
+  const lbPodium = $("#lbPodium");
   const lbList = $("#leaderboardList");
   const lbHint = $("#lbHint");
+
+  // Settings dropdown (Sign out / Delete account)
+  if (settingsBtn && settingsMenu) {
+    const closeSettings = () => { settingsMenu.hidden = true; settingsBtn.setAttribute("aria-expanded", "false"); };
+    settingsBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const open = settingsMenu.hidden;
+      settingsMenu.hidden = !open;
+      settingsBtn.setAttribute("aria-expanded", String(open));
+    });
+    document.addEventListener("click", (e) => {
+      if (!settingsMenu.hidden && !settingsMenu.contains(e.target) && e.target !== settingsBtn) closeSettings();
+    });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeSettings(); });
+    settingsMenu.addEventListener("click", () => closeSettings());
+  }
 
   accountBar.hidden = false;
 
@@ -4919,31 +4939,54 @@ updateBody(null);
   window.GoatLeaderboard = { submitToday, showResultButton, pushDailyHistory };
 
   // Render the global leaderboard for today.
+  // Podium card for one of the top 3 (place = 1, 2, or 3).
+  function podiumCard(r, place, mine) {
+    const medal = place === 1 ? "🥇" : place === 2 ? "🥈" : "🥉";
+    return `
+      <div class="lb-pod lb-pod-${place}${mine ? " lb-pod-me" : ""}">
+        <span class="lb-pod-medal" aria-hidden="true">${medal}</span>
+        <span class="lb-pod-rank">${place}</span>
+        <span class="lb-pod-name">${esc(r.name || "Anonymous")}${mine ? " (you)" : ""}</span>
+        <span class="lb-pod-score">${esc(r.score)}</span>
+        <span class="lb-pod-step" aria-hidden="true"></span>
+      </div>`;
+  }
+
   async function renderLeaderboard() {
     const me = Auth.currentUser();
     lbHint.hidden = true;
+    lbPodium.innerHTML = "";
     lbList.innerHTML = '<p class="lb-empty">Loading today\'s board…</p>';
     let rows;
     try {
-      rows = await Auth.getDailyLeaderboard(getTodayStr(), 100);
+      rows = await Auth.getDailyLeaderboard(getTodayStr(), 75);
     } catch (e) {
       console.error(e);
       lbList.innerHTML = '<p class="lb-empty">Couldn\'t load the leaderboard.</p>';
       return;
     }
+    const isMine = (r) => me && r.uid === me.uid;
     if (!rows.length) {
       lbList.innerHTML = '<p class="lb-empty">No scores yet today. Be the first — play the Daily!</p>';
     } else {
-      lbList.innerHTML = rows.map((r, i) => {
-        const mine = me && r.uid === me.uid;
-        const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}`;
-        return `
-          <div class="lb-row${mine ? " lb-row-me" : ""}">
-            <span class="lb-rank">${medal}</span>
-            <span class="lb-name">${esc(r.name || "Anonymous")}${mine ? " (you)" : ""}</span>
-            <span class="lb-score">${esc(r.score)}</span>
-          </div>`;
-      }).join("");
+      // Top 3 -> podium (rendered 2nd, 1st, 3rd so 1st sits centered/tallest).
+      const top = rows.slice(0, 3);
+      const order = [top[1], top[0], top[2]];
+      const place = [2, 1, 3];
+      lbPodium.innerHTML = order.map((r, i) => r ? podiumCard(r, place[i], isMine(r)) : "").join("");
+      // 4th onward -> scrollable list.
+      const rest = rows.slice(3);
+      lbList.innerHTML = rest.length
+        ? rest.map((r, i) => {
+            const mine = isMine(r);
+            return `
+              <div class="lb-row${mine ? " lb-row-me" : ""}">
+                <span class="lb-rank">${i + 4}</span>
+                <span class="lb-name">${esc(r.name || "Anonymous")}${mine ? " (you)" : ""}</span>
+                <span class="lb-score">${esc(r.score)}</span>
+              </div>`;
+          }).join("")
+        : '<p class="lb-empty lb-empty-rest">Only the podium so far — climb on!</p>';
     }
     if (!me) {
       lbHint.textContent = "Sign in and play today's Daily to claim your spot.";
@@ -4951,12 +4994,28 @@ updateBody(null);
     }
   }
 
-  setupModal(lbModal, () => hideModal(lbModal));
-  function openLeaderboard(trigger) { showModal(lbModal, trigger); renderLeaderboard(); }
-  leaderboardBtn.addEventListener("click", () => openLeaderboard(leaderboardBtn));
-  if (viewLeaderboardBtn) viewLeaderboardBtn.addEventListener("click", () => openLeaderboard(viewLeaderboardBtn));
-  lbClose.addEventListener("click", () => hideModal(lbModal));
-  lbModal.addEventListener("click", (e) => { if (e.target === lbModal) hideModal(lbModal); });
+  // Full-screen leaderboard page: remember the screen we came from, restore on Back.
+  let lbReturnScreen = null;
+  const mainScreens = () => [
+    document.querySelector("#modeScreen"),
+    document.querySelector("#gameGrid"),
+    document.querySelector("#result"),
+  ];
+  function openLeaderboard() {
+    lbReturnScreen = mainScreens().find((s) => s && !s.hidden) || document.querySelector("#modeScreen");
+    mainScreens().forEach((s) => { if (s) s.hidden = true; });
+    lbPage.hidden = false;
+    window.scrollTo(0, 0);
+    renderLeaderboard();
+  }
+  function closeLeaderboard() {
+    lbPage.hidden = true;
+    (lbReturnScreen || document.querySelector("#modeScreen")).hidden = false;
+    window.scrollTo(0, 0);
+  }
+  leaderboardBtn.addEventListener("click", () => openLeaderboard());
+  if (viewLeaderboardBtn) viewLeaderboardBtn.addEventListener("click", () => openLeaderboard());
+  lbBackBtn.addEventListener("click", () => closeLeaderboard());
 
   signInBtn.addEventListener("click", async () => {
     signInBtn.textContent = "Opening Google…";
@@ -5180,7 +5239,6 @@ updateBody(null);
     if (user) {
       signedOut.hidden = true;
       signedIn.hidden = false;
-      dangerZone.hidden = false;
       accountName.textContent = user.displayName || user.email || "you";
       try {
         currentHandle = await Auth.getHandle();
@@ -5199,7 +5257,6 @@ updateBody(null);
     } else {
       signedOut.hidden = false;
       signedIn.hidden = true;
-      dangerZone.hidden = true;
       currentHandle = null;
       saveBuildButton.hidden = true;
     }

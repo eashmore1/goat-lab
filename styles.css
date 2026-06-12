@@ -1736,6 +1736,141 @@ h1 {
 .lb-row-me .lb-score { background: var(--court-dark); }
 .lb-hint { margin: 12px 0 0; padding-top: 10px; border-top: 1px dashed rgba(21,20,19,0.25); font: 700 0.8rem/1.4 "Space Mono", ui-monospace, monospace; color: var(--green); }
 
+/* ===== Full-screen leaderboard page ===== */
+.leaderboard-page {
+  padding: 8px 4px 40px;
+  animation: lb-fade 0.2s ease;
+}
+@keyframes lb-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.lb-page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.lb-page-title {
+  margin: 4px 0 6px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.5rem, 4vw, 2.4rem);
+  line-height: 0.96;
+}
+.lb-back {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  border: 2px solid var(--ink);
+  background: var(--ink);
+  color: var(--chalk);
+  box-shadow: var(--shadow);
+  font: 800 0.78rem/1 "Space Mono", ui-monospace, monospace;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.lb-back:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+
+/* Podium — rendered 2nd · 1st · 3rd, 1st centered + tallest */
+.lb-podium {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  align-items: end;
+  gap: 10px;
+  max-width: 620px;
+  margin: 0 auto 26px;
+}
+.lb-pod {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+  padding: 14px 8px 0;
+  border: 3px solid var(--ink);
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.lb-pod-medal { font-size: 1.8rem; line-height: 1; }
+.lb-pod-rank {
+  font: 950 0.7rem/1 "Space Mono", ui-monospace, monospace;
+  letter-spacing: 0.1em;
+  opacity: 0.55;
+}
+.lb-pod-name {
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 800;
+  font-size: 0.96rem;
+  line-height: 1.05;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lb-pod-score {
+  display: grid;
+  place-items: center;
+  min-width: 48px;
+  padding: 4px 10px;
+  margin-top: 2px;
+  background: var(--ink);
+  color: var(--chalk);
+  font: 950 1.2rem/1 "Space Mono", ui-monospace, monospace;
+}
+.lb-pod-step {
+  margin-top: 8px;
+  width: 100%;
+  border-top: 3px solid var(--ink);
+}
+/* 1st place — gold, biggest, tallest step */
+.lb-pod-1 { background: var(--gold); padding-top: 18px; }
+.lb-pod-1 .lb-pod-medal { font-size: 2.6rem; }
+.lb-pod-1 .lb-pod-name { font-size: 1.18rem; }
+.lb-pod-1 .lb-pod-score { font-size: 1.5rem; min-width: 58px; }
+.lb-pod-1 .lb-pod-step { height: 56px; }
+/* 2nd place — medium */
+.lb-pod-2 .lb-pod-medal { font-size: 2.1rem; }
+.lb-pod-2 .lb-pod-step { height: 36px; }
+/* 3rd place — smallest */
+.lb-pod-3 .lb-pod-step { height: 22px; }
+.lb-pod-me { outline: 3px solid var(--court-dark); outline-offset: 2px; }
+
+/* On the full page, let the page scroll instead of an inner scrollbar */
+.leaderboard-page .lb-list { max-height: none; overflow: visible; max-width: 620px; margin: 0 auto; }
+.lb-empty-rest { text-align: center; padding: 14px; }
+.leaderboard-page .lb-hint { max-width: 620px; margin: 16px auto 0; text-align: center; }
+
+/* ===== Settings menu (account bar) ===== */
+.settings-wrap { position: relative; display: inline-block; }
+.account-btn-gear[aria-expanded="true"] { background: var(--ink); color: var(--chalk); }
+.settings-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  min-width: 184px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.settings-item {
+  padding: 11px 14px;
+  text-align: left;
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(21, 20, 19, 0.18);
+  cursor: pointer;
+  font: 800 0.78rem/1 "Space Mono", ui-monospace, monospace;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.settings-item:last-child { border-bottom: none; }
+.settings-item:hover { background: var(--gold); }
+.settings-item-danger { color: #a8321f; }
+.settings-item-danger:hover { background: #b83a2a; color: #fff; }
+
 /* ===== My Builds + handle modals ===== */
 #saveBuildButton {
   flex: 0 0 auto;
