@@ -127,22 +127,22 @@ window.GoatAuth = (() => {
     // --- Daily history / streak (cloud-synced, one doc per date) ------------
     async fetchDailyHistory() {
       if (!enabled || !user) return {};
-      const snap = await userDoc().collection("dailyHistory").get();
+      const snap = await userDoc().collection("dailyHistory2").get();
       const out = {};
       snap.docs.forEach((d) => { out[d.id] = d.data(); });
       return out;
     },
     async putDailyHistory(dateStr, entry) {
       if (!enabled || !user) return;
-      await userDoc().collection("dailyHistory").doc(dateStr).set(entry);
+      await userDoc().collection("dailyHistory2").doc(dateStr).set(entry);
     },
 
     // --- Delete account + all associated data ------------------------------
     async deleteAccount() {
       if (!enabled || !user) return;
       const uid = user.uid;
-      // Leaderboard entries exist only for days in dailyHistory — use those.
-      const dailySnap = await userDoc().collection("dailyHistory").get();
+      // Leaderboard entries exist only for days in dailyHistory2 — use those.
+      const dailySnap = await userDoc().collection("dailyHistory2").get();
       await Promise.all(dailySnap.docs.map((d) =>
         db.collection("dailyLeaderboard").doc(d.id).collection("entries").doc(uid).delete().catch(() => {})));
       // Delete daily history, saved builds, and the profile doc.

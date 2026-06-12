@@ -4630,9 +4630,9 @@ function strToSeed(str) {
 }
 
 function isFranchiseDay(dateStr) {
+  if (dateStr < "2026-06-19") return false;
   const d = new Date(dateStr + "T12:00:00");
-  const weekNum = Math.floor(d.getTime() / (7 * 24 * 60 * 60 * 1000));
-  return d.getDay() === (strToSeed("fw" + weekNum) % 7);
+  return d.getDay() === 5; // Friday
 }
 
 function seededShuffle(arr, rng) {
@@ -4673,7 +4673,7 @@ function generateDailyData(dateStr) {
   return { franchise: franchise && !!franchiseTeamName, franchiseTeamName, rounds };
 }
 
-const DAILY_KEY = "goatlab_daily";
+const DAILY_KEY = "goatlab_daily_v2";
 const PB_KEY = "goatlab_pb";
 
 function getPB() {
@@ -4928,7 +4928,7 @@ updateBody(null);
       }
     }
     // After recalc: local is authoritative — push everything local up to cloud
-    try { localStorage.setItem("goatlab_daily", JSON.stringify(merged)); } catch (e) {}
+    try { localStorage.setItem(DAILY_KEY, JSON.stringify(merged)); } catch (e) {}
     for (const [date, entry] of Object.entries(merged)) {
       if (recalcPending || !cloud[date] || (entry.score || 0) > (cloud[date].score || 0)) {
         Auth.putDailyHistory(date, entry).catch(console.error);
@@ -5035,7 +5035,7 @@ updateBody(null);
     deleteAccountBtn.textContent = "Deleting…";
     try {
       await Auth.deleteAccount();
-      try { localStorage.removeItem("goatlab_daily"); } catch (e) {}
+      try { localStorage.removeItem(DAILY_KEY); } catch (e) {}
       alert("Your account and all associated data have been deleted.");
       location.reload();
     } catch (e) {
