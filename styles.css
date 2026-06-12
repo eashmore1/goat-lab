@@ -603,6 +603,13 @@ h1 {
   background: var(--gold);
 }
 
+/* On the gold fill, the translucent --muted value text only reaches ~3.4-4.5:1.
+   Solid ink gives 10:1 (WCAG AA). Scoped to filled chips; chalk chips keep muted. */
+.build-chip.filled strong,
+.build-chip.filled span {
+  color: var(--ink);
+}
+
 .round-card {
   display: flex;
   align-items: start;
@@ -822,7 +829,9 @@ h1 {
 }
 
 .card:nth-child(3n) .card-art {
-  background: var(--red);
+  /* Deeper than --red #d64d3a: that mid-tone fails WCAG AA for the cream
+     .attribute-score label (3.93:1). This brick red gives cream ~5.3:1. */
+  background: #b83a2a;
 }
 
 .jersey {
@@ -928,7 +937,8 @@ h1 {
   margin: 6px 0 0;
   font: 400 0.68rem/1.5 "Space Mono", ui-monospace, monospace;
   color: var(--ink);
-  opacity: 0.6;
+  /* 0.6 faded ink on the gold banner = 3.81:1 (fails AA). 0.75 = ~5.7:1. */
+  opacity: 0.75;
   letter-spacing: 0.02em;
 }
 
@@ -941,7 +951,8 @@ h1 {
   text-transform: uppercase;
   padding: 10px 18px;
   cursor: pointer;
-  opacity: 0.55;
+  /* 0.55 faded ink on the gold banner = 3.36:1 (fails AA). 0.75 = ~5.7:1. */
+  opacity: 0.75;
   transition: opacity 0.15s;
 }
 .play-again-btn:hover { opacity: 1; }
@@ -1350,7 +1361,8 @@ h1 {
 
 .share-btn-image {
   grid-column: 1 / -1;
-  background: var(--court);
+  /* --court #c9673d + cream = 3.57:1 (fails AA); --court-dark = ~7.9:1. */
+  background: var(--court-dark);
   color: var(--chalk);
   padding: 13px;
   font-size: 0.8rem;
