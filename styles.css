@@ -1744,6 +1744,12 @@ h1 {
   .lb-rank { font-size: 0.82rem; }
   .lb-name { font-size: 0.82rem; }
   .lb-score { min-width: 36px; height: 30px; font-size: 0.9rem; }
+
+  /* Settings dropdown — open rightward so it stays on screen */
+  .settings-menu {
+    right: auto;
+    left: 0;
+  }
 }
 
 @media (max-width: 480px) {
