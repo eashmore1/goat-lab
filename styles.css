@@ -1692,6 +1692,55 @@ h1 {
   .help-top {
     padding: 8px 10px;
   }
+
+  /* Leaderboard — mobile */
+  .leaderboard-page {
+    padding: 6px 2px 40px;
+  }
+  .lb-page-head {
+    align-items: center;
+    margin-bottom: 14px;
+    gap: 10px;
+  }
+  .lb-page-title {
+    font-size: 1.4rem;
+    margin: 2px 0 4px;
+  }
+  .lb-back {
+    padding: 8px 12px;
+    font-size: 0.72rem;
+  }
+  .lb-podium {
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .lb-pod {
+    padding: 8px 4px 0;
+    gap: 2px;
+  }
+  .lb-pod-medal { font-size: 1.3rem; }
+  .lb-pod-name { font-size: 0.76rem; }
+  .lb-pod-score {
+    font-size: 0.9rem;
+    min-width: 36px;
+    padding: 3px 6px;
+  }
+  .lb-pod-1 { padding-top: 12px; }
+  .lb-pod-1 .lb-pod-medal { font-size: 1.7rem; }
+  .lb-pod-1 .lb-pod-name { font-size: 0.88rem; }
+  .lb-pod-1 .lb-pod-score { font-size: 1.05rem; min-width: 42px; }
+  .lb-pod-1 .lb-pod-step { height: 36px; }
+  .lb-pod-2 .lb-pod-medal { font-size: 1.5rem; }
+  .lb-pod-2 .lb-pod-step { height: 22px; }
+  .lb-pod-3 .lb-pod-step { height: 12px; }
+  .lb-row {
+    padding: 6px 8px;
+    gap: 6px;
+    grid-template-columns: 36px 1fr auto;
+  }
+  .lb-rank { font-size: 0.82rem; }
+  .lb-name { font-size: 0.82rem; }
+  .lb-score { min-width: 36px; height: 30px; font-size: 0.9rem; }
 }
 
 @media (max-width: 480px) {
