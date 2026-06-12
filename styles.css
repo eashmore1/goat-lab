@@ -1125,6 +1125,18 @@ h1 {
   border-bottom-color: var(--ink) !important;
 }
 
+.footer-x {
+  display: inline-flex;
+  align-items: center;
+  border-bottom: none !important;
+  opacity: 0.55;
+  transition: opacity 140ms ease !important;
+}
+.footer-x:hover {
+  opacity: 1;
+  border-bottom-color: transparent !important;
+}
+
 @media (max-width: 930px) {
   body {
     overflow: auto;
