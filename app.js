@@ -4562,12 +4562,11 @@ shareBtnX.addEventListener("click", () => {
 shareBtnText.addEventListener("click", async () => {
   const score = _savedShareData ? _savedShareData.score : calculateScore();
   const tier = getTier(score);
-  const text = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build?`;
-  const msg = encodeURIComponent(`${text} https://playgoatlab.com`);
+  const text = `I scored ${score} (${tier}) in GOAT Lab 🏀 playgoatlab.com`;
+  const msg = encodeURIComponent(text);
   if (_savedShareData) {
-    // Saved build — no canvas available, text-only share
     if (typeof navigator.share === "function") {
-      try { await navigator.share({ text, url: "https://playgoatlab.com" }); }
+      try { await navigator.share({ text }); }
       catch (err) { if (err.name !== "AbortError") console.error(err); }
     } else {
       window.open(`sms:?body=${msg}`, "_self");
@@ -4576,19 +4575,17 @@ shareBtnText.addEventListener("click", async () => {
   }
   const testFile = new File([], "t.jpg", { type: "image/jpeg" });
   if (typeof navigator.canShare === "function" && navigator.canShare({ files: [testFile] })) {
-    // Mobile: share sheet — image auto-attaches when user picks Messages
     shareBtnText.textContent = _shareBlob ? "Opening…" : "Generating…";
     shareBtnText.disabled = true;
     try {
       const blob = await getShareBlob();
       const file = new File([blob], "goat-lab-build.jpg", { type: "image/jpeg" });
-      await navigator.share({ files: [file], text, url: "https://playgoatlab.com" });
+      await navigator.share({ files: [file], text });
     } catch (err) { if (err.name !== "AbortError") console.error(err); }
-    shareBtnText.textContent = "Text";
+    shareBtnText.textContent = "Share";
     shareBtnText.disabled = false;
   } else {
-    // Desktop: open SMS with text pre-filled, download image
-    openAndDownload(shareBtnText, "Text", () => { window.open(`sms:?body=${msg}`, "_self"); });
+    openAndDownload(shareBtnText, "Share", () => { window.open(`sms:?body=${msg}`, "_self"); });
   }
 });
 
