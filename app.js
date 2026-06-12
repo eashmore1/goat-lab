@@ -5242,6 +5242,8 @@ updateBody(null);
       signedIn.hidden = false;
       const acctItems = document.querySelector("#settingsAccountItems");
       if (acctItems) acctItems.hidden = false;
+      const acctActions = document.querySelector("#accountSignedInActions");
+      if (acctActions) acctActions.hidden = false;
       accountName.textContent = user.displayName || user.email || "you";
       try {
         currentHandle = await Auth.getHandle();
@@ -5262,6 +5264,8 @@ updateBody(null);
       signedIn.hidden = true;
       const acctItems = document.querySelector("#settingsAccountItems");
       if (acctItems) acctItems.hidden = true;
+      const acctActions = document.querySelector("#accountSignedInActions");
+      if (acctActions) acctActions.hidden = true;
       currentHandle = null;
       saveBuildButton.hidden = true;
     }

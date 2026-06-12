@@ -1892,6 +1892,8 @@ h1 {
 .leaderboard-page .lb-hint { max-width: 620px; margin: 16px auto 0; text-align: center; }
 
 /* ===== Settings menu (account bar) ===== */
+.account-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.account-signedin-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .settings-wrap { position: relative; display: inline-block; }
 .account-btn-gear[aria-expanded="true"] { background: var(--ink-bg); color: var(--chalk); }
 .settings-menu {

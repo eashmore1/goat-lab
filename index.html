@@ -36,7 +36,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=12" />
+    <link rel="stylesheet" href="styles.css?v=13" />
     <script src="error-monitor.js"></script>
 
     <!-- Structured data: helps Google show a richer search result -->
@@ -89,23 +89,27 @@
           </div>
           <div class="account-signedin" id="accountSignedIn" hidden>
             <span class="account-who">Playing as <strong id="accountName">—</strong></span>
+          </div>
+        </div>
+        <div class="account-right">
+          <div class="account-signedin-actions" id="accountSignedInActions" hidden>
             <button id="editHandleBtn" class="account-btn account-btn-ghost" type="button">Edit name</button>
             <button id="myBuildsBtn" class="account-btn account-btn-ghost" type="button">My Builds</button>
           </div>
-        </div>
-        <div class="settings-wrap">
-          <button id="settingsBtn" class="account-btn account-btn-ghost account-btn-gear" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Settings"><span aria-hidden="true">⚙</span> Settings</button>
-          <div class="settings-menu" id="settingsMenu" role="menu" hidden>
-            <div class="settings-row">
-              <span class="settings-row-label">Theme</span>
-              <div class="theme-toggle" role="group" aria-label="Theme">
-                <button id="themeLightBtn" class="theme-opt" type="button" aria-pressed="true">Light</button>
-                <button id="themeDarkBtn" class="theme-opt" type="button" aria-pressed="false">Dark</button>
+          <div class="settings-wrap">
+            <button id="settingsBtn" class="account-btn account-btn-ghost account-btn-gear" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Settings"><span aria-hidden="true">⚙</span> Settings</button>
+            <div class="settings-menu" id="settingsMenu" role="menu" hidden>
+              <div class="settings-row">
+                <span class="settings-row-label">Theme</span>
+                <div class="theme-toggle" role="group" aria-label="Theme">
+                  <button id="themeLightBtn" class="theme-opt" type="button" aria-pressed="true">Light</button>
+                  <button id="themeDarkBtn" class="theme-opt" type="button" aria-pressed="false">Dark</button>
+                </div>
               </div>
-            </div>
-            <div id="settingsAccountItems" hidden>
-              <button id="signOutBtn" class="settings-item" type="button" role="menuitem">Sign out</button>
-              <button id="deleteAccountBtn" class="settings-item settings-item-danger" type="button" role="menuitem">Delete account</button>
+              <div id="settingsAccountItems" hidden>
+                <button id="signOutBtn" class="settings-item" type="button" role="menuitem">Sign out</button>
+                <button id="deleteAccountBtn" class="settings-item settings-item-danger" type="button" role="menuitem">Delete account</button>
+              </div>
             </div>
           </div>
         </div>
@@ -382,7 +386,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="firebase-init.js"></script>
     <noscript><p style="font-family:sans-serif;text-align:center;padding:2rem">GOAT Lab requires JavaScript. Please enable it in your browser settings.</p></noscript>
-    <script src="app.js?v=29"></script>
+    <script src="app.js?v=30"></script>
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
