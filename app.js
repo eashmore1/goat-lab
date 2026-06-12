@@ -4543,16 +4543,12 @@ shareBtnX.addEventListener("click", () => {
   let tweet;
   if (_savedShareData) {
     const b = _savedShareData;
-    const top = (b.picks || []).slice().sort((a, x) => x.score - a.score).slice(0, 2).map(p => p.player);
-    const names = top.length ? ` Built around ${top.join(" & ")}.` : "";
-    tweet = `I scored ${b.score} (${getTier(b.score)}) in GOAT Lab 🏀${names} Can you beat my build?`;
+    tweet = `I scored ${b.score} (${getTier(b.score)}) in GOAT Lab 🏀 Can you beat my build?`;
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank", "noopener,noreferrer");
   } else {
     const score = calculateScore();
     const tier = getTier(score);
-    const top = attributes.map(a => build[a.key]).filter(Boolean).sort((a, b) => b.score - a.score).slice(0, 2).map(p => p.player.name);
-    const names = top.length ? ` Built around ${top.join(" & ")}.` : "";
-    tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀${names} Can you beat my build?`;
+    tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build?`;
     openAndDownload(shareBtnX, "X / Twitter", () => {
       window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank", "noopener,noreferrer");
     });
