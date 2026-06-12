@@ -10,6 +10,57 @@
   --red: #d64d3a;
   --muted: rgba(21, 20, 19, 0.66);
   --shadow: 5px 5px 0 var(--ink);
+  /* Semantic neutrals that flip in dark mode. --ink/--chalk stay literal
+     (used as fixed text on colored blocks). --surface = neutral raised
+     panels (was chalk); --ink-bg = intentionally-dark element backgrounds. */
+  --surface: var(--chalk);
+  --ink-bg: var(--ink);
+  --grid-line-a: rgba(21, 20, 19, 0.05);
+  --grid-line-b: rgba(21, 20, 19, 0.04);
+}
+
+[data-theme="dark"] {
+  --ink: #f3ecdb;        /* neutral foreground: text, borders, hard shadows */
+  --paper: #16140f;      /* page background */
+  --muted: rgba(243, 236, 219, 0.58);
+  --surface: #241f18;    /* neutral raised panels */
+  --ink-bg: #0c0a07;     /* darkest element backgrounds (chips, score pills) */
+  --grid-line-a: rgba(243, 236, 219, 0.06);
+  --grid-line-b: rgba(243, 236, 219, 0.045);
+}
+
+/* Gold/court blocks keep their color in dark mode, so text on them must stay
+   dark (--ink flips light). Force the fixed-dark exceptions back to ink. */
+[data-theme="dark"] #dailySubtitle,
+[data-theme="dark"] .result-breakdown,
+[data-theme="dark"] .play-again-btn,
+[data-theme="dark"] .build-chip.filled strong,
+[data-theme="dark"] .build-chip.filled span,
+[data-theme="dark"] .share-btn-copy,
+[data-theme="dark"] .jersey,
+[data-theme="dark"] .lb-row-me,
+[data-theme="dark"] .lb-row-me .lb-name,
+[data-theme="dark"] .lb-row-me .lb-rank,
+[data-theme="dark"] .lb-pod-1,
+[data-theme="dark"] .lb-pod-1 .lb-pod-name,
+[data-theme="dark"] .lb-pod-1 .lb-pod-rank {
+  color: #151413;
+}
+[data-theme="dark"] .play-again-btn { border-color: #151413; }
+[data-theme="dark"] .settings-item-danger { color: #ff7a61; }
+/* More gold/light blocks that keep dark text in dark mode */
+[data-theme="dark"] .account-btn-trophy,
+[data-theme="dark"] .respin-token,
+[data-theme="dark"] #viewLeaderboardBtn,
+[data-theme="dark"] .result,
+[data-theme="dark"] .modal-num {
+  color: #151413;
+}
+/* Dark accent text (green) is illegible on the dark page — lighten it */
+[data-theme="dark"] .mode-label,
+[data-theme="dark"] .lb-hint,
+[data-theme="dark"] .save-status {
+  color: #4fc9a6;
 }
 
 * {
@@ -29,8 +80,8 @@ body {
   color: var(--ink);
   font-family: "Playfair Display", Georgia, "Times New Roman", serif;
   background:
-    linear-gradient(90deg, rgba(21, 20, 19, 0.05) 1px, transparent 1px) 0 0 / 24px 24px,
-    linear-gradient(rgba(21, 20, 19, 0.04) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, var(--grid-line-a) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(var(--grid-line-b) 1px, transparent 1px) 0 0 / 24px 24px,
     radial-gradient(circle at 15% 12%, rgba(230, 184, 67, 0.42), transparent 24rem),
     var(--paper);
 }
@@ -112,7 +163,7 @@ h1 {
   min-width: min(180px, 30vw);
   padding: 10px 12px;
   color: var(--chalk);
-  background: var(--ink);
+  background: var(--ink-bg);
   box-shadow: var(--shadow);
 }
 
@@ -174,7 +225,7 @@ h1 {
   padding: 22px;
   text-align: left;
   border: 4px solid var(--ink);
-  background: var(--chalk);
+  background: var(--surface);
   box-shadow: var(--shadow);
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
@@ -185,7 +236,7 @@ h1 {
 }
 
 .mode-card-blind {
-  background: var(--ink);
+  background: var(--ink-bg);
   color: var(--chalk);
 }
 
@@ -204,7 +255,7 @@ h1 {
 /* WCAG AA contrast on the orange (--court) daily banner: small text needs 4.5:1,
    which cream cannot hit on this background. Dark ink gives 4.87:1. */
 .mode-card-daily .mode-tag {
-  background: var(--ink);
+  background: var(--ink-bg);
   border-color: var(--ink);
   color: var(--chalk);
 }
@@ -581,7 +632,7 @@ h1 {
   min-height: 54px;
   padding: 9px;
   border: 2px solid var(--ink);
-  background: var(--chalk);
+  background: var(--surface);
   box-shadow: 4px 4px 0 var(--ink);
 }
 
@@ -618,7 +669,7 @@ h1 {
   min-height: 104px;
   padding: 12px;
   border: 3px solid var(--ink);
-  background: var(--chalk);
+  background: var(--surface);
   box-shadow: var(--shadow);
 }
 
@@ -770,7 +821,8 @@ h1 {
   box-shadow: 3px 3px 0 var(--ink), 0 0 18px 4px rgba(230, 184, 67, 0.75);
 }
 .card.is-golden .jersey {
-  color: #8a6400;
+  /* Deeper than #8a6400 (2.89:1 on gold) so the number meets WCAG AA (~5.4:1). */
+  color: #5a3d00;
 }
 .card-skel {
   min-height: 154px;
@@ -808,7 +860,7 @@ h1 {
   overflow: hidden;
   text-align: left;
   border: 2px solid var(--ink);
-  background: var(--chalk);
+  background: var(--surface);
   box-shadow: 4px 4px 0 var(--ink);
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
@@ -910,7 +962,7 @@ h1 {
 .fill {
   display: block;
   height: 100%;
-  background: var(--ink);
+  background: var(--ink-bg);
 }
 
 .result {
@@ -1068,7 +1120,7 @@ h1 {
 }
 
 .footer-support:hover {
-  background: var(--ink);
+  background: var(--ink-bg);
   color: var(--chalk) !important;
   border-bottom-color: var(--ink) !important;
 }
@@ -1134,7 +1186,7 @@ h1 {
   min-height: 36px;
   padding: 0 12px;
   border: 2px solid var(--ink);
-  background: var(--chalk);
+  background: var(--surface);
   color: var(--ink);
   box-shadow: 5px 5px 0 var(--ink);
   font: 700 0.78rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -1176,7 +1228,7 @@ h1 {
   min-height: 34px;
   padding: 0 11px;
   border: 2px solid var(--ink);
-  background: var(--chalk);
+  background: var(--surface);
   color: var(--ink);
   box-shadow: 4px 4px 0 var(--ink);
   font: 900 0.78rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -1233,7 +1285,7 @@ h1 {
 
 .share-card {
   overflow: hidden;
-  background: var(--chalk);
+  background: var(--surface);
   color: var(--ink);
 }
 
@@ -1243,7 +1295,7 @@ h1 {
   justify-content: space-between;
   gap: 10px;
   padding: 12px 16px;
-  background: var(--ink);
+  background: var(--ink-bg);
   color: var(--chalk);
 }
 
@@ -1323,7 +1375,7 @@ h1 {
   align-items: center;
   justify-content: space-between;
   padding: 10px 16px;
-  background: var(--ink);
+  background: var(--ink-bg);
   color: var(--chalk);
   font: 700 0.6rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   letter-spacing: 0.06em;
@@ -1340,7 +1392,7 @@ h1 {
   gap: 8px;
   padding: 14px 16px;
   border-top: 3px solid var(--ink);
-  background: var(--chalk);
+  background: var(--surface);
 }
 
 .share-btn {
@@ -1369,7 +1421,7 @@ h1 {
 }
 
 .share-btn-text {
-  background: var(--chalk);
+  background: var(--surface);
   color: var(--ink);
 }
 
@@ -1390,7 +1442,7 @@ h1 {
   gap: 9px;
   margin-top: 18px;
   padding: 10px 16px;
-  background: var(--chalk);
+  background: var(--surface);
   border: 3px solid var(--ink);
   color: var(--ink);
   box-shadow: 4px 4px 0 var(--ink);
@@ -1425,7 +1477,7 @@ h1 {
   gap: 8px;
   margin-left: auto;
   padding: 8px 14px;
-  background: var(--chalk);
+  background: var(--surface);
   border: 2px solid var(--ink);
   color: var(--ink);
   box-shadow: 4px 4px 0 var(--ink);
@@ -1467,7 +1519,7 @@ h1 {
 .modal {
   width: min(540px, 100%);
   border: 4px solid var(--ink);
-  background: var(--chalk);
+  background: var(--surface);
   box-shadow: 8px 8px 0 var(--ink);
 }
 
@@ -1477,7 +1529,7 @@ h1 {
   justify-content: space-between;
   padding: 14px 16px 10px;
   border-bottom: 3px solid var(--ink);
-  background: var(--ink);
+  background: var(--ink-bg);
   color: var(--chalk);
 }
 
@@ -1558,7 +1610,7 @@ h1 {
   gap: 10px;
   padding: 9px 14px;
   border: 2px solid var(--ink);
-  background: var(--ink);
+  background: var(--ink-bg);
   color: var(--chalk);
   box-shadow: 5px 5px 0 var(--ink);
   font: 700 0.7rem/1.2 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -1664,7 +1716,7 @@ h1 {
   margin: 10px auto 0;
   padding: 9px 14px;
   border: 2px solid var(--ink);
-  background: var(--chalk);
+  background: var(--surface);
   box-shadow: 4px 4px 0 var(--ink);
   display: flex;
   align-items: center;
@@ -1679,7 +1731,7 @@ h1 {
 .account-btn {
   padding: 8px 14px;
   border: 2px solid var(--ink);
-  background: var(--ink);
+  background: var(--ink-bg);
   color: var(--chalk);
   box-shadow: 3px 3px 0 var(--ink);
   font: 900 0.76rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -1689,7 +1741,7 @@ h1 {
   transition: transform 140ms ease, box-shadow 140ms ease;
 }
 .account-btn:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
-.account-btn-google, .account-btn-ghost, .account-btn-trophy { background: var(--chalk); color: var(--ink); }
+.account-btn-google, .account-btn-ghost, .account-btn-trophy { background: var(--surface); color: var(--ink); }
 .account-btn-google { display: inline-flex; align-items: center; gap: 9px; }
 .account-btn-trophy { background: var(--gold); }
 .g-mark {
@@ -1730,7 +1782,7 @@ h1 {
 .lb-score {
   display: grid; place-items: center;
   min-width: 42px; height: 34px;
-  background: var(--ink); color: var(--chalk);
+  background: var(--ink-bg); color: var(--chalk);
   font: 950 1.05rem/1 "Space Mono", ui-monospace, monospace;
 }
 .lb-row-me .lb-score { background: var(--court-dark); }
@@ -1759,7 +1811,7 @@ h1 {
   flex-shrink: 0;
   padding: 10px 16px;
   border: 2px solid var(--ink);
-  background: var(--ink);
+  background: var(--ink-bg);
   color: var(--chalk);
   box-shadow: var(--shadow);
   font: 800 0.78rem/1 "Space Mono", ui-monospace, monospace;
@@ -1812,7 +1864,7 @@ h1 {
   min-width: 48px;
   padding: 4px 10px;
   margin-top: 2px;
-  background: var(--ink);
+  background: var(--ink-bg);
   color: var(--chalk);
   font: 950 1.2rem/1 "Space Mono", ui-monospace, monospace;
 }
@@ -1841,7 +1893,7 @@ h1 {
 
 /* ===== Settings menu (account bar) ===== */
 .settings-wrap { position: relative; display: inline-block; }
-.account-btn-gear[aria-expanded="true"] { background: var(--ink); color: var(--chalk); }
+.account-btn-gear[aria-expanded="true"] { background: var(--ink-bg); color: var(--chalk); }
 .settings-menu {
   position: absolute;
   right: 0;
@@ -1870,6 +1922,35 @@ h1 {
 .settings-item:hover { background: var(--gold); }
 .settings-item-danger { color: #a8321f; }
 .settings-item-danger:hover { background: #b83a2a; color: #fff; }
+[data-theme="dark"] .settings-item:hover { color: #151413; }
+
+/* Theme toggle (segmented Light | Dark) */
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(127, 116, 92, 0.32);
+}
+.settings-row-label {
+  font: 800 0.72rem/1 "Space Mono", ui-monospace, monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.theme-toggle { display: inline-flex; border: 2px solid var(--ink); }
+.theme-opt {
+  padding: 6px 11px;
+  background: var(--surface);
+  color: var(--ink);
+  font: 800 0.7rem/1 "Space Mono", ui-monospace, monospace;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.theme-opt + .theme-opt { border-left: 2px solid var(--ink); }
+.theme-opt[aria-pressed="true"] { background: var(--ink-bg); color: var(--chalk); }
 
 /* ===== My Builds + handle modals ===== */
 #saveBuildButton {
@@ -1877,7 +1958,7 @@ h1 {
   min-height: 36px;
   padding: 0 14px;
   border: 2px solid var(--ink);
-  background: var(--chalk);
+  background: var(--surface);
   color: var(--ink);
   box-shadow: 5px 5px 0 var(--ink);
   font: 900 0.86rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -1907,7 +1988,7 @@ h1 {
   margin-top: 12px;
   padding: 12px;
   border: 2px solid var(--ink);
-  background: var(--ink);
+  background: var(--ink-bg);
   color: var(--chalk);
   box-shadow: 4px 4px 0 var(--ink);
   font: 900 0.86rem/1 "Space Mono", ui-monospace, monospace;
@@ -1929,7 +2010,7 @@ h1 {
   flex: 0 0 auto;
   display: grid; place-items: center;
   min-width: 46px; height: 46px;
-  background: var(--ink); color: var(--chalk);
+  background: var(--ink-bg); color: var(--chalk);
   font: 950 1.3rem/1 "Space Mono", ui-monospace, monospace;
 }
 .saved-row-meta { display: grid; min-width: 0; }
@@ -1940,11 +2021,11 @@ h1 {
   width: 30px; height: 30px;
   min-width: 44px; min-height: 44px;
   border: 2px solid var(--ink);
-  background: var(--chalk); color: var(--ink);
+  background: var(--surface); color: var(--ink);
   font-weight: 900; cursor: pointer;
 }
 .saved-row-share { font-size: 0.8rem; }
-.saved-row-share:hover { background: var(--ink); color: var(--chalk); }
+.saved-row-share:hover { background: var(--ink-bg); color: var(--chalk); }
 .saved-row-del:hover { background: var(--red); color: #fff; }
 .saved-row-del:disabled { opacity: 0.5; cursor: default; }
 
@@ -1969,7 +2050,7 @@ h1 {
   grid-template-columns: 40px minmax(0, 1.3fr) minmax(0, 1fr) 30px;
   align-items: center; gap: 8px;
   padding: 6px 9px;
-  background: var(--chalk);
+  background: var(--surface);
   border: 1px solid rgba(21, 20, 19, 0.22);
 }
 .bd-stat { font: 900 0.64rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.03em; color: var(--court-dark); }

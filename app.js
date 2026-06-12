@@ -4891,7 +4891,8 @@ updateBody(null);
       if (!settingsMenu.hidden && !settingsMenu.contains(e.target) && e.target !== settingsBtn) closeSettings();
     });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeSettings(); });
-    settingsMenu.addEventListener("click", () => closeSettings());
+    // Close only when an action item is chosen — not when toggling the theme.
+    settingsMenu.addEventListener("click", (e) => { if (e.target.closest(".settings-item")) closeSettings(); });
   }
 
   accountBar.hidden = false;
@@ -5239,6 +5240,8 @@ updateBody(null);
     if (user) {
       signedOut.hidden = true;
       signedIn.hidden = false;
+      const acctItems = document.querySelector("#settingsAccountItems");
+      if (acctItems) acctItems.hidden = false;
       accountName.textContent = user.displayName || user.email || "you";
       try {
         currentHandle = await Auth.getHandle();
@@ -5257,8 +5260,33 @@ updateBody(null);
     } else {
       signedOut.hidden = false;
       signedIn.hidden = true;
+      const acctItems = document.querySelector("#settingsAccountItems");
+      if (acctItems) acctItems.hidden = true;
       currentHandle = null;
       saveBuildButton.hidden = true;
     }
   });
+})();
+
+// ===== Theme toggle (light default, saved per device) =====
+(function initTheme() {
+  const THEME_KEY = "goatlab_theme";
+  const lightBtn = document.querySelector("#themeLightBtn");
+  const darkBtn = document.querySelector("#themeDarkBtn");
+  const getTheme = () => {
+    try { return localStorage.getItem(THEME_KEY) === "dark" ? "dark" : "light"; } catch (e) { return "light"; }
+  };
+  function apply(theme) {
+    if (theme === "dark") document.documentElement.setAttribute("data-theme", "dark");
+    else document.documentElement.removeAttribute("data-theme");
+    if (lightBtn) lightBtn.setAttribute("aria-pressed", String(theme === "light"));
+    if (darkBtn) darkBtn.setAttribute("aria-pressed", String(theme === "dark"));
+  }
+  function set(theme) {
+    try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
+    apply(theme);
+  }
+  apply(getTheme());
+  if (lightBtn) lightBtn.addEventListener("click", () => set("light"));
+  if (darkBtn) darkBtn.addEventListener("click", () => set("dark"));
 })();
