@@ -201,6 +201,18 @@ h1 {
   color: rgba(255, 247, 223, 0.82);
 }
 
+/* WCAG AA contrast on the orange (--court) daily banner: small text needs 4.5:1,
+   which cream cannot hit on this background. Dark ink gives 4.87:1. */
+.mode-card-daily .mode-tag {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--chalk);
+}
+
+#dailySubtitle {
+  color: var(--ink);
+}
+
 .mode-card-daily[disabled] {
   cursor: default;
   opacity: 0.72;
