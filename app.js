@@ -3485,15 +3485,12 @@ function calculateScore() {
   // Floor is 93, but a single 100 is worth one point more than the required 99,
   // and that surplus point lets exactly ONE stat dip to 92. One exception only.
   const sorted = [...values].sort((a, b) => a - b);
-  const lowest = sorted[0];
-  const secondLowest = sorted[1];
-  const floorOk = secondLowest >= 93 && lowest >= 92;
+  const floorOk = sorted[2] >= 93 && sorted[1] >= 92 && sorted[0] >= 92;
 
   const goatGate =
     floorOk &&
     values.filter((value) => value >= 97).length >= 4 &&
-    values.filter((value) => value >= 99).length >= 1 &&
-    values.filter((value) => value >= 98).length >= 2 &&
+    values.filter((value) => value >= 100).length >= 2 &&
     (build.height?.score ?? 0) >= 90;
   if (goatGate) return 100;
 
@@ -4859,15 +4856,13 @@ function recalcEntryScore(entry) {
   });
   if (!pickScores.every(s => s > 0)) return null;
   const sorted = [...pickScores].sort((a, b) => a - b);
-  const lowest = sorted[0], secondLowest = sorted[1];
-  const floorOk = secondLowest >= 93 && lowest >= 92;
+  const floorOk = sorted[2] >= 93 && sorted[1] >= 92 && sorted[0] >= 92;
   const heightPick = entry.picks.find(p => p.attrKey === "height") || {};
   const heightScore = heightPick.score || 0;
   const heightPlayerName = heightPick.playerName || "";
   const goatGate = floorOk &&
     pickScores.filter(v => v >= 97).length >= 4 &&
-    pickScores.filter(v => v >= 99).length >= 1 &&
-    pickScores.filter(v => v >= 98).length >= 2 &&
+    pickScores.filter(v => v >= 100).length >= 2 &&
     heightScore >= 90;
   if (goatGate) return 100;
   const avg = pickScores.reduce((s, v) => s + v, 0) / pickScores.length;
