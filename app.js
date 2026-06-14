@@ -3696,7 +3696,7 @@ function renderCards(animate) {
   cards.innerHTML = "";
 
   const golden = !!currentTeamEra.golden;
-  const isWildcard = golden && currentTeamEra.players.length === 1;
+  const isSoloCard = golden && currentTeamEra.players.length === 1;
   currentTeamEra.players.forEach((playerData, index) => {
     const score = playerData.ratings[currentAttribute.key];
     const isBlind = gameMode === "blind" || gameMode === "daily";
@@ -3719,7 +3719,7 @@ function renderCards(animate) {
         <h3>${playerData.name}</h3>
         <p class="meta">${formatHeight(playerData)} / ${currentTeamEra.era} ${currentTeamEra.team}</p>
         ${
-          isWildcard
+          isSoloCard
             ? `<p class="golden-bio">${currentTeamEra.note}</p>`
             : isBlind
               ? `<div class="blind-note">Ratings hidden until selected</div>`
@@ -3731,45 +3731,9 @@ function renderCards(animate) {
         }
       </div>
     `;
-    card.addEventListener("click", () => isWildcard ? showWildcardPicker(playerData) : draft(playerData));
-    if (isWildcard) {
-      const hint = document.createElement("p");
-      hint.className = "wildcard-hint";
-      hint.textContent = "Tap to choose your stat →";
-      cards.append(card, hint);
-    } else {
-      cards.append(card);
-    }
+    card.addEventListener("click", () => draft(playerData));
+    cards.append(card);
   });
-}
-
-function showWildcardPicker(playerData) {
-  const remaining = [runAttributes[round], ...runAttributes.slice(round + 1)];
-  const picker = document.createElement("div");
-  picker.className = "wildcard-picker";
-  picker.innerHTML = `<p class="wildcard-title">Assign 100 to:</p>`;
-  const btnRow = document.createElement("div");
-  btnRow.className = "wildcard-attrs";
-  remaining.forEach(attr => {
-    const btn = document.createElement("button");
-    btn.className = "wildcard-attr-btn";
-    btn.type = "button";
-    btn.textContent = attr.label;
-    btn.addEventListener("click", () => {
-      if (attr.key !== runAttributes[round].key) {
-        const swapIdx = runAttributes.findIndex((a, i) => i > round && a.key === attr.key);
-        if (swapIdx !== -1) {
-          [runAttributes[round], runAttributes[swapIdx]] = [runAttributes[swapIdx], runAttributes[round]];
-          currentAttribute = runAttributes[round];
-        }
-      }
-      draft(playerData);
-    });
-    btnRow.append(btn);
-  });
-  picker.append(btnRow);
-  cards.innerHTML = "";
-  cards.append(picker);
 }
 
 // Stamp the locked team/era + category into the prompt with a pop, then deal the cards in.
@@ -3779,12 +3743,11 @@ function lockRound(token, animate) {
   prompt.classList.remove("is-rolling");
   prompt.classList.toggle("is-golden", golden);
   cards.classList.toggle("is-golden", golden);
-  const isWildcard = golden && currentTeamEra.players.length === 1;
   prompt.innerHTML =
     (golden ? `<span class="golden-badge">✦ Golden Roll ✦</span>` : "") +
     `<span class="roll-team">${currentTeamEra.era} ${currentTeamEra.team}</span>` +
     `<span class="roll-div">/</span>` +
-    `<span class="roll-attr">${isWildcard ? "Any Stat" : currentAttribute.label}</span>`;
+    `<span class="roll-attr">${currentAttribute.label}</span>`;
   if (animate) {
     prompt.classList.remove("is-locked");
     void prompt.offsetWidth; // restart the stamp animation
