@@ -3349,7 +3349,7 @@ const goldenTeams = [
     era: "2018",
     team: "· LeBron James",
     golden: true,
-    note: "4 MVPs. 4 Finals MVPs. 51 pts in Game 1 of these Finals at age 33. The most complete player the game has ever seen — scorer, playmaker, defender, and basketball IQ that borders on supernatural.",
+    note: "His teammates had no business being in the Finals. No Kyrie. JR Smith lost the ball in OT. The supporting cast fell apart — and LeBron averaged 34-9-9 anyway, dropped 51 in Game 1 against the Warriors, and nearly won it alone. The greatest one-man playoff run in history.",
     players: [
       player("LeBron James", 6, 9, 23, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
     ],
@@ -3358,7 +3358,7 @@ const goldenTeams = [
     era: "1987",
     team: "· Michael Jordan",
     golden: true,
-    note: "Scoring champion AND Defensive Player of the Year in the same season. 63 points in a single playoff game. The standard every player since has been measured against — and none have matched.",
+    note: "No one has ever won the scoring title and Defensive Player of the Year in the same season. Jordan did both — then took the MVP too. Three trophies, one year, one player. He was the most dangerous scorer alive and one of the best defenders in the league at the exact same time.",
     players: [
       player("Michael Jordan", 6, 6, 23, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
     ],
@@ -3367,7 +3367,7 @@ const goldenTeams = [
     era: "1993",
     team: "· Hakeem Olajuwon",
     golden: true,
-    note: "MVP. Defensive Player of the Year. Back-to-back champion. The Dream Shake was literally unguardable — a 7-footer with guard handles, elite footwork, and the instincts of a chess grandmaster. The only man to win Finals MVP over a prime Shaq.",
+    note: "MVP. Defensive Player of the Year. Champion. Finals MVP. All in one season — and he did it against the Knicks in 7 games, closing out Game 7 himself. Two years later he swept a prime Shaq in the Finals. The Dream Shake was a post move so technically perfect that Shaq studied tape of it just to understand how to move his own feet.",
     players: [
       player("Hakeem Olajuwon", 7, 0, 34, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
     ],
