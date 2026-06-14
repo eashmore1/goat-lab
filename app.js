@@ -3349,7 +3349,7 @@ const goldenTeams = [
     era: "2018",
     team: "· LeBron James",
     golden: true,
-    note: "The King's solo masterpiece — 34-9-9 in the 2018 Finals on sheer individual will. Every stat, maxed.",
+    note: "4 MVPs. 4 Finals MVPs. 51 pts in Game 1 of these Finals at age 33. The most complete player the game has ever seen — scorer, playmaker, defender, and basketball IQ that borders on supernatural.",
     players: [
       player("LeBron James", 6, 9, 23, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
     ],
@@ -3358,9 +3358,18 @@ const goldenTeams = [
     era: "1987",
     team: "· Michael Jordan",
     golden: true,
-    note: "MJ at his absolute apex — the year he scored 63 in a playoff game and made the league look human. Every stat, maxed.",
+    note: "Scoring champion AND Defensive Player of the Year in the same season. 63 points in a single playoff game. The standard every player since has been measured against — and none have matched.",
     players: [
       player("Michael Jordan", 6, 6, 23, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
+    ],
+  },
+  {
+    era: "1993",
+    team: "· Hakeem Olajuwon",
+    golden: true,
+    note: "MVP. Defensive Player of the Year. Back-to-back champion. The Dream Shake was literally unguardable — a 7-footer with guard handles, elite footwork, and the instincts of a chess grandmaster. The only man to win Finals MVP over a prime Shaq.",
+    players: [
+      player("Hakeem Olajuwon", 7, 0, 34, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
     ],
   },
 ];
@@ -3648,6 +3657,7 @@ function renderCards(animate) {
   cards.innerHTML = "";
 
   const golden = !!currentTeamEra.golden;
+  const isWildcard = golden && currentTeamEra.players.length === 1;
   currentTeamEra.players.forEach((playerData, index) => {
     const score = playerData.ratings[currentAttribute.key];
     const isBlind = gameMode === "blind" || gameMode === "daily";
@@ -3670,17 +3680,18 @@ function renderCards(animate) {
         <h3>${playerData.name}</h3>
         <p class="meta">${formatHeight(playerData)} / ${currentTeamEra.era} ${currentTeamEra.team}</p>
         ${
-          isBlind
-            ? `<div class="blind-note">Ratings hidden until selected</div>`
-            : `<div class="bars">
-                ${renderBar(currentAttribute.label, score)}
-                ${renderBar("Height", playerData.ratings.height)}
-                ${renderBar("IQ", playerData.ratings.iq)}
-              </div>`
+          isWildcard
+            ? `<p class="golden-bio">${currentTeamEra.note}</p>`
+            : isBlind
+              ? `<div class="blind-note">Ratings hidden until selected</div>`
+              : `<div class="bars">
+                  ${renderBar(currentAttribute.label, score)}
+                  ${renderBar("Height", playerData.ratings.height)}
+                  ${renderBar("IQ", playerData.ratings.iq)}
+                </div>`
         }
       </div>
     `;
-    const isWildcard = currentTeamEra.golden && currentTeamEra.players.length === 1;
     card.addEventListener("click", () => isWildcard ? showWildcardPicker(playerData) : draft(playerData));
     if (isWildcard) {
       const hint = document.createElement("p");

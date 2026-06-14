@@ -824,6 +824,17 @@ h1 {
   /* Deeper than #8a6400 (2.89:1 on gold) so the number meets WCAG AA (~5.4:1). */
   color: #5a3d00;
 }
+.golden-bio {
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: #5a3d00;
+  font-style: italic;
+  margin: 6px 0 0;
+  padding: 0 2px;
+}
+[data-theme="dark"] .golden-bio {
+  color: #c9973a;
+}
 .wildcard-hint {
   grid-column: 1 / -1;
   text-align: center;
