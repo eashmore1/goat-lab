@@ -3367,7 +3367,7 @@ const goldenTeams = [
     era: "1993",
     team: "· Hakeem Olajuwon",
     golden: true,
-    note: "MVP. Defensive Player of the Year. Champion. Finals MVP. All in one season — and he closed out Game 7 against the Knicks himself. The Dream Shake was a post move so technically perfect that Shaq studied tape of it just to understand how to move his own feet.",
+    note: "MVP. Defensive Player of the Year. Champion. Finals MVP. All in one season — and he closed out Game 7 against the Knicks himself. The Dream Shake was the most unguardable post move ever invented. A 7-footer with the footwork of a dancer and the instincts of a point guard.",
     players: [
       player("Hakeem Olajuwon", 7, 0, 34, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
     ],
