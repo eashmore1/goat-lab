@@ -3490,7 +3490,7 @@ function calculateScore() {
   const goatGate =
     floorOk &&
     values.filter((value) => value >= 100).length >= 1 &&
-    values.filter((value) => value >= 98).length >= 2 &&
+    values.filter((value) => value >= 98).length >= 3 &&
     values.filter((value) => value >= 97).length >= 4 &&
     values.filter((value) => value >= 95).length >= 6 &&
     (build.height?.score ?? 0) >= 90;
@@ -4864,7 +4864,7 @@ function recalcEntryScore(entry) {
   const heightPlayerName = heightPick.playerName || "";
   const goatGate = floorOk &&
     pickScores.filter(v => v >= 100).length >= 1 &&
-    pickScores.filter(v => v >= 98).length >= 2 &&
+    pickScores.filter(v => v >= 98).length >= 3 &&
     pickScores.filter(v => v >= 97).length >= 4 &&
     pickScores.filter(v => v >= 95).length >= 6 &&
     heightScore >= 90;
