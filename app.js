@@ -3349,7 +3349,7 @@ const goldenTeams = [
     era: "2018",
     team: "· LeBron James",
     golden: true,
-    note: "His teammates had no business being in the Finals. No Kyrie. JR Smith lost the ball in OT. The supporting cast fell apart — and LeBron averaged 34-9-9 anyway, dropped 51 in Game 1 against the Warriors, and nearly won it alone. The greatest one-man playoff run in history.",
+    note: "34-9-9 through the entire playoffs. 51 points in Game 1 of the Finals against the greatest team ever assembled. His supporting cast had no business being there — he dragged them anyway. Some people argue about the GOAT. This version of LeBron makes that argument very short.",
     players: [
       player("LeBron James", 6, 9, 23, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
     ],
@@ -3367,7 +3367,7 @@ const goldenTeams = [
     era: "1993",
     team: "· Hakeem Olajuwon",
     golden: true,
-    note: "MVP. Defensive Player of the Year. Champion. Finals MVP. All in one season — and he did it against the Knicks in 7 games, closing out Game 7 himself. Two years later he swept a prime Shaq in the Finals. The Dream Shake was a post move so technically perfect that Shaq studied tape of it just to understand how to move his own feet.",
+    note: "MVP. Defensive Player of the Year. Champion. Finals MVP. All in one season — and he closed out Game 7 against the Knicks himself. The Dream Shake was a post move so technically perfect that Shaq studied tape of it just to understand how to move his own feet.",
     players: [
       player("Hakeem Olajuwon", 7, 0, 34, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
     ],
