@@ -3489,8 +3489,10 @@ function calculateScore() {
 
   const goatGate =
     floorOk &&
+    values.filter((value) => value >= 100).length >= 1 &&
+    values.filter((value) => value >= 98).length >= 2 &&
     values.filter((value) => value >= 97).length >= 4 &&
-    values.filter((value) => value >= 100).length >= 2 &&
+    values.filter((value) => value >= 95).length >= 6 &&
     (build.height?.score ?? 0) >= 90;
   if (goatGate) return 100;
 
@@ -4861,8 +4863,10 @@ function recalcEntryScore(entry) {
   const heightScore = heightPick.score || 0;
   const heightPlayerName = heightPick.playerName || "";
   const goatGate = floorOk &&
+    pickScores.filter(v => v >= 100).length >= 1 &&
+    pickScores.filter(v => v >= 98).length >= 2 &&
     pickScores.filter(v => v >= 97).length >= 4 &&
-    pickScores.filter(v => v >= 100).length >= 2 &&
+    pickScores.filter(v => v >= 95).length >= 6 &&
     heightScore >= 90;
   if (goatGate) return 100;
   const avg = pickScores.reduce((s, v) => s + v, 0) / pickScores.length;
