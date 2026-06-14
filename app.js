@@ -3349,6 +3349,7 @@ const goldenTeams = [
     era: "2018",
     team: "· LeBron James",
     golden: true,
+    soloCard: true,
     note: "34-9-9 through the entire playoffs. 51 points in Game 1 of the Finals against the greatest team ever assembled. His supporting cast had no business being there — he dragged them anyway. Some people argue about the GOAT. This version of LeBron makes that argument very short.",
     players: [
       player("LeBron James", 6, 9, 23, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
@@ -3358,6 +3359,7 @@ const goldenTeams = [
     era: "1987",
     team: "· Michael Jordan",
     golden: true,
+    soloCard: true,
     note: "No one has ever won the scoring title and Defensive Player of the Year in the same season. Jordan did both — then took the MVP too. Three trophies, one year, one player. He was the most dangerous scorer alive and one of the best defenders in the league at the exact same time.",
     players: [
       player("Michael Jordan", 6, 6, 23, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
@@ -3367,9 +3369,40 @@ const goldenTeams = [
     era: "1993",
     team: "· Hakeem Olajuwon",
     golden: true,
+    soloCard: true,
     note: "MVP. Defensive Player of the Year. Champion. Finals MVP. All in one season — and he closed out Game 7 against the Knicks himself. The Dream Shake was the most unguardable post move ever invented. A 7-footer with the footwork of a dancer and the instincts of a point guard.",
     players: [
       player("Hakeem Olajuwon", 7, 0, 34, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
+    ],
+  },
+  {
+    era: "2016",
+    team: "· Stephen Curry",
+    golden: true,
+    soloCard: true,
+    note: "73 wins. 402 three-pointers. The first unanimous MVP in NBA history. Curry didn't just have the greatest shooting season ever — he invented a new way to play basketball. Every team in the league is still trying to copy it.",
+    players: [
+      player("Stephen Curry", 6, 2, 30, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
+    ],
+  },
+  {
+    era: "2001",
+    team: "· Shaquille O'Neal",
+    golden: true,
+    soloCard: true,
+    note: "15-1 in the playoffs. Swept every team he faced until the Finals. Centers tried to stop him and couldn't. Shaq in 2001 was the most physically overwhelming force the league has ever seen — 28 points, 13 rebounds, and nobody on earth could do a thing about it.",
+    players: [
+      player("Shaquille O'Neal", 7, 1, 34, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
+    ],
+  },
+  {
+    era: "1962",
+    team: "· Wilt Chamberlain",
+    golden: true,
+    soloCard: true,
+    note: "50.4 points per game. 25.7 rebounds per game. In one season. Numbers so far beyond anything that's happened since that they look made up — but they're not. The most statistically dominant season in the history of any sport.",
+    players: [
+      player("Wilt Chamberlain", 7, 1, 13, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
     ],
   },
 ];
@@ -3455,7 +3488,14 @@ const GOLDEN_ODDS = 0.012;
 
 function pickTeamEra() {
   if (goldenTeams.length && Math.random() < GOLDEN_ODDS) {
-    return goldenTeams[(Math.random() * goldenTeams.length) | 0];
+    // Team cards (soloCard falsy) are 2× more likely per slot than solo player cards.
+    const solos = goldenTeams.filter(t => t.soloCard);
+    const teams = goldenTeams.filter(t => !t.soloCard);
+    const totalWeight = teams.length * 2 + solos.length;
+    let r = Math.random() * totalWeight;
+    for (const t of teams) { r -= 2; if (r <= 0) return t; }
+    for (const s of solos) { r -= 1; if (r <= 0) return s; }
+    return goldenTeams[0];
   }
   return teamEras[Math.floor(Math.random() * teamEras.length)];
 }
