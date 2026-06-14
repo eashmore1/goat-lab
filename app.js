@@ -3354,6 +3354,15 @@ const goldenTeams = [
       player("LeBron James", 6, 9, 23, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
     ],
   },
+  {
+    era: "1987",
+    team: "· Michael Jordan",
+    golden: true,
+    note: "MJ at his absolute apex — the year he scored 63 in a playoff game and made the league look human. Every stat, maxed.",
+    players: [
+      player("Michael Jordan", 6, 6, 23, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
+    ],
+  },
 ];
 
 let round = 0;
