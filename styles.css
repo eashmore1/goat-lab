@@ -824,6 +824,57 @@ h1 {
   /* Deeper than #8a6400 (2.89:1 on gold) so the number meets WCAG AA (~5.4:1). */
   color: #5a3d00;
 }
+.wildcard-hint {
+  grid-column: 1 / -1;
+  text-align: center;
+  font: 700 0.72rem/1 "Space Mono", monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gold);
+  margin: 4px 0 0;
+  animation: goldenShimmer 2.4s linear infinite;
+  background: linear-gradient(90deg, #8a6400, #e6b843, #fff1c0, #e6b843, #8a6400);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.wildcard-picker {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 8px 8px;
+}
+.wildcard-title {
+  font: 900 0.78rem/1 "Space Mono", monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+}
+.wildcard-attrs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+.wildcard-attr-btn {
+  padding: 8px 16px;
+  border: 2px solid var(--gold);
+  background: linear-gradient(rgba(230,184,67,0.12), rgba(230,184,67,0.04));
+  color: var(--ink);
+  font: 700 0.78rem/1 "Space Mono", monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.12s, box-shadow 0.12s;
+}
+.wildcard-attr-btn:hover {
+  background: var(--gold);
+  color: #5a3d00;
+  box-shadow: 3px 3px 0 var(--ink);
+}
 .card-skel {
   min-height: 154px;
   border: 3px solid var(--ink);
