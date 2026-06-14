@@ -3542,7 +3542,7 @@ function calculateScore() {
                    + values.filter((value) => value >= 96 && value < 99).length * 0.5;
   const minScore = Math.min(...values);
   const balanceBonus = minScore >= 90 ? 2.0 : minScore >= 87 ? 1.0 : minScore >= 82 ? 0.25 : 0;
-  const heightBonus = ["Victor Wembanyama", "Yao Ming", "Mark Eaton"].includes(build.height?.player?.name ?? "") ? 2 : 0;
+  const heightBonus = ["Victor Wembanyama", "Yao Ming", "Mark Eaton", "Shawn Bradley"].includes(build.height?.player?.name ?? "") ? 2 : 0;
   const blindBonus = (gameMode === "blind" || gameMode === "daily") ? 1 : 0;
   const score = Math.round(average - 5 - weakPenalty + eliteBonus + balanceBonus + heightBonus + blindBonus);
 
@@ -4915,7 +4915,7 @@ function recalcEntryScore(entry) {
               + pickScores.filter(v => v >= 96 && v < 99).length * 0.5;
   const minPick = Math.min(...pickScores);
   const bal = minPick >= 90 ? 2.0 : minPick >= 87 ? 1.0 : minPick >= 82 ? 0.25 : 0;
-  const hgtBonus = ["Victor Wembanyama", "Yao Ming", "Mark Eaton"].includes(heightPlayerName) ? 2 : 0;
+  const hgtBonus = ["Victor Wembanyama", "Yao Ming", "Mark Eaton", "Shawn Bradley"].includes(heightPlayerName) ? 2 : 0;
   return Math.max(55, Math.min(99, Math.round(avg - 5 - pen + elite + bal + hgtBonus + 1)));
 }
 
