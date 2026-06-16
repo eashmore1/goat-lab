@@ -5167,7 +5167,7 @@ updateBody(null);
   });
   handleClose.addEventListener("click", () => hideModal(handleModal));
   handleModal.addEventListener("click", (e) => { if (e.target === handleModal) hideModal(handleModal); });
-  const _badWords = /\b(shit|fuck|fuk|fuq|fvck|fck|ass(?:hole)?|bitch|bastard|cunt|dick|cock|pussy|piss|prick|slut|whore|nigger|nigga|n[i1]gg[ae3]r?|faggot|f[a4]gg?[o0]t|retard|spic|chink|kike|wetback|twat|wank(?:er)?|jizz|cum|clit|dildo|tits?|boob|penis|vagina|anus|anal|porn|sex(?:y)?|rape|molest|pedo|nazi|hitler|kkk)\b/i;
+  const _badWords = /\b(sh[i1]t|fuck|fuk|fuq|fvck|fck|f+u+c+k+|ass(?:hole|wipe|hat|face|clown)?|a55|b[i1]tch|bastard|c[u\*]nt|d[i1]ck|c[o0]ck|pussy|p[i1]ss|prick|sl[u\*]t|wh[o0]re|nigger|nigga|n[i1]gg[ae3]r?|faggot|f[a4]gg?[o0]t|r[e3]tard|spic|ch[i1]nk|k[i1]ke|wetback|twat|wank(?:er)?|j[i1]zz|[ck]um|cl[i1]t|dildo|t[i1]ts?|boob|p[e3]nis|vag[i1]na|anus|anal|p[o0]rn|sex(?:y)?|r[a4]pe|mol[e3]st|p[e3]do|naz[i1]|h[i1]tler|kkk|cuck|skank|ho(?:e)?|d[u\*]mb(?:ass)?|idiot|moron|suck|balls|scrote|nutsack|ballsack|boner|erect|horny|lust|perv|creep|simp|incel|dyke|tr[a4]nny|beaner|cracker|honky|gook|raghead|towelhead|coon|darkie|mick|polack|hymie|jap|c[o0]on|wop|dago|gypsy|redneck|buttfuck|butthole|butt(?:hole|plug|sex)|c[o0]ck(?:sucker)?|cumshot|c[u\*]mslut|deepthroat|gangbang|handjob|blowjob|footjob|rimjob|fist(?:ing)?|squirt|orgasm|fetish|bdsm|bondage|masturbat|finger(?:ing)|sext(?:ing)?|nude|nudes|naked|twerk|onlyfan|camgirl|escort|hooker|prostitut|stripper|threesome|incest|hentai|loli|shota|gore|snuff|suicide|kys|killurself|kms)\b/i;
   function isNameClean(name) { return !_badWords.test(name.replace(/[^a-z0-9]/gi, " ")); }
 
   handleSaveBtn.addEventListener("click", async () => {
