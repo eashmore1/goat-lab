@@ -5167,9 +5167,13 @@ updateBody(null);
   });
   handleClose.addEventListener("click", () => hideModal(handleModal));
   handleModal.addEventListener("click", (e) => { if (e.target === handleModal) hideModal(handleModal); });
+  const _badWords = /\b(shit|fuck|fuk|fuq|fvck|fck|ass(?:hole)?|bitch|bastard|cunt|dick|cock|pussy|piss|prick|slut|whore|nigger|nigga|n[i1]gg[ae3]r?|faggot|f[a4]gg?[o0]t|retard|spic|chink|kike|wetback|twat|wank(?:er)?|jizz|cum|clit|dildo|tits?|boob|penis|vagina|anus|anal|porn|sex(?:y)?|rape|molest|pedo|nazi|hitler|kkk)\b/i;
+  function isNameClean(name) { return !_badWords.test(name.replace(/[^a-z0-9]/gi, " ")); }
+
   handleSaveBtn.addEventListener("click", async () => {
     const name = handleInput.value.trim();
     if (!name) { handleStatus.textContent = "Enter a name."; return; }
+    if (!isNameClean(name)) { handleStatus.textContent = "That name isn't allowed. Please choose another."; return; }
     handleSaveBtn.disabled = true;
     handleStatus.textContent = "Saving…";
     try {
