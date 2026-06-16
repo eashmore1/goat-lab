@@ -1140,26 +1140,6 @@ h1 {
   color: var(--muted);
 }
 
-.footer-promo {
-  width: min(1260px, calc(100% - 20px));
-  margin: 10px auto 0;
-  padding-top: 10px;
-  border-top: 1px dashed rgba(21, 20, 19, 0.18);
-  font: 400 0.68rem/1.45 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  color: var(--muted);
-  text-align: center;
-}
-.footer-promo a {
-  color: var(--ink);
-  font-weight: 700;
-  text-decoration: none;
-  border-bottom: 1px solid currentColor;
-  transition: opacity 140ms ease;
-}
-.footer-promo a:hover {
-  opacity: 0.65;
-}
-
 .footer-disclaimer {
   width: min(1260px, calc(100% - 20px));
   margin: 10px auto 0;
