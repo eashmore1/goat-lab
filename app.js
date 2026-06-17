@@ -3543,8 +3543,8 @@ function calculateScore() {
   const minScore = Math.min(...values);
   const balanceBonus = minScore >= 90 ? 2.0 : minScore >= 87 ? 1.0 : minScore >= 82 ? 0.25 : 0;
   const heightBonus = ["Victor Wembanyama", "Yao Ming", "Mark Eaton", "Shawn Bradley"].includes(build.height?.player?.name ?? "") ? 2 : 0;
-  const blindAdj = (gameMode === "blind" || gameMode === "daily") ? -0.5 : 0;
-  const score = Math.round(average - 5 - weakPenalty + eliteBonus + balanceBonus + heightBonus + blindAdj);
+  const flatAdj = (gameMode === "blind" || gameMode === "daily") ? -2 : -5;
+  const score = Math.round(average + flatAdj - weakPenalty + eliteBonus + balanceBonus + heightBonus);
 
   // Only a gate-passing build can show 100; everything else caps at 99.
   return Math.max(55, Math.min(99, score));
@@ -4916,7 +4916,7 @@ function recalcEntryScore(entry) {
   const minPick = Math.min(...pickScores);
   const bal = minPick >= 90 ? 2.0 : minPick >= 87 ? 1.0 : minPick >= 82 ? 0.25 : 0;
   const hgtBonus = ["Victor Wembanyama", "Yao Ming", "Mark Eaton", "Shawn Bradley"].includes(heightPlayerName) ? 2 : 0;
-  return Math.max(55, Math.min(99, Math.round(avg - 5 - pen + elite + bal + hgtBonus - 0.5)));
+  return Math.max(55, Math.min(99, Math.round(avg - 2 - pen + elite + bal + hgtBonus)));
 }
 
 const _params = new URLSearchParams(location.search);
