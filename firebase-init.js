@@ -102,7 +102,17 @@ window.GoatAuth = (() => {
     async getDailyLeaderboard(dateStr, topN = 100) {
       if (!enabled) return [];
       const snap = await entriesRef(dateStr).orderBy("score", "desc").limit(topN).get();
-      return snap.docs.map((d) => ({ uid: d.id, ...d.data() }));
+      const rows = snap.docs.map((d) => ({ uid: d.id, ...d.data() }));
+      rows.sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        const bestA = Array.isArray(a.picks) ? Math.max(...a.picks.map(p => p.score ?? 0)) : 0;
+        const bestB = Array.isArray(b.picks) ? Math.max(...b.picks.map(p => p.score ?? 0)) : 0;
+        if (bestB !== bestA) return bestB - bestA;
+        const tA = a.createdAt?.toMillis?.() ?? 0;
+        const tB = b.createdAt?.toMillis?.() ?? 0;
+        return tA - tB;
+      });
+      return rows;
     },
 
     // --- Private saved builds ("My Builds") --------------------------------
