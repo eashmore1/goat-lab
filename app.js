@@ -3581,12 +3581,16 @@ function calculateScore() {
   if (goatGate) return 100;
 
   const average = values.reduce((sum, value) => sum + value, 0) / values.length;
-  const weakPenalty = values.reduce((sum, value) => sum + Math.max(0, 75 - value) * 0.42, 0);
+  const weakPenalty = gameMode === "blind" ? 0 : values.reduce((sum, value) => sum + Math.max(0, 75 - value) * 0.42, 0);
   const eliteBonus = values.filter((value) => value >= 99).length * 1.5
                    + values.filter((value) => value >= 96 && value < 99).length * 0.5;
   const minScore = Math.min(...values);
   const balanceBonus = minScore >= 90 ? 2.0 : minScore >= 87 ? 1.0 : minScore >= 82 ? 0.25 : 0;
-  const heightBonus = ["Victor Wembanyama", "Yao Ming", "Mark Eaton", "Shawn Bradley"].includes(build.height?.player?.name ?? "") ? 2 : 0;
+  const heightBonus = [
+    "Victor Wembanyama", "Yao Ming", "Mark Eaton", "Shawn Bradley",
+    "Gheorghe Muresan", "Manute Bol", "Ralph Sampson", "Rik Smits",
+    "Arvydas Sabonis", "Zydrunas Ilgauskas", "Kristaps Porzingis", "Randy Breuer",
+  ].includes(build.height?.player?.name ?? "") ? 2 : 0;
   const flatAdj = (gameMode === "blind" || gameMode === "daily") ? -2 : -5;
   const score = Math.round(average + flatAdj - weakPenalty + eliteBonus + balanceBonus + heightBonus);
 
