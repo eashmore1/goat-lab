@@ -3405,6 +3405,26 @@ const goldenTeams = [
       player("Wilt Chamberlain", 7, 1, 13, { height: 100, shooting: 100, finishing: 100, handles: 100, passing: 100, defense: 100, rebounding: 100, athleticism: 100, iq: 100 }),
     ],
   },
+  {
+    era: "2026",
+    team: "NBA · Draft Lottery",
+    golden: true,
+    note: "The most anticipated draft class in years. AJ Dybantsa enters as a generational talent — a 6'9" scorer who can do everything. Around him, elite shooters, freakish athletes, and high-IQ playmakers ready to reshape the league.",
+    players: [
+      player("AJ Dybantsa",         6, 9,  1,  { height: 88, shooting: 92, finishing: 100, handles: 90, passing: 86, defense: 86, rebounding: 80, athleticism: 96, iq: 92 }),
+      player("Ace Bailey",          6, 10, 4,  { height: 92, shooting: 100, finishing: 90, handles: 78, passing: 72, defense: 80, rebounding: 80, athleticism: 88, iq: 80 }),
+      player("Aday Mara",           7, 3,  13, { height: 100, shooting: 74, finishing: 86, handles: 62, passing: 70, defense: 92, rebounding: 92, athleticism: 78, iq: 82 }),
+      player("Daryn Peterson",      6, 5,  2,  { height: 80, shooting: 84, finishing: 90, handles: 88, passing: 80, defense: 86, rebounding: 70, athleticism: 100, iq: 84 }),
+      player("Morez Johnson",       6, 9,  5,  { height: 90, shooting: 68, finishing: 88, handles: 68, passing: 68, defense: 90, rebounding: 92, athleticism: 100, iq: 78 }),
+      player("Tre Johnson",         6, 6,  11, { height: 82, shooting: 90, finishing: 90, handles: 100, passing: 74, defense: 74, rebounding: 68, athleticism: 88, iq: 86 }),
+      player("Kasparas Jakucionis", 6, 5,  10, { height: 80, shooting: 86, finishing: 84, handles: 92, passing: 100, defense: 78, rebounding: 64, athleticism: 80, iq: 92 }),
+      player("Liam McNeeley",       6, 7,  3,  { height: 84, shooting: 100, finishing: 86, handles: 80, passing: 78, defense: 78, rebounding: 74, athleticism: 82, iq: 88 }),
+      player("Noa Essengue",        6, 9,  9,  { height: 88, shooting: 82, finishing: 86, handles: 78, passing: 76, defense: 86, rebounding: 100, athleticism: 90, iq: 82 }),
+      player("Adou Thiero",         6, 7,  14, { height: 84, shooting: 78, finishing: 84, handles: 78, passing: 72, defense: 100, rebounding: 80, athleticism: 94, iq: 84 }),
+      player("Maxime Raynaud",      7, 1,  42, { height: 100, shooting: 82, finishing: 88, handles: 68, passing: 100, defense: 80, rebounding: 90, athleticism: 76, iq: 88 }),
+      player("Ben Saraf",           6, 5,  7,  { height: 80, shooting: 84, finishing: 82, handles: 90, passing: 88, defense: 76, rebounding: 62, athleticism: 80, iq: 100 }),
+    ],
+  },
 ];
 
 let round = 0;
