@@ -3428,6 +3428,26 @@ const goldenTeams = [
       player("Hannes Steinbach",  6, 8,  7,  { height: 86, shooting: 100, finishing: 84, handles: 74, passing: 76, defense: 76, rebounding: 74, athleticism: 78, iq: 86 }),
     ],
   },
+  {
+    era: "2026",
+    team: "New York Knicks",
+    golden: true,
+    activeUntil: "2026-10-20",
+    note: "New York's first championship since 1973. Jalen Brunson dropped 45 in Game 5 to close out the Spurs and give the Garden what it had waited 53 years for. The city finally got its ring.",
+    players: [
+      player("Jalen Brunson",    6, 1,  11, { height: 68, shooting: 96, finishing: 100, handles: 99, passing: 92, defense: 82, rebounding: 64, athleticism: 86, iq: 99 }),
+      player("Karl-Anthony Towns", 7, 0, 32, { height: 98, shooting: 100, finishing: 96, handles: 84, passing: 86, defense: 84, rebounding: 98, athleticism: 86, iq: 90 }),
+      player("OG Anunoby",       6, 7,  8,  { height: 84, shooting: 90, finishing: 94, handles: 84, passing: 80, defense: 100, rebounding: 86, athleticism: 98, iq: 90 }),
+      player("Mikal Bridges",    6, 6,  1,  { height: 82, shooting: 92, finishing: 92, handles: 86, passing: 82, defense: 96, rebounding: 80, athleticism: 100, iq: 90 }),
+      player("Jeremy Sochan",    6, 9,  10, { height: 88, shooting: 86, finishing: 90, handles: 84, passing: 82, defense: 96, rebounding: 100, athleticism: 98, iq: 88 }),
+      player("Josh Hart",        6, 5,  3,  { height: 80, shooting: 84, finishing: 88, handles: 82, passing: 84, defense: 94, rebounding: 96, athleticism: 96, iq: 100 }),
+      player("Jordan Clarkson",  6, 5,  0,  { height: 80, shooting: 98, finishing: 96, handles: 100, passing: 80, defense: 74, rebounding: 68, athleticism: 88, iq: 86 }),
+      player("Jose Alvarado",    6, 0,  15, { height: 64, shooting: 84, finishing: 86, handles: 92, passing: 86, defense: 100, rebounding: 64, athleticism: 90, iq: 88 }),
+      player("Ariel Hukporti",   7, 1,  18, { height: 100, shooting: 68, finishing: 86, handles: 64, passing: 70, defense: 98, rebounding: 96, athleticism: 84, iq: 80 }),
+      player("Pacôme Dadiet",    6, 7,  22, { height: 84, shooting: 90, finishing: 86, handles: 82, passing: 100, defense: 86, rebounding: 76, athleticism: 90, iq: 84 }),
+      player("Mohamed Diawara",  6, 5,  27, { height: 80, shooting: 100, finishing: 86, handles: 90, passing: 84, defense: 84, rebounding: 64, athleticism: 88, iq: 86 }),
+    ],
+  },
 ];
 
 let round = 0;
