@@ -3435,9 +3435,9 @@ const goldenTeams = [
     activeUntil: "2026-10-20",
     note: "New York's first championship since 1973. Jalen Brunson dropped 45 in Game 5 to close out the Spurs and give the Garden what it had waited 53 years for. The city finally got its ring.",
     players: [
-      player("Jalen Brunson",      6, 1,  11, { height: 68, shooting: 96, finishing: 100, handles: 96, passing: 90, defense: 80, rebounding: 62, athleticism: 84, iq: 96 }),
+      player("Jalen Brunson",      6, 1,  11, { height: 68, shooting: 96, finishing: 100, handles: 100, passing: 90, defense: 80, rebounding: 62, athleticism: 84, iq: 96 }),
       player("Karl-Anthony Towns", 7, 0,  32, { height: 98, shooting: 100, finishing: 94, handles: 82, passing: 84, defense: 80, rebounding: 96, athleticism: 84, iq: 88 }),
-      player("OG Anunoby",         6, 7,  8,  { height: 84, shooting: 88, finishing: 90, handles: 82, passing: 78, defense: 98, rebounding: 84, athleticism: 96, iq: 88 }),
+      player("OG Anunoby",         6, 7,  8,  { height: 84, shooting: 88, finishing: 90, handles: 82, passing: 78, defense: 100, rebounding: 84, athleticism: 100, iq: 88 }),
       player("Mikal Bridges",      6, 6,  1,  { height: 82, shooting: 90, finishing: 90, handles: 84, passing: 80, defense: 94, rebounding: 78, athleticism: 92, iq: 88 }),
       player("Josh Hart",          6, 5,  3,  { height: 80, shooting: 80, finishing: 84, handles: 78, passing: 82, defense: 90, rebounding: 94, athleticism: 92, iq: 90 }),
       player("Jose Alvarado",      6, 0,  15, { height: 64, shooting: 80, finishing: 82, handles: 88, passing: 82, defense: 96, rebounding: 60, athleticism: 86, iq: 84 }),
