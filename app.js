@@ -3409,6 +3409,7 @@ const goldenTeams = [
     era: "2026",
     team: "NBA · Draft Lottery",
     golden: true,
+    activeUntil: "2026-10-01",
     note: "The 2026 NBA Draft lottery class. AJ Dybantsa goes #1 to Washington as a generational talent. Fourteen prospects — athletes, shooters, bigs, and playmakers — ready to reshape the league.",
     players: [
       player("AJ Dybantsa",       6, 9,  1,  { height: 88, shooting: 92, finishing: 100, handles: 90, passing: 86, defense: 86, rebounding: 80, athleticism: 96, iq: 92 }),
@@ -3509,15 +3510,17 @@ function formatHeight(player) {
 const GOLDEN_ODDS = 0.012;
 
 function pickTeamEra() {
-  if (goldenTeams.length && Math.random() < GOLDEN_ODDS) {
+  const today = new Date().toISOString().slice(0, 10);
+  const activeGolden = goldenTeams.filter(t => !t.activeUntil || today < t.activeUntil);
+  if (activeGolden.length && Math.random() < GOLDEN_ODDS) {
     // Team cards (soloCard falsy) are 2× more likely per slot than solo player cards.
-    const solos = goldenTeams.filter(t => t.soloCard);
-    const teams = goldenTeams.filter(t => !t.soloCard);
+    const solos = activeGolden.filter(t => t.soloCard);
+    const teams = activeGolden.filter(t => !t.soloCard);
     const totalWeight = teams.length * 2 + solos.length;
     let r = Math.random() * totalWeight;
     for (const t of teams) { r -= 2; if (r <= 0) return t; }
     for (const s of solos) { r -= 1; if (r <= 0) return s; }
-    return goldenTeams[0];
+    return activeGolden[0];
   }
   return teamEras[Math.floor(Math.random() * teamEras.length)];
 }
