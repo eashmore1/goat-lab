@@ -5155,6 +5155,24 @@ updateBody(null);
           }).join("")
         : '<p class="lb-empty lb-empty-rest">Only the podium so far — climb on!</p>';
     }
+
+    // If the signed-in user played today but didn't crack the top 75, pin their
+    // own score at the very bottom with a "-" rank. Rendered from their own
+    // session, so only they ever see it.
+    if (me && !rows.some((r) => r.uid === me.uid)) {
+      let myScore = null;
+      try { myScore = getDailyHistory()[getTodayStr()]?.score ?? null; } catch (e) {}
+      if (myScore != null) {
+        let myName = Auth.displayName();
+        try { myName = await Auth.getHandle(); } catch (e) {}
+        lbList.insertAdjacentHTML("beforeend", `
+          <div class="lb-row lb-row-me lb-row-you" style="border-top:2px dashed var(--ink,#151413);margin-top:6px">
+            <span class="lb-rank">-</span>
+            <span class="lb-name">${esc(myName)} (you)</span>
+            <span class="lb-score">${esc(myScore)}</span>
+          </div>`);
+      }
+    }
     if (!me) {
       lbHint.textContent = "Sign in and play today's Daily to claim your spot.";
       lbHint.hidden = false;
