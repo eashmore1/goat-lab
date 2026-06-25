@@ -2273,3 +2273,67 @@ h1 {
   .lb-name { font-size: 0.82rem; }
   .lb-score { min-width: 36px; height: 30px; font-size: 0.9rem; }
 }
+
+/* ── Share modal mobile fixes ──────────────────────────────────────────────── */
+/* On short phones the modal overflows and the Ko-fi button disappears.
+   Solution: cap the modal at viewport height and let only the player rows scroll
+   so the action buttons and coffee CTA are always visible. */
+@media (max-width: 640px) {
+  .modal-overlay {
+    align-items: flex-start;
+    padding: 12px 10px;
+    overflow-y: auto;
+  }
+
+  .share-modal {
+    max-height: calc(100dvh - 24px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .share-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .share-card-rows {
+    overflow-y: auto;
+    max-height: 36vh;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .share-card-header {
+    padding: 8px 12px;
+  }
+
+  .share-card-score {
+    font-size: 1.8rem;
+  }
+
+  .share-row {
+    padding: 6px 0;
+  }
+
+  .share-row-player {
+    font-size: 0.8rem;
+  }
+
+  .share-row-attr,
+  .share-row-meta {
+    font-size: 0.54rem;
+  }
+
+  .share-buttons {
+    padding: 10px 12px;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .coffee-cta-wrap {
+    flex-shrink: 0;
+    padding: 0 12px 12px;
+    margin-top: 2px;
+  }
+}
