@@ -465,7 +465,7 @@ const teamEras = [
       player("Greg Anthony", 6, 1, 50, { height: 68, shooting: 74, finishing: 74, handles: 84, passing: 82, defense: 80, rebounding: 52, athleticism: 80, iq: 76 }),
       player("Rolando Blackman", 6, 6, 55, { height: 82, shooting: 86, finishing: 80, handles: 78, passing: 74, defense: 76, rebounding: 60, athleticism: 74, iq: 86 }),
       player("Allan Houston", 6, 6, 20, { height: 82, shooting: 84, finishing: 82, handles: 80, passing: 74, defense: 74, rebounding: 56, athleticism: 80, iq: 86 }),
-      player("Latrell Sprewell", 6, 5, 8, { height: 80, shooting: 80, finishing: 86, handles: 80, passing: 78, defense: 80, rebounding: 62, athleticism: 84, iq: 78 }),
+      player("Latrell Sprewell", 6, 5, 8, { height: 80, shooting: 80, finishing: 86, handles: 80, passing: 78, defense: 84, rebounding: 62, athleticism: 84, iq: 78 }),
       player("Larry Johnson", 6, 6, 2, { height: 82, shooting: 78, finishing: 84, handles: 80, passing: 78, defense: 80, rebounding: 80, athleticism: 84, iq: 84 }),
       player("Charlie Ward", 6, 2, 21, { height: 71, shooting: 74, finishing: 76, handles: 84, passing: 84, defense: 84, rebounding: 56, athleticism: 82, iq: 78 }),
       player("Doc Rivers", 6, 4, 25, { height: 77, shooting: 78, finishing: 80, handles: 84, passing: 84, defense: 86, rebounding: 60, athleticism: 82, iq: 86 }),
@@ -854,7 +854,7 @@ const teamEras = [
     players: [
       player("Kevin Garnett", 6, 11, 21, { height: 96, shooting: 73, finishing: 88, handles: 72, passing: 88, defense: 96, rebounding: 98, athleticism: 94, iq: 94 }),
       player("Sam Cassell", 6, 3, 19, { height: 74, shooting: 90, finishing: 86, handles: 84, passing: 80, defense: 70, rebounding: 56, athleticism: 70, iq: 88 }),
-      player("Latrell Sprewell", 6, 5, 8, { height: 80, shooting: 84, finishing: 84, handles: 80, passing: 76, defense: 84, rebounding: 62, athleticism: 86, iq: 78 }),
+      player("Latrell Sprewell", 6, 5, 8, { height: 80, shooting: 84, finishing: 84, handles: 80, passing: 76, defense: 87, rebounding: 62, athleticism: 86, iq: 78 }),
       player("Wally Szczerbiak", 6, 7, 10, { height: 84, shooting: 88, finishing: 80, handles: 74, passing: 72, defense: 68, rebounding: 66, athleticism: 74, iq: 80 }),
       player("Troy Hudson", 6, 1, 3, { height: 68, shooting: 82, finishing: 76, handles: 82, passing: 78, defense: 64, rebounding: 50, athleticism: 76, iq: 78 }),
       player("Fred Hoiberg", 6, 4, 15, { height: 77, shooting: 88, finishing: 74, handles: 74, passing: 74, defense: 64, rebounding: 58, athleticism: 72, iq: 78 }),
@@ -2526,8 +2526,8 @@ const teamEras = [
     players: [
       player("Tim Hardaway", 6, 0, 10, { height: 66, shooting: 82, finishing: 84, handles: 96, passing: 90, defense: 78, rebounding: 52, athleticism: 88, iq: 86 }),
       player("Chris Mullin", 6, 7, 17, { height: 84, shooting: 92, finishing: 84, handles: 82, passing: 82, defense: 74, rebounding: 64, athleticism: 74, iq: 86 }),
-      player("Mitch Richmond", 6, 5, 23, { height: 80, shooting: 90, finishing: 86, handles: 82, passing: 74, defense: 78, rebounding: 64, athleticism: 86, iq: 84 }),
-      player("Latrell Sprewell", 6, 5, 15, { height: 80, shooting: 80, finishing: 86, handles: 80, passing: 78, defense: 82, rebounding: 62, athleticism: 84, iq: 78 }),
+      player("Mitch Richmond", 6, 5, 23, { height: 80, shooting: 90, finishing: 86, handles: 82, passing: 74, defense: 82, rebounding: 64, athleticism: 86, iq: 84 }),
+      player("Latrell Sprewell", 6, 5, 15, { height: 80, shooting: 80, finishing: 86, handles: 80, passing: 78, defense: 85, rebounding: 62, athleticism: 84, iq: 78 }),
       player("Chris Webber", 6, 10, 4, { height: 94, shooting: 78, finishing: 88, handles: 82, passing: 84, defense: 80, rebounding: 88, athleticism: 88, iq: 78 }),
       player("Sarunas Marciulionis", 6, 5, 13, { height: 80, shooting: 80, finishing: 84, handles: 82, passing: 74, defense: 70, rebounding: 54, athleticism: 82, iq: 80 }),
       player("Billy Owens", 6, 9, 30, { height: 90, shooting: 74, finishing: 84, handles: 80, passing: 80, defense: 74, rebounding: 76, athleticism: 82, iq: 76 }),
