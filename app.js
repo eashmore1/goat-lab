@@ -3565,9 +3565,10 @@ function calculateScore() {
   const values = attributes.map((attribute) => build[attribute.key]?.score ?? 0);
   if (values.some((value) => value === 0)) return null;
 
-  // GOAT gate: need 1×100, 3×98+, 4×97+, 6×95+, and height ≥ 90.
-  // No floor requirement — elite stat counts alone determine GOAT status.
+  // GOAT gate: min stat ≥ 88, plus 1×100, 3×98+, 4×97+, 6×95+, height ≥ 90.
+  const sorted = [...values].sort((a, b) => a - b);
   const goatGate =
+    sorted[0] >= 88 &&
     values.filter((value) => value >= 100).length >= 1 &&
     values.filter((value) => value >= 98).length >= 3 &&
     values.filter((value) => value >= 97).length >= 4 &&
@@ -3577,8 +3578,8 @@ function calculateScore() {
 
   const average = values.reduce((sum, value) => sum + value, 0) / values.length;
   const weakPenalty = gameMode === "blind" ? 0 : values.reduce((sum, value) => sum + Math.max(0, 75 - value) * 0.42, 0);
-  const eliteBonus = values.filter((value) => value >= 99).length * 1.5
-                   + values.filter((value) => value >= 96 && value < 99).length * 0.5;
+  const eliteBonus = values.filter((value) => value >= 99).length * 1.2
+                   + values.filter((value) => value >= 96 && value < 99).length * 0.2;
   const minScore = Math.min(...values);
   const balanceBonus = minScore >= 90 ? 2.0 : minScore >= 87 ? 1.0 : minScore >= 82 ? 0.25 : 0;
   const heightBonus = [
@@ -4958,7 +4959,9 @@ function recalcEntryScore(entry) {
   const heightPick = entry.picks.find(p => p.attrKey === "height") || {};
   const heightScore = heightPick.score || 0;
   const heightPlayerName = heightPick.playerName || "";
+  const sortedPicks = [...pickScores].sort((a, b) => a - b);
   const goatGate =
+    sortedPicks[0] >= 88 &&
     pickScores.filter(v => v >= 100).length >= 1 &&
     pickScores.filter(v => v >= 98).length >= 3 &&
     pickScores.filter(v => v >= 97).length >= 4 &&
@@ -4967,8 +4970,8 @@ function recalcEntryScore(entry) {
   if (goatGate) return 100;
   const avg = pickScores.reduce((s, v) => s + v, 0) / pickScores.length;
   const pen = pickScores.reduce((s, v) => s + Math.max(0, 75 - v) * 0.42, 0);
-  const elite = pickScores.filter(v => v >= 99).length * 1.5
-              + pickScores.filter(v => v >= 96 && v < 99).length * 0.5;
+  const elite = pickScores.filter(v => v >= 99).length * 1.2
+              + pickScores.filter(v => v >= 96 && v < 99).length * 0.2;
   const minPick = Math.min(...pickScores);
   const bal = minPick >= 90 ? 2.0 : minPick >= 87 ? 1.0 : minPick >= 82 ? 0.25 : 0;
   const hgtBonus = [
