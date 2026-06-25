@@ -3488,6 +3488,7 @@ const shareBtnImage = document.querySelector("#shareBtnImage");
 const shareBtnText = document.querySelector("#shareBtnText");
 const shareBtnX = document.querySelector("#shareBtnX");
 const shareBtnCopy = document.querySelector("#shareBtnCopy");
+const shareBtnLeaderboard = document.querySelector("#shareBtnLeaderboard");
 const result = document.querySelector("#result");
 const resultTitle = document.querySelector("#resultTitle");
 const resultCopy = document.querySelector("#resultCopy");
@@ -4490,6 +4491,7 @@ function openShareModal() {
     shareCardRows.appendChild(row);
   });
 
+  if (shareBtnLeaderboard) shareBtnLeaderboard.hidden = gameMode !== "daily";
   showModal(shareModal, document.activeElement instanceof HTMLElement ? document.activeElement : shareButton);
   primeShareImage();
 }
@@ -4634,6 +4636,7 @@ function openShareModalFromSaved(b) {
     shareCardRows.appendChild(row);
   });
 
+  if (shareBtnLeaderboard) shareBtnLeaderboard.hidden = gameMode !== "daily";
   showModal(shareModal, null);
   primeShareImage();
 }
@@ -4750,6 +4753,11 @@ shareBtnCopy.addEventListener("click", async () => {
     shareBtnCopy.textContent = "Failed";
     setTimeout(() => { shareBtnCopy.textContent = "Copy"; }, 1400);
   }
+});
+
+if (shareBtnLeaderboard) shareBtnLeaderboard.addEventListener("click", () => {
+  closeShareModal();
+  window.GoatLeaderboard?.openLeaderboard?.();
 });
 
 // ===== DAILY CHALLENGE =====
@@ -5095,7 +5103,7 @@ updateBody(null);
     if (recalcPending) try { localStorage.removeItem("goatlab_recalc_pending"); } catch (e) {}
     try { updateDailyCard(); } catch (e) {}
   }
-  window.GoatLeaderboard = { submitToday, showResultButton, pushDailyHistory };
+  window.GoatLeaderboard = { submitToday, showResultButton, pushDailyHistory, openLeaderboard };
 
   // Render the global leaderboard for today.
   // Podium card for one of the top 3 (place = 1, 2, or 3).
