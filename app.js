@@ -3587,9 +3587,12 @@ function calculateScore() {
 
   const average = values.reduce((sum, value) => sum + value, 0) / values.length;
   const weakPenalty = gameMode === "blind" ? 0 : values.reduce((sum, value) => sum + Math.max(0, 75 - value) * 0.42, 0);
-  const eliteBonus = newScoring
-    ? values.filter((value) => value >= 99).length * 1.2
-    + values.filter((value) => value >= 96 && value < 99).length * 0.2
+  // Classic keeps original bonus (already penalised by flatAdj=-5 + weakPenalty).
+  // Daily/blind get the tuned bonus from 2026-06-26 onward.
+  const isClassic = gameMode === "classic";
+  const eliteBonus = (newScoring && !isClassic)
+    ? values.filter((value) => value >= 99).length * 1.3
+    + values.filter((value) => value >= 96 && value < 99).length * 0.4
     : values.filter((value) => value >= 99).length * 1.5
     + values.filter((value) => value >= 96 && value < 99).length * 0.5;
   const minScore = Math.min(...values);
@@ -4990,7 +4993,7 @@ function recalcEntryScore(entry, dateStr) {
   const avg = pickScores.reduce((s, v) => s + v, 0) / pickScores.length;
   const pen = pickScores.reduce((s, v) => s + Math.max(0, 75 - v) * 0.42, 0);
   const elite = newScoring
-    ? pickScores.filter(v => v >= 99).length * 1.2 + pickScores.filter(v => v >= 96 && v < 99).length * 0.2
+    ? pickScores.filter(v => v >= 99).length * 1.3 + pickScores.filter(v => v >= 96 && v < 99).length * 0.4
     : pickScores.filter(v => v >= 99).length * 1.5 + pickScores.filter(v => v >= 96 && v < 99).length * 0.5;
   const minPick = Math.min(...pickScores);
   const bal = minPick >= 90 ? 2.0 : minPick >= 87 ? 1.0 : minPick >= 82 ? 0.25 : 0;
