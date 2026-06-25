@@ -3856,7 +3856,7 @@ function renderRound() {
   roundLabel.textContent = `Round ${round + 1} of ${runAttributes.length}`;
   context.textContent = "";
   modeLabel.textContent = gameMode === "daily"
-    ? (dailyData?.franchise ? `Franchise Daily · ${dailyData.franchiseTeamName} · Blind` : "Daily Challenge · Blind")
+    ? (dailyData?.franchise ? `Franchise Daily #${getDailyNumber()} · ${dailyData.franchiseTeamName} · Blind` : `Daily #${getDailyNumber()} · Blind`)
     : gameMode === "blind" ? "Blind mode: ratings reveal after your pick."
     : "Classic mode: ratings are visible before you pick.";
 
@@ -4175,7 +4175,7 @@ function startGame(mode) {
   if (respinTeamBtn) respinTeamBtn.hidden = mode === "daily" && dailyData?.franchise;
 
   modeLabel.textContent = mode === "daily"
-    ? (dailyData?.franchise ? `Franchise Daily · ${dailyData.franchiseTeamName} · Blind` : "Daily Challenge · Blind")
+    ? (dailyData?.franchise ? `Franchise Daily #${getDailyNumber()} · ${dailyData.franchiseTeamName} · Blind` : `Daily #${getDailyNumber()} · Blind`)
     : mode === "blind" ? "Blind mode: ratings reveal after your pick."
     : "Classic mode: ratings are visible before you pick.";
   renderRound();
@@ -4295,7 +4295,7 @@ async function generateShareImage() {
   const NAVY  = "#091420";
 
   const modeColor = gameMode === "daily" ? GOLD : gameMode === "blind" ? COURT : CHALK;
-  const modeText  = gameMode === "daily" ? "DAILY CHALLENGE" : gameMode === "blind" ? "BLIND MODE" : "CLASSIC MODE";
+  const modeText  = gameMode === "daily" ? `DAILY #${getDailyNumber()}` : gameMode === "blind" ? "BLIND MODE" : "CLASSIC MODE";
 
   // Truncate text to fit a pixel width
   function clip(text, maxW, font) {
@@ -4448,11 +4448,10 @@ function buildShareText(score, tier) {
   const best = attributes.map(a => build[a.key]).filter(Boolean).sort((a, b) => b.score - a.score)[0];
   const bestStr = best ? ` My best pick was ${best.player.name} (${best.score}).` : "";
   if (gameMode === "daily") {
-    const d = new Date();
-    const dateLabel = d.toLocaleDateString("en-US", { month: "long", day: "numeric" });
+    const num = getDailyNumber();
     const prefix = dailyData?.franchise
-      ? `I scored ${score} building the greatest ${dailyData.franchiseTeamName} on the ${dateLabel} GOAT Lab Daily 🏀`
-      : `I scored ${score} on the ${dateLabel} GOAT Lab Daily 🏀`;
+      ? `I scored ${score} building the greatest ${dailyData.franchiseTeamName} on GOAT Lab Daily #${num} 🏀`
+      : `I scored ${score} on GOAT Lab Daily #${num} 🏀`;
     return `${prefix}${bestStr} Can you beat me? https://playgoatlab.com`;
   }
   return `I scored ${score} (${tier}) in GOAT Lab 🏀${bestStr} Can you beat my build? https://playgoatlab.com`;
@@ -4771,6 +4770,14 @@ function getTodayStr() {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
+// Sequential daily number, counting up forever. Day #1 = 2026-06-10 (the daily's
+// launch). Noon anchor on both dates avoids any DST off-by-one.
+function getDailyNumber(dateStr = getTodayStr()) {
+  const start = new Date("2026-06-10T12:00:00");
+  const cur   = new Date(dateStr + "T12:00:00");
+  return Math.max(1, Math.floor((cur - start) / 86400000) + 1);
+}
+
 function strToSeed(str) {
   let h = 0;
   for (let i = 0; i < str.length; i++) h = Math.imul(31, h) + str.charCodeAt(i) | 0;
@@ -4868,6 +4875,7 @@ const dailyCardBtn    = document.querySelector("[data-mode='daily']");
 const dailyStatusEl   = document.querySelector("#dailyStatus");
 const dailyStreakEl   = document.querySelector("#dailyStreak");
 const dailySubtitleEl = document.querySelector("#dailySubtitle");
+const dailyTagEl      = document.querySelector("#dailyTag");
 
 function getCountdownStr() {
   const now = new Date();
@@ -4881,6 +4889,7 @@ function getCountdownStr() {
 
 function updateDailyCard() {
   if (!dailyStatusEl) return;
+  if (dailyTagEl) dailyTagEl.textContent = `Daily #${getDailyNumber()}`;
   const todayStr    = getTodayStr();
   const history     = getDailyHistory();
   const entry       = history[todayStr];

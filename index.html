@@ -131,7 +131,7 @@
         <div class="mode-options">
           <button class="mode-card mode-card-daily" type="button" data-mode="daily">
             <div class="daily-card-top">
-              <span class="mode-tag">Daily</span>
+              <span class="mode-tag" id="dailyTag">Daily</span>
               <span class="daily-streak" id="dailyStreak" hidden></span>
             </div>
             <strong>Today's Challenge</strong>
@@ -389,7 +389,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="firebase-init.js"></script>
     <noscript><p style="font-family:sans-serif;text-align:center;padding:2rem">GOAT Lab requires JavaScript. Please enable it in your browser settings.</p></noscript>
-    <script src="app.js?v=63"></script>
+    <script src="app.js?v=64"></script>
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
