@@ -4,3 +4,5 @@ gen_share_previews.py
 share_preview_a.png
 share_preview_b.png
 share_preview_c.png
+node_modules/
+.vercel

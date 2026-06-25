@@ -1,0 +1,10 @@
+{
+  "name": "goat-lab",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "GOAT Lab — static game + OG image functions",
+  "dependencies": {
+    "@vercel/og": "^0.6.8"
+  }
+}

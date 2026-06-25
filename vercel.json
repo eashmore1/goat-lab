@@ -1,4 +1,7 @@
 {
+  "rewrites": [
+    { "source": "/s", "destination": "/api/share" }
+  ],
   "headers": [
     {
       "source": "/:file.(png|jpg|webp|ico|svg)",

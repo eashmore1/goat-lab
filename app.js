@@ -4452,9 +4452,20 @@ function buildShareText(score, tier) {
     const prefix = dailyData?.franchise
       ? `I scored ${score} building the greatest ${dailyData.franchiseTeamName} on GOAT Lab Daily #${num} 🏀`
       : `I scored ${score} on GOAT Lab Daily #${num} 🏀`;
-    return `${prefix}${bestStr} Can you beat me? https://playgoatlab.com`;
+    return `${prefix}${bestStr} Can you beat me? ${buildShareUrl()}`;
   }
-  return `I scored ${score} (${tier}) in GOAT Lab 🏀${bestStr} Can you beat my build? https://playgoatlab.com`;
+  return `I scored ${score} (${tier}) in GOAT Lab 🏀${bestStr} Can you beat my build? ${buildShareUrl()}`;
+}
+
+// Personalized share link. Resolves to /s, which serves a per-build trading-card
+// OG image so the link unfurls as a picture when texted/posted. Reads the live
+// globals (the saved-build path repopulates build + gameMode before sharing).
+function buildShareUrl() {
+  const score = _savedShareData ? _savedShareData.score : calculateScore();
+  const vals = attributes.map((a) => build[a.key]?.score ?? 0).join("-");
+  const params = new URLSearchParams({ s: String(score), m: gameMode, v: vals });
+  if (gameMode === "daily") params.set("d", String(getDailyNumber()));
+  return `https://playgoatlab.com/s?${params.toString()}`;
 }
 
 function openShareModal() {
@@ -4584,7 +4595,7 @@ let _modeSnapshot = null;
 function buildSavedShareText(b) {
   const best = (b.picks || []).slice().sort((a, x) => x.score - a.score)[0];
   const bestStr = best ? ` My best pick was ${best.player} (${best.score}).` : "";
-  return `I scored ${b.score} (${getTier(b.score)}) in GOAT Lab 🏀${bestStr} Can you beat my build? https://playgoatlab.com`;
+  return `I scored ${b.score} (${getTier(b.score)}) in GOAT Lab 🏀${bestStr} Can you beat my build? ${buildShareUrl()}`;
 }
 
 function openShareModalFromSaved(b) {
@@ -4696,7 +4707,7 @@ shareBtnX.addEventListener("click", () => {
     const best = (b.picks || []).slice().sort((a, x) => x.score - a.score)[0];
     const bestStr = best ? ` My best pick was ${best.player} (${best.score}).` : "";
     tweet = `I scored ${b.score} (${getTier(b.score)}) in GOAT Lab 🏀${bestStr} Can you beat my build?`;
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank", "noopener,noreferrer");
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent(buildShareUrl())}`, "_blank", "noopener,noreferrer");
   } else {
     const score = calculateScore();
     const tier = getTier(score);
@@ -4704,38 +4715,22 @@ shareBtnX.addEventListener("click", () => {
     const bestStr = best ? ` My best pick was ${best.player.name} (${best.score}).` : "";
     tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀${bestStr} Can you beat my build?`;
     openAndDownload(shareBtnX, "X / Twitter", () => {
-      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank", "noopener,noreferrer");
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent(buildShareUrl())}`, "_blank", "noopener,noreferrer");
     });
   }
 });
 
 shareBtnText.addEventListener("click", async () => {
+  // Shares the personalized /s link (which unfurls as the trading-card image).
+  // The "Share Image" button is the one that sends the detailed JPEG file.
   const score = _savedShareData ? _savedShareData.score : calculateScore();
   const tier = getTier(score);
-  const text = `I scored ${score} (${tier}) in GOAT Lab 🏀 playgoatlab.com`;
-  const msg = encodeURIComponent(text);
-  if (_savedShareData) {
-    if (typeof navigator.share === "function") {
-      try { await navigator.share({ text }); }
-      catch (err) { if (err.name !== "AbortError") console.error(err); }
-    } else {
-      window.open(`sms:?body=${msg}`, "_self");
-    }
-    return;
-  }
-  const testFile = new File([], "t.jpg", { type: "image/jpeg" });
-  if (typeof navigator.canShare === "function" && navigator.canShare({ files: [testFile] })) {
-    shareBtnText.textContent = _shareBlob ? "Opening…" : "Generating…";
-    shareBtnText.disabled = true;
-    try {
-      const blob = await getShareBlob();
-      const file = new File([blob], "goat-lab-build.jpg", { type: "image/jpeg" });
-      await navigator.share({ files: [file], text });
-    } catch (err) { if (err.name !== "AbortError") console.error(err); }
-    shareBtnText.textContent = "Share";
-    shareBtnText.disabled = false;
+  const text = _savedShareData ? buildSavedShareText(_savedShareData) : buildShareText(score, tier);
+  if (typeof navigator.share === "function") {
+    try { await navigator.share({ text }); }
+    catch (err) { if (err.name !== "AbortError") console.error(err); }
   } else {
-    openAndDownload(shareBtnText, "Share", () => { window.open(`sms:?body=${msg}`, "_self"); });
+    window.open(`sms:?body=${encodeURIComponent(text)}`, "_self");
   }
 });
 
