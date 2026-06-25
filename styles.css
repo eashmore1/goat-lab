@@ -1187,6 +1187,36 @@ h1 {
   border-bottom-color: var(--ink) !important;
 }
 
+/* Post-game "buy the dev a coffee" — at the result emotional peak, but kept
+   visually secondary to Play Again so it doesn't pull players from replaying. */
+.result-support-wrap {
+  text-align: center;
+  margin-top: 12px;
+}
+.result-support {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: var(--gold, #d9a441);
+  color: var(--ink) !important;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border: 1.5px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.result-support:hover {
+  transform: translateY(-1px);
+  box-shadow: 2px 3px 0 var(--ink);
+}
+.result-support:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
 .footer-x {
   display: inline-flex;
   align-items: center;
