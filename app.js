@@ -4979,7 +4979,11 @@ function recalcEntryScore(entry) {
               + pickScores.filter(v => v >= 96 && v < 99).length * 0.5;
   const minPick = Math.min(...pickScores);
   const bal = minPick >= 90 ? 2.0 : minPick >= 87 ? 1.0 : minPick >= 82 ? 0.25 : 0;
-  const hgtBonus = ["Victor Wembanyama", "Yao Ming", "Mark Eaton", "Shawn Bradley"].includes(heightPlayerName) ? 2 : 0;
+  const hgtBonus = [
+    "Victor Wembanyama", "Yao Ming", "Mark Eaton", "Shawn Bradley",
+    "Gheorghe Muresan", "Manute Bol", "Ralph Sampson", "Rik Smits",
+    "Arvydas Sabonis", "Zydrunas Ilgauskas", "Kristaps Porzingis", "Randy Breuer",
+  ].includes(heightPlayerName) ? 2 : 0;
   return Math.max(55, Math.min(99, Math.round(avg - 2 - pen + elite + bal + hgtBonus)));
 }
 
