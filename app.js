@@ -4445,27 +4445,26 @@ async function generateShareImage() {
 }
 
 function buildShareText(score, tier) {
-  const best = attributes.map(a => build[a.key]).filter(Boolean).sort((a, b) => b.score - a.score)[0];
-  const bestStr = best ? ` My best pick was ${best.player.name} (${best.score}).` : "";
   if (gameMode === "daily") {
     const num = getDailyNumber();
     const prefix = dailyData?.franchise
       ? `I scored ${score} building the greatest ${dailyData.franchiseTeamName} on GOAT Lab Daily #${num} 🏀`
       : `I scored ${score} on GOAT Lab Daily #${num} 🏀`;
-    return `${prefix}${bestStr} Can you beat me? ${buildShareUrl()}`;
+    return `${prefix} Can you beat me? https://playgoatlab.com`;
   }
-  return `I scored ${score} (${tier}) in GOAT Lab 🏀${bestStr} Can you beat my build? ${buildShareUrl()}`;
+  return `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build? https://playgoatlab.com`;
 }
 
-// Personalized share link. Resolves to /s, which serves a per-build trading-card
-// OG image so the link unfurls as a picture when texted/posted. Reads the live
+// URL of the per-build trading-card PNG (rendered by the /api/og edge function).
+// Used to fetch the image and ATTACH it to a share — not as a link preview.
+// Relative path keeps the fetch same-origin (works on www + apex). Reads the live
 // globals (the saved-build path repopulates build + gameMode before sharing).
-function buildShareUrl() {
+function buildCardImageUrl() {
   const score = _savedShareData ? _savedShareData.score : calculateScore();
   const vals = attributes.map((a) => build[a.key]?.score ?? 0).join("-");
   const params = new URLSearchParams({ s: String(score), m: gameMode, v: vals });
   if (gameMode === "daily") params.set("d", String(getDailyNumber()));
-  return `https://playgoatlab.com/s?${params.toString()}`;
+  return `/api/og?${params.toString()}`;
 }
 
 function openShareModal() {
@@ -4593,9 +4592,7 @@ let _buildSnapshot = null;   // saved build/gameMode so we can restore after sha
 let _modeSnapshot = null;
 
 function buildSavedShareText(b) {
-  const best = (b.picks || []).slice().sort((a, x) => x.score - a.score)[0];
-  const bestStr = best ? ` My best pick was ${best.player} (${best.score}).` : "";
-  return `I scored ${b.score} (${getTier(b.score)}) in GOAT Lab 🏀${bestStr} Can you beat my build? ${buildShareUrl()}`;
+  return `I scored ${b.score} (${getTier(b.score)}) in GOAT Lab 🏀 Can you beat my build? https://playgoatlab.com`;
 }
 
 function openShareModalFromSaved(b) {
@@ -4704,29 +4701,36 @@ shareBtnX.addEventListener("click", () => {
   let tweet;
   if (_savedShareData) {
     const b = _savedShareData;
-    const best = (b.picks || []).slice().sort((a, x) => x.score - a.score)[0];
-    const bestStr = best ? ` My best pick was ${best.player} (${best.score}).` : "";
-    tweet = `I scored ${b.score} (${getTier(b.score)}) in GOAT Lab 🏀${bestStr} Can you beat my build?`;
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent(buildShareUrl())}`, "_blank", "noopener,noreferrer");
+    tweet = `I scored ${b.score} (${getTier(b.score)}) in GOAT Lab 🏀 Can you beat my build?`;
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank", "noopener,noreferrer");
   } else {
     const score = calculateScore();
     const tier = getTier(score);
-    const best = attributes.map(a => build[a.key]).filter(Boolean).sort((a, b) => b.score - a.score)[0];
-    const bestStr = best ? ` My best pick was ${best.player.name} (${best.score}).` : "";
-    tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀${bestStr} Can you beat my build?`;
+    tweet = `I scored ${score} (${tier}) in GOAT Lab 🏀 Can you beat my build?`;
     openAndDownload(shareBtnX, "X / Twitter", () => {
-      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent(buildShareUrl())}`, "_blank", "noopener,noreferrer");
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://playgoatlab.com")}`, "_blank", "noopener,noreferrer");
     });
   }
 });
 
 shareBtnText.addEventListener("click", async () => {
-  // Shares the personalized /s link (which unfurls as the trading-card image).
-  // The "Share Image" button is the one that sends the detailed JPEG file.
+  // Attaches the trading-card PNG (from /api/og) as a real image alongside short
+  // text. "Share Image" sends the detailed canvas card; this sends the card art.
   const score = _savedShareData ? _savedShareData.score : calculateScore();
   const tier = getTier(score);
   const text = _savedShareData ? buildSavedShareText(_savedShareData) : buildShareText(score, tier);
-  if (typeof navigator.share === "function") {
+  const probe = new File([], "t.png", { type: "image/png" });
+  if (typeof navigator.canShare === "function" && navigator.canShare({ files: [probe] })) {
+    shareBtnText.textContent = "Generating…";
+    shareBtnText.disabled = true;
+    try {
+      const blob = await fetch(buildCardImageUrl()).then((r) => r.blob());
+      const file = new File([blob], "goat-lab.png", { type: "image/png" });
+      await navigator.share({ files: [file], text });
+    } catch (err) { if (err.name !== "AbortError") console.error(err); }
+    shareBtnText.textContent = "Share";
+    shareBtnText.disabled = false;
+  } else if (typeof navigator.share === "function") {
     try { await navigator.share({ text }); }
     catch (err) { if (err.name !== "AbortError") console.error(err); }
   } else {
