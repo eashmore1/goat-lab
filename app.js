@@ -2106,7 +2106,7 @@ const teamEras = [
     team: "Spurs",
     note: "Victor Wembanyama's two-way unicorn era — paired with rookies Dylan Harper and Stephon Castle and a traded-in De'Aaron Fox.",
     players: [
-      player("Victor Wembanyama", 7, 4, 1, { height: 100, shooting: 88, finishing: 92, handles: 76, passing: 80, defense: 99, rebounding: 92, athleticism: 94, iq: 88 }),
+      player("Victor Wembanyama", 7, 4, 1, { height: 100, shooting: 88, finishing: 92, handles: 76, passing: 80, defense: 99, rebounding: 95, athleticism: 94, iq: 88 }),
       player("De'Aaron Fox", 6, 3, 4, { height: 74, shooting: 78, finishing: 88, handles: 92, passing: 84, defense: 78, rebounding: 56, athleticism: 92, iq: 86 }),
       player("Dylan Harper", 6, 6, 2, { height: 82, shooting: 80, finishing: 86, handles: 88, passing: 82, defense: 80, rebounding: 62, athleticism: 86, iq: 80 }),
       player("Stephon Castle", 6, 6, 5, { height: 82, shooting: 74, finishing: 84, handles: 84, passing: 78, defense: 86, rebounding: 62, athleticism: 88, iq: 80 }),
