@@ -3449,6 +3449,19 @@ const goldenTeams = [
   },
 ];
 
+// Golden rolls are rare and lucky — raise every team player's stat floor so that
+// on blind/daily it's hard to pick a bad attribute (you can't see ratings there).
+// Solo wildcard cards are already all 100s, so they're skipped.
+const GOLDEN_STAT_FLOOR = 85;
+goldenTeams.forEach((t) => {
+  if (t.soloCard) return;
+  t.players.forEach((p) => {
+    Object.keys(p.ratings).forEach((k) => {
+      if (p.ratings[k] < GOLDEN_STAT_FLOOR) p.ratings[k] = GOLDEN_STAT_FLOOR;
+    });
+  });
+});
+
 let round = 0;
 let runAttributes = [];
 let currentTeamEra = null;
