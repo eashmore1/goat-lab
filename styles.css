@@ -1187,13 +1187,14 @@ h1 {
   border-bottom-color: var(--ink) !important;
 }
 
-/* Post-game "buy the dev a coffee" — at the result emotional peak, but kept
-   visually secondary to Play Again so it doesn't pull players from replaying. */
-.result-support-wrap {
+/* "Buy the dev a coffee" — lives at the bottom of the share modal, a high-intent
+   moment (they tapped Share because they like it). */
+.coffee-cta-wrap {
   text-align: center;
-  margin-top: 12px;
+  margin-top: 4px;
+  padding: 0 16px 14px;
 }
-.result-support {
+.coffee-cta {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -1208,11 +1209,11 @@ h1 {
   box-shadow: 2px 2px 0 var(--ink);
   transition: transform 120ms ease, box-shadow 120ms ease;
 }
-.result-support:hover {
+.coffee-cta:hover {
   transform: translateY(-1px);
   box-shadow: 2px 3px 0 var(--ink);
 }
-.result-support:active {
+.coffee-cta:active {
   transform: translate(2px, 2px);
   box-shadow: none;
 }
