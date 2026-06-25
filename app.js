@@ -3586,7 +3586,7 @@ function calculateScore() {
   if (goatGate) return 100;
 
   const average = values.reduce((sum, value) => sum + value, 0) / values.length;
-  const weakPenalty = values.reduce((sum, value) => sum + Math.max(0, 75 - value) * 0.42, 0);
+  const weakPenalty = (gameMode === "blind" && !newScoring) ? 0 : values.reduce((sum, value) => sum + Math.max(0, 75 - value) * 0.42, 0);
   // Classic keeps original bonus (already penalised by flatAdj=-5 + weakPenalty).
   // Daily/blind get the tuned bonus from 2026-06-26 onward.
   const isClassic = gameMode === "classic";
