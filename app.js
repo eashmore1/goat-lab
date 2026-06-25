@@ -3565,21 +3565,33 @@ function calculateScore() {
   const values = attributes.map((attribute) => build[attribute.key]?.score ?? 0);
   if (values.some((value) => value === 0)) return null;
 
-  // GOAT gate: min stat ≥ 88, plus 1×100, 3×98+, 4×97+, 6×95+, height ≥ 90.
+  // New scoring (gate + elite bonus) takes effect 2026-06-26.
+  const today = new Date().toISOString().slice(0, 10);
+  const newScoring = today >= "2026-06-26";
+
   const sorted = [...values].sort((a, b) => a - b);
-  const goatGate =
-    sorted[0] >= 88 &&
-    values.filter((value) => value >= 100).length >= 1 &&
-    values.filter((value) => value >= 98).length >= 3 &&
-    values.filter((value) => value >= 97).length >= 4 &&
-    values.filter((value) => value >= 95).length >= 6 &&
-    (build.height?.score ?? 0) >= 90;
+  const goatGate = newScoring
+    ? sorted[0] >= 88 &&
+      values.filter((value) => value >= 100).length >= 1 &&
+      values.filter((value) => value >= 98).length >= 3 &&
+      values.filter((value) => value >= 97).length >= 4 &&
+      values.filter((value) => value >= 95).length >= 6 &&
+      (build.height?.score ?? 0) >= 90
+    : sorted[2] >= 93 && sorted[1] >= 92 && sorted[0] >= 92 &&
+      values.filter((value) => value >= 100).length >= 1 &&
+      values.filter((value) => value >= 98).length >= 3 &&
+      values.filter((value) => value >= 97).length >= 4 &&
+      values.filter((value) => value >= 95).length >= 6 &&
+      (build.height?.score ?? 0) >= 90;
   if (goatGate) return 100;
 
   const average = values.reduce((sum, value) => sum + value, 0) / values.length;
   const weakPenalty = gameMode === "blind" ? 0 : values.reduce((sum, value) => sum + Math.max(0, 75 - value) * 0.42, 0);
-  const eliteBonus = values.filter((value) => value >= 99).length * 1.2
-                   + values.filter((value) => value >= 96 && value < 99).length * 0.2;
+  const eliteBonus = newScoring
+    ? values.filter((value) => value >= 99).length * 1.2
+    + values.filter((value) => value >= 96 && value < 99).length * 0.2
+    : values.filter((value) => value >= 99).length * 1.5
+    + values.filter((value) => value >= 96 && value < 99).length * 0.5;
   const minScore = Math.min(...values);
   const balanceBonus = minScore >= 90 ? 2.0 : minScore >= 87 ? 1.0 : minScore >= 82 ? 0.25 : 0;
   const heightBonus = [
@@ -4949,7 +4961,7 @@ function tickCountdown() {
   if (el) el.textContent = getCountdownStr();
 }
 
-function recalcEntryScore(entry) {
+function recalcEntryScore(entry, dateStr) {
   if (!entry || !Array.isArray(entry.picks) || entry.picks.length !== attributes.length) return null;
   const pickScores = attributes.map(attr => {
     const p = entry.picks.find(pk => pk.attrKey === attr.key);
@@ -4959,19 +4971,27 @@ function recalcEntryScore(entry) {
   const heightPick = entry.picks.find(p => p.attrKey === "height") || {};
   const heightScore = heightPick.score || 0;
   const heightPlayerName = heightPick.playerName || "";
+  const newScoring = (dateStr || new Date().toISOString().slice(0, 10)) >= "2026-06-26";
   const sortedPicks = [...pickScores].sort((a, b) => a - b);
-  const goatGate =
-    sortedPicks[0] >= 88 &&
-    pickScores.filter(v => v >= 100).length >= 1 &&
-    pickScores.filter(v => v >= 98).length >= 3 &&
-    pickScores.filter(v => v >= 97).length >= 4 &&
-    pickScores.filter(v => v >= 95).length >= 6 &&
-    heightScore >= 90;
+  const goatGate = newScoring
+    ? sortedPicks[0] >= 88 &&
+      pickScores.filter(v => v >= 100).length >= 1 &&
+      pickScores.filter(v => v >= 98).length >= 3 &&
+      pickScores.filter(v => v >= 97).length >= 4 &&
+      pickScores.filter(v => v >= 95).length >= 6 &&
+      heightScore >= 90
+    : sortedPicks[2] >= 93 && sortedPicks[1] >= 92 && sortedPicks[0] >= 92 &&
+      pickScores.filter(v => v >= 100).length >= 1 &&
+      pickScores.filter(v => v >= 98).length >= 3 &&
+      pickScores.filter(v => v >= 97).length >= 4 &&
+      pickScores.filter(v => v >= 95).length >= 6 &&
+      heightScore >= 90;
   if (goatGate) return 100;
   const avg = pickScores.reduce((s, v) => s + v, 0) / pickScores.length;
   const pen = pickScores.reduce((s, v) => s + Math.max(0, 75 - v) * 0.42, 0);
-  const elite = pickScores.filter(v => v >= 99).length * 1.2
-              + pickScores.filter(v => v >= 96 && v < 99).length * 0.2;
+  const elite = newScoring
+    ? pickScores.filter(v => v >= 99).length * 1.2 + pickScores.filter(v => v >= 96 && v < 99).length * 0.2
+    : pickScores.filter(v => v >= 99).length * 1.5 + pickScores.filter(v => v >= 96 && v < 99).length * 0.5;
   const minPick = Math.min(...pickScores);
   const bal = minPick >= 90 ? 2.0 : minPick >= 87 ? 1.0 : minPick >= 82 ? 0.25 : 0;
   const hgtBonus = [
