@@ -1755,7 +1755,7 @@ const teamEras = [
     note: "The 2011 champions who toppled the Heat — Dirk's unstoppable fadeaway, Kidd's command, and Jason Terry off the bench; later, a teenage Luka.",
     players: [
       player("Dirk Nowitzki", 7, 0, 41, { height: 98, shooting: 90, finishing: 90, handles: 78, passing: 76, defense: 68, rebounding: 78, athleticism: 70, iq: 88 }),
-      player("Luka Doncic", 6, 7, 77, { height: 84, shooting: 80, finishing: 86, handles: 90, passing: 90, defense: 70, rebounding: 74, athleticism: 80, iq: 86 }),
+      player("Luka Doncic", 6, 7, 77, { height: 84, shooting: 80, finishing: 86, handles: 90, passing: 90, defense: 70, rebounding: 82, athleticism: 80, iq: 86 }),
       player("Jason Kidd", 6, 4, 2, { height: 77, shooting: 78, finishing: 76, handles: 90, passing: 94, defense: 82, rebounding: 70, athleticism: 74, iq: 95 }),
       player("Jason Terry", 6, 2, 31, { height: 71, shooting: 86, finishing: 82, handles: 84, passing: 78, defense: 70, rebounding: 54, athleticism: 80, iq: 88 }),
       player("Tyson Chandler", 7, 1, 6, { height: 100, shooting: 50, finishing: 84, handles: 54, passing: 60, defense: 90, rebounding: 88, athleticism: 86, iq: 78 }),
@@ -1908,7 +1908,7 @@ const teamEras = [
     team: "Mavericks",
     note: "Luka does things at 6'7 that shouldn't be possible. Adding Kyrie made the 2024 Finals run feel inevitable.",
     players: [
-      player("Luka Doncic", 6, 7, 77, { height: 84, shooting: 94, finishing: 83, handles: 96, passing: 98, defense: 66, rebounding: 79, athleticism: 74, iq: 96 }),
+      player("Luka Doncic", 6, 7, 77, { height: 84, shooting: 94, finishing: 83, handles: 96, passing: 98, defense: 66, rebounding: 87, athleticism: 74, iq: 96 }),
       player("Kyrie Irving", 6, 2, 11, { height: 72, shooting: 94, finishing: 98, handles: 98, passing: 80, defense: 76, rebounding: 56, athleticism: 92, iq: 92 }),
       player("PJ Washington", 6, 8, 25, { height: 88, shooting: 84, finishing: 80, handles: 70, passing: 70, defense: 82, rebounding: 80, athleticism: 80, iq: 78 }),
       player("Daniel Gafford", 6, 11, 12, { height: 96, shooting: 64, finishing: 82, handles: 52, passing: 58, defense: 90, rebounding: 88, athleticism: 90, iq: 70 }),
@@ -1954,7 +1954,7 @@ const teamEras = [
     players: [
       player("LeBron James", 6, 9, 23, { height: 90, shooting: 80, finishing: 90, handles: 90, passing: 92, defense: 82, rebounding: 80, athleticism: 88, iq: 90 }),
       player("Anthony Davis", 6, 10, 3, { height: 94, shooting: 80, finishing: 90, handles: 72, passing: 74, defense: 94, rebounding: 88, athleticism: 90, iq: 84 }),
-      player("Luka Doncic", 6, 7, 77, { height: 84, shooting: 82, finishing: 88, handles: 92, passing: 97, defense: 70, rebounding: 78, athleticism: 80, iq: 88 }),
+      player("Luka Doncic", 6, 7, 77, { height: 84, shooting: 82, finishing: 88, handles: 92, passing: 97, defense: 70, rebounding: 85, athleticism: 80, iq: 88 }),
       player("Austin Reaves", 6, 5, 15, { height: 80, shooting: 82, finishing: 82, handles: 84, passing: 80, defense: 72, rebounding: 60, athleticism: 76, iq: 82 }),
       player("Rui Hachimura", 6, 8, 28, { height: 86, shooting: 80, finishing: 84, handles: 72, passing: 66, defense: 74, rebounding: 70, athleticism: 82, iq: 76 }),
       player("D'Angelo Russell", 6, 4, 1, { height: 77, shooting: 82, finishing: 80, handles: 88, passing: 84, defense: 62, rebounding: 54, athleticism: 76, iq: 80 }),
@@ -1997,7 +1997,7 @@ const teamEras = [
     note: "Anthony Edwards' ascent to superstardom and a 2024 conference finals run anchored by Gobert's defense.",
     players: [
       player("Anthony Edwards", 6, 4, 5, { height: 77, shooting: 87, finishing: 90, handles: 84, passing: 74, defense: 82, rebounding: 66, athleticism: 94, iq: 80 }),
-      player("Karl-Anthony Towns", 7, 0, 32, { height: 98, shooting: 90, finishing: 88, handles: 74, passing: 74, defense: 80, rebounding: 86, athleticism: 80, iq: 80 }),
+      player("Karl-Anthony Towns", 7, 0, 32, { height: 98, shooting: 90, finishing: 88, handles: 74, passing: 74, defense: 86, rebounding: 86, athleticism: 80, iq: 80 }),
       player("Rudy Gobert", 7, 1, 27, { height: 100, shooting: 54, finishing: 84, handles: 54, passing: 62, defense: 98, rebounding: 92, athleticism: 82, iq: 74 }),
       player("Mike Conley", 6, 1, 10, { height: 68, shooting: 80, finishing: 78, handles: 88, passing: 88, defense: 78, rebounding: 54, athleticism: 74, iq: 90 }),
       player("Jaden McDaniels", 6, 9, 3, { height: 90, shooting: 74, finishing: 80, handles: 72, passing: 66, defense: 92, rebounding: 66, athleticism: 88, iq: 74 }),
@@ -2063,7 +2063,7 @@ const teamEras = [
     note: "Jalen Brunson's clutch shotmaking led a gritty defensive revival that reached the 2025 conference finals.",
     players: [
       player("Jalen Brunson", 6, 1, 11, { height: 68, shooting: 84, finishing: 88, handles: 90, passing: 84, defense: 70, rebounding: 54, athleticism: 78, iq: 90 }),
-      player("Karl-Anthony Towns", 7, 0, 32, { height: 98, shooting: 90, finishing: 88, handles: 74, passing: 74, defense: 78, rebounding: 88, athleticism: 78, iq: 80 }),
+      player("Karl-Anthony Towns", 7, 0, 32, { height: 98, shooting: 90, finishing: 88, handles: 74, passing: 74, defense: 86, rebounding: 88, athleticism: 78, iq: 80 }),
       player("Julius Randle", 6, 8, 30, { height: 86, shooting: 78, finishing: 86, handles: 80, passing: 78, defense: 78, rebounding: 84, athleticism: 80, iq: 78 }),
       player("Mikal Bridges", 6, 6, 25, { height: 82, shooting: 80, finishing: 82, handles: 76, passing: 70, defense: 90, rebounding: 60, athleticism: 86, iq: 80 }),
       player("OG Anunoby", 6, 7, 8, { height: 84, shooting: 80, finishing: 80, handles: 72, passing: 66, defense: 92, rebounding: 66, athleticism: 88, iq: 78 }),
