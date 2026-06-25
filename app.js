@@ -3436,7 +3436,7 @@ const goldenTeams = [
     note: "New York's first championship since 1973. Jalen Brunson dropped 45 in Game 5 to close out the Spurs and give the Garden what it had waited 53 years for. The city finally got its ring.",
     players: [
       player("Jalen Brunson",      6, 1,  11, { height: 68, shooting: 98, finishing: 100, handles: 100, passing: 96, defense: 92, rebounding: 85, athleticism: 94, iq: 98 }),
-      player("Karl-Anthony Towns", 7, 0,  32, { height: 98, shooting: 100, finishing: 98, handles: 93, passing: 94, defense: 92, rebounding: 98, athleticism: 94, iq: 95 }),
+      player("Karl-Anthony Towns", 7, 0,  32, { height: 98, shooting: 100, finishing: 98, handles: 93, passing: 94, defense: 97, rebounding: 98, athleticism: 94, iq: 95 }),
       player("OG Anunoby",         6, 7,  8,  { height: 84, shooting: 95, finishing: 96, handles: 93, passing: 91, defense: 100, rebounding: 94, athleticism: 100, iq: 95 }),
       player("Mikal Bridges",      6, 6,  1,  { height: 82, shooting: 96, finishing: 96, handles: 94, passing: 92, defense: 98, rebounding: 91, athleticism: 97, iq: 95 }),
       player("Josh Hart",          6, 5,  3,  { height: 80, shooting: 92, finishing: 94, handles: 91, passing: 93, defense: 96, rebounding: 98, athleticism: 97, iq: 96 }),
