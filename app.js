@@ -3565,15 +3565,9 @@ function calculateScore() {
   const values = attributes.map((attribute) => build[attribute.key]?.score ?? 0);
   if (values.some((value) => value === 0)) return null;
 
-  // GOAT gate: meeting ALL of these conditions IS a perfect 100. Tuned to be
-  // extremely rare but reachable for a skilled player who spends respins well.
-  // Floor is 93, but a single 100 is worth one point more than the required 99,
-  // and that surplus point lets exactly ONE stat dip to 92. One exception only.
-  const sorted = [...values].sort((a, b) => a - b);
-  const floorOk = sorted[2] >= 93 && sorted[1] >= 92 && sorted[0] >= 92;
-
+  // GOAT gate: need 1×100, 3×98+, 4×97+, 6×95+, and height ≥ 90.
+  // No floor requirement — elite stat counts alone determine GOAT status.
   const goatGate =
-    floorOk &&
     values.filter((value) => value >= 100).length >= 1 &&
     values.filter((value) => value >= 98).length >= 3 &&
     values.filter((value) => value >= 97).length >= 4 &&
@@ -4961,12 +4955,10 @@ function recalcEntryScore(entry) {
     return p ? p.score : 0;
   });
   if (!pickScores.every(s => s > 0)) return null;
-  const sorted = [...pickScores].sort((a, b) => a - b);
-  const floorOk = sorted[2] >= 93 && sorted[1] >= 92 && sorted[0] >= 92;
   const heightPick = entry.picks.find(p => p.attrKey === "height") || {};
   const heightScore = heightPick.score || 0;
   const heightPlayerName = heightPick.playerName || "";
-  const goatGate = floorOk &&
+  const goatGate =
     pickScores.filter(v => v >= 100).length >= 1 &&
     pickScores.filter(v => v >= 98).length >= 3 &&
     pickScores.filter(v => v >= 97).length >= 4 &&
