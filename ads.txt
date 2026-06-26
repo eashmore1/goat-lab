@@ -1,8 +1,1 @@
-# GOAT Lab — ads.txt (IAB authorized-sellers standard)
-# This file is currently comment-only, which is valid and serves no ads.
-#
-# ACTION REQUIRED once your Google AdSense account is approved:
-#   AdSense will show you a line like the one below (with your real
-#   publisher ID). Replace this comment block's example with that exact line.
-#
-# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+google.com, pub-9736995109176734, DIRECT, f08c47fec0942fa0

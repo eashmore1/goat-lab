@@ -4013,13 +4013,16 @@ function makeArchetype(values) {
 // While these stay blank, NO ad scripts load (a labelled placeholder shows
 // only on localhost so you can see where the slot lives).
 // ============================================================
-const ADSENSE_CLIENT = "";       // e.g. "ca-pub-1234567890123456"
-const ADSENSE_SLOT_RESULT = "";  // e.g. "1234567890"
+const ADSENSE_CLIENT = "ca-pub-9736995109176734"; // live publisher ID
+const ADSENSE_SLOT_RESULT = "";  // set after approval: create a Display ad unit, paste its slot ID
 
 let adsenseLoaded = false;
 function loadAdSense() {
   if (adsenseLoaded || !ADSENSE_CLIENT) return;
   adsenseLoaded = true;
+  // The loader is already in each page's <head> (for AdSense verification);
+  // only inject as a fallback if that static tag is somehow missing.
+  if (document.querySelector('script[src*="adsbygoogle.js"]')) return;
   const s = document.createElement("script");
   s.async = true;
   s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + ADSENSE_CLIENT;
