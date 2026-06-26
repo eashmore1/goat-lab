@@ -3867,7 +3867,7 @@ function renderRound() {
   roundLabel.textContent = `Round ${round + 1} of ${runAttributes.length}`;
   context.textContent = "";
   modeLabel.textContent = gameMode === "daily"
-    ? (dailyData?.franchise ? `Franchise Daily #${getDailyNumber()} · ${dailyData.franchiseTeamName} · Blind` : `Daily #${getDailyNumber()} · Blind`)
+    ? (dailyData?.franchise ? `Franchise Friday · ${dailyData.franchiseTeamName} only · Blind` : `Daily #${getDailyNumber()} · Blind`)
     : gameMode === "blind" ? "Blind mode: ratings reveal after your pick."
     : "Classic mode: ratings are visible before you pick.";
 
@@ -4263,7 +4263,7 @@ function startGame(mode) {
   if (respinTeamBtn) respinTeamBtn.hidden = mode === "daily" && dailyData?.franchise;
 
   modeLabel.textContent = mode === "daily"
-    ? (dailyData?.franchise ? `Franchise Daily #${getDailyNumber()} · ${dailyData.franchiseTeamName} · Blind` : `Daily #${getDailyNumber()} · Blind`)
+    ? (dailyData?.franchise ? `Franchise Friday · ${dailyData.franchiseTeamName} only · Blind` : `Daily #${getDailyNumber()} · Blind`)
     : mode === "blind" ? "Blind mode: ratings reveal after your pick."
     : "Classic mode: ratings are visible before you pick.";
   renderRound();
@@ -4996,7 +4996,7 @@ function hideResultCountdown() {
 
 function updateDailyCard() {
   if (!dailyStatusEl) return;
-  if (dailyTagEl) dailyTagEl.textContent = `Daily #${getDailyNumber()}`;
+  if (dailyTagEl) dailyTagEl.textContent = isFranchiseDay(getTodayStr()) ? `Franchise Friday` : `Daily #${getDailyNumber()}`;
   const todayStr    = getTodayStr();
   const history     = getDailyHistory();
   const entry       = history[todayStr];
@@ -5041,10 +5041,11 @@ function updateDailyCard() {
     if (isFranchise) {
       const data = generateDailyData(todayStr);
       dailySubtitleEl.textContent = data.franchiseTeamName
-        ? `Franchise · ${data.franchiseTeamName} · Blind · one shot`
-        : "Franchise Challenge · Blind · one shot";
+        ? `All picks from the ${data.franchiseTeamName} · Blind · one shot`
+        : "All picks from one franchise · Blind · one shot";
     } else {
-      dailySubtitleEl.textContent = "Blind · same draft for everyone · one shot";
+      const nextFriday = (() => { const d = new Date(todayStr + "T12:00:00"); const diff = (5 - d.getDay() + 7) % 7 || 7; d.setDate(d.getDate() + diff); return d.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" }); })();
+      dailySubtitleEl.textContent = `Blind · same draft for everyone · one shot · Franchise Friday ${nextFriday}`;
     }
   }
 }
