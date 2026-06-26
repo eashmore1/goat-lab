@@ -1,11 +1,12 @@
 // GOAT Lab service worker — conservative, network-first with cache fallback.
 // Only same-origin GETs are handled; Firebase, Google auth, fonts, and analytics
 // (all cross-origin) are never intercepted, so sign-in/Firestore are untouched.
-const CACHE = "goatlab-v1";
+const CACHE = "goatlab-v2";
 const CORE = [
   "/", "/index.html", "/styles.css", "/manifest.json",
   "/GOATLABLOGO.webp", "/GOATLABLOGO.png", "/favicon.png",
-  "/apple-touch-icon.png", "/icon-192.png", "/icon-512.png",
+  "/apple-touch-icon-v2.png", "/icon-192-v2.png", "/icon-512-v2.png",
+  "/icon-192-maskable-v2.png", "/icon-512-maskable-v2.png",
 ];
 
 self.addEventListener("install", (e) => {
