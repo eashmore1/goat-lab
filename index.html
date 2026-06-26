@@ -229,8 +229,9 @@
           <button id="playAgainBtn" type="button" class="play-again-btn" title="Start a new run">Play Again</button>
         </div>
         <div class="coffee-cta-wrap">
-          <a href="https://ko-fi.com/goatlab" target="_blank" rel="noopener" class="coffee-cta">☕ Buy the dev a coffee</a>
+          <a href="https://ko-fi.com/goatlab" target="_blank" rel="noopener" class="coffee-cta" id="resultCoffeeCta">☕ Buy the dev a coffee</a>
         </div>
+        <div class="result-ad" id="resultAd" hidden></div>
       </section>
 
       <section class="leaderboard-page" id="leaderboardPage" hidden aria-label="Daily leaderboard">
@@ -368,6 +369,8 @@
       <div class="footer-inner">
         <span>© 2026 Momentum Apps LLC. All rights reserved.</span>
         <div class="footer-links">
+          <a href="about.html">About</a>
+          <span class="footer-dot">·</span>
           <a href="mailto:ethan@momentumapps.net">Contact</a>
           <span class="footer-dot">·</span>
           <a href="terms.html">Terms</a>
@@ -396,7 +399,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="firebase-init.js"></script>
     <noscript><p style="font-family:sans-serif;text-align:center;padding:2rem">GOAT Lab requires JavaScript. Please enable it in your browser settings.</p></noscript>
-    <script src="app.js?v=81"></script>
+    <script src="app.js?v=82"></script>
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {

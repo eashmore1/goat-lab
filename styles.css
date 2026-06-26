@@ -1218,6 +1218,32 @@ h1 {
   box-shadow: none;
 }
 
+/* Result-screen ad slot — gentle, clearly labelled, no layout shift (hidden until filled) */
+.result-ad {
+  margin: 10px auto 18px;
+  max-width: 360px;
+  padding: 0 16px;
+  text-align: center;
+}
+.result-ad-label {
+  display: block;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.result-ad-placeholder {
+  border: 1.5px dashed var(--muted);
+  border-radius: 12px;
+  padding: 26px 16px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.result-ad .adsbygoogle {
+  display: block;
+}
+
 .footer-x {
   display: inline-flex;
   align-items: center;
