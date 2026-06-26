@@ -1120,7 +1120,7 @@ h1 {
 .legal-back {
   margin-top: 28px;
   padding-top: 14px;
-  border-top: 1px dashed rgba(21, 20, 19, 0.2);
+  border-top: 1px dashed color-mix(in srgb, var(--ink) 20%, transparent);
 }
 
 .site-footer {
@@ -1145,7 +1145,7 @@ h1 {
   width: min(1260px, calc(100% - 20px));
   margin: 10px auto 0;
   padding-top: 10px;
-  border-top: 1px dashed rgba(21, 20, 19, 0.18);
+  border-top: 1px dashed color-mix(in srgb, var(--ink) 18%, transparent);
   font: 400 0.62rem/1.45 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   color: var(--muted);
   text-align: center;
