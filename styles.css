@@ -910,6 +910,7 @@ h1 {
   .part.is-new,
   .card.is-golden,
   .golden-badge,
+  .wildcard-hint,
   #prompt.is-golden .roll-team {
     animation: none;
   }
