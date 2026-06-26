@@ -40,7 +40,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css?v=26" />
-    <script src="error-monitor.js"></script>
+    <script defer src="error-monitor.js"></script>
 
     <!-- Structured data: helps Google show a richer search result -->
     <script type="application/ld+json">
@@ -426,13 +426,15 @@
       </div>
     </div>
 
-    <!-- Firebase (compat SDK — works with plain scripts, no build step) -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-    <script src="firebase-init.js"></script>
+    <!-- Firebase (compat SDK — works with plain scripts, no build step).
+         deferred: download in parallel, execute in order after parse so they
+         don't compete with first paint. Order preserved (GoatAuth before app.js). -->
+    <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script defer src="firebase-init.js"></script>
     <noscript><p style="font-family:sans-serif;text-align:center;padding:2rem">GOAT Lab requires JavaScript. Please enable it in your browser settings.</p></noscript>
-    <script src="app.js?v=85"></script>
+    <script defer src="app.js?v=85"></script>
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
