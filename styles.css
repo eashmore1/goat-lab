@@ -1146,7 +1146,7 @@ h1 {
   padding-top: 10px;
   border-top: 1px dashed rgba(21, 20, 19, 0.18);
   font: 400 0.62rem/1.45 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  color: rgba(21, 20, 19, 0.5);
+  color: var(--muted);
   text-align: center;
 }
 
@@ -1172,7 +1172,7 @@ h1 {
 }
 
 .footer-dot {
-  color: rgba(21, 20, 19, 0.5);
+  color: var(--muted);
 }
 
 .footer-support {
