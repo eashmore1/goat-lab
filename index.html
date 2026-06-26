@@ -393,13 +393,38 @@
       </p>
     </footer>
 
+    <!-- Add-to-Home-Screen prompt (mobile only, shown after a finished game) -->
+    <div class="a2hs-scrim" id="a2hsScrim" hidden></div>
+    <div class="a2hs" id="a2hs" role="dialog" aria-modal="true" aria-label="Add GOAT Lab to your home screen" hidden>
+      <button class="a2hs-x" id="a2hsClose" type="button" aria-label="Dismiss">&#x2715;</button>
+      <div class="a2hs-row">
+        <img class="a2hs-logo" src="icon-192.png" alt="GOAT Lab" width="46" height="46" />
+        <div>
+          <p class="a2hs-title" id="a2hsTitle">Add GOAT Lab to your home screen</p>
+          <p class="a2hs-sub" id="a2hsSub">Play tomorrow's Daily in one tap — keep your streak alive. No app store, no download.</p>
+        </div>
+      </div>
+      <div class="a2hs-actions" id="a2hsActions">
+        <button class="a2hs-add" id="a2hsAdd" type="button">Add to Home Screen</button>
+        <button class="a2hs-not" id="a2hsNot" type="button">Not now</button>
+      </div>
+      <ol class="a2hs-steps" id="a2hsSteps" hidden>
+        <li><span class="a2hs-num">1</span> Tap the <span class="a2hs-share">Share &#x2191;</span> button in Safari's toolbar</li>
+        <li><span class="a2hs-num">2</span> Choose <strong>Add to Home Screen</strong></li>
+        <li><span class="a2hs-num">3</span> Tap <strong>Add</strong> — done!</li>
+      </ol>
+      <div class="a2hs-actions a2hs-actions-ios" id="a2hsActionsIos" hidden>
+        <button class="a2hs-add" id="a2hsGotIt" type="button">Got it</button>
+      </div>
+    </div>
+
     <!-- Firebase (compat SDK — works with plain scripts, no build step) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="firebase-init.js"></script>
     <noscript><p style="font-family:sans-serif;text-align:center;padding:2rem">GOAT Lab requires JavaScript. Please enable it in your browser settings.</p></noscript>
-    <script src="app.js?v=82"></script>
+    <script src="app.js?v=83"></script>
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {

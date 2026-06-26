@@ -4172,6 +4172,7 @@ function finish() {
 
   updateTipCta(score, gameMode);
   showResultAd();
+  if (window.GoatA2HS) window.GoatA2HS.maybe();
 }
 
 function reset() {
@@ -5579,4 +5580,104 @@ updateBody(null);
   apply(getTheme());
   if (lightBtn) lightBtn.addEventListener("click", () => set("light"));
   if (darkBtn) darkBtn.addEventListener("click", () => set("dark"));
+})();
+
+// ===== Add to Home Screen prompt (gentle mobile capture) =====
+// Shows once per visit, mobile only, AFTER a finished game (never on arrival).
+// If dismissed/ignored it snoozes 7 days; gives up after 3 shows; never shows
+// once installed. Android gets the real one-tap prompt; iOS Safari gets steps.
+(function initA2HS() {
+  const SNOOZE_DAYS = 7;
+  const MAX_SHOWS = 3;
+  const K_INSTALLED = "goatlab_pwa_installed";
+  const K_LAST = "goatlab_pwa_last_shown";
+  const K_COUNT = "goatlab_pwa_show_count";
+
+  const el = document.getElementById("a2hs");
+  const scrim = document.getElementById("a2hsScrim");
+  if (!el || !scrim) return;
+
+  const ls = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+  };
+
+  let deferredPrompt = null;
+  let shownThisSession = false;
+
+  const isStandalone = () =>
+    (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+    window.navigator.standalone === true;
+  const isiOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+  const isiOSSafari = () =>
+    isiOS() && /safari/i.test(navigator.userAgent) && !/crios|fxios|edgios/i.test(navigator.userAgent);
+  const isMobile = () => window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+  });
+  window.addEventListener("appinstalled", () => {
+    ls.set(K_INSTALLED, "1");
+    hide();
+  });
+
+  function eligible() {
+    if (ls.get(K_INSTALLED) === "1") return false;
+    if (isStandalone()) { ls.set(K_INSTALLED, "1"); return false; }
+    if (!isMobile()) return false;
+    if (shownThisSession) return false;
+    if (parseInt(ls.get(K_COUNT) || "0", 10) >= MAX_SHOWS) return false;
+    const last = parseInt(ls.get(K_LAST) || "0", 10);
+    if (last && Date.now() - last < SNOOZE_DAYS * 86400000) return false;
+    return Boolean(deferredPrompt) || isiOSSafari(); // need a usable path
+  }
+
+  function show() {
+    const iosMode = !deferredPrompt && isiOSSafari();
+    document.getElementById("a2hsActions").hidden = iosMode;
+    document.getElementById("a2hsSteps").hidden = !iosMode;
+    document.getElementById("a2hsActionsIos").hidden = !iosMode;
+    if (iosMode) {
+      document.getElementById("a2hsTitle").textContent = "Keep GOAT Lab one tap away";
+      document.getElementById("a2hsSub").textContent =
+        "Add it to your home screen so tomorrow's Daily is always ready.";
+    }
+    scrim.hidden = false;
+    el.hidden = false;
+    requestAnimationFrame(() => { el.classList.add("show"); scrim.classList.add("show"); });
+    ls.set(K_LAST, String(Date.now()));
+    ls.set(K_COUNT, String(parseInt(ls.get(K_COUNT) || "0", 10) + 1));
+  }
+
+  function hide() {
+    el.classList.remove("show");
+    scrim.classList.remove("show");
+    setTimeout(() => { el.hidden = true; scrim.hidden = true; }, 340);
+  }
+
+  async function doAdd() {
+    if (!deferredPrompt) { hide(); return; }
+    hide();
+    deferredPrompt.prompt();
+    try {
+      const choice = await deferredPrompt.userChoice;
+      if (choice && choice.outcome === "accepted") ls.set(K_INSTALLED, "1");
+    } catch (e) {}
+    deferredPrompt = null;
+  }
+
+  document.getElementById("a2hsAdd").addEventListener("click", doAdd);
+  document.getElementById("a2hsNot").addEventListener("click", hide);
+  document.getElementById("a2hsClose").addEventListener("click", hide);
+  document.getElementById("a2hsGotIt").addEventListener("click", hide);
+  scrim.addEventListener("click", hide);
+
+  window.GoatA2HS = {
+    maybe() {
+      if (!eligible()) return;
+      shownThisSession = true; // claim now so a repeat call can't double-schedule
+      setTimeout(show, 1200);  // let the result screen settle first
+    },
+  };
 })();
