@@ -1247,6 +1247,18 @@ h1 {
   display: block;
 }
 
+/* "Next Daily in …" countdown on the result screen */
+.result-countdown {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.result-countdown .js-countdown {
+  color: var(--ink);
+  font-weight: 700;
+}
+
 /* ===== Add to Home Screen prompt (mobile capture) ===== */
 .a2hs-scrim {
   position: fixed;

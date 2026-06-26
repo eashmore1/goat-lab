@@ -4165,12 +4165,14 @@ function finish() {
       : score === 100
         ? `You built the impossible player: ${archetype}. Daily perfection.`
         : `${archetype}. Daily complete. Come back tomorrow for a new challenge.`;
+    showResultCountdown();
   } else {
     resultTitle.textContent = `${score}: ${tier}`;
     resultCopy.textContent =
       score === 100
         ? `You built the impossible player: ${archetype}. No weak spots, no era can stop this.`
         : `${archetype}. Keep chasing.`;
+    hideResultCountdown();
   }
 
   updateTipCta(score, gameMode);
@@ -4979,6 +4981,19 @@ function getCountdownStr() {
   return h > 0 ? `${h}h ${m}m` : `${m}m`;
 }
 
+function showResultCountdown() {
+  const rc = document.getElementById("resultCountdown");
+  if (!rc) return;
+  const span = rc.querySelector(".js-countdown");
+  if (span) span.textContent = getCountdownStr();
+  rc.hidden = false;
+}
+
+function hideResultCountdown() {
+  const rc = document.getElementById("resultCountdown");
+  if (rc) rc.hidden = true;
+}
+
 function updateDailyCard() {
   if (!dailyStatusEl) return;
   if (dailyTagEl) dailyTagEl.textContent = `Daily #${getDailyNumber()}`;
@@ -4989,7 +5004,7 @@ function updateDailyCard() {
   const isFranchise = isFranchiseDay(todayStr);
 
   if (entry) {
-    dailyStatusEl.innerHTML = `${entry.score} · ${getTier(entry.score)}<span class="daily-comeback">Next challenge in <span id="dailyCountdown">${getCountdownStr()}</span></span>`;
+    dailyStatusEl.innerHTML = `${entry.score} · ${getTier(entry.score)}<span class="daily-comeback">Next challenge in <span id="dailyCountdown" class="js-countdown">${getCountdownStr()}</span></span>`;
     dailyStatusEl.dataset.done = "true";
     if (dailyCardBtn) {
       dailyCardBtn.disabled = false;
@@ -5035,8 +5050,8 @@ function updateDailyCard() {
 }
 
 function tickCountdown() {
-  const el = document.getElementById("dailyCountdown");
-  if (el) el.textContent = getCountdownStr();
+  const txt = getCountdownStr();
+  document.querySelectorAll(".js-countdown").forEach((el) => { el.textContent = txt; });
 }
 
 function recalcEntryScore(entry, dateStr) {
