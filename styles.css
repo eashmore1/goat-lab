@@ -1153,6 +1153,9 @@ h1 {
 .footer-links {
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  row-gap: 6px;
   gap: 8px;
 }
 
@@ -1871,6 +1874,19 @@ h1 {
 }
 
 @media (max-width: 640px) {
+  /* Stack the footer and let the links wrap centered so nothing runs off-screen */
+  .footer-inner {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+    font-size: 0.64rem;
+  }
+  .footer-links {
+    gap: 6px;
+    row-gap: 5px;
+  }
+
   .round-card {
     flex-direction: column;
   }
