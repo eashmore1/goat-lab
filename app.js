@@ -5044,8 +5044,8 @@ function updateDailyCard() {
         ? `All picks from the ${data.franchiseTeamName} · Blind · one shot`
         : "All picks from one franchise · Blind · one shot";
     } else {
-      const nextFriday = (() => { const d = new Date(todayStr + "T12:00:00"); const diff = (5 - d.getDay() + 7) % 7 || 7; d.setDate(d.getDate() + diff); return d.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" }); })();
-      dailySubtitleEl.textContent = `Blind · same draft for everyone · one shot · Franchise Friday ${nextFriday}`;
+      const nextFriday = (() => { const d = new Date(todayStr + "T12:00:00"); const diff = (5 - d.getDay() + 7) % 7 || 7; d.setDate(d.getDate() + diff); return d.toLocaleDateString("en-US", { month: "short", day: "numeric" }); })();
+      dailySubtitleEl.textContent = `Blind · same draft for everyone · one shot · Next Franchise Friday: ${nextFriday}`;
     }
   }
 }
