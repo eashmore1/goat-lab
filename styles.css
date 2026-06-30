@@ -1755,6 +1755,37 @@ h1 {
   box-shadow: 2px 2px 0 var(--ink);
 }
 
+/* Support / "buy the dev a coffee" — always-visible header CTA so visitors who
+   never finish a full game still see the ask. Mirrors .help-top but in gold.
+   It carries the margin-left:auto so it + Help + score-tile group on the right. */
+.coffee-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  padding: 8px 14px;
+  background: var(--gold);
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  font: 900 0.74rem/1 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.coffee-top-mark {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.coffee-top:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
 /* How to Play modal */
 .modal-overlay {
   position: fixed;
@@ -1938,11 +1969,13 @@ h1 {
     font-size: 0.78rem;
   }
 
-  .help-top-text {
+  .help-top-text,
+  .coffee-top-text {
     display: none;
   }
 
-  .help-top {
+  .help-top,
+  .coffee-top {
     padding: 8px 10px;
   }
 
@@ -1970,6 +2003,7 @@ h1 {
 
 .modal-close:focus-visible,
 .help-top:focus-visible,
+.coffee-top:focus-visible,
 .help-link:focus-visible {
   outline-color: var(--chalk);
 }
