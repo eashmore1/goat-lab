@@ -2101,17 +2101,17 @@ h1 {
   gap: 16px;
   margin-bottom: 22px;
 }
-.lb-tabs { display: flex; gap: 6px; max-width: 620px; margin: 0 auto 20px; }
+.lb-tabs { display: flex; gap: 0; max-width: 620px; margin: 0 auto 20px; border-bottom: 2px solid rgba(21,20,19,0.15); }
 .lb-tab {
-  flex: 1; padding: 8px 0;
+  flex: 1; padding: 9px 0 8px;
   font: 700 0.75rem/1 "Space Mono", ui-monospace, monospace;
   letter-spacing: 0.07em; text-transform: uppercase;
-  background: transparent; border: 2px solid var(--ink);
-  border-radius: 4px; cursor: pointer; color: var(--muted);
-  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  background: transparent; border: none;
+  border-bottom: 3px solid transparent; margin-bottom: -2px;
+  cursor: pointer; color: var(--muted);
+  transition: color 0.12s, border-color 0.12s;
 }
-.lb-tab-active { background: var(--court); border-color: var(--court); color: #fff; }
-[data-theme="dark"] .lb-tab { border-color: var(--ink); color: var(--muted); }
+.lb-tab-active { border-bottom-color: var(--court); color: var(--ink); }
 .lb-page-title {
   margin: 4px 0 6px;
   font-family: "Playfair Display", Georgia, serif;
