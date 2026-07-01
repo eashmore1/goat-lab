@@ -5275,12 +5275,12 @@ updateBody(null);
     { label: "≤85",     min: 0,   max: 85,  color: "#c5bfb3" },
   ];
 
-  function renderDistBar(rows) {
-    if (!lbDist || !rows.length) { if (lbDist) lbDist.hidden = true; return; }
-    const total = rows.length;
+  function renderDistBar(scores) {
+    if (!lbDist || !scores.length) { if (lbDist) lbDist.hidden = true; return; }
+    const total = scores.length;
     const bars = DIST_TIERS.map(t => {
-      const count = rows.filter(r => r.score >= t.min && r.score <= t.max).length;
-      const pct = (count / total * 100).toFixed(0);
+      const count = scores.filter(s => s >= t.min && s <= t.max).length;
+      const pct = Math.round(count / total * 100);
       if (!count) return "";
       return `<div class="lb-dist-row">
         <span class="lb-dist-label">${t.label}</span>
@@ -5359,7 +5359,9 @@ updateBody(null);
       const place = [2, 1, 3];
       lbPodium.innerHTML = order.map((r, i) => r ? podiumCard(r, place[i], isMine(r)) : "").join("");
       // Score distribution bar — fetch all scores, not just top 75.
-      Auth.getAllDailyScores(targetDate).then(allScores => renderDistBar(allScores)).catch(() => renderDistBar(rows.map(r => r.score)));
+      Auth.getAllDailyScores(targetDate)
+        .then(allScores => renderDistBar(allScores))
+        .catch(() => renderDistBar(rows.map(r => r.score)));
       // 4th onward -> scrollable list.
       lbList.hidden = false;
       const rest = rows.slice(3);
