@@ -5228,6 +5228,12 @@ updateBody(null);
   }
   window.GoatLeaderboard = { submitToday, showResultButton, pushDailyHistory, openLeaderboard };
 
+  function formatPlayerCount(n) {
+    if (n < 10) return String(n);
+    const mag = Math.pow(10, Math.floor(Math.log10(n)));
+    return (Math.floor(n / mag) * mag).toLocaleString() + "+";
+  }
+
   // Home screen player count badge — load once on init, refresh on submit.
   async function refreshHomePlayerCount(dateStr) {
     const el = document.querySelector("#homePlayerCount");
@@ -5240,7 +5246,7 @@ updateBody(null);
       count = scores.length || null;
     }
     if (count && count > 0) {
-      el.innerHTML = `<span class="hpc-num">${count.toLocaleString()}</span> players have drafted today`;
+      el.innerHTML = `<span class="hpc-num">${formatPlayerCount(count)}</span> players have drafted today`;
       el.hidden = false;
     }
   }
@@ -5343,7 +5349,7 @@ updateBody(null);
           count = s.length || null;
         }
         if (count && count > 0) {
-          lbPlayerCount.textContent = `${count.toLocaleString()} players ${isToday ? "have played today" : "played yesterday"}`;
+          lbPlayerCount.textContent = `${formatPlayerCount(count)} players ${isToday ? "have played today" : "played yesterday"}`;
           lbPlayerCount.hidden = false;
         }
       }).catch(() => {});
