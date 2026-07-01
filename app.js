@@ -5232,7 +5232,13 @@ updateBody(null);
   async function refreshHomePlayerCount(dateStr) {
     const el = document.querySelector("#homePlayerCount");
     if (!el) return;
-    const count = await Auth.getDailyPlayerCount(dateStr || getTodayStr());
+    const today = dateStr || getTodayStr();
+    // Try the stored counter first (fast); fall back to counting all entries.
+    let count = await Auth.getDailyPlayerCount(today);
+    if (!count) {
+      const scores = await Auth.getAllDailyScores(today);
+      count = scores.length || null;
+    }
     if (count && count > 0) {
       el.innerHTML = `<span class="hpc-num">${count.toLocaleString()}</span> players have drafted today`;
       el.hidden = false;
@@ -5329,9 +5335,13 @@ updateBody(null);
     }
     const isMine = (r) => me && r.uid === me.uid;
 
-    // Player count (real number from stored counter)
+    // Player count — stored counter first, fall back to all-scores length.
     if (lbPlayerCount) {
-      Auth.getDailyPlayerCount(targetDate).then(count => {
+      Auth.getDailyPlayerCount(targetDate).then(async count => {
+        if (!count) {
+          const s = await Auth.getAllDailyScores(targetDate);
+          count = s.length || null;
+        }
         if (count && count > 0) {
           lbPlayerCount.textContent = `${count.toLocaleString()} players ${isToday ? "have played today" : "played yesterday"}`;
           lbPlayerCount.hidden = false;
