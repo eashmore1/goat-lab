@@ -5188,9 +5188,7 @@ updateBody(null);
   function submitToday(dateStr, score, tier, franchise, franchiseTeam) {
     if (!Auth.currentUser()) return;
     const picks = (getDailyHistory()[dateStr] || {}).picks || null;
-    Auth.submitDailyScore(dateStr, { score, tier, franchise, franchiseTeam, picks })
-      .then(() => refreshHomePlayerCount(dateStr))
-      .catch(console.error);
+    Auth.submitDailyScore(dateStr, { score, tier, franchise, franchiseTeam, picks }).catch(console.error);
   }
   function showResultButton() {
     if (viewLeaderboardBtn) viewLeaderboardBtn.hidden = false;
@@ -5233,24 +5231,6 @@ updateBody(null);
     const mag = Math.pow(10, Math.floor(Math.log10(n)));
     return (Math.floor(n / mag) * mag).toLocaleString() + "+";
   }
-
-  // Home screen player count badge — load once on init, refresh on submit.
-  async function refreshHomePlayerCount(dateStr) {
-    const el = document.querySelector("#homePlayerCount");
-    if (!el) return;
-    const today = dateStr || getTodayStr();
-    // Try the stored counter first (fast); fall back to counting all entries.
-    let count = await Auth.getDailyPlayerCount(today);
-    if (!count) {
-      const scores = await Auth.getAllDailyScores(today);
-      count = scores.length || null;
-    }
-    if (count && count > 0) {
-      el.innerHTML = `<span class="hpc-num">${formatPlayerCount(count)}</span> players have drafted today`;
-      el.hidden = false;
-    }
-  }
-  refreshHomePlayerCount();
 
   // Render the global leaderboard for today.
   // Podium card for one of the top 3 (place = 1, 2, or 3).
