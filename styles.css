@@ -2101,6 +2101,18 @@ h1 {
   gap: 16px;
   margin-bottom: 22px;
 }
+.lb-tabs { display: flex; gap: 6px; max-width: 620px; margin: 0 auto 20px; }
+.lb-tab {
+  flex: 1; padding: 8px 0;
+  font: 700 0.75rem/1 "Space Mono", ui-monospace, monospace;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  background: transparent; border: 2px solid var(--ink);
+  border-radius: 4px; cursor: pointer; color: var(--ink);
+  transition: background 0.12s, color 0.12s;
+}
+.lb-tab-active { background: var(--ink); color: var(--bg); }
+[data-theme="dark"] .lb-tab { border-color: var(--bg); color: var(--bg); }
+[data-theme="dark"] .lb-tab-active { background: var(--bg); color: var(--ink); }
 .lb-page-title {
   margin: 4px 0 6px;
   font-family: "Playfair Display", Georgia, serif;

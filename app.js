@@ -5157,6 +5157,8 @@ updateBody(null);
   const lbPodium = $("#lbPodium");
   const lbList = $("#leaderboardList");
   const lbHint = $("#lbHint");
+  const lbTabToday = $("#lbTabToday");
+  const lbTabYesterday = $("#lbTabYesterday");
 
   // Settings dropdown (Sign out / Delete account)
   if (settingsBtn && settingsMenu) {
@@ -5233,14 +5235,22 @@ updateBody(null);
       </div>`;
   }
 
-  async function renderLeaderboard() {
+  function getYesterdayStr() {
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    return d.toISOString().slice(0, 10);
+  }
+
+  async function renderLeaderboard(dateStr) {
+    const isToday = !dateStr || dateStr === getTodayStr();
+    const targetDate = dateStr || getTodayStr();
     const me = Auth.currentUser();
     lbHint.hidden = true;
     lbPodium.innerHTML = "";
-    lbList.innerHTML = '<p class="lb-empty">Loading today\'s board…</p>';
+    lbList.innerHTML = `<p class="lb-empty">Loading ${isToday ? "today" : "yesterday"}'s board…</p>`;
     let rows;
     try {
-      rows = await Auth.getDailyLeaderboard(getTodayStr(), 75);
+      rows = await Auth.getDailyLeaderboard(targetDate, 75);
     } catch (e) {
       console.error(e);
       lbList.innerHTML = '<p class="lb-empty">Couldn\'t load the leaderboard.</p>';
@@ -5248,7 +5258,9 @@ updateBody(null);
     }
     const isMine = (r) => me && r.uid === me.uid;
     if (!rows.length) {
-      lbList.innerHTML = '<p class="lb-empty">No scores yet today. Be the first — play the Daily!</p>';
+      lbList.innerHTML = isToday
+        ? '<p class="lb-empty">No scores yet today. Be the first — play the Daily!</p>'
+        : '<p class="lb-empty">No scores recorded for yesterday.</p>';
     } else {
       // Top 3 -> podium (rendered 2nd, 1st, 3rd so 1st sits centered/tallest).
       const top = rows.slice(0, 3);
@@ -5270,10 +5282,8 @@ updateBody(null);
         : '<p class="lb-empty lb-empty-rest">Only the podium so far — climb on!</p>';
     }
 
-    // If the signed-in user played today but didn't crack the top 75, pin their
-    // own score at the very bottom with a "-" rank. Rendered from their own
-    // session, so only they ever see it.
-    if (me && !rows.some((r) => r.uid === me.uid)) {
+    // Only pin the user's own score when viewing today's board.
+    if (isToday && me && !rows.some((r) => r.uid === me.uid)) {
       let myScore = null;
       try { myScore = getDailyHistory()[getTodayStr()]?.score ?? null; } catch (e) {}
       if (myScore != null) {
@@ -5288,7 +5298,9 @@ updateBody(null);
       }
     }
     if (!me) {
-      lbHint.textContent = "Sign in and play today's Daily to claim your spot.";
+      lbHint.textContent = isToday
+        ? "Sign in and play today's Daily to claim your spot."
+        : "Sign in to see your placement highlighted on past boards.";
       lbHint.hidden = false;
     }
   }
@@ -5300,12 +5312,19 @@ updateBody(null);
     document.querySelector("#gameGrid"),
     document.querySelector("#result"),
   ];
+  function setLbTab(tab) {
+    const isYesterday = tab === "yesterday";
+    if (lbTabToday) { lbTabToday.classList.toggle("lb-tab-active", !isYesterday); lbTabToday.setAttribute("aria-selected", String(!isYesterday)); }
+    if (lbTabYesterday) { lbTabYesterday.classList.toggle("lb-tab-active", isYesterday); lbTabYesterday.setAttribute("aria-selected", String(isYesterday)); }
+    renderLeaderboard(isYesterday ? getYesterdayStr() : getTodayStr());
+  }
+
   function openLeaderboard() {
     lbReturnScreen = mainScreens().find((s) => s && !s.hidden) || document.querySelector("#modeScreen");
     mainScreens().forEach((s) => { if (s) s.hidden = true; });
     lbPage.hidden = false;
     window.scrollTo(0, 0);
-    renderLeaderboard();
+    setLbTab("today");
   }
   function closeLeaderboard() {
     lbPage.hidden = true;
@@ -5315,6 +5334,8 @@ updateBody(null);
   leaderboardBtn.addEventListener("click", () => openLeaderboard());
   if (viewLeaderboardBtn) viewLeaderboardBtn.addEventListener("click", () => openLeaderboard());
   lbBackBtn.addEventListener("click", () => closeLeaderboard());
+  if (lbTabToday) lbTabToday.addEventListener("click", () => setLbTab("today"));
+  if (lbTabYesterday) lbTabYesterday.addEventListener("click", () => setLbTab("yesterday"));
 
   signInBtn.addEventListener("click", async () => {
     signInBtn.textContent = "Opening Google…";
