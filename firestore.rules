@@ -19,6 +19,16 @@ service cloud.firestore {
       allow delete: if request.auth != null && request.auth.uid == uid;
     }
 
+    // Global all-time player counter. Public read; anonymous writes allowed
+    // but constrained: only the totalPlayers field, only +1 increments.
+    match /globalStats/totals {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['totalPlayers'])
+        && request.resource.data.totalPlayers == 1;
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['totalPlayers'])
+        && request.resource.data.totalPlayers == resource.data.totalPlayers + 1;
+    }
+
     // Everything under a user's own space — profile (handle), saved builds,
     // daily history/streak, and anything we add later. Owner only.
     match /users/{uid} {

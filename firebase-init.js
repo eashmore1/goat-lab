@@ -117,6 +117,24 @@ window.GoatAuth = (() => {
       } catch (e) { return null; }
     },
 
+    async getTotalPlayers() {
+      if (!enabled) return null;
+      try {
+        const doc = await db.collection("globalStats").doc("totals").get();
+        return doc.exists ? (doc.data().totalPlayers || null) : null;
+      } catch (e) { return null; }
+    },
+
+    async recordNewPlayer() {
+      if (!enabled) return;
+      try {
+        await db.collection("globalStats").doc("totals").set(
+          { totalPlayers: firebase.firestore.FieldValue.increment(1) },
+          { merge: true }
+        );
+      } catch (e) { /* silently ignore rule violations on repeat calls */ }
+    },
+
     async getAllDailyScores(dateStr) {
       if (!enabled) return [];
       try {

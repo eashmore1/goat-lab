@@ -4158,6 +4158,7 @@ function finish() {
       window.GoatLeaderboard.submitToday(todayStr, score, tier, dailyData?.franchise || false, dailyData?.franchiseTeamName || null);
       window.GoatLeaderboard.pushDailyHistory(todayStr);
       window.GoatLeaderboard.showResultButton();
+      window.GoatLeaderboard.recordNewPlayer();
     }
     resultTitle.textContent = `Daily — ${score}: ${tier}`;
     resultCopy.textContent = dailyData?.franchise
@@ -5224,12 +5225,41 @@ updateBody(null);
     if (recalcPending) try { localStorage.removeItem("goatlab_recalc_pending"); } catch (e) {}
     try { updateDailyCard(); } catch (e) {}
   }
-  window.GoatLeaderboard = { submitToday, showResultButton, pushDailyHistory, openLeaderboard };
+  window.GoatLeaderboard = { submitToday, showResultButton, pushDailyHistory, openLeaderboard, recordNewPlayer: maybeRecordNewPlayer };
 
   function formatPlayerCount(n) {
     if (n < 10) return String(n);
     const mag = Math.pow(10, Math.floor(Math.log10(n)));
     return (Math.floor(n / mag) * mag).toLocaleString() + "+";
+  }
+
+  // All-time player counter — one increment per device ever.
+  (async function loadTotalPlayers() {
+    const el = document.querySelector("#homeTotalPlayers");
+    const numEl = document.querySelector("#homeTotalPlayersNum");
+    if (!el || !numEl) return;
+    const count = await Auth.getTotalPlayers();
+    if (count && count > 0) {
+      numEl.textContent = formatPlayerCount(count);
+      el.hidden = false;
+    }
+  })();
+
+  function maybeRecordNewPlayer() {
+    try {
+      if (localStorage.getItem("goatlab_counted")) return;
+      Auth.recordNewPlayer().then(() => {
+        localStorage.setItem("goatlab_counted", "1");
+        // Refresh the displayed count.
+        const numEl = document.querySelector("#homeTotalPlayersNum");
+        const el = document.querySelector("#homeTotalPlayers");
+        if (numEl && el) {
+          Auth.getTotalPlayers().then(count => {
+            if (count) { numEl.textContent = formatPlayerCount(count); el.hidden = false; }
+          }).catch(() => {});
+        }
+      }).catch(() => {});
+    } catch (e) {}
   }
 
   // Render the global leaderboard for today.

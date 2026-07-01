@@ -40,7 +40,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=37" />
+    <link rel="stylesheet" href="styles.css?v=38" />
     <script defer src="error-monitor.js"></script>
     <script defer src="/_vercel/speed-insights/script.js"></script>
 
@@ -137,6 +137,10 @@
             <path d="M100 158 C88 168 87 190 100 204 C113 190 112 168 100 158 Z"/>
           </svg>
         </div>
+        <p class="home-total-players" id="homeTotalPlayers" hidden>
+          <span class="htp-num" id="homeTotalPlayersNum"></span>
+          <span class="htp-label">players worldwide</span>
+        </p>
         <div class="mode-options">
           <button class="mode-card mode-card-daily" type="button" data-mode="daily">
             <div class="daily-card-top">
@@ -451,7 +455,7 @@
     <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script defer src="firebase-init.js"></script>
     <noscript><p style="font-family:sans-serif;text-align:center;padding:2rem">GOAT Lab requires JavaScript. Please enable it in your browser settings.</p></noscript>
-    <script defer src="app.js?v=96"></script>
+    <script defer src="app.js?v=97"></script>
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
