@@ -5324,6 +5324,9 @@ updateBody(null);
     lbPodium.innerHTML = "";
     lbList.hidden = false;
     lbList.innerHTML = `<p class="lb-empty">Loading ${isToday ? "today" : "yesterday"}'s board…</p>`;
+
+    // Fire both reads simultaneously — leaderboard (top 75) + all scores for count + distribution.
+    const allScoresPromise = Auth.getAllDailyScores(targetDate).catch(() => []);
     let rows;
     try {
       rows = await Auth.getDailyLeaderboard(targetDate, 75);
@@ -5334,35 +5337,16 @@ updateBody(null);
     }
     const isMine = (r) => me && r.uid === me.uid;
 
-    // Player count — stored counter first, fall back to all-scores length.
-    if (lbPlayerCount) {
-      Auth.getDailyPlayerCount(targetDate).then(async count => {
-        if (!count) {
-          const s = await Auth.getAllDailyScores(targetDate);
-          count = s.length || null;
-        }
-        if (count && count > 0) {
-          lbPlayerCount.textContent = `${formatPlayerCount(count)} players ${isToday ? "have played today" : "played yesterday"}`;
-          lbPlayerCount.hidden = false;
-        }
-      }).catch(() => {});
-    }
-
+    // Render the main board immediately once top-75 arrives.
     if (!rows.length) {
       lbList.innerHTML = isToday
         ? '<p class="lb-empty">No scores yet today. Be the first — play the Daily!</p>'
         : '<p class="lb-empty">No scores recorded for yesterday.</p>';
     } else {
-      // Top 3 -> podium (rendered 2nd, 1st, 3rd so 1st sits centered/tallest).
       const top = rows.slice(0, 3);
       const order = [top[1], top[0], top[2]];
       const place = [2, 1, 3];
       lbPodium.innerHTML = order.map((r, i) => r ? podiumCard(r, place[i], isMine(r)) : "").join("");
-      // Score distribution bar — fetch all scores, not just top 75.
-      Auth.getAllDailyScores(targetDate)
-        .then(allScores => renderDistBar(allScores))
-        .catch(() => renderDistBar(rows.map(r => r.score)));
-      // 4th onward -> scrollable list.
       lbList.hidden = false;
       const rest = rows.slice(3);
       lbList.innerHTML = rest.length
@@ -5377,6 +5361,16 @@ updateBody(null);
           }).join("")
         : '<p class="lb-empty lb-empty-rest">Only the podium so far — climb on!</p>';
     }
+
+    // Player count + distribution bar fill in once all-scores resolves (non-blocking).
+    allScoresPromise.then(allScores => {
+      const fallback = allScores.length ? allScores : rows.map(r => r.score);
+      renderDistBar(fallback);
+      if (lbPlayerCount && fallback.length > 0) {
+        lbPlayerCount.textContent = `${formatPlayerCount(fallback.length)} players ${isToday ? "have played today" : "played yesterday"}`;
+        lbPlayerCount.hidden = false;
+      }
+    });
 
     // Only pin the user's own score when viewing today's board.
     if (isToday && me && !rows.some((r) => r.uid === me.uid)) {
