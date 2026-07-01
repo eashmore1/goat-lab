@@ -4158,7 +4158,6 @@ function finish() {
       window.GoatLeaderboard.submitToday(todayStr, score, tier, dailyData?.franchise || false, dailyData?.franchiseTeamName || null);
       window.GoatLeaderboard.pushDailyHistory(todayStr);
       window.GoatLeaderboard.showResultButton();
-      window.GoatLeaderboard.recordNewPlayer();
     }
     resultTitle.textContent = `Daily — ${score}: ${tier}`;
     resultCopy.textContent = dailyData?.franchise
@@ -5225,7 +5224,7 @@ updateBody(null);
     if (recalcPending) try { localStorage.removeItem("goatlab_recalc_pending"); } catch (e) {}
     try { updateDailyCard(); } catch (e) {}
   }
-  window.GoatLeaderboard = { submitToday, showResultButton, pushDailyHistory, openLeaderboard, recordNewPlayer: maybeRecordNewPlayer };
+  window.GoatLeaderboard = { submitToday, showResultButton, pushDailyHistory, openLeaderboard };
 
   function formatPlayerCount(n) {
     if (n < 10) return String(n);
@@ -5243,7 +5242,6 @@ updateBody(null);
     el.hidden = false;
   })();
 
-  function maybeRecordNewPlayer() {} // no-op, kept for call-site compatibility
 
   // Render the global leaderboard for today.
   // Podium card for one of the top 3 (place = 1, 2, or 3).
