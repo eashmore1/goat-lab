@@ -5260,26 +5260,33 @@ updateBody(null);
     if (!rows.length) {
       lbList.innerHTML = isToday
         ? '<p class="lb-empty">No scores yet today. Be the first — play the Daily!</p>'
-        : '<p class="lb-empty">No scores recorded for yesterday.</p>';
+        : "";
+      lbList.hidden = !isToday;
     } else {
       // Top 3 -> podium (rendered 2nd, 1st, 3rd so 1st sits centered/tallest).
       const top = rows.slice(0, 3);
       const order = [top[1], top[0], top[2]];
       const place = [2, 1, 3];
       lbPodium.innerHTML = order.map((r, i) => r ? podiumCard(r, place[i], isMine(r)) : "").join("");
-      // 4th onward -> scrollable list.
-      const rest = rows.slice(3);
-      lbList.innerHTML = rest.length
-        ? rest.map((r, i) => {
-            const mine = isMine(r);
-            return `
-              <div class="lb-row${mine ? " lb-row-me" : ""}">
-                <span class="lb-rank">${i + 4}</span>
-                <span class="lb-name">${esc(r.name || "Anonymous")}${mine ? " (you)" : ""}</span>
-                <span class="lb-score">${esc(r.score)}</span>
-              </div>`;
-          }).join("")
-        : '<p class="lb-empty lb-empty-rest">Only the podium so far — climb on!</p>';
+      if (isToday) {
+        // 4th onward -> scrollable list.
+        lbList.hidden = false;
+        const rest = rows.slice(3);
+        lbList.innerHTML = rest.length
+          ? rest.map((r, i) => {
+              const mine = isMine(r);
+              return `
+                <div class="lb-row${mine ? " lb-row-me" : ""}">
+                  <span class="lb-rank">${i + 4}</span>
+                  <span class="lb-name">${esc(r.name || "Anonymous")}${mine ? " (you)" : ""}</span>
+                  <span class="lb-score">${esc(r.score)}</span>
+                </div>`;
+            }).join("")
+          : '<p class="lb-empty lb-empty-rest">Only the podium so far — climb on!</p>';
+      } else {
+        lbList.hidden = true;
+        lbList.innerHTML = "";
+      }
     }
 
     // Only pin the user's own score when viewing today's board.
