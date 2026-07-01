@@ -88,7 +88,9 @@ window.GoatAuth = (() => {
     async submitDailyScore(dateStr, data) {
       if (!enabled || !user) return false;
       const name = String(data.name || handleCache || this.displayName()).slice(0, 40);
-      await entriesRef(dateStr).doc(user.uid).set({
+      const entryRef = entriesRef(dateStr).doc(user.uid);
+      const existing = await entryRef.get();
+      await entryRef.set({
         name,
         score: Number(data.score) || 0,
         tier: String(data.tier || ""),
@@ -97,7 +99,30 @@ window.GoatAuth = (() => {
         picks: data.picks || null, // stored for auditability (detect/purge fake scores)
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
+      // Increment the total player count only on first submission for this date.
+      if (!existing.exists) {
+        db.collection("dailyLeaderboard").doc(dateStr).set(
+          { playerCount: firebase.firestore.FieldValue.increment(1) },
+          { merge: true }
+        ).catch(() => {});
+      }
       return true;
+    },
+
+    async getDailyPlayerCount(dateStr) {
+      if (!enabled) return null;
+      try {
+        const doc = await db.collection("dailyLeaderboard").doc(dateStr).get();
+        return doc.exists ? (doc.data().playerCount || null) : null;
+      } catch (e) { return null; }
+    },
+
+    async getAllDailyScores(dateStr) {
+      if (!enabled) return [];
+      try {
+        const snap = await entriesRef(dateStr).get();
+        return snap.docs.map(d => d.data().score).filter(s => typeof s === "number");
+      } catch (e) { return []; }
     },
     async getDailyLeaderboard(dateStr, topN = 100) {
       if (!enabled) return [];

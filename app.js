@@ -5188,7 +5188,9 @@ updateBody(null);
   function submitToday(dateStr, score, tier, franchise, franchiseTeam) {
     if (!Auth.currentUser()) return;
     const picks = (getDailyHistory()[dateStr] || {}).picks || null;
-    Auth.submitDailyScore(dateStr, { score, tier, franchise, franchiseTeam, picks }).catch(console.error);
+    Auth.submitDailyScore(dateStr, { score, tier, franchise, franchiseTeam, picks })
+      .then(() => refreshHomePlayerCount(dateStr))
+      .catch(console.error);
   }
   function showResultButton() {
     if (viewLeaderboardBtn) viewLeaderboardBtn.hidden = false;
@@ -5225,6 +5227,18 @@ updateBody(null);
     try { updateDailyCard(); } catch (e) {}
   }
   window.GoatLeaderboard = { submitToday, showResultButton, pushDailyHistory, openLeaderboard };
+
+  // Home screen player count badge — load once on init, refresh on submit.
+  async function refreshHomePlayerCount(dateStr) {
+    const el = document.querySelector("#homePlayerCount");
+    if (!el) return;
+    const count = await Auth.getDailyPlayerCount(dateStr || getTodayStr());
+    if (count && count > 0) {
+      el.innerHTML = `<span class="hpc-num">${count.toLocaleString()}</span> players have drafted today`;
+      el.hidden = false;
+    }
+  }
+  refreshHomePlayerCount();
 
   // Render the global leaderboard for today.
   // Podium card for one of the top 3 (place = 1, 2, or 3).
@@ -5315,11 +5329,14 @@ updateBody(null);
     }
     const isMine = (r) => me && r.uid === me.uid;
 
-    // Player count
-    if (lbPlayerCount && rows.length) {
-      const atLeast = rows.length >= 75 ? "75+" : rows.length;
-      lbPlayerCount.textContent = `${atLeast} players ${isToday ? "have played today" : "played yesterday"}`;
-      lbPlayerCount.hidden = false;
+    // Player count (real number from stored counter)
+    if (lbPlayerCount) {
+      Auth.getDailyPlayerCount(targetDate).then(count => {
+        if (count && count > 0) {
+          lbPlayerCount.textContent = `${count.toLocaleString()} players ${isToday ? "have played today" : "played yesterday"}`;
+          lbPlayerCount.hidden = false;
+        }
+      }).catch(() => {});
     }
 
     if (!rows.length) {
@@ -5332,8 +5349,8 @@ updateBody(null);
       const order = [top[1], top[0], top[2]];
       const place = [2, 1, 3];
       lbPodium.innerHTML = order.map((r, i) => r ? podiumCard(r, place[i], isMine(r)) : "").join("");
-      // Score distribution bar (subtle, below podium)
-      renderDistBar(rows);
+      // Score distribution bar — fetch all scores, not just top 75.
+      Auth.getAllDailyScores(targetDate).then(allScores => renderDistBar(allScores)).catch(() => renderDistBar(rows.map(r => r.score)));
       // 4th onward -> scrollable list.
       lbList.hidden = false;
       const rest = rows.slice(3);
