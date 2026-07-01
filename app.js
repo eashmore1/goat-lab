@@ -5364,10 +5364,6 @@ updateBody(null);
     allScoresPromise.then(allScores => {
       const fallback = allScores.length ? allScores : rows.map(r => r.score);
       renderDistBar(fallback);
-      if (lbPlayerCount && fallback.length > 0) {
-        lbPlayerCount.textContent = `${formatPlayerCount(fallback.length)} players ${isToday ? "have played today" : "played yesterday"}`;
-        lbPlayerCount.hidden = false;
-      }
     });
 
     // Only pin the user's own score when viewing today's board.
