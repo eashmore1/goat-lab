@@ -5233,13 +5233,13 @@ updateBody(null);
     return (Math.floor(n / mag) * mag).toLocaleString() + "+";
   }
 
-  // All-time games played — static baseline, update manually over time.
-  const GAMES_PLAYED_BASELINE = 100_000;
-  (function showGamesPlayed() {
+  // All-time player count — update manually over time.
+  const PLAYER_COUNT_DISPLAY = "36,200+";
+  (function showTotalPlayers() {
     const el = document.querySelector("#homeTotalPlayers");
     const numEl = document.querySelector("#homeTotalPlayersNum");
     if (!el || !numEl) return;
-    numEl.textContent = formatPlayerCount(GAMES_PLAYED_BASELINE);
+    numEl.textContent = PLAYER_COUNT_DISPLAY;
     el.hidden = false;
   })();
 
