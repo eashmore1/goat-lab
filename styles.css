@@ -308,18 +308,6 @@ h1 {
   color: var(--gold);
 }
 
-.home-total-players {
-  display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
-  margin: 18px 0 0;
-}
-.htp-num {
-  font: 900 2.6rem/1 "Playfair Display", Georgia, serif;
-  color: var(--gold); letter-spacing: -0.01em;
-}
-.htp-label {
-  font: 700 0.72rem/1 "Space Mono", ui-monospace, monospace;
-  letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,247,223,0.7);
-}
 .home-player-count {
   margin: 10px 0 0;
   font: 700 0.72rem/1.2 "Space Mono", ui-monospace, monospace;
@@ -2067,6 +2055,15 @@ h1 {
 .account-btn-google, .account-btn-ghost, .account-btn-trophy { background: var(--surface); color: var(--ink); }
 .account-btn-google { display: inline-flex; align-items: center; gap: 9px; }
 .account-btn-trophy { background: var(--gold); }
+.players-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 5px 11px; border-radius: 999px;
+  background: var(--surface); border: 1.5px solid var(--ink);
+  font: 700 0.72rem/1 "Space Mono", ui-monospace, monospace;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink);
+  white-space: nowrap;
+}
+.players-pill span:first-child { color: var(--court); }
 .g-mark {
   display: grid; place-items: center;
   width: 20px; height: 20px; border-radius: 50%;
