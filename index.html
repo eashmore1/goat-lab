@@ -40,7 +40,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=35" />
+    <link rel="stylesheet" href="styles.css?v=36" />
     <script defer src="error-monitor.js"></script>
     <script defer src="/_vercel/speed-insights/script.js"></script>
 
@@ -257,9 +257,16 @@
           <button id="lbTabToday" class="lb-tab lb-tab-active" type="button" role="tab" aria-selected="true">Today</button>
           <button id="lbTabYesterday" class="lb-tab" type="button" role="tab" aria-selected="false">Yesterday</button>
         </div>
+        <p class="lb-player-count" id="lbPlayerCount" hidden></p>
         <div class="lb-podium" id="lbPodium" aria-label="Top 3"></div>
+        <div class="lb-dist" id="lbDist" hidden></div>
         <div id="leaderboardList" class="lb-list"></div>
         <p class="lb-hint" id="lbHint" hidden></p>
+        <div class="lb-tomorrow" id="lbTomorrow" hidden>
+          <span class="lb-tomorrow-label">Come back tomorrow</span>
+          <span class="lb-tomorrow-num" id="lbTomorrowNum"></span>
+          <span class="lb-tomorrow-countdown" id="lbCountdown"></span>
+        </div>
       </section>
     </main>
 
@@ -444,7 +451,7 @@
     <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script defer src="firebase-init.js"></script>
     <noscript><p style="font-family:sans-serif;text-align:center;padding:2rem">GOAT Lab requires JavaScript. Please enable it in your browser settings.</p></noscript>
-    <script defer src="app.js?v=91"></script>
+    <script defer src="app.js?v=92"></script>
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {

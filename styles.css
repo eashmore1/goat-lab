@@ -2202,6 +2202,43 @@ h1 {
 .lb-empty-rest { text-align: center; padding: 14px; }
 .leaderboard-page .lb-hint { max-width: 620px; margin: 16px auto 0; text-align: center; }
 
+/* Player count */
+.lb-player-count {
+  max-width: 620px; margin: 0 auto 14px;
+  font: 700 0.72rem/1 "Space Mono", ui-monospace, monospace;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
+  text-align: center;
+}
+
+/* Score distribution bar */
+.lb-dist { max-width: 620px; margin: 0 auto 20px; display: grid; gap: 5px; }
+.lb-dist-row { display: grid; grid-template-columns: 44px 1fr 32px; align-items: center; gap: 7px; }
+.lb-dist-label { font: 700 0.64rem/1 "Space Mono", ui-monospace, monospace; color: var(--muted); text-align: right; }
+.lb-dist-track { height: 7px; background: rgba(21,20,19,0.1); border-radius: 4px; overflow: hidden; }
+[data-theme="dark"] .lb-dist-track { background: rgba(243,236,219,0.12); }
+.lb-dist-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+.lb-dist-pct { font: 700 0.64rem/1 "Space Mono", ui-monospace, monospace; color: var(--muted); }
+
+/* Come back tomorrow nudge */
+.lb-tomorrow {
+  max-width: 620px; margin: 28px auto 0; padding: 14px 18px;
+  border: 2px dashed rgba(21,20,19,0.2); border-radius: 8px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  text-align: center;
+}
+[data-theme="dark"] .lb-tomorrow { border-color: rgba(243,236,219,0.2); }
+.lb-tomorrow-label {
+  font: 700 0.7rem/1 "Space Mono", ui-monospace, monospace;
+  letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted);
+}
+.lb-tomorrow-num {
+  font: 900 1.1rem/1.2 "Playfair Display", Georgia, serif; color: var(--ink);
+}
+.lb-tomorrow-countdown {
+  font: 700 1.4rem/1 "Space Mono", ui-monospace, monospace;
+  color: var(--court); letter-spacing: 0.04em;
+}
+
 /* ===== Settings menu (account bar) ===== */
 .account-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .account-signedin-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }

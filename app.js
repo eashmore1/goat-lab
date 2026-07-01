@@ -5159,6 +5159,11 @@ updateBody(null);
   const lbHint = $("#lbHint");
   const lbTabToday = $("#lbTabToday");
   const lbTabYesterday = $("#lbTabYesterday");
+  const lbPlayerCount = $("#lbPlayerCount");
+  const lbDist = $("#lbDist");
+  const lbTomorrow = $("#lbTomorrow");
+  const lbTomorrowNum = $("#lbTomorrowNum");
+  const lbCountdown = $("#lbCountdown");
 
   // Settings dropdown (Sign out / Delete account)
   if (settingsBtn && settingsMenu) {
@@ -5241,12 +5246,64 @@ updateBody(null);
     return d.toISOString().slice(0, 10);
   }
 
+  // Score tier bands for distribution bar
+  const DIST_TIERS = [
+    { label: "GOAT",    min: 100, max: 100, color: "#e6b843" },
+    { label: "97–99",   min: 97,  max: 99,  color: "#157f68" },
+    { label: "94–96",   min: 94,  max: 96,  color: "#4fa882" },
+    { label: "90–93",   min: 90,  max: 93,  color: "#c9673d" },
+    { label: "86–89",   min: 86,  max: 89,  color: "#b0956a" },
+    { label: "≤85",     min: 0,   max: 85,  color: "#c5bfb3" },
+  ];
+
+  function renderDistBar(rows) {
+    if (!lbDist || !rows.length) { if (lbDist) lbDist.hidden = true; return; }
+    const total = rows.length;
+    const bars = DIST_TIERS.map(t => {
+      const count = rows.filter(r => r.score >= t.min && r.score <= t.max).length;
+      const pct = (count / total * 100).toFixed(0);
+      if (!count) return "";
+      return `<div class="lb-dist-row">
+        <span class="lb-dist-label">${t.label}</span>
+        <div class="lb-dist-track">
+          <div class="lb-dist-fill" style="width:${pct}%;background:${t.color}"></div>
+        </div>
+        <span class="lb-dist-pct">${pct}%</span>
+      </div>`;
+    }).join("");
+    lbDist.innerHTML = bars;
+    lbDist.hidden = false;
+  }
+
+  function startCountdown() {
+    if (!lbCountdown) return;
+    const tick = () => {
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+      const diff = tomorrow - now;
+      const h = String(Math.floor(diff / 3600000)).padStart(2, "0");
+      const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, "0");
+      const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, "0");
+      lbCountdown.textContent = `${h}:${m}:${s}`;
+    };
+    tick();
+    clearInterval(window._lbCountdownTimer);
+    window._lbCountdownTimer = setInterval(tick, 1000);
+  }
+
   async function renderLeaderboard(dateStr) {
     const isToday = !dateStr || dateStr === getTodayStr();
     const targetDate = dateStr || getTodayStr();
     const me = Auth.currentUser();
     lbHint.hidden = true;
+    if (lbPlayerCount) lbPlayerCount.hidden = true;
+    if (lbDist) lbDist.hidden = true;
+    if (lbTomorrow) lbTomorrow.hidden = true;
+    clearInterval(window._lbCountdownTimer);
     lbPodium.innerHTML = "";
+    lbList.hidden = false;
     lbList.innerHTML = `<p class="lb-empty">Loading ${isToday ? "today" : "yesterday"}'s board…</p>`;
     let rows;
     try {
@@ -5257,36 +5314,40 @@ updateBody(null);
       return;
     }
     const isMine = (r) => me && r.uid === me.uid;
+
+    // Player count
+    if (lbPlayerCount && rows.length) {
+      const atLeast = rows.length >= 75 ? "75+" : rows.length;
+      lbPlayerCount.textContent = `${atLeast} players ${isToday ? "have played today" : "played yesterday"}`;
+      lbPlayerCount.hidden = false;
+    }
+
     if (!rows.length) {
       lbList.innerHTML = isToday
         ? '<p class="lb-empty">No scores yet today. Be the first — play the Daily!</p>'
-        : "";
-      lbList.hidden = !isToday;
+        : '<p class="lb-empty">No scores recorded for yesterday.</p>';
     } else {
       // Top 3 -> podium (rendered 2nd, 1st, 3rd so 1st sits centered/tallest).
       const top = rows.slice(0, 3);
       const order = [top[1], top[0], top[2]];
       const place = [2, 1, 3];
       lbPodium.innerHTML = order.map((r, i) => r ? podiumCard(r, place[i], isMine(r)) : "").join("");
-      if (isToday) {
-        // 4th onward -> scrollable list.
-        lbList.hidden = false;
-        const rest = rows.slice(3);
-        lbList.innerHTML = rest.length
-          ? rest.map((r, i) => {
-              const mine = isMine(r);
-              return `
-                <div class="lb-row${mine ? " lb-row-me" : ""}">
-                  <span class="lb-rank">${i + 4}</span>
-                  <span class="lb-name">${esc(r.name || "Anonymous")}${mine ? " (you)" : ""}</span>
-                  <span class="lb-score">${esc(r.score)}</span>
-                </div>`;
-            }).join("")
-          : '<p class="lb-empty lb-empty-rest">Only the podium so far — climb on!</p>';
-      } else {
-        lbList.hidden = true;
-        lbList.innerHTML = "";
-      }
+      // Score distribution bar (subtle, below podium)
+      renderDistBar(rows);
+      // 4th onward -> scrollable list.
+      lbList.hidden = false;
+      const rest = rows.slice(3);
+      lbList.innerHTML = rest.length
+        ? rest.map((r, i) => {
+            const mine = isMine(r);
+            return `
+              <div class="lb-row${mine ? " lb-row-me" : ""}">
+                <span class="lb-rank">${i + 4}</span>
+                <span class="lb-name">${esc(r.name || "Anonymous")}${mine ? " (you)" : ""}</span>
+                <span class="lb-score">${esc(r.score)}</span>
+              </div>`;
+          }).join("")
+        : '<p class="lb-empty lb-empty-rest">Only the podium so far — climb on!</p>';
     }
 
     // Only pin the user's own score when viewing today's board.
@@ -5304,6 +5365,17 @@ updateBody(null);
           </div>`);
       }
     }
+
+    // "Come back tomorrow" nudge — only on today's board if the user has already played.
+    if (isToday && lbTomorrow) {
+      const playedToday = !!getDailyHistory()[getTodayStr()];
+      if (playedToday) {
+        if (lbTomorrowNum) lbTomorrowNum.textContent = `Daily #${getDailyNumber() + 1}`;
+        lbTomorrow.hidden = false;
+        startCountdown();
+      }
+    }
+
     if (!me) {
       lbHint.textContent = isToday
         ? "Sign in and play today's Daily to claim your spot."
