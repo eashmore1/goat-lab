@@ -5233,34 +5233,17 @@ updateBody(null);
     return (Math.floor(n / mag) * mag).toLocaleString() + "+";
   }
 
-  // All-time player counter — one increment per device ever.
-  (async function loadTotalPlayers() {
+  // All-time games played — static baseline, update manually over time.
+  const GAMES_PLAYED_BASELINE = 100_000;
+  (function showGamesPlayed() {
     const el = document.querySelector("#homeTotalPlayers");
     const numEl = document.querySelector("#homeTotalPlayersNum");
     if (!el || !numEl) return;
-    const count = await Auth.getTotalPlayers();
-    if (count && count > 0) {
-      numEl.textContent = formatPlayerCount(count);
-      el.hidden = false;
-    }
+    numEl.textContent = formatPlayerCount(GAMES_PLAYED_BASELINE);
+    el.hidden = false;
   })();
 
-  function maybeRecordNewPlayer() {
-    try {
-      if (localStorage.getItem("goatlab_counted")) return;
-      Auth.recordNewPlayer().then(() => {
-        localStorage.setItem("goatlab_counted", "1");
-        // Refresh the displayed count.
-        const numEl = document.querySelector("#homeTotalPlayersNum");
-        const el = document.querySelector("#homeTotalPlayers");
-        if (numEl && el) {
-          Auth.getTotalPlayers().then(count => {
-            if (count) { numEl.textContent = formatPlayerCount(count); el.hidden = false; }
-          }).catch(() => {});
-        }
-      }).catch(() => {});
-    } catch (e) {}
-  }
+  function maybeRecordNewPlayer() {} // no-op, kept for call-site compatibility
 
   // Render the global leaderboard for today.
   // Podium card for one of the top 3 (place = 1, 2, or 3).
