@@ -65,9 +65,21 @@ export default async function handler(req, res) {
   try {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
-      const uid = session.client_reference_id;
+      let uid = session.client_reference_id;
       const email =
         session.customer_details?.email || session.customer_email || null;
+
+      // Fallback: if no uid was attached (promo code, bare payment link, etc.),
+      // match the Stripe email to a Firebase account so the pass still lands.
+      if (!uid && email) {
+        try {
+          const u = await admin.auth().getUserByEmail(email);
+          uid = u.uid;
+          console.log(`[stripe-webhook] matched by email → uid=${uid}`);
+        } catch (e) {
+          console.warn(`[stripe-webhook] no Firebase user for email=${email}`);
+        }
+      }
 
       if (uid) {
         await db.collection("users").doc(uid).set(
@@ -81,10 +93,9 @@ export default async function handler(req, res) {
         );
         console.log(`[stripe-webhook] GOAT Pass granted to uid=${uid}`);
       } else {
-        // No uid attached (e.g. someone bought via a bare link). Log for manual
-        // reconciliation — we can match the email to an account by hand.
+        // Couldn't map to an account at all — log for manual reconciliation.
         console.warn(
-          `[stripe-webhook] checkout completed with no client_reference_id ` +
+          `[stripe-webhook] checkout completed but no uid/email match ` +
             `(email=${email}, session=${session.id})`
         );
       }
