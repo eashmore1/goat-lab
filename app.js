@@ -5868,7 +5868,13 @@ updateBody(null);
   const statsBackBtn = document.querySelector("#statsBackBtn");
   const statsPassPill = document.querySelector("#statsPassPill");
   const myStatsBtn = document.querySelector("#myStatsBtn");
+  const statsTabsBar = document.querySelector("#statsTabs");
+  const statsTabDaily = document.querySelector("#statsTabDaily");
+  const statsTabClassic = document.querySelector("#statsTabClassic");
+  const statsTabBlind = document.querySelector("#statsTabBlind");
   let statsReturnScreen = null;
+  let statsTab = "daily";
+  let _statsBuilds = null; // cached saved builds for the Classic/Blind tabs
 
   function isoUTC(d) {
     return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
@@ -5910,7 +5916,6 @@ updateBody(null);
     const best = scores.length ? Math.max(...scores) : 0;
     const perfect = scores.filter((s) => s === 100).length;
     const elite = scores.filter((s) => s >= 97).length;
-    const strong90 = scores.filter((s) => s >= 90).length;
     const allAvg = scores.length ? Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 10) / 10 : 0;
     const cur = getDailyStreak(history, today);
     const long = computeLongestStreak(history);
@@ -5923,7 +5928,6 @@ updateBody(null);
         <div class="stat-tile stat-tile-gold"><div class="stat-tile-num">${best}</div><div class="stat-tile-label">Best Score</div></div>
         <div class="stat-tile"><div class="stat-tile-num">${elite}</div><div class="stat-tile-label">Elite ≥97</div></div>
         <div class="stat-tile"><div class="stat-tile-num">${perfect}</div><div class="stat-tile-label">Perfect 100s</div></div>
-        <div class="stat-tile"><div class="stat-tile-num">${strong90}</div><div class="stat-tile-label">90+ Finishes</div></div>
         <div class="stat-tile"><div class="stat-tile-num">${avg || "—"}</div><div class="stat-tile-label">Avg · Last 30</div></div>
         <div class="stat-tile"><div class="stat-tile-num">${allAvg || "—"}</div><div class="stat-tile-label">Avg · All-Time</div></div>
       </div>`;
@@ -5969,13 +5973,62 @@ updateBody(null);
     }).join("");
     return `<div class="stats-panel-title">Your daily history · tap to see the build</div><div class="hist-list">${rows}</div>`;
   }
-  function renderStats() {
+  // --- Saved-build rows for Classic / Blind tabs -------------------------
+  function shortForStat(p) {
+    const a = attributes.find((x) => x.key === p.statKey);
+    return (a && a.short) || p.stat || "";
+  }
+  function buildsListHTML(builds) {
+    return `<div class="hist-list">` + builds.map((b) => {
+      const picks = Array.isArray(b.picks) ? b.picks : [];
+      const chips = picks.length
+        ? picks.map((p) => `<div class="mini-chip"><span class="mc-stat">${esc(shortForStat(p))}${p.score != null ? `<b class="mc-pscore">${esc(p.score)}</b>` : ""}</span><span class="mc-name">${esc(p.player || "—")}</span></div>`).join("")
+        : `<p class="bd-empty">No pick details saved for this build.</p>`;
+      const isGoat = Number(b.score) === 100;
+      return `
+        <div class="hist-row" data-hist>
+          <span class="hist-caret" aria-hidden="true">▸</span>
+          <span class="hist-tier">${esc(b.name || getTier(Number(b.score) || 0))}</span>
+          <span class="hist-date">${esc(fmtDate(b.createdAt))}</span>
+          <span class="hist-score ${isGoat ? "is-goat" : ""}">${esc(b.score)}</span>
+          <div class="hist-build">${chips}</div>
+        </div>`;
+    }).join("") + `</div>`;
+  }
+  function renderModeStatsHTML(mode) {
+    const label = mode === "classic" ? "Classic" : "Blind";
+    const builds = (_statsBuilds || []).filter((b) => String(b.mode || "").toLowerCase() === mode);
+    const scores = builds.map((b) => Number(b.score) || 0).filter((s) => s > 0);
+    const pb = (getPB() || {})[mode] || 0;
+    const best = Math.max(pb, scores.length ? Math.max(...scores) : 0);
+    const avg = scores.length ? Math.round((scores.reduce((a, c) => a + c, 0) / scores.length) * 10) / 10 : 0;
+    const tiles = `
+      <div class="stat-tiles">
+        <div class="stat-tile stat-tile-gold"><div class="stat-tile-num">${best || "—"}</div><div class="stat-tile-label">Best Score</div></div>
+        <div class="stat-tile"><div class="stat-tile-num">${builds.length}</div><div class="stat-tile-label">Saved Builds</div></div>
+        <div class="stat-tile"><div class="stat-tile-num">${avg || "—"}</div><div class="stat-tile-label">Avg Saved</div></div>
+      </div>`;
+    const body = builds.length
+      ? `<div class="stats-panel-title">Saved ${label} builds · tap to see the picks</div>` + buildsListHTML(builds)
+      : `<p class="lb-empty" style="max-width:620px;margin:18px auto 0;text-align:center">No saved ${label} builds yet. Finish a ${label} run and hit “Save Build.”</p>`;
+    return tiles + body;
+  }
+  function wireStatsToggles() {
+    statsBody.querySelectorAll("[data-hist]").forEach((row) => {
+      row.addEventListener("click", () => row.classList.toggle("open"));
+    });
+  }
+  function updateStatsTabUI() {
+    [[statsTabDaily, "daily"], [statsTabClassic, "classic"], [statsTabBlind, "blind"]].forEach(([btn, t]) => {
+      if (btn) { btn.classList.toggle("lb-tab-active", statsTab === t); btn.setAttribute("aria-selected", String(statsTab === t)); }
+    });
+  }
+  async function renderStats() {
     if (!statsBody) return;
     if (statsPassPill) statsPassPill.hidden = !hasPass;
-    const history = getDailyHistory();
-    const today = getTodayStr();
-    const tiles = statsTilesHTML(history, today);
     if (!hasPass) {
+      if (statsTabsBar) statsTabsBar.hidden = true;
+      const tiles = statsTilesHTML(getDailyHistory(), getTodayStr());
       statsBody.innerHTML = `
         <div class="locked-wrap">
           <div class="locked-blur">${tiles}</div>
@@ -5989,11 +6042,25 @@ updateBody(null);
       if (b) b.addEventListener("click", openPassModal);
       return;
     }
-    statsBody.innerHTML = tiles + heatmapHTML(history, today) + historyListHTML(history);
-    statsBody.querySelectorAll("[data-hist]").forEach((row) => {
-      row.addEventListener("click", () => row.classList.toggle("open"));
-    });
+    if (statsTabsBar) statsTabsBar.hidden = false;
+    updateStatsTabUI();
+    if (statsTab === "daily") {
+      const history = getDailyHistory();
+      const today = getTodayStr();
+      statsBody.innerHTML = statsTilesHTML(history, today) + heatmapHTML(history, today) + historyListHTML(history);
+      wireStatsToggles();
+      return;
+    }
+    // Classic / Blind — pull the saved builds (once per stats-page open).
+    if (_statsBuilds === null) {
+      statsBody.innerHTML = `<p class="lb-empty" style="text-align:center;margin-top:18px">Loading…</p>`;
+      try { _statsBuilds = await Auth.listBuilds(); } catch (e) { _statsBuilds = []; }
+      if (statsTab === "daily" || (statsPage && statsPage.hidden)) return; // user moved on
+    }
+    statsBody.innerHTML = renderModeStatsHTML(statsTab);
+    wireStatsToggles();
   }
+  function setStatsTab(tab) { statsTab = tab; renderStats(); }
   function openStats() {
     statsReturnScreen = (lbPage && !lbPage.hidden)
       ? lbPage
@@ -6001,6 +6068,8 @@ updateBody(null);
     mainScreens().forEach((s) => { if (s) s.hidden = true; });
     if (lbPage) lbPage.hidden = true;
     if (statsPage) statsPage.hidden = false;
+    statsTab = "daily";
+    _statsBuilds = null; // refetch so newly saved builds show
     window.scrollTo(0, 0);
     renderStats();
   }
@@ -6011,6 +6080,9 @@ updateBody(null);
   }
   if (myStatsBtn) myStatsBtn.addEventListener("click", openStats);
   if (statsBackBtn) statsBackBtn.addEventListener("click", closeStats);
+  if (statsTabDaily) statsTabDaily.addEventListener("click", () => setStatsTab("daily"));
+  if (statsTabClassic) statsTabClassic.addEventListener("click", () => setStatsTab("classic"));
+  if (statsTabBlind) statsTabBlind.addEventListener("click", () => setStatsTab("blind"));
 
   // Top-of-page GOAT Pass button: holders jump to their stats, others see the unlock.
   const goatPassTopBtn = document.querySelector("#goatPassTop");
