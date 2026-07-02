@@ -1179,7 +1179,7 @@ h1 {
 
 .footer-support {
   color: var(--ink) !important;
-  font-weight: 600;
+  font-weight: 400;
   transition: color 140ms ease !important;
 }
 
