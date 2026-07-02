@@ -20,7 +20,12 @@ service cloud.firestore {
         && request.resource.data.score >= 0
         && request.resource.data.score <= 100
         && request.resource.data.name is string
-        && request.resource.data.name.size() <= 40;
+        && request.resource.data.name.size() <= 40
+        // The GOAT badge is only trustworthy if it can't be faked: an entry may
+        // claim goatPass only when the user actually owns the pass.
+        && (!('goatPass' in request.resource.data)
+          || request.resource.data.goatPass == false
+          || get(/databases/$(database)/documents/users/$(uid)).data.goatPass == true);
       allow delete: if request.auth != null && request.auth.uid == uid;
     }
 
@@ -34,11 +39,22 @@ service cloud.firestore {
         && request.resource.data.totalPlayers == resource.data.totalPlayers + 1;
     }
 
-    // Everything under a user's own space — profile (handle), saved builds,
-    // daily history/streak, and anything we add later. Owner only.
+    // A user's own profile doc — handle, streak mirror, and the GOAT Pass flag.
+    // Owner can read/write their doc, BUT never the goatPass* fields: those are
+    // written only by the Stripe webhook via the Admin SDK (which bypasses
+    // rules). This stops anyone from granting themselves the pass for free.
     match /users/{uid} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create: if request.auth != null && request.auth.uid == uid
+        && !request.resource.data.keys().hasAny(
+          ['goatPass', 'goatPassAt', 'goatPassEmail', 'goatPassSession']);
+      allow update: if request.auth != null && request.auth.uid == uid
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(
+          ['goatPass', 'goatPassAt', 'goatPassEmail', 'goatPassSession']);
+      allow delete: if request.auth != null && request.auth.uid == uid;
     }
+    // Everything under a user's own space — saved builds, daily history/streak,
+    // and anything we add later. Owner only.
     match /users/{uid}/{document=**} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }

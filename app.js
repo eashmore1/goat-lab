@@ -4122,6 +4122,10 @@ function finish() {
 
   result.hidden = false;
 
+  // GOAT Pass daily reveal / unlock strip — only for the Daily; hide otherwise.
+  const _gpr = document.querySelector("#goatPassResult");
+  if (_gpr && gameMode !== "daily") { _gpr.hidden = true; _gpr.innerHTML = ""; }
+
   if (gameMode !== "daily") savePB(gameMode, score);
   updatePBDisplay();
 
@@ -4158,6 +4162,7 @@ function finish() {
       window.GoatLeaderboard.submitToday(todayStr, score, tier, dailyData?.franchise || false, dailyData?.franchiseTeamName || null);
       window.GoatLeaderboard.pushDailyHistory(todayStr);
       window.GoatLeaderboard.showResultButton();
+      if (window.GoatLeaderboard.showDailyExtras) window.GoatLeaderboard.showDailyExtras(todayStr);
     }
     resultTitle.textContent = `Daily — ${score}: ${tier}`;
     resultCopy.textContent = dailyData?.franchise
@@ -4431,6 +4436,13 @@ async function generateShareImage() {
   ctx.font = '700 10px "Space Mono", monospace';
   ctx.fillText(modeText, W - 22, 57);
 
+  // GOAT Pass flair — right, below mode label (pass holders only)
+  if (window.GoatPassActive) {
+    ctx.fillStyle = GOLD;
+    ctx.font = '700 11px "Space Mono", monospace';
+    ctx.fillText("🐐 GOAT PASS", W - 22, 76);
+  }
+
   ctx.textAlign = "left";
 
   // ── Radar section ────────────────────────────────────────────────────────
@@ -4578,6 +4590,8 @@ function openShareModal() {
     shareCardRows.appendChild(row);
   });
 
+  const gpEl = document.querySelector("#shareCardGP");
+  if (gpEl) gpEl.hidden = !window.GoatPassActive;
   if (shareBtnLeaderboard) shareBtnLeaderboard.hidden = gameMode !== "daily";
   showModal(shareModal, document.activeElement instanceof HTMLElement ? document.activeElement : shareButton);
   primeShareImage();
@@ -4723,6 +4737,8 @@ function openShareModalFromSaved(b) {
     shareCardRows.appendChild(row);
   });
 
+  const gpEl2 = document.querySelector("#shareCardGP");
+  if (gpEl2) gpEl2.hidden = !window.GoatPassActive;
   if (shareBtnLeaderboard) shareBtnLeaderboard.hidden = gameMode !== "daily";
   showModal(shareModal, null);
   primeShareImage();
@@ -5160,6 +5176,7 @@ updateBody(null);
   const lbTabToday = $("#lbTabToday");
   const lbTabYesterday = $("#lbTabYesterday");
   const lbPlayerCount = $("#lbPlayerCount");
+  const lbRankBanner = $("#lbRankBanner");
   const lbDist = $("#lbDist");
   const lbTomorrow = $("#lbTomorrow");
   const lbTomorrowNum = $("#lbTomorrowNum");
@@ -5224,7 +5241,7 @@ updateBody(null);
     if (recalcPending) try { localStorage.removeItem("goatlab_recalc_pending"); } catch (e) {}
     try { updateDailyCard(); } catch (e) {}
   }
-  window.GoatLeaderboard = { submitToday, showResultButton, pushDailyHistory, openLeaderboard };
+  window.GoatLeaderboard = { submitToday, showResultButton, pushDailyHistory, openLeaderboard, showDailyExtras: (d) => renderDailyExtras(d) };
 
   function formatPlayerCount(n) {
     if (n < 10) return String(n);
@@ -5245,13 +5262,22 @@ updateBody(null);
 
   // Render the global leaderboard for today.
   // Podium card for one of the top 3 (place = 1, 2, or 3).
+  function goatBadge(on) {
+    return on ? ' <span class="goat-badge-sm" title="GOAT Pass holder" aria-label="GOAT Pass">🐐</span>' : "";
+  }
+  // Strip the 🐐 from any display name so the badge can never be faked in a
+  // handle (defends even against direct database writes — the badge only ever
+  // comes from the verified goatPass flag).
+  const stripGoatEmoji = (s) => String(s == null ? "" : s).replace(/\u{1F410}[️‍]?/gu, "");
+  const lbName = (s) => esc(stripGoatEmoji(s).trim() || "Anonymous");
+
   function podiumCard(r, place, mine) {
     const medal = place === 1 ? "🥇" : place === 2 ? "🥈" : "🥉";
     return `
       <div class="lb-pod lb-pod-${place}${mine ? " lb-pod-me" : ""}">
         <span class="lb-pod-medal" aria-hidden="true">${medal}</span>
         <span class="lb-pod-rank">${place}</span>
-        <span class="lb-pod-name">${esc(r.name || "Anonymous")}${mine ? " (you)" : ""}</span>
+        <span class="lb-pod-name${r.goatPass ? " gp-name" : ""}">${lbName(r.name)}${goatBadge(r.goatPass)}${mine ? " (you)" : ""}</span>
         <span class="lb-pod-score">${esc(r.score)}</span>
         <span class="lb-pod-step" aria-hidden="true"></span>
       </div>`;
@@ -5316,6 +5342,7 @@ updateBody(null);
     const me = Auth.currentUser();
     lbHint.hidden = true;
     if (lbPlayerCount) lbPlayerCount.hidden = true;
+    if (lbRankBanner) lbRankBanner.hidden = true;
     if (lbDist) lbDist.hidden = true;
     if (lbTomorrow) lbTomorrow.hidden = true;
     clearInterval(window._lbCountdownTimer);
@@ -5353,17 +5380,19 @@ updateBody(null);
             return `
               <div class="lb-row${mine ? " lb-row-me" : ""}">
                 <span class="lb-rank">${i + 4}</span>
-                <span class="lb-name">${esc(r.name || "Anonymous")}${mine ? " (you)" : ""}</span>
+                <span class="lb-name${r.goatPass ? " gp-name" : ""}">${lbName(r.name)}${goatBadge(r.goatPass)}${mine ? " (you)" : ""}</span>
                 <span class="lb-score">${esc(r.score)}</span>
               </div>`;
           }).join("")
         : '<p class="lb-empty lb-empty-rest">Only the podium so far — climb on!</p>';
     }
 
-    // Player count + distribution bar fill in once all-scores resolves (non-blocking).
+    // Player count + distribution bar + exact rank fill in once all-scores
+    // resolves (non-blocking).
     allScoresPromise.then(allScores => {
       const fallback = allScores.length ? allScores : rows.map(r => r.score);
       renderDistBar(fallback);
+      renderRankBanner(fallback, rows, me, isToday);
     });
 
     // Only pin the user's own score when viewing today's board.
@@ -5376,7 +5405,7 @@ updateBody(null);
         lbList.insertAdjacentHTML("beforeend", `
           <div class="lb-row lb-row-me lb-row-you" style="border-top:2px dashed var(--ink,#151413);margin-top:6px">
             <span class="lb-rank">-</span>
-            <span class="lb-name">${esc(myName)} (you)</span>
+            <span class="lb-name${hasPass ? " gp-name" : ""}">${lbName(myName)}${goatBadge(hasPass)} (you)</span>
             <span class="lb-score">${esc(myScore)}</span>
           </div>`);
       }
@@ -5489,6 +5518,7 @@ updateBody(null);
   handleSaveBtn.addEventListener("click", async () => {
     const name = handleInput.value.trim();
     if (!name) { handleStatus.textContent = "Enter a name."; return; }
+    if (/\u{1F410}/u.test(name)) { handleStatus.textContent = "The 🐐 badge is reserved for GOAT Pass holders — please remove it from your name."; return; }
     if (!isNameClean(name)) { handleStatus.textContent = "That name isn't allowed. Please choose another."; return; }
     handleSaveBtn.disabled = true;
     handleStatus.textContent = "Saving…";
@@ -5657,6 +5687,312 @@ updateBody(null);
 
   updatePBDisplay();
 
+  // ===== GOAT Pass — optional one-time unlock ($2.99 launch price) =========
+  const GOAT_PASS_URL = "https://buy.stripe.com/5kQaEY8wV4vldQF1v68Zq01";
+  let hasPass = false;
+
+  // --- Optimal build: best achievable from a day's exact draft (no respins) ---
+  function computeOptimalDaily(dateStr) {
+    let data;
+    try { data = generateDailyData(dateStr); } catch (e) { return null; }
+    if (!data || !Array.isArray(data.rounds) || data.rounds.length !== attributes.length) return null;
+    const picks = data.rounds.map((rd) => {
+      const attr = rd.attribute;
+      const pool = (rd.teamEra && rd.teamEra.players) || [];
+      let best = null, bestScore = -1;
+      for (const pl of pool) {
+        const sc = (pl.ratings && pl.ratings[attr.key]) || 0;
+        if (sc > bestScore) { bestScore = sc; best = pl; }
+      }
+      return {
+        attrKey: attr.key, attrLabel: attr.label, attrShort: attr.short,
+        playerName: best ? best.name : "—",
+        era: rd.teamEra ? rd.teamEra.era : "", team: rd.teamEra ? rd.teamEra.team : "",
+        score: bestScore < 0 ? 0 : bestScore,
+      };
+    });
+    const score = recalcEntryScore({ picks }, dateStr);
+    return score == null ? null : { picks, score };
+  }
+
+  // --- The unlock modal ---------------------------------------------------
+  const passModal = document.querySelector("#passModal");
+  const passModalClose = document.querySelector("#passModalClose");
+  const passCtaBtn = document.querySelector("#passCtaBtn");
+  const passFine = document.querySelector("#passFine");
+
+  function openPassModal() {
+    if (!passModal) return;
+    const signedIn = !!Auth.currentUser();
+    if (passCtaBtn) passCtaBtn.textContent = signedIn ? "Unlock GOAT Pass · $2.99" : "Sign in to unlock · $2.99";
+    if (passFine) passFine.textContent = signedIn
+      ? "One-time purchase. No subscription. Secure checkout via Stripe."
+      : "Sign in with Google first so your pass unlocks on your account.";
+    showModal(passModal, null);
+  }
+  function closePassModal() { if (passModal) hideModal(passModal); }
+  async function startCheckout() {
+    if (!Auth.currentUser()) {
+      try { await Auth.signIn(); } catch (e) { return; }
+      if (!Auth.currentUser()) return;
+    }
+    window.location.href = Auth.goatPassCheckoutUrl(GOAT_PASS_URL);
+  }
+  if (passModal) {
+    setupModal(passModal, closePassModal);
+    passModal.addEventListener("click", (e) => { if (e.target === passModal) closePassModal(); });
+  }
+  if (passModalClose) passModalClose.addEventListener("click", closePassModal);
+  if (passCtaBtn) passCtaBtn.addEventListener("click", startCheckout);
+
+  // --- Results-screen reveal / unlock strip -------------------------------
+  function miniChip(p, best) {
+    return `<div class="mini-chip${best ? " mc-best" : ""}"><span class="mc-stat">${esc(p.attrLabel || p.attrShort || "")}</span><span class="mc-name">${esc(p.playerName || "—")}</span></div>`;
+  }
+  function optimalCardHTML(opt) {
+    let bestIdx = 0, bestScore = -1;
+    opt.picks.forEach((p, i) => { if (p.score > bestScore) { bestScore = p.score; bestIdx = i; } });
+    const chips = opt.picks.map((p, i) => miniChip(p, i === bestIdx)).join("");
+    return `
+      <div class="optimal-card">
+        <div class="optimal-head">
+          <span class="optimal-kicker">🐐 Best build from today's draft</span>
+          <span class="optimal-score">${esc(opt.score)}</span>
+        </div>
+        <div class="optimal-grid">${chips}</div>
+        <div class="optimal-foot" id="optimalFoot">The highest score possible from today's exact draft.</div>
+      </div>`;
+  }
+  function fillOptimalRarity(dateStr, optScore) {
+    Auth.getAllDailyScores(dateStr).then((scores) => {
+      const foot = document.querySelector("#optimalFoot");
+      if (!foot || !scores.length) return;
+      const n = scores.filter((s) => s >= optScore).length;
+      const pct = Math.max(1, Math.round((n / scores.length) * 100));
+      foot.textContent = n === 0
+        ? `No one has matched ${optScore} yet today — the draft's ceiling is still standing.`
+        : `Only ${pct}% of today's players matched this score (${optScore}).`;
+    }).catch(() => {});
+  }
+  function unlockStripHTML(opt) {
+    const tease = opt.picks.slice(0, 6).map((p) =>
+      `<div class="mini-chip"><span class="mc-stat">${esc(p.attrLabel)}</span><span class="mc-name">${esc(p.playerName)}</span></div>`).join("");
+    return `
+      <div class="unlock-strip">
+        <div class="us-left">
+          <div class="us-goat" aria-hidden="true">🐐</div>
+          <div class="us-txt">
+            <strong>See the best build from today's draft</strong>
+            <span>+ your exact rank &amp; the 🐐 badge on every board</span>
+          </div>
+        </div>
+        <button class="unlock-cta" type="button" data-unlock>Unlock · $2.99</button>
+      </div>
+      <div class="tease-wrap" aria-hidden="true"><div class="tease-grid">${tease}</div></div>`;
+  }
+  function renderDailyExtras(dateStr) {
+    const box = document.querySelector("#goatPassResult");
+    if (!box) return;
+    const opt = computeOptimalDaily(dateStr);
+    if (!opt) { box.hidden = true; box.innerHTML = ""; return; }
+    if (hasPass) {
+      box.innerHTML = optimalCardHTML(opt);
+      fillOptimalRarity(dateStr, opt.score);
+    } else {
+      box.innerHTML = unlockStripHTML(opt);
+      const btn = box.querySelector("[data-unlock]");
+      if (btn) btn.addEventListener("click", openPassModal);
+    }
+    box.hidden = false;
+  }
+
+  // --- Exact rank + percentile on the leaderboard -------------------------
+  function renderRankBanner(allScores, rows, me, isToday) {
+    if (!lbRankBanner) return;
+    if (!me || !allScores.length) { lbRankBanner.hidden = true; return; }
+    let myScore = null;
+    const myRow = rows.find((r) => r.uid === me.uid);
+    if (myRow) myScore = myRow.score;
+    else if (isToday) { try { myScore = getDailyHistory()[getTodayStr()]?.score ?? null; } catch (e) {} }
+    if (myScore == null) { lbRankBanner.hidden = true; return; }
+    const total = allScores.length;
+    const rank = allScores.filter((s) => s > myScore).length + 1;
+    const pct = Math.max(1, Math.round((rank / total) * 100));
+    if (hasPass) {
+      lbRankBanner.innerHTML = `
+        <div class="lb-rank-card">
+          <div class="lb-rank-left">
+            <div class="lb-rank-kicker">${isToday ? "Your rank today" : "Your rank"}</div>
+            <div class="lb-rank-big">#${rank.toLocaleString()} <small>/ ${total.toLocaleString()}</small></div>
+          </div>
+          <div class="lb-rank-pct"><div class="lb-rank-pct-num">Top ${pct}%</div><div class="lb-rank-pct-label">of players</div></div>
+        </div>`;
+    } else {
+      lbRankBanner.innerHTML = `<button class="lb-rank-teaser" type="button" id="lbRankTeaser">🔒 See your exact rank &amp; percentile — <strong>GOAT Pass</strong></button>`;
+      const t = document.querySelector("#lbRankTeaser");
+      if (t) t.addEventListener("click", openPassModal);
+    }
+    lbRankBanner.hidden = false;
+  }
+
+  // --- My Stats page ------------------------------------------------------
+  const statsPage = document.querySelector("#statsPage");
+  const statsBody = document.querySelector("#statsBody");
+  const statsBackBtn = document.querySelector("#statsBackBtn");
+  const statsPassPill = document.querySelector("#statsPassPill");
+  const myStatsBtn = document.querySelector("#myStatsBtn");
+  let statsReturnScreen = null;
+
+  function isoUTC(d) {
+    return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+  }
+  function dayDiff(a, b) {
+    return Math.round((new Date(b + "T12:00:00Z") - new Date(a + "T12:00:00Z")) / 86400000);
+  }
+  function computeLongestStreak(history) {
+    const dates = Object.keys(history).filter((d) => history[d]).sort();
+    let best = 0, cur = 0, prev = null;
+    for (const d of dates) {
+      if (prev && dayDiff(prev, d) === 1) cur++; else cur = 1;
+      if (cur > best) best = cur;
+      prev = d;
+    }
+    return best;
+  }
+  function last30Avg(history, today) {
+    const end = new Date(today + "T12:00:00Z");
+    let sum = 0, n = 0;
+    for (let i = 0; i < 30; i++) {
+      const d = new Date(end); d.setUTCDate(d.getUTCDate() - i);
+      const e = history[isoUTC(d)];
+      if (e && typeof e.score === "number") { sum += e.score; n++; }
+    }
+    return n ? Math.round((sum / n) * 10) / 10 : 0;
+  }
+  function heatTier(score) {
+    if (score >= 100) return "hm-goat";
+    if (score >= 94) return "hm-4";
+    if (score >= 88) return "hm-3";
+    if (score >= 80) return "hm-2";
+    return "hm-1";
+  }
+  function statsTilesHTML(history, today) {
+    const dates = Object.keys(history).filter((d) => history[d] && typeof history[d].score === "number");
+    const scores = dates.map((d) => history[d].score);
+    const played = dates.length;
+    const best = scores.length ? Math.max(...scores) : 0;
+    const perfect = scores.filter((s) => s === 100).length;
+    const elite = scores.filter((s) => s >= 97).length;
+    const allAvg = scores.length ? Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 10) / 10 : 0;
+    const cur = getDailyStreak(history, today);
+    const long = computeLongestStreak(history);
+    const avg = last30Avg(history, today);
+    return `
+      <div class="stat-tiles">
+        <div class="stat-tile stat-tile-fire"><div class="stat-tile-num">${cur}</div><div class="stat-tile-label">Day Streak 🔥</div></div>
+        <div class="stat-tile"><div class="stat-tile-num">${long}</div><div class="stat-tile-label">Longest Streak</div></div>
+        <div class="stat-tile"><div class="stat-tile-num">${played}</div><div class="stat-tile-label">Dailies Played</div></div>
+        <div class="stat-tile stat-tile-gold"><div class="stat-tile-num">${best}</div><div class="stat-tile-label">Best Score</div></div>
+        <div class="stat-tile"><div class="stat-tile-num">${elite}</div><div class="stat-tile-label">Elite ≥97</div></div>
+        <div class="stat-tile"><div class="stat-tile-num">${perfect}</div><div class="stat-tile-label">Perfect 100s</div></div>
+        <div class="stat-tile"><div class="stat-tile-num">${avg || "—"}</div><div class="stat-tile-label">Avg · Last 30</div></div>
+        <div class="stat-tile"><div class="stat-tile-num">${allAvg || "—"}</div><div class="stat-tile-label">Avg · All-Time</div></div>
+      </div>`;
+  }
+  function heatmapHTML(history, today) {
+    const end = new Date(today + "T12:00:00Z");
+    let cells = "";
+    for (let i = 118; i >= 0; i--) {
+      const d = new Date(end); d.setUTCDate(d.getUTCDate() - i);
+      const k = isoUTC(d);
+      const e = history[k];
+      const cls = e && typeof e.score === "number" ? heatTier(e.score) : "";
+      const title = e && typeof e.score === "number" ? `${k}: ${e.score}` : `${k}: —`;
+      cells += `<div class="hm-cell ${cls}" title="${title}"></div>`;
+    }
+    return `
+      <div class="stats-panel-title">Play calendar · last 17 weeks</div>
+      <div class="heatmap">${cells}</div>
+      <div class="hm-legend">Less <span class="hm-cell"></span><span class="hm-cell hm-1"></span><span class="hm-cell hm-2"></span><span class="hm-cell hm-3"></span><span class="hm-cell hm-4"></span><span class="hm-cell hm-goat"></span> More</div>`;
+  }
+  function fmtHistDate(d) {
+    try { return new Date(d + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }); }
+    catch (e) { return d; }
+  }
+  function historyListHTML(history) {
+    const dates = Object.keys(history).filter((d) => history[d] && typeof history[d].score === "number").sort().reverse();
+    if (!dates.length) return `<div class="stats-panel-title">Your daily history</div><p class="lb-empty">No dailies played yet — play today's!</p>`;
+    const rows = dates.map((d) => {
+      const e = history[d];
+      const picks = Array.isArray(e.picks) ? e.picks : [];
+      const chips = picks.length
+        ? picks.map((p) => `<div class="mini-chip"><span class="mc-stat">${esc(p.attrShort || p.attrLabel || "")}</span><span class="mc-name">${esc(p.playerName || "—")}</span></div>`).join("")
+        : `<p class="bd-empty">Build details weren't saved for this day.</p>`;
+      const isGoat = e.score === 100;
+      return `
+        <div class="hist-row" data-hist>
+          <span class="hist-caret" aria-hidden="true">▸</span>
+          <span class="hist-tier">${esc(e.tier || getTier(e.score))}</span>
+          <span class="hist-date">${esc(fmtHistDate(d))}</span>
+          <span class="hist-score ${isGoat ? "is-goat" : ""}">${esc(e.score)}</span>
+          <div class="hist-build">${chips}</div>
+        </div>`;
+    }).join("");
+    return `<div class="stats-panel-title">Your daily history · tap to see the build</div><div class="hist-list">${rows}</div>`;
+  }
+  function renderStats() {
+    if (!statsBody) return;
+    if (statsPassPill) statsPassPill.hidden = !hasPass;
+    const history = getDailyHistory();
+    const today = getTodayStr();
+    const tiles = statsTilesHTML(history, today);
+    if (!hasPass) {
+      statsBody.innerHTML = `
+        <div class="locked-wrap">
+          <div class="locked-blur">${tiles}</div>
+          <div class="locked-gate">
+            <div class="lock-ico" aria-hidden="true">🔒</div>
+            <div class="lock-txt">Your full career stats — history, streaks, builds, and calendar — are part of the GOAT Pass.</div>
+            <button class="gp-pill gp-pill-btn" type="button" id="statsUnlockBtn">🐐 Unlock · $2.99</button>
+          </div>
+        </div>`;
+      const b = document.querySelector("#statsUnlockBtn");
+      if (b) b.addEventListener("click", openPassModal);
+      return;
+    }
+    statsBody.innerHTML = tiles + heatmapHTML(history, today) + historyListHTML(history);
+    statsBody.querySelectorAll("[data-hist]").forEach((row) => {
+      row.addEventListener("click", () => row.classList.toggle("open"));
+    });
+  }
+  function openStats() {
+    statsReturnScreen = (lbPage && !lbPage.hidden)
+      ? lbPage
+      : (mainScreens().find((s) => s && !s.hidden) || document.querySelector("#modeScreen"));
+    mainScreens().forEach((s) => { if (s) s.hidden = true; });
+    if (lbPage) lbPage.hidden = true;
+    if (statsPage) statsPage.hidden = false;
+    window.scrollTo(0, 0);
+    renderStats();
+  }
+  function closeStats() {
+    if (statsPage) statsPage.hidden = true;
+    (statsReturnScreen || document.querySelector("#modeScreen")).hidden = false;
+    window.scrollTo(0, 0);
+  }
+  if (myStatsBtn) myStatsBtn.addEventListener("click", openStats);
+  if (statsBackBtn) statsBackBtn.addEventListener("click", closeStats);
+
+  // Reflect pass state across the UI (called on sign-in and after a refresh).
+  function updatePassUI() {
+    window.GoatPassActive = hasPass; // read by the share-image renderer (global scope)
+    const pill = document.querySelector("#goatPassPill");
+    if (pill) pill.hidden = !hasPass;
+    if (statsPage && !statsPage.hidden) renderStats();
+    const box = document.querySelector("#goatPassResult");
+    if (box && !box.hidden) { try { renderDailyExtras(getTodayStr()); } catch (e) {} }
+  }
+
   // Auth state drives the UI. Load handle, then back-fill today's score.
   Auth.onChange(async (user) => {
     if (user) {
@@ -5671,6 +6007,10 @@ updateBody(null);
         currentHandle = await Auth.getHandle();
         accountName.textContent = currentHandle;
       } catch (e) { console.error(e); }
+      try {
+        hasPass = await Auth.hasGoatPass();
+      } catch (e) { hasPass = false; }
+      updatePassUI();
       try {
         const todayStr = getTodayStr();
         const entry = getDailyHistory()[todayStr];
@@ -5689,6 +6029,8 @@ updateBody(null);
       const acctActions = document.querySelector("#accountSignedInActions");
       if (acctActions) acctActions.hidden = true;
       currentHandle = null;
+      hasPass = false;
+      updatePassUI();
       saveBuildButton.hidden = true;
     }
   });

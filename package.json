@@ -5,6 +5,8 @@
   "type": "module",
   "description": "GOAT Lab — static game + OG image functions",
   "dependencies": {
-    "@vercel/og": "^0.6.8"
+    "@vercel/og": "^0.6.8",
+    "firebase-admin": "^12.7.0",
+    "stripe": "^17.5.0"
   }
 }

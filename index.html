@@ -40,7 +40,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=45" />
+    <link rel="stylesheet" href="styles.css?v=47" />
     <script defer src="error-monitor.js"></script>
     <script defer src="/_vercel/speed-insights/script.js"></script>
 
@@ -104,6 +104,8 @@
         <div class="account-right">
           <div class="account-signedin-actions" id="accountSignedInActions" hidden>
             <span class="account-who">Playing as <strong id="accountName">—</strong></span>
+            <span class="gp-pill" id="goatPassPill" hidden title="GOAT Pass holder">🐐 GOAT Pass</span>
+            <button id="myStatsBtn" class="account-btn account-btn-ghost" type="button">My Stats</button>
             <button id="editHandleBtn" class="account-btn account-btn-ghost" type="button">Edit name</button>
             <button id="myBuildsBtn" class="account-btn account-btn-ghost" type="button">My Builds</button>
           </div>
@@ -241,6 +243,7 @@
           <button id="shareButton" type="button" title="Share your build">Share</button>
           <button id="playAgainBtn" type="button" class="play-again-btn" title="Start a new run">Play Again</button>
         </div>
+        <div class="goat-pass-result" id="goatPassResult" hidden></div>
         <div class="coffee-cta-wrap">
           <a href="https://ko-fi.com/goatlab" target="_blank" rel="noopener" class="coffee-cta" id="resultCoffeeCta">☕ Buy the dev a coffee</a>
           <a href="https://discord.gg/c4ek2mnBK" target="_blank" rel="noopener" class="coffee-cta discord-cta">💬 Argue your build on Discord</a>
@@ -262,6 +265,7 @@
           <button id="lbTabYesterday" class="lb-tab" type="button" role="tab" aria-selected="false">Yesterday</button>
         </div>
         <p class="lb-player-count" id="lbPlayerCount" hidden></p>
+        <div class="lb-rank-banner" id="lbRankBanner" hidden></div>
         <div class="lb-podium" id="lbPodium" aria-label="Top 3"></div>
         <div class="lb-dist" id="lbDist" hidden></div>
         <div id="leaderboardList" class="lb-list"></div>
@@ -272,11 +276,46 @@
           <span class="lb-tomorrow-countdown" id="lbCountdown"></span>
         </div>
       </section>
+
+      <section class="stats-page" id="statsPage" hidden aria-label="Your stats">
+        <div class="lb-page-head">
+          <div>
+            <p class="kicker">My Stats</p>
+            <h2 class="lb-page-title">Your GOAT Lab career</h2>
+            <span class="gp-pill" id="statsPassPill" hidden>🐐 GOAT Pass</span>
+          </div>
+          <button id="statsBackBtn" class="lb-back" type="button">← Back</button>
+        </div>
+        <div id="statsBody"></div>
+      </section>
     </main>
 
     <footer class="site-footer">
       <a href="https://discord.gg/c4ek2mnBK" target="_blank" rel="noopener" class="footer-discord">💬 Join the GOAT Lab Discord</a>
     </footer>
+
+    <div class="modal-overlay" id="passModal" hidden>
+      <div class="modal pass-modal" role="dialog" aria-modal="true" aria-label="GOAT Pass">
+        <button id="passModalClose" class="modal-close" type="button" aria-label="Close">&#x2715;</button>
+        <div class="pass-top">
+          <div class="pass-goat" aria-hidden="true">🐐</div>
+          <h3>GOAT Pass</h3>
+          <div class="pass-price"><s>$3.99</s> $2.99 <small>· one time · yours forever</small></div>
+          <div class="pass-launch">🔥 Launch price — going up soon</div>
+        </div>
+        <div class="pass-body">
+          <ul class="pass-perks">
+            <li><span class="perk-ico">🐐</span><span class="perk-txt"><strong>The GOAT badge</strong><span>Your name turns gold with a 🐐 on every leaderboard — and on every scorecard you share. Everyone sees it.</span></span></li>
+            <li><span class="perk-ico">📊</span><span class="perk-txt"><strong>Your exact rank &amp; percentile</strong><span>Know precisely where you stand every day — "#312 of 2,847 · top 11%" — even outside the top 75.</span></span></li>
+            <li><span class="perk-ico">🎯</span><span class="perk-txt"><strong>The perfect build, revealed</strong><span>After every Daily, see the best build from that exact draft and how rare it was to find.</span></span></li>
+            <li><span class="perk-ico">📈</span><span class="perk-txt"><strong>Your full career stats</strong><span>Every build you've ever made, streaks, averages, elite finishes, and a play calendar.</span></span></li>
+          </ul>
+          <p class="pass-free-note">GOAT Lab is 100% free — the Pass is just optional extra fun. No gameplay is ever locked.</p>
+          <button class="pass-cta" id="passCtaBtn" type="button">Unlock GOAT Pass · $2.99</button>
+          <p class="pass-fine" id="passFine">One-time purchase. No subscription. Secure checkout via Stripe.</p>
+        </div>
+      </div>
+    </div>
 
     <div class="modal-overlay" id="shareModal" hidden>
       <div class="modal share-modal" role="dialog" aria-modal="true" aria-label="Share your build">
@@ -287,6 +326,7 @@
         <div class="share-card">
           <div class="share-card-header">
             <span class="share-card-label">GOAT Lab</span>
+            <span class="share-card-gp" id="shareCardGP" hidden>🐐 GOAT PASS</span>
             <svg id="radarShare" class="radar-share" viewBox="0 0 60 60" aria-hidden="true"></svg>
             <div class="share-card-score-block">
               <span class="share-card-score" id="shareCardScore">--</span>
@@ -459,7 +499,7 @@
     <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script defer src="firebase-init.js"></script>
     <noscript><p style="font-family:sans-serif;text-align:center;padding:2rem">GOAT Lab requires JavaScript. Please enable it in your browser settings.</p></noscript>
-    <script defer src="app.js?v=106"></script>
+    <script defer src="app.js?v=108"></script>
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {

@@ -19,6 +19,7 @@ window.GoatAuth = (() => {
   let user = null;
   let enabled = false;
   let handleCache = null;
+  let passCache = null; // GOAT Pass ownership, cached per sign-in (null = not yet read)
   const listeners = new Set();
 
   if (!isPlaceholder && typeof firebase !== "undefined") {
@@ -30,6 +31,7 @@ window.GoatAuth = (() => {
       auth.onAuthStateChanged((u) => {
         user = u;
         handleCache = null; // reset on sign-in/out
+        passCache = null;   // re-read GOAT Pass ownership for the new user
         listeners.forEach((cb) => cb(u));
       });
     } catch (e) {
@@ -84,6 +86,31 @@ window.GoatAuth = (() => {
       return h;
     },
 
+    // --- GOAT Pass (optional one-time purchase) ----------------------------
+    // Reads the goatPass flag set by the Stripe webhook on the user's doc.
+    async hasGoatPass() {
+      if (!enabled || !user) return false;
+      if (passCache !== null) return passCache;
+      try {
+        const doc = await userDoc().get();
+        passCache = !!(doc.exists && doc.data().goatPass);
+      } catch (e) { passCache = false; }
+      return passCache;
+    },
+    // Synchronous best-effort read (may be null if not fetched yet).
+    goatPassCached() { return passCache === true; },
+    // Build the Stripe checkout URL, tagging it with this user's uid so the
+    // webhook can grant the pass to the right account, and pre-filling email.
+    goatPassCheckoutUrl(base) {
+      if (!user) return base;
+      try {
+        const u = new URL(base);
+        u.searchParams.set("client_reference_id", user.uid);
+        if (user.email) u.searchParams.set("prefilled_email", user.email);
+        return u.toString();
+      } catch (e) { return base; }
+    },
+
     // --- Global daily leaderboard ------------------------------------------
     async submitDailyScore(dateStr, data) {
       if (!enabled || !user) return false;
@@ -97,6 +124,7 @@ window.GoatAuth = (() => {
         franchise: !!data.franchise,
         franchiseTeam: data.franchiseTeam || null,
         picks: data.picks || null, // stored for auditability (detect/purge fake scores)
+        goatPass: passCache === true, // drives the 🐐 badge; rules verify it's real
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
       // Increment the total player count only on first submission for this date.

@@ -2596,3 +2596,170 @@ h1 {
     margin-top: 2px;
   }
 }
+
+/* ===================================================================
+   GOAT Pass — optional one-time unlock ($2.99). Badge, unlock strip,
+   optimal reveal, exact rank, My Stats page, and the unlock modal.
+   =================================================================== */
+
+/* Badge next to names on the leaderboard */
+.goat-badge-sm { display: inline-flex; align-items: center; font-size: 0.92em; }
+
+/* Gold name tint for GOAT Pass holders (theme-safe; gold rows keep dark text) */
+.gp-name { color: var(--court-dark); }
+[data-theme="dark"] .gp-name { color: var(--gold); }
+.lb-row-me .gp-name, .lb-pod-1 .gp-name,
+[data-theme="dark"] .lb-row-me .gp-name, [data-theme="dark"] .lb-pod-1 .gp-name { color: #151413; }
+
+/* GOAT Pass tag on the share card */
+.share-card-gp {
+  font: 700 0.58rem/1 "Space Mono", ui-monospace, monospace;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: #151413; background: var(--gold);
+  border-radius: 999px; padding: 3px 8px; white-space: nowrap;
+}
+
+/* Account-bar "GOAT Pass" pill */
+.gp-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: 999px;
+  background: var(--gold); color: var(--ink);
+  border: 2px solid var(--ink);
+  font: 700 0.66rem/1 "Space Mono", ui-monospace, monospace;
+  letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap;
+}
+.gp-pill-btn { cursor: pointer; box-shadow: 2px 2px 0 var(--ink); }
+.gp-pill-btn:hover { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+
+/* Results-screen container */
+.goat-pass-result { margin-top: 12px; }
+
+/* Unlock strip (non-pass, on results) */
+.unlock-strip {
+  border: 3px solid var(--ink); background: var(--surface);
+  box-shadow: var(--shadow); padding: 14px 16px;
+  display: flex; align-items: center; gap: 14px; justify-content: space-between; flex-wrap: wrap;
+}
+.unlock-strip .us-left { display: flex; align-items: center; gap: 13px; min-width: 0; }
+.unlock-strip .us-goat {
+  width: 44px; height: 44px; flex-shrink: 0; display: grid; place-items: center; font-size: 1.5rem;
+  background: var(--gold); border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink);
+}
+.unlock-strip .us-txt strong { display: block; font: 800 0.98rem/1.15 "Playfair Display", Georgia, serif; }
+.unlock-strip .us-txt span { display: block; margin-top: 3px; color: var(--muted); font: 400 0.8rem/1.35 "Playfair Display", Georgia, serif; }
+.unlock-cta {
+  flex-shrink: 0; padding: 11px 18px; cursor: pointer; white-space: nowrap;
+  background: var(--court); color: #fff; border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink);
+  font: 800 0.8rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.04em; text-transform: uppercase;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.unlock-cta:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+.tease-wrap { margin-top: 10px; }
+.tease-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; filter: blur(4px); opacity: 0.5; pointer-events: none; user-select: none; }
+
+/* Mini chips (used by reveal, tease, and history builds) */
+.mini-chip { border: 2px solid var(--ink); background: var(--surface); padding: 7px 8px; box-shadow: 3px 3px 0 var(--ink); }
+.mini-chip .mc-stat { font: 950 0.56rem/1.1 "Space Mono", ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.mini-chip .mc-name { display: block; margin-top: 3px; font: 700 0.82rem/1.1 "Playfair Display", Georgia, serif; }
+.mini-chip.mc-best { background: var(--gold); }
+.mini-chip.mc-best .mc-stat, .mini-chip.mc-best .mc-name { color: var(--ink); }
+
+/* Optimal build reveal card (pass, on results) */
+.optimal-card { border: 3px solid var(--ink); background: var(--chalk); box-shadow: var(--shadow); padding: 16px; }
+[data-theme="dark"] .optimal-card { background: var(--surface); }
+.optimal-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.optimal-kicker { font: 700 0.62rem/1.2 "Space Mono", ui-monospace, monospace; letter-spacing: 0.07em; text-transform: uppercase; color: var(--court); }
+.optimal-score { font: 900 1.7rem/1 "Space Mono", ui-monospace, monospace; color: var(--ink); }
+.optimal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+.optimal-foot { margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(21,20,19,0.25); text-align: center; font: 700 0.76rem/1.4 "Space Mono", ui-monospace, monospace; color: var(--green); }
+[data-theme="dark"] .optimal-foot { border-color: rgba(243,236,219,0.25); color: #4fc9a6; }
+
+/* Exact rank banner on the leaderboard */
+.lb-rank-banner { max-width: 620px; margin: 0 auto 18px; }
+.lb-rank-card {
+  border: 3px solid var(--ink); background: var(--paper); box-shadow: var(--shadow);
+  padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px;
+}
+.lb-rank-kicker { font: 700 0.6rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lb-rank-big { font: 900 1.9rem/1 "Space Mono", ui-monospace, monospace; margin-top: 5px; }
+.lb-rank-big small { font-size: 0.95rem; color: var(--muted); }
+.lb-rank-pct { text-align: center; flex-shrink: 0; padding: 9px 15px; background: var(--court); color: #fff; border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+.lb-rank-pct-num { font: 900 1.5rem/1 "Space Mono", ui-monospace, monospace; }
+.lb-rank-pct-label { margin-top: 3px; font: 700 0.56rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.07em; text-transform: uppercase; }
+.lb-rank-teaser {
+  width: 100%; padding: 12px; cursor: pointer; text-align: center;
+  border: 2px dashed rgba(21,20,19,0.35); background: transparent; color: var(--ink);
+  font: 700 0.78rem/1.3 "Space Mono", ui-monospace, monospace; letter-spacing: 0.03em;
+}
+[data-theme="dark"] .lb-rank-teaser { border-color: rgba(243,236,219,0.35); }
+.lb-rank-teaser strong { color: var(--court); }
+.lb-rank-teaser:hover { background: rgba(201,103,61,0.08); }
+
+/* My Stats page */
+.stats-page { padding: 8px 4px 40px; animation: lb-fade 0.2s ease; }
+.stats-panel-title { max-width: 620px; margin: 26px auto 10px; font: 700 0.7rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+#statsBody { max-width: 620px; margin: 0 auto; }
+
+/* Stat tiles */
+.stat-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 0 4px; }
+.stat-tile { border: 2px solid var(--ink); background: var(--surface); box-shadow: 4px 4px 0 var(--ink); padding: 14px 12px 12px; text-align: center; }
+.stat-tile-num { font: 900 1.9rem/1 "Space Mono", ui-monospace, monospace; color: var(--ink); }
+.stat-tile-label { margin-top: 6px; color: var(--muted); font: 700 0.58rem/1.2 "Space Mono", ui-monospace, monospace; letter-spacing: 0.06em; text-transform: uppercase; }
+.stat-tile-gold { background: var(--gold); }
+.stat-tile-gold .stat-tile-num, .stat-tile-gold .stat-tile-label { color: var(--ink); }
+.stat-tile-fire .stat-tile-num { color: var(--court); }
+
+/* Play-calendar heatmap */
+.heatmap { width: max-content; max-width: 100%; margin: 0 auto; display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 1fr); gap: 3px; overflow-x: auto; border: 2px solid var(--ink); background: var(--surface); box-shadow: 4px 4px 0 var(--ink); padding: 12px; }
+.hm-cell { width: 13px; height: 13px; border-radius: 2px; background: rgba(21,20,19,0.08); }
+[data-theme="dark"] .hm-cell { background: rgba(243,236,219,0.08); }
+.hm-1 { background: #cfe6dd; } .hm-2 { background: #7fc4ac; } .hm-3 { background: #3ea081; } .hm-4 { background: #157f68; }
+.hm-goat { background: var(--gold); box-shadow: inset 0 0 0 1.5px var(--ink); }
+.hm-legend { max-width: 620px; margin: 8px auto 0; display: flex; align-items: center; gap: 6px; justify-content: flex-end; color: var(--muted); font: 700 0.58rem/1 "Space Mono", ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.05em; }
+.hm-legend .hm-cell { width: 11px; height: 11px; }
+
+/* Daily history list (expandable) */
+.hist-list { display: grid; gap: 6px; }
+.hist-row { display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 12px; padding: 11px 14px; border: 2px solid var(--ink); background: var(--paper); cursor: pointer; font-family: "Playfair Display", Georgia, serif; }
+.hist-caret { color: var(--muted); font-family: "Space Mono", monospace; transition: transform 0.15s ease; }
+.hist-row.open .hist-caret { transform: rotate(90deg); }
+.hist-tier { font-weight: 700; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hist-date { font: 700 0.72rem/1.1 "Space Mono", ui-monospace, monospace; color: var(--muted); }
+.hist-score { display: grid; place-items: center; min-width: 42px; height: 32px; background: var(--ink-bg); color: var(--chalk); font: 950 1rem/1 "Space Mono", ui-monospace, monospace; }
+.hist-score.is-goat { background: var(--gold); color: var(--ink); }
+.hist-build { display: none; grid-column: 1 / -1; margin-top: 10px; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+.hist-row.open .hist-build { display: grid; }
+.hist-build .bd-empty { grid-column: 1 / -1; color: var(--muted); font: 400 0.82rem/1.4 "Playfair Display", Georgia, serif; }
+
+/* Locked (free-user) state on stats */
+.locked-wrap { position: relative; }
+.locked-blur { filter: blur(5px); opacity: 0.5; pointer-events: none; user-select: none; }
+.locked-gate { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; padding: 20px; }
+.locked-gate .lock-ico { font-size: 1.8rem; }
+.locked-gate .lock-txt { font: 700 0.82rem/1.4 "Space Mono", ui-monospace, monospace; color: var(--ink); max-width: 280px; }
+
+/* Unlock modal */
+.pass-modal { max-width: 380px; padding: 0; overflow: hidden; }
+.pass-modal .modal-close { position: absolute; top: 10px; right: 10px; z-index: 2; color: var(--ink); }
+.pass-top { background: var(--gold); color: var(--ink); padding: 22px 20px 16px; text-align: center; border-bottom: 3px solid var(--ink); }
+.pass-top .pass-goat { font-size: 2.3rem; line-height: 1; }
+.pass-top h3 { margin: 6px 0 2px; font-family: "Playfair Display", Georgia, serif; font-size: 1.6rem; }
+.pass-price { font: 900 1.05rem/1 "Space Mono", ui-monospace, monospace; }
+.pass-price s { opacity: 0.5; font-weight: 400; }
+.pass-price small { font-size: 0.68rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.06em; }
+.pass-launch { margin-top: 7px; display: inline-block; background: var(--court); color: #fff; border: 2px solid var(--ink); padding: 3px 10px; font: 700 0.56rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.08em; text-transform: uppercase; }
+.pass-body { padding: 20px; }
+.pass-perks { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 13px; }
+.pass-perks li { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; }
+.pass-perks .perk-ico { width: 34px; height: 34px; display: grid; place-items: center; flex-shrink: 0; border: 2px solid var(--ink); background: var(--surface); font-size: 1.05rem; }
+.pass-perks .perk-txt strong { display: block; font: 700 0.9rem/1.2 "Playfair Display", Georgia, serif; }
+.pass-perks .perk-txt span { display: block; margin-top: 2px; color: var(--muted); font-size: 0.8rem; line-height: 1.35; }
+.pass-free-note { margin: 0 0 14px; text-align: center; color: var(--muted); font: 400 0.78rem/1.4 "Playfair Display", Georgia, serif; }
+.pass-cta { width: 100%; padding: 14px; cursor: pointer; background: var(--court); color: #fff; border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); font: 800 0.92rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.04em; text-transform: uppercase; transition: transform 0.1s ease, box-shadow 0.1s ease; }
+.pass-cta:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+.pass-fine { text-align: center; margin: 12px 0 0; color: var(--muted); font: 400 0.74rem/1.4 "Playfair Display", Georgia, serif; }
+
+@media (max-width: 460px) {
+  .stat-tiles { grid-template-columns: repeat(2, 1fr); }
+  .optimal-grid, .tease-grid, .hist-build { grid-template-columns: repeat(2, 1fr); }
+}
