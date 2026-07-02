@@ -156,6 +156,22 @@ window.GoatAuth = (() => {
         return { count: d.playerCount || 0, hist: d.scoreHist || {} };
       } catch (e) { return null; }
     },
+    // Full read of every score for a day — used only to (re)build the summary
+    // when it's missing or incomplete, so it happens at most once per day.
+    async getAllDailyScores(dateStr) {
+      if (!enabled) return [];
+      try {
+        const snap = await entriesRef(dateStr).get();
+        return snap.docs.map((d) => d.data().score).filter((s) => typeof s === "number");
+      } catch (e) { return []; }
+    },
+    // Overwrite the daily summary with an accurate snapshot (backfill).
+    async writeDailyHist(dateStr, hist, count) {
+      if (!enabled) return;
+      const ref = db.collection("dailyLeaderboard").doc(dateStr);
+      try { await ref.update({ scoreHist: hist, playerCount: count }); }
+      catch (e) { try { await ref.set({ scoreHist: hist, playerCount: count }, { merge: true }); } catch (e2) {} }
+    },
     async getDailyLeaderboard(dateStr, topN = 100) {
       if (!enabled) return [];
       const snap = await entriesRef(dateStr).orderBy("score", "desc").limit(topN).get();

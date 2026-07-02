@@ -5395,11 +5395,21 @@ updateBody(null);
     }
 
     // Distribution bar + exact rank fill in once the aggregate resolves
-    // (non-blocking). Old days without an aggregate fall back to the top-75 rows.
-    aggPromise.then(agg => {
-      const hist = (agg && agg.hist && Object.keys(agg.hist).length)
-        ? agg.hist
-        : scoresToHist(rows.map(r => r.score));
+    // (non-blocking). The summary covers EVERY player who's played; if it looks
+    // incomplete (missing, or fewer than the tracked player count), read the
+    // full set once, use it, and write the summary back so later views are cheap.
+    aggPromise.then(async agg => {
+      let hist = agg && agg.hist ? agg.hist : {};
+      const count = agg ? (agg.count || 0) : 0;
+      if (histTotal(hist) === 0 || histTotal(hist) < count) {
+        try {
+          const scores = await Auth.getAllDailyScores(targetDate);
+          if (scores.length) {
+            hist = scoresToHist(scores);
+            Auth.writeDailyHist(targetDate, hist, scores.length); // fire-and-forget backfill
+          }
+        } catch (e) {}
+      }
       renderDistBar(hist);
       renderRankBanner(hist, rows, me, isToday);
     });
@@ -5772,18 +5782,24 @@ updateBody(null);
         <div class="optimal-foot" id="optimalFoot">The highest score possible from today's exact draft.</div>
       </div>`;
   }
-  function fillOptimalRarity(dateStr, optScore) {
-    Auth.getDailyAggregate(dateStr).then((agg) => {
+  async function fillOptimalRarity(dateStr, optScore) {
+    try {
+      const agg = await Auth.getDailyAggregate(dateStr);
+      let hist = agg && agg.hist ? agg.hist : {};
+      const count = agg ? (agg.count || 0) : 0;
+      if (histTotal(hist) === 0 || histTotal(hist) < count) {
+        const scores = await Auth.getAllDailyScores(dateStr);
+        if (scores.length) { hist = scoresToHist(scores); Auth.writeDailyHist(dateStr, hist, scores.length); }
+      }
       const foot = document.querySelector("#optimalFoot");
-      if (!foot || !agg || !agg.hist) return;
-      const total = histTotal(agg.hist);
-      if (!total) return;
-      const n = histAbove(agg.hist, optScore - 1); // scores >= optScore
+      const total = histTotal(hist);
+      if (!foot || !total) return;
+      const n = histAbove(hist, optScore - 1); // scores >= optScore
       const pct = Math.max(1, Math.round((n / total) * 100));
       foot.textContent = n === 0
         ? `No one has matched ${optScore} yet today — the draft's ceiling is still standing.`
         : `Only ${pct}% of today's players matched this score (${optScore}).`;
-    }).catch(() => {});
+    } catch (e) {}
   }
   function unlockStripHTML(opt) {
     const tease = opt.picks.slice(0, 6).map((p) =>
