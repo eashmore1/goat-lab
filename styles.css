@@ -1220,19 +1220,6 @@ h1 {
 .coffee-cta-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .discord-cta { background: #5865f2; }
 
-.lb-discord {
-  max-width: 620px; margin: 20px auto 8px;
-  text-align: center;
-}
-.lb-discord a {
-  font: 700 0.75rem/1 "Space Mono", ui-monospace, monospace;
-  color: #5865f2;
-  text-decoration: none;
-  letter-spacing: 0.04em;
-  opacity: 0.85;
-  transition: opacity 0.12s;
-}
-.lb-discord a:hover { opacity: 1; }
 
 .site-footer {
   text-align: center;
