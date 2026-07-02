@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script>
+      try { if (localStorage.getItem("goatlab_theme") === "dark") document.documentElement.setAttribute("data-theme", "dark"); } catch (e) {}
+    </script>
+    <title>GOAT Pass — Placement Preview</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/png" sizes="96x96" href="favicon-v2.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=45" />
+    <style>
+      /* PREVIEW-ONLY — shows where the GOAT Pass sits vs. a demoted Ko-fi.
+         Nothing wired into the game. */
+      .preview-banner {
+        position: sticky; top: 0; z-index: 50;
+        background: var(--ink-bg); color: var(--chalk);
+        text-align: center; padding: 9px 14px;
+        font: 700 0.72rem/1.3 "Space Mono", ui-monospace, monospace;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        border-bottom: 2px solid var(--court);
+      }
+      .preview-wrap { max-width: 680px; margin: 0 auto; padding: 0 16px 80px; }
+      .section-label { margin: 54px 0 8px; display: flex; align-items: center; gap: 12px; }
+      .section-label::before, .section-label::after { content: ""; flex: 1; height: 2px; background: rgba(21,20,19,0.14); }
+      [data-theme="dark"] .section-label::before, [data-theme="dark"] .section-label::after { background: rgba(243,236,219,0.14); }
+      .section-label span { font: 700 0.68rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--court); }
+      .section-note { text-align: center; color: var(--muted); font: 400 0.85rem/1.4 "Playfair Display", Georgia, serif; margin: 0 auto 22px; max-width: 520px; }
+
+      /* faux results-screen frame so the context reads clearly */
+      .screen-frame { border: 2px dashed rgba(21,20,19,0.25); border-radius: 10px; padding: 16px; }
+      [data-theme="dark"] .screen-frame { border-color: rgba(243,236,219,0.2); }
+      .screen-tag { font: 700 0.6rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+
+      .goat-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; background: var(--gold); color: var(--ink); border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); font: 700 0.66rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
+
+      /* THE unlock strip — the new prominent Pass CTA on the results screen */
+      .unlock-strip {
+        margin-top: 12px; border: 3px solid var(--ink); background: var(--surface);
+        box-shadow: var(--shadow); padding: 15px 16px;
+        display: flex; align-items: center; gap: 14px; justify-content: space-between; flex-wrap: wrap;
+      }
+      .unlock-strip .us-left { display: flex; align-items: center; gap: 13px; min-width: 0; }
+      .unlock-strip .us-goat {
+        width: 46px; height: 46px; flex-shrink: 0; display: grid; place-items: center; font-size: 1.6rem;
+        background: var(--gold); border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink);
+      }
+      .unlock-strip .us-txt strong { display: block; font: 800 1rem/1.15 "Playfair Display", Georgia, serif; }
+      .unlock-strip .us-txt span { display: block; margin-top: 3px; color: var(--muted); font: 400 0.8rem/1.35 "Playfair Display", Georgia, serif; }
+      .unlock-cta {
+        flex-shrink: 0; padding: 12px 18px; cursor: pointer; white-space: nowrap;
+        background: var(--court); color: #fff; border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink);
+        font: 800 0.82rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.04em; text-transform: uppercase;
+        transition: transform 0.1s ease, box-shadow 0.1s ease;
+      }
+      .unlock-cta:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+
+      /* teased optimal build behind the lock */
+      .tease-wrap { position: relative; margin-top: 12px; }
+      .tease-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; filter: blur(4px); opacity: 0.5; pointer-events: none; user-select: none; }
+      @media (max-width: 460px) { .tease-grid { grid-template-columns: repeat(2, 1fr); } }
+      .mini-chip { border: 2px solid var(--ink); background: var(--surface); padding: 7px 8px; box-shadow: 3px 3px 0 var(--ink); }
+      .mini-chip .mc-stat { font: 950 0.56rem/1.1 "Space Mono", ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+      .mini-chip .mc-name { display: block; margin-top: 3px; font: 700 0.82rem/1.1 "Playfair Display", Georgia, serif; }
+      .mini-chip.mc-best { background: var(--gold); }
+      .mini-chip.mc-best .mc-stat, .mini-chip.mc-best .mc-name { color: var(--ink); }
+
+      /* optimal reveal (pass holder — fully shown) */
+      .optimal-card { border: 3px solid var(--ink); background: var(--chalk); box-shadow: var(--shadow); padding: 16px; margin-top: 12px; }
+      [data-theme="dark"] .optimal-card { background: var(--surface); }
+      .optimal-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+      .optimal-kicker { font: 700 0.64rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.09em; text-transform: uppercase; color: var(--court); }
+      .optimal-score { font: 900 1.7rem/1 "Space Mono", ui-monospace, monospace; }
+      .optimal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+      @media (max-width: 460px) { .optimal-grid { grid-template-columns: repeat(2, 1fr); } }
+      .optimal-foot { margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(21,20,19,0.25); text-align: center; font: 700 0.76rem/1.4 "Space Mono", ui-monospace, monospace; color: var(--green); }
+      [data-theme="dark"] .optimal-foot { border-color: rgba(243,236,219,0.25); color: #4fc9a6; }
+
+      /* demoted ko-fi — tiny text link only */
+      .kofi-tiny { text-align: center; margin-top: 16px; }
+      .kofi-tiny a { color: var(--muted); text-decoration: none; font: 400 0.76rem/1.4 "Playfair Display", Georgia, serif; opacity: 0.75; }
+      .kofi-tiny a:hover { opacity: 1; text-decoration: underline; }
+
+      /* faux settings menu to show where ko-fi now lives */
+      .fake-settings { max-width: 280px; border: 2px solid var(--ink); background: var(--surface); box-shadow: var(--shadow); padding: 6px; }
+      .fs-item { display: block; width: 100%; text-align: left; padding: 10px 12px; background: none; border: none; color: var(--ink); font: 700 0.82rem/1 "Space Mono", ui-monospace, monospace; text-decoration: none; }
+      .fs-item:hover { background: rgba(21,20,19,0.06); }
+      .fs-div { height: 1px; background: rgba(21,20,19,0.12); margin: 4px 0; }
+
+      .discord-cta {
+        display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 999px;
+        background: #5865f2; color: #fff !important; font-weight: 700; font-size: 0.86rem; text-decoration: none;
+        border: 1.5px solid var(--ink); box-shadow: 2px 2px 0 var(--ink);
+      }
+      .cta-row { display: flex; justify-content: center; margin-top: 14px; }
+      .prev-nav { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 20px 0 0; }
+      .prev-nav a { text-decoration: none; padding: 7px 12px; border: 2px solid var(--ink); background: var(--surface); color: var(--ink); font: 700 0.68rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.04em; text-transform: uppercase; box-shadow: 2px 2px 0 var(--ink); }
+    </style>
+  </head>
+  <body>
+    <div class="preview-banner">🐐 GOAT Pass placement — where it sits vs. a demoted Ko-fi · preview only</div>
+
+    <div class="preview-wrap">
+      <div class="prev-nav">
+        <a href="#free">Results (free user)</a>
+        <a href="#paid">Results (pass holder)</a>
+        <a href="#kofi">Where Ko-fi goes</a>
+      </div>
+
+      <!-- ========== RESULTS SCREEN — FREE USER ========== -->
+      <div class="section-label"><span>Results screen · free user</span></div>
+      <p class="section-note">Peak moment — they just finished and saw their score. The GOAT Pass strip is the loudest thing after the score, with the perfect build teased right behind it. No coffee button competing for the tap.</p>
+
+      <div id="free" class="screen-frame">
+        <div class="screen-tag">▾ Results screen</div>
+
+        <!-- real result banner -->
+        <section class="result" style="position:static">
+          <div>
+            <p class="kicker">Final Build</p>
+            <h2 style="margin:0">Daily — 96: GOAT Candidate</h2>
+            <p style="margin:6px 0 0">Prime two-way wing. Come back tomorrow for a new challenge.</p>
+          </div>
+          <div class="result-actions">
+            <button id="shareButton" type="button">Share</button>
+            <button class="play-again-btn" type="button">Play Again</button>
+          </div>
+        </section>
+
+        <!-- THE prominent Pass CTA -->
+        <div class="unlock-strip">
+          <div class="us-left">
+            <div class="us-goat">🐐</div>
+            <div class="us-txt">
+              <strong>See the perfect 100 build</strong>
+              <span>+ your exact rank &amp; the 🐐 badge on every board</span>
+            </div>
+          </div>
+          <button class="unlock-cta" type="button">Unlock · $3.99</button>
+        </div>
+
+        <!-- teased optimal build behind lock -->
+        <div class="tease-wrap">
+          <div class="tease-grid">
+            <div class="mini-chip"><span class="mc-stat">Height</span><span class="mc-name">Wilt Chamberlain</span></div>
+            <div class="mini-chip"><span class="mc-stat">Shooting</span><span class="mc-name">Stephen Curry</span></div>
+            <div class="mini-chip"><span class="mc-stat">Finishing</span><span class="mc-name">Shaquille O'Neal</span></div>
+            <div class="mini-chip"><span class="mc-stat">Handles</span><span class="mc-name">Kyrie Irving</span></div>
+            <div class="mini-chip"><span class="mc-stat">Passing</span><span class="mc-name">Magic Johnson</span></div>
+            <div class="mini-chip"><span class="mc-stat">Defense</span><span class="mc-name">Hakeem Olajuwon</span></div>
+          </div>
+        </div>
+
+        <!-- discord stays, ko-fi is gone from here -->
+        <div class="cta-row"><a href="#" class="discord-cta">💬 Argue your build on Discord</a></div>
+      </div>
+
+      <!-- ========== RESULTS SCREEN — PASS HOLDER ========== -->
+      <div class="section-label"><span>Results screen · pass holder</span></div>
+      <p class="section-note">Already bought — no upsell, ever. They just get the reward: the full perfect build and how rare it was. Clean and premium.</p>
+
+      <div id="paid" class="screen-frame">
+        <div class="screen-tag">▾ Results screen · 🐐 GOAT Pass</div>
+
+        <section class="result" style="position:static">
+          <div>
+            <p class="kicker">Final Build</p>
+            <h2 style="margin:0">Daily — 96: GOAT Candidate</h2>
+            <p style="margin:6px 0 0">Prime two-way wing. Come back tomorrow for a new challenge.</p>
+          </div>
+          <div class="result-actions">
+            <button id="shareButton" type="button">Share</button>
+            <button class="play-again-btn" type="button">Play Again</button>
+          </div>
+        </section>
+
+        <div class="optimal-card">
+          <div class="optimal-head">
+            <span class="optimal-kicker">🐐 The Perfect Build</span>
+            <span class="optimal-score">100</span>
+          </div>
+          <div class="optimal-grid">
+            <div class="mini-chip"><span class="mc-stat">Height</span><span class="mc-name">Wilt Chamberlain</span></div>
+            <div class="mini-chip"><span class="mc-stat">Shooting</span><span class="mc-name">Stephen Curry</span></div>
+            <div class="mini-chip"><span class="mc-stat">Finishing</span><span class="mc-name">Shaquille O'Neal</span></div>
+            <div class="mini-chip"><span class="mc-stat">Handles</span><span class="mc-name">Kyrie Irving</span></div>
+            <div class="mini-chip"><span class="mc-stat">Passing</span><span class="mc-name">Magic Johnson</span></div>
+            <div class="mini-chip"><span class="mc-stat">Defense</span><span class="mc-name">Hakeem Olajuwon</span></div>
+            <div class="mini-chip"><span class="mc-stat">Rebounding</span><span class="mc-name">Dennis Rodman</span></div>
+            <div class="mini-chip mc-best"><span class="mc-stat">Athleticism</span><span class="mc-name">Michael Jordan</span></div>
+            <div class="mini-chip"><span class="mc-stat">IQ</span><span class="mc-name">Larry Bird</span></div>
+          </div>
+          <div class="optimal-foot">Only 3.2% of players found the perfect build today.</div>
+        </div>
+
+        <div class="cta-row"><a href="#" class="discord-cta">💬 Argue your build on Discord</a></div>
+      </div>
+
+      <!-- ========== WHERE KO-FI GOES ========== -->
+      <div class="section-label"><span>Where Ko-fi goes now</span></div>
+      <p class="section-note">Ko-fi doesn't compete with the Pass anymore. It survives as a tiny link in the Settings menu — there for the die-hards who already bought the Pass and still want to chip in, invisible to everyone else.</p>
+
+      <div id="kofi" style="display:flex;flex-direction:column;align-items:center;gap:24px">
+        <div>
+          <div class="screen-tag" style="text-align:center">Settings menu</div>
+          <div class="fake-settings">
+            <div style="padding:8px 12px 4px;font:700 0.6rem/1 'Space Mono',monospace;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">Theme · Light / Dark</div>
+            <div class="fs-div"></div>
+            <a class="fs-item" href="#">☕ Support the dev</a>
+            <button class="fs-item" type="button">Sign out</button>
+          </div>
+        </div>
+
+        <div style="text-align:center">
+          <div class="screen-tag">…or as a whisper-quiet footer line</div>
+          <div class="kofi-tiny"><a href="#">Enjoying GOAT Lab? Support the dev ☕</a></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
