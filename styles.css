@@ -1234,6 +1234,14 @@ h1 {
   transition: opacity 0.12s;
 }
 .footer-discord:hover { opacity: 0.8; }
+.footer-sep { color: var(--muted); font: 700 0.75rem/1 "Space Mono", ui-monospace, monospace; opacity: 0.6; }
+.footer-support-subtle {
+  font: 700 0.75rem/1 "Space Mono", ui-monospace, monospace;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; opacity: 0.8;
+  transition: opacity 0.12s;
+}
+.footer-support-subtle:hover { opacity: 1; }
 
 /* Result-screen ad slot — gentle, clearly labelled, no layout shift (hidden until filled) */
 .result-ad {

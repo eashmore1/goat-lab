@@ -5983,6 +5983,10 @@ updateBody(null);
   if (myStatsBtn) myStatsBtn.addEventListener("click", openStats);
   if (statsBackBtn) statsBackBtn.addEventListener("click", closeStats);
 
+  // Top-of-page GOAT Pass button: holders jump to their stats, others see the unlock.
+  const goatPassTopBtn = document.querySelector("#goatPassTop");
+  if (goatPassTopBtn) goatPassTopBtn.addEventListener("click", () => { if (hasPass) openStats(); else openPassModal(); });
+
   // Reflect pass state across the UI (called on sign-in and after a refresh).
   function updatePassUI() {
     window.GoatPassActive = hasPass; // read by the share-image renderer (global scope)
