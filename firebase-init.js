@@ -117,6 +117,9 @@ window.GoatAuth = (() => {
       const name = String(data.name || handleCache || this.displayName()).slice(0, 40);
       const entryRef = entriesRef(dateStr).doc(user.uid);
       const existing = await entryRef.get();
+      const clamp = (s) => Math.max(0, Math.min(100, Math.round(Number(s) || 0)));
+      const newScore = clamp(data.score);
+      const oldScore = existing.exists ? clamp(existing.data().score) : null;
       await entryRef.set({
         name,
         score: Number(data.score) || 0,
@@ -127,22 +130,31 @@ window.GoatAuth = (() => {
         goatPass: passCache === true, // drives the 🐐 badge; rules verify it's real
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
-      // Increment the total player count only on first submission for this date.
+      // Maintain a running tally on the daily doc so the leaderboard can read ONE
+      // document (count + score histogram) instead of every player's score.
+      const inc = firebase.firestore.FieldValue.increment.bind(firebase.firestore.FieldValue);
+      const agg = {};
       if (!existing.exists) {
-        db.collection("dailyLeaderboard").doc(dateStr).set(
-          { playerCount: firebase.firestore.FieldValue.increment(1) },
-          { merge: true }
-        ).catch(() => {});
+        agg.playerCount = inc(1);
+        agg.scoreHist = { [newScore]: inc(1) };
+      } else if (oldScore !== newScore) {
+        agg.scoreHist = { [oldScore]: inc(-1), [newScore]: inc(1) };
+      }
+      if (Object.keys(agg).length) {
+        db.collection("dailyLeaderboard").doc(dateStr).set(agg, { merge: true }).catch(() => {});
       }
       return true;
     },
 
-    async getAllDailyScores(dateStr) {
-      if (!enabled) return [];
+    // One cheap read: { count, hist } where hist maps score -> number of players.
+    async getDailyAggregate(dateStr) {
+      if (!enabled) return null;
       try {
-        const snap = await entriesRef(dateStr).get();
-        return snap.docs.map(d => d.data().score).filter(s => typeof s === "number");
-      } catch (e) { return []; }
+        const doc = await db.collection("dailyLeaderboard").doc(dateStr).get();
+        if (!doc.exists) return null;
+        const d = doc.data();
+        return { count: d.playerCount || 0, hist: d.scoreHist || {} };
+      } catch (e) { return null; }
     },
     async getDailyLeaderboard(dateStr, topN = 100) {
       if (!enabled) return [];

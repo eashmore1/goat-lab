@@ -5299,11 +5299,17 @@ updateBody(null);
     { label: "≤85",     min: 0,   max: 85,  color: "#c5bfb3" },
   ];
 
-  function renderDistBar(scores) {
-    if (!lbDist || !scores.length) { if (lbDist) lbDist.hidden = true; return; }
-    const total = scores.length;
+  // --- Score histogram helpers (score -> player count) --------------------
+  function histTotal(hist) { let n = 0; for (const k in hist) n += hist[k] || 0; return n; }
+  function histBetween(hist, min, max) { let n = 0; for (const k in hist) { const v = +k; if (v >= min && v <= max) n += hist[k] || 0; } return n; }
+  function histAbove(hist, x) { let n = 0; for (const k in hist) { if (+k > x) n += hist[k] || 0; } return n; }
+  function scoresToHist(scores) { const h = {}; scores.forEach(s => { const k = Math.max(0, Math.min(100, Math.round(s))); h[k] = (h[k] || 0) + 1; }); return h; }
+
+  function renderDistBar(hist) {
+    const total = histTotal(hist);
+    if (!lbDist || !total) { if (lbDist) lbDist.hidden = true; return; }
     const bars = DIST_TIERS.map(t => {
-      const count = scores.filter(s => s >= t.min && s <= t.max).length;
+      const count = histBetween(hist, t.min, t.max);
       const pct = Math.round(count / total * 100);
       if (!count) return "";
       return `<div class="lb-dist-row">
@@ -5350,8 +5356,9 @@ updateBody(null);
     lbList.hidden = false;
     lbList.innerHTML = `<p class="lb-empty">Loading ${isToday ? "today" : "yesterday"}'s board…</p>`;
 
-    // Fire both reads simultaneously — leaderboard (top 75) + all scores for count + distribution.
-    const allScoresPromise = Auth.getAllDailyScores(targetDate).catch(() => []);
+    // Fire both reads simultaneously — leaderboard (top 75) + the daily aggregate
+    // (ONE doc: player count + score histogram) for count, distribution, and rank.
+    const aggPromise = Auth.getDailyAggregate(targetDate).catch(() => null);
     let rows;
     try {
       rows = await Auth.getDailyLeaderboard(targetDate, 75);
@@ -5387,12 +5394,14 @@ updateBody(null);
         : '<p class="lb-empty lb-empty-rest">Only the podium so far — climb on!</p>';
     }
 
-    // Player count + distribution bar + exact rank fill in once all-scores
-    // resolves (non-blocking).
-    allScoresPromise.then(allScores => {
-      const fallback = allScores.length ? allScores : rows.map(r => r.score);
-      renderDistBar(fallback);
-      renderRankBanner(fallback, rows, me, isToday);
+    // Distribution bar + exact rank fill in once the aggregate resolves
+    // (non-blocking). Old days without an aggregate fall back to the top-75 rows.
+    aggPromise.then(agg => {
+      const hist = (agg && agg.hist && Object.keys(agg.hist).length)
+        ? agg.hist
+        : scoresToHist(rows.map(r => r.score));
+      renderDistBar(hist);
+      renderRankBanner(hist, rows, me, isToday);
     });
 
     // Only pin the user's own score when viewing today's board.
@@ -5764,11 +5773,13 @@ updateBody(null);
       </div>`;
   }
   function fillOptimalRarity(dateStr, optScore) {
-    Auth.getAllDailyScores(dateStr).then((scores) => {
+    Auth.getDailyAggregate(dateStr).then((agg) => {
       const foot = document.querySelector("#optimalFoot");
-      if (!foot || !scores.length) return;
-      const n = scores.filter((s) => s >= optScore).length;
-      const pct = Math.max(1, Math.round((n / scores.length) * 100));
+      if (!foot || !agg || !agg.hist) return;
+      const total = histTotal(agg.hist);
+      if (!total) return;
+      const n = histAbove(agg.hist, optScore - 1); // scores >= optScore
+      const pct = Math.max(1, Math.round((n / total) * 100));
       foot.textContent = n === 0
         ? `No one has matched ${optScore} yet today — the draft's ceiling is still standing.`
         : `Only ${pct}% of today's players matched this score (${optScore}).`;
@@ -5807,16 +5818,16 @@ updateBody(null);
   }
 
   // --- Exact rank + percentile on the leaderboard -------------------------
-  function renderRankBanner(allScores, rows, me, isToday) {
+  function renderRankBanner(hist, rows, me, isToday) {
     if (!lbRankBanner) return;
-    if (!me || !allScores.length) { lbRankBanner.hidden = true; return; }
+    const total = histTotal(hist);
+    if (!me || !total) { lbRankBanner.hidden = true; return; }
     let myScore = null;
     const myRow = rows.find((r) => r.uid === me.uid);
     if (myRow) myScore = myRow.score;
     else if (isToday) { try { myScore = getDailyHistory()[getTodayStr()]?.score ?? null; } catch (e) {} }
     if (myScore == null) { lbRankBanner.hidden = true; return; }
-    const total = allScores.length;
-    const rank = allScores.filter((s) => s > myScore).length + 1;
+    const rank = histAbove(hist, myScore) + 1;
     const pct = Math.max(1, Math.round((rank / total) * 100));
     if (hasPass) {
       lbRankBanner.innerHTML = `
@@ -5883,6 +5894,7 @@ updateBody(null);
     const best = scores.length ? Math.max(...scores) : 0;
     const perfect = scores.filter((s) => s === 100).length;
     const elite = scores.filter((s) => s >= 97).length;
+    const strong90 = scores.filter((s) => s >= 90).length;
     const allAvg = scores.length ? Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 10) / 10 : 0;
     const cur = getDailyStreak(history, today);
     const long = computeLongestStreak(history);
@@ -5895,6 +5907,7 @@ updateBody(null);
         <div class="stat-tile stat-tile-gold"><div class="stat-tile-num">${best}</div><div class="stat-tile-label">Best Score</div></div>
         <div class="stat-tile"><div class="stat-tile-num">${elite}</div><div class="stat-tile-label">Elite ≥97</div></div>
         <div class="stat-tile"><div class="stat-tile-num">${perfect}</div><div class="stat-tile-label">Perfect 100s</div></div>
+        <div class="stat-tile"><div class="stat-tile-num">${strong90}</div><div class="stat-tile-label">90+ Finishes</div></div>
         <div class="stat-tile"><div class="stat-tile-num">${avg || "—"}</div><div class="stat-tile-label">Avg · Last 30</div></div>
         <div class="stat-tile"><div class="stat-tile-num">${allAvg || "—"}</div><div class="stat-tile-label">Avg · All-Time</div></div>
       </div>`;
@@ -5926,7 +5939,7 @@ updateBody(null);
       const e = history[d];
       const picks = Array.isArray(e.picks) ? e.picks : [];
       const chips = picks.length
-        ? picks.map((p) => `<div class="mini-chip"><span class="mc-stat">${esc(p.attrShort || p.attrLabel || "")}</span><span class="mc-name">${esc(p.playerName || "—")}</span></div>`).join("")
+        ? picks.map((p) => `<div class="mini-chip"><span class="mc-stat">${esc(p.attrShort || p.attrLabel || "")}${p.score != null ? `<b class="mc-pscore">${esc(p.score)}</b>` : ""}</span><span class="mc-name">${esc(p.playerName || "—")}</span></div>`).join("")
         : `<p class="bd-empty">Build details weren't saved for this day.</p>`;
       const isGoat = e.score === 100;
       return `

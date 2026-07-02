@@ -2667,10 +2667,12 @@ h1 {
 
 /* Mini chips (used by reveal, tease, and history builds) */
 .mini-chip { border: 2px solid var(--ink); background: var(--surface); padding: 7px 8px; box-shadow: 3px 3px 0 var(--ink); }
-.mini-chip .mc-stat { font: 950 0.56rem/1.1 "Space Mono", ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.mini-chip .mc-stat { display: flex; align-items: center; justify-content: space-between; gap: 6px; font: 950 0.56rem/1.1 "Space Mono", ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.mini-chip .mc-pscore { font: 950 0.72rem/1 "Space Mono", ui-monospace, monospace; color: var(--court); }
 .mini-chip .mc-name { display: block; margin-top: 3px; font: 700 0.82rem/1.1 "Playfair Display", Georgia, serif; }
 .mini-chip.mc-best { background: var(--gold); }
 .mini-chip.mc-best .mc-stat, .mini-chip.mc-best .mc-name { color: var(--ink); }
+.mini-chip.mc-best .mc-pscore { color: var(--court-dark); }
 
 /* Optimal build reveal card (pass, on results) */
 .optimal-card { border: 3px solid var(--ink); background: var(--chalk); box-shadow: var(--shadow); padding: 16px; }

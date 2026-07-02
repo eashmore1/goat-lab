@@ -10,7 +10,7 @@ service cloud.firestore {
     match /dailyLeaderboard/{date} {
       allow read: if true;
       allow write: if request.auth != null
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['playerCount']);
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['playerCount', 'scoreHist']);
     }
     match /dailyLeaderboard/{date}/entries/{uid} {
       allow read: if true;
