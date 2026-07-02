@@ -40,7 +40,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=51" />
+    <link rel="stylesheet" href="styles.css?v=52" />
     <script defer src="error-monitor.js"></script>
     <script defer src="/_vercel/speed-insights/script.js"></script>
 
@@ -106,6 +106,8 @@
             <span class="account-who">Playing as <strong id="accountName">—</strong></span>
             <span class="gp-pill" id="goatPassPill" hidden title="GOAT Pass holder">🐐 GOAT Pass</span>
             <button id="myStatsBtn" class="account-btn account-btn-ghost" type="button">My Stats</button>
+            <button id="editHandleBtn" class="account-btn account-btn-ghost" type="button">Edit name</button>
+            <button id="myBuildsBtn" class="account-btn account-btn-ghost" type="button">My Builds</button>
           </div>
           <div class="settings-wrap">
             <button id="settingsBtn" class="account-btn account-btn-ghost account-btn-gear" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Settings"><span aria-hidden="true">⚙</span> Settings</button>
@@ -118,7 +120,6 @@
                 </div>
               </div>
               <div id="settingsAccountItems" hidden>
-                <button id="editHandleBtn" class="settings-item" type="button" role="menuitem">Edit name</button>
                 <button id="signOutBtn" class="settings-item" type="button" role="menuitem">Sign out</button>
                 <button id="deleteAccountBtn" class="settings-item settings-item-danger" type="button" role="menuitem">Delete account</button>
               </div>
@@ -283,10 +284,7 @@
             <h2 class="lb-page-title">Your GOAT Lab career</h2>
             <span class="gp-pill" id="statsPassPill" hidden>🐐 GOAT Pass</span>
           </div>
-          <div class="stats-head-actions">
-            <button id="myBuildsBtn" class="account-btn account-btn-ghost" type="button">🗂 My Builds</button>
-            <button id="statsBackBtn" class="lb-back" type="button">← Back</button>
-          </div>
+          <button id="statsBackBtn" class="lb-back" type="button">← Back</button>
         </div>
         <div class="lb-tabs" id="statsTabs" role="tablist" hidden>
           <button id="statsTabDaily" class="lb-tab lb-tab-active" type="button" role="tab">Daily</button>
@@ -508,7 +506,7 @@
     <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script defer src="firebase-init.js"></script>
     <noscript><p style="font-family:sans-serif;text-align:center;padding:2rem">GOAT Lab requires JavaScript. Please enable it in your browser settings.</p></noscript>
-    <script defer src="app.js?v=112"></script>
+    <script defer src="app.js?v=113"></script>
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {

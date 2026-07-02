@@ -2707,7 +2707,15 @@ h1 {
 
 /* My Stats page */
 .stats-page { padding: 8px 4px 40px; animation: lb-fade 0.2s ease; }
-.stats-head-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+
+/* Mobile: keep every account-bar button, just tidy the layout so it's not cramped */
+@media (max-width: 560px) {
+  .account-bar { gap: 8px; padding: 8px 10px; }
+  .account-signedin-actions, .account-right, .account-auth, .account-signedin { gap: 8px; }
+  .account-signedin-actions { flex-wrap: wrap; }
+  .account-btn { padding: 7px 11px; font-size: 0.72rem; }
+  .account-who { font-size: 0.74rem; }
+}
 .stats-panel-title { max-width: 620px; margin: 26px auto 10px; font: 700 0.7rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 #statsBody { max-width: 620px; margin: 0 auto; }
 

@@ -4126,7 +4126,7 @@ function finish() {
   const _gpr = document.querySelector("#goatPassResult");
   if (_gpr && gameMode !== "daily") { _gpr.hidden = true; _gpr.innerHTML = ""; }
 
-  if (gameMode !== "daily") savePB(gameMode, score);
+  if (gameMode !== "daily") { savePB(gameMode, score); recordModePlay(gameMode, score); }
   updatePBDisplay();
 
   if (resultBreakdown) {
@@ -4950,6 +4950,25 @@ function savePB(mode, score) {
     pb[mode] = score;
     try { localStorage.setItem(PB_KEY, JSON.stringify(pb)); } catch {}
   }
+}
+
+// Per-mode play stats for Classic/Blind (every game, not just saved builds).
+const MODE_STATS_KEY = "goatlab_modestats_v1";
+function getModeStats() {
+  try { return JSON.parse(localStorage.getItem(MODE_STATS_KEY) || "{}"); } catch { return {}; }
+}
+function recordModePlay(mode, score) {
+  if ((mode !== "classic" && mode !== "blind") || typeof score !== "number" || score <= 0) return;
+  const all = getModeStats();
+  const m = all[mode] || { plays: 0, best: 0, sum: 0, elite: 0, perfect: 0, recent: [] };
+  m.plays += 1;
+  m.sum += score;
+  if (score > m.best) m.best = score;
+  if (score >= 97) m.elite += 1;
+  if (score === 100) m.perfect += 1;
+  m.recent = (m.recent || []).concat(score).slice(-30);
+  all[mode] = m;
+  try { localStorage.setItem(MODE_STATS_KEY, JSON.stringify(all)); } catch {}
 }
 function updatePBDisplay() {
   const pb = getPB();
@@ -5997,17 +6016,24 @@ updateBody(null);
   }
   function renderModeStatsHTML(mode) {
     const label = mode === "classic" ? "Classic" : "Blind";
-    const builds = (_statsBuilds || []).filter((b) => String(b.mode || "").toLowerCase() === mode);
-    const scores = builds.map((b) => Number(b.score) || 0).filter((s) => s > 0);
-    const pb = (getPB() || {})[mode] || 0;
-    const best = Math.max(pb, scores.length ? Math.max(...scores) : 0);
-    const avg = scores.length ? Math.round((scores.reduce((a, c) => a + c, 0) / scores.length) * 10) / 10 : 0;
+    // Tiles: computed over EVERY game played in this mode (tracked locally).
+    const s = getModeStats()[mode] || { plays: 0, best: 0, sum: 0, elite: 0, perfect: 0, recent: [] };
+    const plays = s.plays || 0;
+    const best = Math.max(s.best || 0, (getPB() || {})[mode] || 0);
+    const allAvg = plays ? Math.round((s.sum / plays) * 10) / 10 : 0;
+    const recent = s.recent || [];
+    const recentAvg = recent.length ? Math.round((recent.reduce((a, c) => a + c, 0) / recent.length) * 10) / 10 : 0;
     const tiles = `
       <div class="stat-tiles">
+        <div class="stat-tile"><div class="stat-tile-num">${plays}</div><div class="stat-tile-label">${label} Played</div></div>
         <div class="stat-tile stat-tile-gold"><div class="stat-tile-num">${best || "—"}</div><div class="stat-tile-label">Best Score</div></div>
-        <div class="stat-tile"><div class="stat-tile-num">${builds.length}</div><div class="stat-tile-label">Saved Builds</div></div>
-        <div class="stat-tile"><div class="stat-tile-num">${avg || "—"}</div><div class="stat-tile-label">Avg Saved</div></div>
+        <div class="stat-tile"><div class="stat-tile-num">${s.elite || 0}</div><div class="stat-tile-label">Elite ≥97</div></div>
+        <div class="stat-tile"><div class="stat-tile-num">${s.perfect || 0}</div><div class="stat-tile-label">Perfect 100s</div></div>
+        <div class="stat-tile"><div class="stat-tile-num">${recentAvg || "—"}</div><div class="stat-tile-label">Avg · Last 30</div></div>
+        <div class="stat-tile"><div class="stat-tile-num">${allAvg || "—"}</div><div class="stat-tile-label">Avg · All-Time</div></div>
       </div>`;
+    // List: only the builds they chose to save, same style as the daily history.
+    const builds = (_statsBuilds || []).filter((b) => String(b.mode || "").toLowerCase() === mode);
     const body = builds.length
       ? `<div class="stats-panel-title">Saved ${label} builds · tap to see the picks</div>` + buildsListHTML(builds)
       : `<p class="lb-empty" style="max-width:620px;margin:18px auto 0;text-align:center">No saved ${label} builds yet. Finish a ${label} run and hit “Save Build.”</p>`;
