@@ -172,6 +172,37 @@ window.GoatAuth = (() => {
       try { await ref.update({ scoreHist: hist, playerCount: count }); }
       catch (e) { try { await ref.set({ scoreHist: hist, playerCount: count }, { merge: true }); } catch (e2) {} }
     },
+
+    // --- Classic / Blind mode stats (cloud, follows you across devices) -----
+    async getModeStatsCloud() {
+      if (!enabled || !user) return null;
+      try {
+        const doc = await userDoc().collection("stats").doc("modes").get();
+        return doc.exists ? (doc.data() || {}) : {};
+      } catch (e) { return null; }
+    },
+    // Add one Classic/Blind result to the account's running totals. A transaction
+    // keeps it correct even if two devices finish games at the same time.
+    async bumpModeStats(mode, score) {
+      if (!enabled || !user) return;
+      if ((mode !== "classic" && mode !== "blind") || typeof score !== "number" || score <= 0) return;
+      const ref = userDoc().collection("stats").doc("modes");
+      try {
+        await db.runTransaction(async (tx) => {
+          const doc = await tx.get(ref);
+          const data = doc.exists ? (doc.data() || {}) : {};
+          const m = data[mode] || { plays: 0, best: 0, sum: 0, elite: 0, perfect: 0, recent: [] };
+          m.plays = (m.plays || 0) + 1;
+          m.sum = (m.sum || 0) + score;
+          if (score > (m.best || 0)) m.best = score;
+          if (score >= 97) m.elite = (m.elite || 0) + 1;
+          if (score === 100) m.perfect = (m.perfect || 0) + 1;
+          m.recent = (Array.isArray(m.recent) ? m.recent : []).concat(score).slice(-30);
+          data[mode] = m;
+          tx.set(ref, data, { merge: true });
+        });
+      } catch (e) {}
+    },
     async getDailyLeaderboard(dateStr, topN = 100) {
       if (!enabled) return [];
       const snap = await entriesRef(dateStr).orderBy("score", "desc").limit(topN).get();

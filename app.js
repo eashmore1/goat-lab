@@ -4126,7 +4126,11 @@ function finish() {
   const _gpr = document.querySelector("#goatPassResult");
   if (_gpr && gameMode !== "daily") { _gpr.hidden = true; _gpr.innerHTML = ""; }
 
-  if (gameMode !== "daily") { savePB(gameMode, score); recordModePlay(gameMode, score); }
+  if (gameMode !== "daily") {
+    savePB(gameMode, score);
+    recordModePlay(gameMode, score);
+    try { if (window.GoatAuth && window.GoatAuth.currentUser && window.GoatAuth.currentUser()) window.GoatAuth.bumpModeStats(gameMode, score); } catch (e) {}
+  }
   updatePBDisplay();
 
   if (resultBreakdown) {
@@ -5894,6 +5898,7 @@ updateBody(null);
   let statsReturnScreen = null;
   let statsTab = "daily";
   let _statsBuilds = null; // cached saved builds for the Classic/Blind tabs
+  let _cloudModeStats = null; // cached cloud Classic/Blind totals (signed in)
 
   function isoUTC(d) {
     return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
@@ -6016,8 +6021,11 @@ updateBody(null);
   }
   function renderModeStatsHTML(mode) {
     const label = mode === "classic" ? "Classic" : "Blind";
-    // Tiles: computed over EVERY game played in this mode (tracked locally).
-    const s = getModeStats()[mode] || { plays: 0, best: 0, sum: 0, elite: 0, perfect: 0, recent: [] };
+    // Tiles: every game played in this mode. Signed in → the account's cloud
+    // totals (follow you across devices); signed out → this device's local tally.
+    const s = (_cloudModeStats && _cloudModeStats[mode])
+      || getModeStats()[mode]
+      || { plays: 0, best: 0, sum: 0, elite: 0, perfect: 0, recent: [] };
     const plays = s.plays || 0;
     const best = Math.max(s.best || 0, (getPB() || {})[mode] || 0);
     const allAvg = plays ? Math.round((s.sum / plays) * 10) / 10 : 0;
@@ -6077,10 +6085,12 @@ updateBody(null);
       wireStatsToggles();
       return;
     }
-    // Classic / Blind — pull the saved builds (once per stats-page open).
+    // Classic / Blind — pull saved builds + the account's cloud totals
+    // (once per stats-page open).
     if (_statsBuilds === null) {
       statsBody.innerHTML = `<p class="lb-empty" style="text-align:center;margin-top:18px">Loading…</p>`;
       try { _statsBuilds = await Auth.listBuilds(); } catch (e) { _statsBuilds = []; }
+      if (Auth.currentUser()) { try { _cloudModeStats = await Auth.getModeStatsCloud(); } catch (e) { _cloudModeStats = null; } }
       if (statsTab === "daily" || (statsPage && statsPage.hidden)) return; // user moved on
     }
     statsBody.innerHTML = renderModeStatsHTML(statsTab);
@@ -6096,6 +6106,7 @@ updateBody(null);
     if (statsPage) statsPage.hidden = false;
     statsTab = "daily";
     _statsBuilds = null; // refetch so newly saved builds show
+    _cloudModeStats = null; // refetch cloud mode totals
     window.scrollTo(0, 0);
     renderStats();
   }
