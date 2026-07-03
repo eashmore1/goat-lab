@@ -5273,7 +5273,7 @@ updateBody(null);
   }
 
   // All-time player count — update manually over time.
-  const PLAYER_COUNT_DISPLAY = "43,400+";
+  const PLAYER_COUNT_DISPLAY = "45,700+";
   (function showTotalPlayers() {
     const el = document.querySelector("#homeTotalPlayers");
     const numEl = document.querySelector("#homeTotalPlayersNum");
@@ -5373,6 +5373,8 @@ updateBody(null);
     if (lbPlayerCount) lbPlayerCount.hidden = true;
     if (lbRankBanner) lbRankBanner.hidden = true;
     if (lbDist) lbDist.hidden = true;
+    const _lbOpt = document.querySelector("#lbOptimal");
+    if (_lbOpt) { _lbOpt.hidden = true; _lbOpt.innerHTML = ""; }
     if (lbTomorrow) lbTomorrow.hidden = true;
     clearInterval(window._lbCountdownTimer);
     lbPodium.innerHTML = "";
@@ -5436,6 +5438,9 @@ updateBody(null);
       renderDistBar(hist);
       renderRankBanner(hist, rows, me, isToday);
     });
+
+    // Perfect-build reveal for the viewed day (pass holders) / unlock teaser.
+    renderLbOptimal(targetDate);
 
     // Only pin the user's own score when viewing today's board.
     if (isToday && me && !rows.some((r) => r.uid === me.uid)) {
@@ -5791,21 +5796,21 @@ updateBody(null);
   function miniChip(p, best) {
     return `<div class="mini-chip${best ? " mc-best" : ""}"><span class="mc-stat">${esc(p.attrLabel || p.attrShort || "")}</span><span class="mc-name">${esc(p.playerName || "—")}</span></div>`;
   }
-  function optimalCardHTML(opt) {
+  function optimalCardHTML(opt, footId = "optimalFoot", kicker = "🐐 Best build from today's draft") {
     let bestIdx = 0, bestScore = -1;
     opt.picks.forEach((p, i) => { if (p.score > bestScore) { bestScore = p.score; bestIdx = i; } });
     const chips = opt.picks.map((p, i) => miniChip(p, i === bestIdx)).join("");
     return `
       <div class="optimal-card">
         <div class="optimal-head">
-          <span class="optimal-kicker">🐐 Best build from today's draft</span>
+          <span class="optimal-kicker">${kicker}</span>
           <span class="optimal-score">${esc(opt.score)}</span>
         </div>
         <div class="optimal-grid">${chips}</div>
-        <div class="optimal-foot" id="optimalFoot">The highest score possible from today's exact draft.</div>
+        <div class="optimal-foot" id="${footId}">The highest score possible from that day's exact draft.</div>
       </div>`;
   }
-  async function fillOptimalRarity(dateStr, optScore) {
+  async function fillOptimalRarity(dateStr, optScore, footId = "optimalFoot") {
     try {
       const agg = await Auth.getDailyAggregate(dateStr);
       let hist = agg && agg.hist ? agg.hist : {};
@@ -5814,15 +5819,49 @@ updateBody(null);
         const scores = await Auth.getAllDailyScores(dateStr);
         if (scores.length) { hist = scoresToHist(scores); Auth.writeDailyHist(dateStr, hist, scores.length); }
       }
-      const foot = document.querySelector("#optimalFoot");
+      const foot = document.querySelector("#" + footId);
       const total = histTotal(hist);
       if (!foot || !total) return;
       const n = histAbove(hist, optScore - 1); // scores >= optScore
       const pct = Math.max(1, Math.round((n / total) * 100));
+      const isToday = dateStr === getTodayStr();
       foot.textContent = n === 0
-        ? `No one has matched ${optScore} yet today — the draft's ceiling is still standing.`
-        : `Only ${pct}% of today's players matched this score (${optScore}).`;
+        ? `No one has matched ${optScore}${isToday ? " yet today" : ""} — the draft's ceiling still stands.`
+        : `Only ${pct}% of ${isToday ? "today's" : "that day's"} players matched this score (${optScore}).`;
     } catch (e) {}
+  }
+  // Collapsible "perfect build" reveal on the leaderboard (any viewed date).
+  function renderLbOptimal(dateStr) {
+    const box = document.querySelector("#lbOptimal");
+    if (!box) return;
+    const opt = computeOptimalDaily(dateStr);
+    if (!opt) { box.hidden = true; box.innerHTML = ""; return; }
+    if (!hasPass) {
+      box.innerHTML = `<button class="lb-optimal-toggle" type="button" id="lbOptimalUnlock">🐐 See the perfect build for this day — <strong>GOAT Pass</strong></button>`;
+      const u = document.querySelector("#lbOptimalUnlock");
+      if (u) u.addEventListener("click", openPassModal);
+      box.hidden = false;
+      return;
+    }
+    box.innerHTML = `
+      <button class="lb-optimal-toggle" type="button" id="lbOptimalToggle" aria-expanded="false">🐐 Reveal the perfect build ▾</button>
+      <div id="lbOptimalBody" hidden></div>`;
+    const toggle = document.querySelector("#lbOptimalToggle");
+    const body = document.querySelector("#lbOptimalBody");
+    if (toggle && body) {
+      toggle.addEventListener("click", () => {
+        const show = body.hidden;
+        body.hidden = !show;
+        toggle.setAttribute("aria-expanded", String(show));
+        toggle.innerHTML = show ? "🐐 Hide the perfect build ▴" : "🐐 Reveal the perfect build ▾";
+        if (show && !body.dataset.filled) {
+          body.innerHTML = optimalCardHTML(opt, "lbOptimalFoot", "🐐 The perfect build");
+          body.dataset.filled = "1";
+          fillOptimalRarity(dateStr, opt.score, "lbOptimalFoot");
+        }
+      });
+    }
+    box.hidden = false;
   }
   function unlockStripHTML(opt) {
     const tease = opt.picks.slice(0, 6).map((p) =>
