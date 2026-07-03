@@ -58,6 +58,9 @@
       .xp-row .xr-txt small { display: block; font: 400 0.72rem/1.2 "Space Mono", monospace; color: var(--muted); margin-top: 2px; }
       .xp-row .xr-amt { font: 950 0.9rem/1 "Space Mono", monospace; color: var(--green); white-space: nowrap; }
       [data-theme="dark"] .xp-row .xr-amt { color: #4fc9a6; }
+      .xp-row-pass { background: var(--gold); border-color: var(--ink); }
+      .xp-row-pass .xr-txt, .xp-row-pass .xr-txt small { color: #3a2c05; }
+      .xp-row-pass .xr-amt { color: #7b392c; }
 
       /* ---- Rank ladder ---- */
       .ladder { display: grid; gap: 6px; max-width: 520px; margin: 0 auto; }
@@ -130,6 +133,7 @@
         <div class="xp-row"><span class="xr-ico">🎯</span><span class="xr-txt">Elite build (97+)<small>Score 97 or higher</small></span><span class="xr-amt">+50</span></div>
         <div class="xp-row"><span class="xr-ico">💯</span><span class="xr-txt">Perfect 100<small>The rare air</small></span><span class="xr-amt">+150</span></div>
         <div class="xp-row"><span class="xr-ico">🏆</span><span class="xr-txt">Unlock a trophy<small>Each achievement</small></span><span class="xr-amt">+100</span></div>
+        <div class="xp-row xp-row-pass"><span class="xr-ico">🐐</span><span class="xr-txt">GOAT Pass bonus<small>+25% XP on everything — level up &amp; hit the flashy ranks faster</small></span><span class="xr-amt">+25%</span></div>
       </div>
 
       <!-- LADDER -->
@@ -168,7 +172,8 @@
       <div class="callout">
         <p style="margin:0 0 8px"><strong>Everyone earns XP and levels up</strong> — that's the retention hook that keeps people playing daily.</p>
         <p style="margin:0 0 8px"><strong>The GOAT Pass badge becomes the rank chip:</strong> the plain 🐐 goes away, and instead pass holders show their <strong>gold-bordered rank chip</strong> on the public leaderboard. The gold border signals "pass holder," the color &amp; title signal how good they are — one badge doing both jobs, and it levels up over time.</p>
-        <p style="margin:0"><strong>Free players</strong> earn XP and have a rank privately, but show no chip on the board — so they watch everyone else flexing theirs. That's what makes them want the Pass.</p>
+        <p style="margin:0 0 8px"><strong>Free players</strong> earn XP and have a rank privately, but show no chip on the board — so they watch everyone else flexing theirs. That's what makes them want the Pass.</p>
+        <p style="margin:0"><strong>+ Pass holders earn 25% more XP</strong>, so they climb the ranks noticeably faster — another reason the Pass feels worth it. (The exact % is easy to tune.)</p>
       </div>
 
     </div>
