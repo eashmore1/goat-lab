@@ -4102,9 +4102,16 @@ function finish() {
 
   result.hidden = false;
 
-  // GOAT Pass daily reveal / unlock strip — only for the Daily; hide otherwise.
-  const _gpr = document.querySelector("#goatPassResult");
-  if (_gpr && gameMode !== "daily") { _gpr.hidden = true; _gpr.innerHTML = ""; }
+  // GOAT Pass: Daily gets the top-build reveal (in the daily block below);
+  // Classic/Blind get a generic unlock prompt for non-holders.
+  if (gameMode !== "daily") {
+    if (window.GoatLeaderboard && window.GoatLeaderboard.showResultUnlock) {
+      window.GoatLeaderboard.showResultUnlock();
+    } else {
+      const _gpr = document.querySelector("#goatPassResult");
+      if (_gpr) { _gpr.hidden = true; _gpr.innerHTML = ""; }
+    }
+  }
 
   if (gameMode !== "daily") {
     savePB(gameMode, score);
@@ -5243,7 +5250,7 @@ updateBody(null);
     if (recalcPending) try { localStorage.removeItem("goatlab_recalc_pending"); } catch (e) {}
     try { updateDailyCard(); } catch (e) {}
   }
-  window.GoatLeaderboard = { submitToday, showResultButton, pushDailyHistory, openLeaderboard, showDailyExtras: (d) => renderDailyExtras(d) };
+  window.GoatLeaderboard = { submitToday, showResultButton, pushDailyHistory, openLeaderboard, showDailyExtras: (d) => renderDailyExtras(d), showResultUnlock: () => showResultUnlock() };
 
   function formatPlayerCount(n) {
     if (n < 10) return String(n);
@@ -5895,6 +5902,29 @@ updateBody(null);
     if (btn) btn.addEventListener("click", openPassModal);
     box.hidden = false;
   }
+  // Generic GOAT Pass prompt shown on Classic/Blind results (non-holders).
+  function genericUnlockStripHTML() {
+    return `
+      <div class="unlock-strip">
+        <div class="us-left">
+          <div class="us-goat" aria-hidden="true">🐐</div>
+          <div class="us-txt">
+            <strong>Unlock the GOAT Pass</strong>
+            <span>Gold badge, full stats, the trophy case &amp; more — one time, just $2.99</span>
+          </div>
+        </div>
+        <button class="unlock-cta" type="button" data-unlock>Unlock · $2.99</button>
+      </div>`;
+  }
+  function showResultUnlock() {
+    const box = document.querySelector("#goatPassResult");
+    if (!box) return;
+    if (hasPass) { box.hidden = true; box.innerHTML = ""; return; }
+    box.innerHTML = genericUnlockStripHTML();
+    const btn = box.querySelector("[data-unlock]");
+    if (btn) btn.addEventListener("click", openPassModal);
+    box.hidden = false;
+  }
 
   // --- Exact rank + percentile on the leaderboard -------------------------
   function renderRankBanner(hist, rows, me, isToday) {
@@ -6260,12 +6290,16 @@ updateBody(null);
   // Top-of-page GOAT Pass button: holders jump to their stats, others see the unlock.
   const goatPassTopBtn = document.querySelector("#goatPassTop");
   if (goatPassTopBtn) goatPassTopBtn.addEventListener("click", () => { if (hasPass) openStats(); else openPassModal(); });
+  const goatPassPromo = document.querySelector("#goatPassPromo");
+  if (goatPassPromo) goatPassPromo.addEventListener("click", openPassModal);
 
   // Reflect pass state across the UI (called on sign-in and after a refresh).
   function updatePassUI() {
     window.GoatPassActive = hasPass; // read by the share-image renderer (global scope)
     const pill = document.querySelector("#goatPassPill");
     if (pill) pill.hidden = !hasPass;
+    const promo = document.querySelector("#goatPassPromo");
+    if (promo) promo.hidden = hasPass; // show the home banner to everyone but holders
     if (statsPage && !statsPage.hidden) renderStats();
     const box = document.querySelector("#goatPassResult");
     if (box && !box.hidden) { try { renderDailyExtras(getTodayStr()); } catch (e) {} }
