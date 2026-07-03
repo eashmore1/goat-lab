@@ -6078,6 +6078,16 @@ updateBody(null);
     { id: "goat", icon: "🐐", name: "GOAT", desc: "Score a perfect 100 anywhere", cur: (s) => s.totalPerfect, target: 1 },
     { id: "perfectionist", icon: "👑", name: "Perfectionist", desc: "Score 100 five times", cur: (s) => s.totalPerfect, target: 5 },
     { id: "marathon", icon: "🏆", name: "Marathon", desc: "Play 100 games total", cur: (s) => s.totalPlays, target: 100 },
+    // The long haul — hard, for the die-hards
+    { id: "daily100", icon: "🔁", name: "Century of Dailies", desc: "Play 100 Dailies", cur: (s) => s.daily.plays, target: 100 },
+    { id: "streak100", icon: "☄️", name: "Streak Legend", desc: "Reach a 100-day streak", cur: (s) => s.daily.longStreak, target: 100 },
+    { id: "franchise10", icon: "🏟️", name: "Franchise Regular", desc: "Play 10 Franchise Fridays", cur: (s) => s.daily.franchise, target: 10 },
+    { id: "elite25", icon: "🎖️", name: "Sharpshooter", desc: "Score 97+ 25 times", cur: (s) => s.totalElite, target: 25 },
+    { id: "perfect10", icon: "💎", name: "Untouchable", desc: "Score 100 ten times", cur: (s) => s.totalPerfect, target: 10 },
+    { id: "classic100", icon: "📚", name: "Classic Master", desc: "Play 100 Classic games", cur: (s) => s.classic.plays, target: 100 },
+    { id: "blind100", icon: "🔮", name: "Blind Master", desc: "Play 100 Blind games", cur: (s) => s.blind.plays, target: 100 },
+    { id: "goatherd", icon: "🏅", name: "GOAT Herd", desc: "Score 100 in all three modes", cur: (s) => [s.daily.perfect, s.classic.perfect, s.blind.perfect].filter((x) => x > 0).length, target: 3 },
+    { id: "marathon250", icon: "🥇", name: "Iron Man", desc: "Play 250 games total", cur: (s) => s.totalPlays, target: 250 },
   ];
   function gatherAchvStats() {
     const dh = getDailyHistory();
@@ -6087,6 +6097,7 @@ updateBody(null);
       plays: dates.length,
       best: ds.length ? Math.max(...ds) : 0,
       perfect: ds.filter((x) => x === 100).length,
+      elite: ds.filter((x) => x >= 97).length,
       ninety: ds.filter((x) => x >= 90).length,
       franchise: dates.filter((d) => dh[d].franchise).length,
       longStreak: computeLongestStreak(dh),
@@ -6094,11 +6105,12 @@ updateBody(null);
     const pb = getPB() || {};
     const cm = (_cloudModeStats && _cloudModeStats.classic) || getModeStats().classic || {};
     const bm = (_cloudModeStats && _cloudModeStats.blind) || getModeStats().blind || {};
-    const classic = { plays: cm.plays || 0, best: Math.max(cm.best || 0, pb.classic || 0), perfect: cm.perfect || 0 };
-    const blind = { plays: bm.plays || 0, best: Math.max(bm.best || 0, pb.blind || 0), perfect: bm.perfect || 0 };
+    const classic = { plays: cm.plays || 0, best: Math.max(cm.best || 0, pb.classic || 0), perfect: cm.perfect || 0, elite: cm.elite || 0 };
+    const blind = { plays: bm.plays || 0, best: Math.max(bm.best || 0, pb.blind || 0), perfect: bm.perfect || 0, elite: bm.elite || 0 };
     const totalPlays = daily.plays + classic.plays + blind.plays;
     const totalPerfect = daily.perfect + classic.perfect + blind.perfect;
-    return { daily, classic, blind, totalPlays, totalPerfect };
+    const totalElite = daily.elite + classic.elite + blind.elite;
+    return { daily, classic, blind, totalPlays, totalPerfect, totalElite };
   }
   function renderTrophiesHTML() {
     const s = gatherAchvStats();
