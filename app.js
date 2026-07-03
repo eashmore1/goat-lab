@@ -5895,6 +5895,7 @@ updateBody(null);
   const statsTabDaily = document.querySelector("#statsTabDaily");
   const statsTabClassic = document.querySelector("#statsTabClassic");
   const statsTabBlind = document.querySelector("#statsTabBlind");
+  const statsTabTrophies = document.querySelector("#statsTabTrophies");
   let statsReturnScreen = null;
   let statsTab = "daily";
   let _statsBuilds = null; // cached saved builds for the Classic/Blind tabs
@@ -6052,8 +6053,76 @@ updateBody(null);
       row.addEventListener("click", () => row.classList.toggle("open"));
     });
   }
+
+  // --- Trophy case: achievements across Daily / Classic / Blind -----------
+  const ACHIEVEMENTS = [
+    // Daily
+    { id: "daily1", icon: "📅", name: "Day One", desc: "Play your first Daily", cur: (s) => s.daily.plays, target: 1 },
+    { id: "streak7", icon: "🔥", name: "Week Warrior", desc: "Hit a 7-day streak", cur: (s) => s.daily.longStreak, target: 7 },
+    { id: "streak30", icon: "🗓️", name: "Month Strong", desc: "Hit a 30-day streak", cur: (s) => s.daily.longStreak, target: 30 },
+    { id: "daily50", icon: "🏀", name: "Daily Grinder", desc: "Play 50 Dailies", cur: (s) => s.daily.plays, target: 50 },
+    { id: "daily90", icon: "⭐", name: "Consistent", desc: "Score 90+ in 10 Dailies", cur: (s) => s.daily.ninety, target: 10 },
+    { id: "dailyPerfect", icon: "💯", name: "Daily Perfection", desc: "Score 100 on a Daily", cur: (s) => s.daily.perfect, target: 1 },
+    { id: "franchise", icon: "🏛️", name: "Franchise Fan", desc: "Play a Franchise Friday", cur: (s) => s.daily.franchise, target: 1 },
+    // Classic
+    { id: "classic1", icon: "👁️", name: "Classic Rookie", desc: "Play a Classic game", cur: (s) => s.classic.plays, target: 1 },
+    { id: "classic25", icon: "📊", name: "Classic Regular", desc: "Play 25 Classic games", cur: (s) => s.classic.plays, target: 25 },
+    { id: "classicPerfect", icon: "🎯", name: "Classic 100", desc: "Score 100 in Classic", cur: (s) => s.classic.perfect, target: 1 },
+    // Blind
+    { id: "blind1", icon: "🕶️", name: "Blind Rookie", desc: "Play a Blind game", cur: (s) => s.blind.plays, target: 1 },
+    { id: "blind25", icon: "🧠", name: "Blind Believer", desc: "Play 25 Blind games", cur: (s) => s.blind.plays, target: 25 },
+    { id: "blindPerfect", icon: "🎯", name: "Blind 100", desc: "Score 100 in Blind", cur: (s) => s.blind.perfect, target: 1 },
+    // Overall
+    { id: "triple", icon: "🎮", name: "Triple Threat", desc: "Play all three modes", cur: (s) => [s.daily.plays, s.classic.plays, s.blind.plays].filter((x) => x > 0).length, target: 3 },
+    { id: "rounded", icon: "🧩", name: "Well Rounded", desc: "Best 90+ in all three modes", cur: (s) => [s.daily.best, s.classic.best, s.blind.best].filter((x) => x >= 90).length, target: 3 },
+    { id: "goat", icon: "🐐", name: "GOAT", desc: "Score a perfect 100 anywhere", cur: (s) => s.totalPerfect, target: 1 },
+    { id: "perfectionist", icon: "👑", name: "Perfectionist", desc: "Score 100 five times", cur: (s) => s.totalPerfect, target: 5 },
+    { id: "marathon", icon: "🏆", name: "Marathon", desc: "Play 100 games total", cur: (s) => s.totalPlays, target: 100 },
+  ];
+  function gatherAchvStats() {
+    const dh = getDailyHistory();
+    const dates = Object.keys(dh).filter((d) => dh[d] && typeof dh[d].score === "number");
+    const ds = dates.map((d) => dh[d].score);
+    const daily = {
+      plays: dates.length,
+      best: ds.length ? Math.max(...ds) : 0,
+      perfect: ds.filter((x) => x === 100).length,
+      ninety: ds.filter((x) => x >= 90).length,
+      franchise: dates.filter((d) => dh[d].franchise).length,
+      longStreak: computeLongestStreak(dh),
+    };
+    const pb = getPB() || {};
+    const cm = (_cloudModeStats && _cloudModeStats.classic) || getModeStats().classic || {};
+    const bm = (_cloudModeStats && _cloudModeStats.blind) || getModeStats().blind || {};
+    const classic = { plays: cm.plays || 0, best: Math.max(cm.best || 0, pb.classic || 0), perfect: cm.perfect || 0 };
+    const blind = { plays: bm.plays || 0, best: Math.max(bm.best || 0, pb.blind || 0), perfect: bm.perfect || 0 };
+    const totalPlays = daily.plays + classic.plays + blind.plays;
+    const totalPerfect = daily.perfect + classic.perfect + blind.perfect;
+    return { daily, classic, blind, totalPlays, totalPerfect };
+  }
+  function renderTrophiesHTML() {
+    const s = gatherAchvStats();
+    const items = ACHIEVEMENTS.map((a) => {
+      const cur = Math.max(0, Math.min(a.cur(s), a.target));
+      return { a, cur, done: cur >= a.target };
+    });
+    const unlocked = items.filter((i) => i.done).length;
+    const cards = items.map(({ a, cur, done }) => {
+      const pct = Math.round((cur / a.target) * 100);
+      return `
+        <div class="trophy${done ? " trophy-done" : ""}">
+          <div class="trophy-ico">${a.icon}</div>
+          <div class="trophy-name">${esc(a.name)}</div>
+          <div class="trophy-desc">${esc(a.desc)}</div>
+          ${done
+            ? `<div class="trophy-badge">✓ Unlocked</div>`
+            : `<div class="trophy-progress"><div class="trophy-progress-bar" style="width:${pct}%"></div></div><div class="trophy-count">${cur} / ${a.target}</div>`}
+        </div>`;
+    }).join("");
+    return `<div class="trophy-head">🏆 ${unlocked} / ${ACHIEVEMENTS.length} unlocked</div><div class="trophy-grid">${cards}</div>`;
+  }
   function updateStatsTabUI() {
-    [[statsTabDaily, "daily"], [statsTabClassic, "classic"], [statsTabBlind, "blind"]].forEach(([btn, t]) => {
+    [[statsTabDaily, "daily"], [statsTabClassic, "classic"], [statsTabBlind, "blind"], [statsTabTrophies, "trophies"]].forEach(([btn, t]) => {
       if (btn) { btn.classList.toggle("lb-tab-active", statsTab === t); btn.setAttribute("aria-selected", String(statsTab === t)); }
     });
   }
@@ -6083,6 +6152,16 @@ updateBody(null);
       const today = getTodayStr();
       statsBody.innerHTML = statsTilesHTML(history, today) + heatmapHTML(history, today) + historyListHTML(history);
       wireStatsToggles();
+      return;
+    }
+    if (statsTab === "trophies") {
+      // Needs the account's cloud mode totals for the Classic/Blind achievements.
+      if (Auth.currentUser() && _cloudModeStats === null) {
+        statsBody.innerHTML = `<p class="lb-empty" style="text-align:center;margin-top:18px">Loading…</p>`;
+        try { _cloudModeStats = (await Auth.getModeStatsCloud()) || {}; } catch (e) { _cloudModeStats = {}; }
+        if (statsTab !== "trophies" || (statsPage && statsPage.hidden)) return;
+      }
+      statsBody.innerHTML = renderTrophiesHTML();
       return;
     }
     // Classic / Blind — pull saved builds + the account's cloud totals
@@ -6124,6 +6203,7 @@ updateBody(null);
   if (statsTabDaily) statsTabDaily.addEventListener("click", () => setStatsTab("daily"));
   if (statsTabClassic) statsTabClassic.addEventListener("click", () => setStatsTab("classic"));
   if (statsTabBlind) statsTabBlind.addEventListener("click", () => setStatsTab("blind"));
+  if (statsTabTrophies) statsTabTrophies.addEventListener("click", () => setStatsTab("trophies"));
 
   // Top-of-page GOAT Pass button: holders jump to their stats, others see the unlock.
   const goatPassTopBtn = document.querySelector("#goatPassTop");
