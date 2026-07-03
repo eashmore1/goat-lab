@@ -14,7 +14,7 @@ const firebaseConfig = {
 
 // Web Push public key (Firebase Console → Project settings → Cloud Messaging →
 // "Web Push certificates" → Generate key pair). Paste the key pair value here.
-const VAPID_KEY = "PASTE_VAPID_KEY";
+const VAPID_KEY = "BJfK7UIjqku9IXqwH_HFgLs4eQ-AHxj0WAeox7e1ZQrNbsnj1gmZvg0FneQYzVhc935Dk_zQf_rSuTOU8f891jU";
 
 window.GoatAuth = (() => {
   const isPlaceholder = String(firebaseConfig.apiKey).startsWith("PASTE");
