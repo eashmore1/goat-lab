@@ -58,5 +58,14 @@ service cloud.firestore {
     match /users/{uid}/{document=**} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
+
+    // Push-notification tokens (daily reminder). Anyone (incl. signed-out) can
+    // register/remove their own device token; only the server (Admin SDK) reads
+    // them to send. Not publicly readable.
+    match /pushTokens/{token} {
+      allow read: if false;
+      allow create, update: if request.resource.data.keys().hasOnly(['uid', 'ua', 'createdAt']);
+      allow delete: if true;
+    }
   }
 }

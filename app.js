@@ -6510,6 +6510,39 @@ updateBody(null);
   if (darkBtn) darkBtn.addEventListener("click", () => set("dark"));
 })();
 
+// ===== Push notifications — daily reminder toggle (Settings) =====
+(function initPush() {
+  const Auth = window.GoatAuth;
+  const row = document.querySelector("#pushRow");
+  const btn = document.querySelector("#pushToggleBtn");
+  if (!Auth || !row || !btn || !Auth.pushSupported()) return; // hidden until configured/supported
+  row.hidden = false;
+  const reflect = () => {
+    const on = Auth.pushEnabled();
+    btn.textContent = on ? "Turn off" : "Turn on";
+    btn.setAttribute("aria-pressed", String(on));
+  };
+  reflect();
+  btn.addEventListener("click", async () => {
+    if (btn.disabled) return;
+    btn.disabled = true;
+    const wasOn = Auth.pushEnabled();
+    btn.textContent = "…";
+    try {
+      if (wasOn) {
+        await Auth.disablePush();
+      } else {
+        const res = await Auth.enablePush();
+        if (!res.ok && (res.reason === "denied" || res.reason === "default")) {
+          alert("Notifications are blocked for this site. Enable them in your browser settings for playgoatlab.com to get daily reminders.");
+        }
+      }
+    } catch (e) {}
+    btn.disabled = false;
+    reflect();
+  });
+})();
+
 // ===== Add to Home Screen prompt (gentle mobile capture) =====
 // Shows once per visit, mobile only, AFTER a finished game (never on arrival).
 // If dismissed/ignored it snoozes 7 days; gives up after 3 shows; never shows

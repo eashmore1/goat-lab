@@ -1,4 +1,7 @@
 {
+  "crons": [
+    { "path": "/api/send-daily-push", "schedule": "0 16 * * *" }
+  ],
   "headers": [
     {
       "source": "/:file.(png|jpg|webp|ico|svg)",

@@ -119,6 +119,10 @@
                   <button id="themeDarkBtn" class="theme-opt" type="button" aria-pressed="false">Dark</button>
                 </div>
               </div>
+              <div class="settings-row" id="pushRow" hidden>
+                <span class="settings-row-label">🔔 Daily reminder</span>
+                <button id="pushToggleBtn" class="theme-opt" type="button">Turn on</button>
+              </div>
               <div id="settingsAccountItems" hidden>
                 <button id="signOutBtn" class="settings-item" type="button" role="menuitem">Sign out</button>
                 <button id="deleteAccountBtn" class="settings-item settings-item-danger" type="button" role="menuitem">Delete account</button>
@@ -506,9 +510,10 @@
     <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
     <script defer src="firebase-init.js"></script>
     <noscript><p style="font-family:sans-serif;text-align:center;padding:2rem">GOAT Lab requires JavaScript. Please enable it in your browser settings.</p></noscript>
-    <script defer src="app.js?v=133"></script>
+    <script defer src="app.js?v=134"></script>
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {

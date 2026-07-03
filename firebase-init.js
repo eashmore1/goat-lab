@@ -12,6 +12,10 @@ const firebaseConfig = {
   measurementId: "G-K66KP53VPS",
 };
 
+// Web Push public key (Firebase Console → Project settings → Cloud Messaging →
+// "Web Push certificates" → Generate key pair). Paste the key pair value here.
+const VAPID_KEY = "PASTE_VAPID_KEY";
+
 window.GoatAuth = (() => {
   const isPlaceholder = String(firebaseConfig.apiKey).startsWith("PASTE");
   let auth = null;
@@ -21,6 +25,7 @@ window.GoatAuth = (() => {
   let handleCache = null;
   let passCache = null; // GOAT Pass ownership, cached per sign-in (null = not yet read)
   let profilePromise = null; // one shared read of users/{uid} feeding handle + pass
+  let messaging = null;      // Firebase Cloud Messaging (push), lazy-initialised
   const listeners = new Set();
 
   if (!isPlaceholder && typeof firebase !== "undefined") {
@@ -84,6 +89,50 @@ window.GoatAuth = (() => {
       return res.user;
     },
     async signOut() { if (enabled) await auth.signOut(); },
+
+    // --- Push notifications (daily reminder) -------------------------------
+    pushSupported() {
+      return enabled && typeof firebase !== "undefined" && !!firebase.messaging
+        && "serviceWorker" in navigator && "Notification" in window
+        && !String(VAPID_KEY).startsWith("PASTE");
+    },
+    notifPermission() { try { return Notification.permission; } catch (e) { return "default"; } },
+    // "On" if the browser has permission AND we hold a token for this device.
+    pushEnabled() {
+      try { return Notification.permission === "granted" && !!localStorage.getItem("goatlab_push_token"); }
+      catch (e) { return false; }
+    },
+    async enablePush() {
+      if (!this.pushSupported()) return { ok: false, reason: "unsupported" };
+      try {
+        const ok = firebase.messaging.isSupported ? await firebase.messaging.isSupported() : true;
+        if (!ok) return { ok: false, reason: "unsupported" };
+        const perm = await Notification.requestPermission();
+        if (perm !== "granted") return { ok: false, reason: perm };
+        const reg = await navigator.serviceWorker.register("/firebase-messaging-sw.js", { scope: "/fcm/" });
+        if (!messaging) messaging = firebase.messaging();
+        const token = await messaging.getToken({ vapidKey: VAPID_KEY, serviceWorkerRegistration: reg });
+        if (!token) return { ok: false, reason: "no-token" };
+        await db.collection("pushTokens").doc(token).set({
+          uid: user ? user.uid : null,
+          ua: String(navigator.userAgent || "").slice(0, 200),
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
+        try { localStorage.setItem("goatlab_push_token", token); } catch (e) {}
+        return { ok: true };
+      } catch (e) { return { ok: false, reason: "error", error: String(e) }; }
+    },
+    async disablePush() {
+      try {
+        const token = localStorage.getItem("goatlab_push_token");
+        if (token) {
+          await db.collection("pushTokens").doc(token).delete().catch(() => {});
+          try { if (!messaging) messaging = firebase.messaging(); await messaging.deleteToken(); } catch (e) {}
+          try { localStorage.removeItem("goatlab_push_token"); } catch (e) {}
+        }
+        return { ok: true };
+      } catch (e) { return { ok: false }; }
+    },
 
     // --- Custom handle (leaderboard display name) --------------------------
     async getHandle() {
