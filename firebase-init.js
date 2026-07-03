@@ -94,9 +94,16 @@ window.GoatAuth = (() => {
       try {
         const doc = await userDoc().get();
         passCache = !!(doc.exists && doc.data().goatPass);
-      } catch (e) { passCache = false; }
-      return passCache;
+        return passCache;
+      } catch (e) {
+        // Transient read failure (flaky mobile connection etc.): do NOT cache a
+        // false — leave it unresolved so the next check retries instead of
+        // requiring a page refresh.
+        return false;
+      }
     },
+    // Force a fresh read (used to poll right after a purchase).
+    async refreshGoatPass() { passCache = null; return this.hasGoatPass(); },
     // Synchronous best-effort read (may be null if not fetched yet).
     goatPassCached() { return passCache === true; },
     // Build the Stripe checkout URL, tagging it with this user's uid so the

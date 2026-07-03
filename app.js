@@ -6089,8 +6089,12 @@ updateBody(null);
     // (once per stats-page open).
     if (_statsBuilds === null) {
       statsBody.innerHTML = `<p class="lb-empty" style="text-align:center;margin-top:18px">Loading…</p>`;
-      try { _statsBuilds = await Auth.listBuilds(); } catch (e) { _statsBuilds = []; }
-      if (Auth.currentUser()) { try { _cloudModeStats = await Auth.getModeStatsCloud(); } catch (e) { _cloudModeStats = null; } }
+      const [builds, cloud] = await Promise.all([
+        Auth.listBuilds().catch(() => []),
+        Auth.currentUser() ? Auth.getModeStatsCloud().catch(() => null) : Promise.resolve(null),
+      ]);
+      _statsBuilds = builds;
+      _cloudModeStats = cloud;
       if (statsTab === "daily" || (statsPage && statsPage.hidden)) return; // user moved on
     }
     statsBody.innerHTML = renderModeStatsHTML(statsTab);
@@ -6135,6 +6139,28 @@ updateBody(null);
     if (box && !box.hidden) { try { renderDailyExtras(getTodayStr()); } catch (e) {} }
   }
 
+  // After returning from a successful checkout (Stripe redirects to
+  // playgoatlab.com/?goatpass=success), the webhook may take a second or two to
+  // write the pass. Poll a few times so it unlocks without a manual refresh.
+  let _passPollRunning = false;
+  function maybePollForPass() {
+    if (hasPass || _passPollRunning) return;
+    let params;
+    try { params = new URLSearchParams(location.search); } catch (e) { return; }
+    if (!params.has("goatpass")) return;
+    _passPollRunning = true;
+    let tries = 0;
+    const tick = async () => {
+      tries++;
+      let ok = false;
+      try { ok = await Auth.refreshGoatPass(); } catch (e) {}
+      if (ok) { hasPass = true; updatePassUI(); _passPollRunning = false; try { history.replaceState(null, "", location.pathname); } catch (e) {} return; }
+      if (tries < 8) setTimeout(tick, 2500); // ~20s of retries
+      else { _passPollRunning = false; try { history.replaceState(null, "", location.pathname); } catch (e) {} }
+    };
+    setTimeout(tick, 1500);
+  }
+
   // Auth state drives the UI. Load handle, then back-fill today's score.
   Auth.onChange(async (user) => {
     if (user) {
@@ -6145,14 +6171,15 @@ updateBody(null);
       const acctActions = document.querySelector("#accountSignedInActions");
       if (acctActions) acctActions.hidden = false;
       accountName.textContent = user.displayName || user.email || "you";
-      try {
-        currentHandle = await Auth.getHandle();
-        accountName.textContent = currentHandle;
-      } catch (e) { console.error(e); }
-      try {
-        hasPass = await Auth.hasGoatPass();
-      } catch (e) { hasPass = false; }
+      // Fetch handle + pass status together so neither blocks the other.
+      const [handle, pass] = await Promise.all([
+        Auth.getHandle().catch(() => null),
+        Auth.hasGoatPass().catch(() => false),
+      ]);
+      if (handle) { currentHandle = handle; accountName.textContent = handle; }
+      hasPass = pass;
       updatePassUI();
+      maybePollForPass(); // catch the just-purchased case without a refresh
       try {
         const todayStr = getTodayStr();
         const entry = getDailyHistory()[todayStr];
