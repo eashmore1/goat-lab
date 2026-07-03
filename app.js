@@ -5754,20 +5754,30 @@ updateBody(null);
   const passCtaBtn = document.querySelector("#passCtaBtn");
   const passFine = document.querySelector("#passFine");
 
+  // Reflect sign-in state in the buy modal. You MUST be signed in before the
+  // Stripe step, so the purchase always ties to a Google account (no orphaned /
+  // mismatched-email buys). Two explicit steps: sign in → then confirm purchase.
+  function updatePassModalState() {
+    const u = Auth.currentUser();
+    if (passCtaBtn) passCtaBtn.textContent = u ? "Unlock GOAT Pass · $2.99" : "Sign in with Google to continue";
+    if (passFine) passFine.textContent = u
+      ? `Your Pass locks to ${u.email || "your account"} and restores on any device. One-time · secure Stripe checkout.`
+      : "Sign in first so your Pass ties to your Google account — you'll confirm the $2.99 on the next step. This keeps every purchase matched to the right account.";
+  }
   function openPassModal() {
     if (!passModal) return;
-    const signedIn = !!Auth.currentUser();
-    if (passCtaBtn) passCtaBtn.textContent = signedIn ? "Unlock GOAT Pass · $2.99" : "Sign in to unlock · $2.99";
-    if (passFine) passFine.textContent = signedIn
-      ? "One-time purchase. No subscription. Secure checkout via Stripe."
-      : "Sign in with Google first so your pass unlocks on your account.";
+    updatePassModalState();
     showModal(passModal, null);
   }
   function closePassModal() { if (passModal) hideModal(passModal); }
   async function startCheckout() {
+    // Not signed in yet → sign in FIRST, then stop and re-render the modal so
+    // they deliberately confirm the purchase (never auto-redirect to Stripe
+    // without an account attached).
     if (!Auth.currentUser()) {
       try { await Auth.signIn(); } catch (e) { return; }
-      if (!Auth.currentUser()) return;
+      updatePassModalState();
+      return;
     }
     window.location.href = Auth.goatPassCheckoutUrl(GOAT_PASS_URL);
   }
