@@ -4054,26 +4054,6 @@ function showResultAd() {
   resultAdRendered = true;
 }
 
-// Make the Ko-fi tip ask warmer at high-emotion moments (perfect score,
-// rare-air builds, long streaks) instead of the same flat line every time.
-function updateTipCta(score, mode) {
-  const cta = document.getElementById("resultCoffeeCta");
-  if (!cta) return;
-  let streak = 0;
-  if (mode === "daily") {
-    try { streak = getDailyStreak(getDailyHistory(), getTodayStr()); } catch (e) {}
-  }
-  let label = "☕ Buy the dev a coffee";
-  if (score === 100) {
-    label = "🐐 A perfect 100?! Tip the dev a coffee →";
-  } else if (score >= 94) {
-    label = "🔥 Rare air — enjoying GOAT Lab? Buy the dev a coffee →";
-  } else if (streak >= 5) {
-    label = `🔥 ${streak}-day streak! Keep the lights on — buy the dev a coffee →`;
-  }
-  cta.textContent = label;
-}
-
 function finish() {
   roundLocked = false;
   if (respinBar) respinBar.hidden = true;
@@ -4184,7 +4164,6 @@ function finish() {
     hideResultCountdown();
   }
 
-  updateTipCta(score, gameMode);
   showResultAd();
   if (window.GoatA2HS) window.GoatA2HS.maybe();
 }
