@@ -6135,18 +6135,22 @@ updateBody(null);
         </div>`;
     }).join("") + `</div>`;
   }
+  // Pick the mode-stats source that actually has the games: prefer the cloud
+  // (cross-device, authoritative), but fall back to this device's local tally
+  // when the cloud is behind — so a game you played always shows, in the stats
+  // tiles AND the trophies.
+  function modeSource(mode) {
+    const cloudM = (Auth.currentUser() && _cloudModeStats && _cloudModeStats[mode]) || null;
+    const localM = getModeStats()[mode] || null;
+    const cp = (cloudM && cloudM.plays) || 0;
+    const lp = (localM && localM.plays) || 0;
+    return (cp >= lp ? (cloudM || localM) : localM) || { plays: 0, best: 0, sum: 0, elite: 0, perfect: 0, recent: [] };
+  }
   function renderModeStatsHTML(mode) {
     const label = mode === "classic" ? "Classic" : "Blind";
-    // Tiles: every game played in this mode. Signed in → the account's cloud
-    // totals ONLY (so every device shows the same thing); signed out → this
-    // device's local tally. Never mix the two, or two devices would disagree.
-    const signedIn = !!Auth.currentUser();
-    const s = (signedIn
-      ? (_cloudModeStats && _cloudModeStats[mode])
-      : getModeStats()[mode])
-      || { plays: 0, best: 0, sum: 0, elite: 0, perfect: 0, recent: [] };
+    const s = modeSource(mode);
     const plays = s.plays || 0;
-    const best = signedIn ? (s.best || 0) : Math.max(s.best || 0, (getPB() || {})[mode] || 0);
+    const best = Math.max(s.best || 0, (getPB() || {})[mode] || 0);
     const allAvg = plays ? Math.round((s.sum / plays) * 10) / 10 : 0;
     const recent = s.recent || [];
     const recentAvg = recent.length ? Math.round((recent.reduce((a, c) => a + c, 0) / recent.length) * 10) / 10 : 0;
@@ -6220,11 +6224,10 @@ updateBody(null);
       franchise: dates.filter((d) => dh[d].franchise).length,
       longStreak: computeLongestStreak(dh),
     };
-    // Signed in → cloud mode stats ONLY (same on every device); signed out → local.
-    const signedIn = !!Auth.currentUser();
-    const pb = signedIn ? {} : (getPB() || {});
-    const cm = (signedIn ? (_cloudModeStats && _cloudModeStats.classic) : getModeStats().classic) || {};
-    const bm = (signedIn ? (_cloudModeStats && _cloudModeStats.blind) : getModeStats().blind) || {};
+    // Same source logic as the mode tabs — whichever of cloud/local has the games.
+    const pb = getPB() || {};
+    const cm = modeSource("classic");
+    const bm = modeSource("blind");
     const classic = { plays: cm.plays || 0, best: Math.max(cm.best || 0, pb.classic || 0), perfect: cm.perfect || 0, elite: cm.elite || 0 };
     const blind = { plays: bm.plays || 0, best: Math.max(bm.best || 0, pb.blind || 0), perfect: bm.perfect || 0, elite: bm.elite || 0 };
     const totalPlays = daily.plays + classic.plays + blind.plays;
