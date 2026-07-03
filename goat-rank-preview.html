@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script>
+      try { if (localStorage.getItem("goatlab_theme") === "dark") document.documentElement.setAttribute("data-theme", "dark"); } catch (e) {}
+    </script>
+    <title>GOAT Lab — Rank / XP Preview</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/png" sizes="96x96" href="favicon-v2.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=58" />
+    <style>
+      /* PREVIEW-ONLY — mockup of the XP / rank system. Not wired into the game. */
+      .preview-banner {
+        position: sticky; top: 0; z-index: 50; background: var(--ink-bg); color: var(--chalk);
+        text-align: center; padding: 9px 14px; font: 700 0.72rem/1.3 "Space Mono", monospace;
+        letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 2px solid var(--court);
+      }
+      .pw { max-width: 680px; margin: 0 auto; padding: 0 16px 80px; }
+      .section-label { margin: 46px 0 8px; display: flex; align-items: center; gap: 12px; }
+      .section-label::before, .section-label::after { content: ""; flex: 1; height: 2px; background: rgba(21,20,19,0.14); }
+      [data-theme="dark"] .section-label::before, [data-theme="dark"] .section-label::after { background: rgba(243,236,219,0.14); }
+      .section-label span { font: 700 0.68rem/1 "Space Mono", monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--court); }
+      .note { text-align: center; color: var(--muted); font: 400 0.85rem/1.4 "Playfair Display", Georgia, serif; margin: 0 auto 22px; max-width: 540px; }
+
+      /* ---- Hero rank card ---- */
+      .rank-card {
+        border: 3px solid var(--ink); background: var(--paper); box-shadow: var(--shadow);
+        padding: 22px; margin: 18px 0 8px; text-align: center;
+      }
+      .rank-emblem {
+        width: 78px; height: 78px; margin: 0 auto 12px; display: grid; place-items: center;
+        border: 3px solid var(--ink); border-radius: 50%; font-size: 2.4rem;
+        background: var(--gold); box-shadow: 3px 3px 0 var(--ink);
+      }
+      .rank-kicker { font: 700 0.62rem/1 "Space Mono", monospace; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+      .rank-title { margin: 4px 0 2px; font: 900 2.1rem/1 "Playfair Display", Georgia, serif; }
+      .rank-lvl { font: 700 0.8rem/1 "Space Mono", monospace; color: var(--court); text-transform: uppercase; letter-spacing: 0.05em; }
+      .xp-bar-wrap { margin: 16px auto 6px; max-width: 420px; }
+      .xp-bar { height: 12px; background: rgba(21,20,19,0.12); border: 2px solid var(--ink); border-radius: 999px; overflow: hidden; }
+      [data-theme="dark"] .xp-bar { background: rgba(243,236,219,0.14); }
+      .xp-fill { height: 100%; background: var(--court); border-radius: 999px; }
+      .xp-label { margin-top: 7px; font: 700 0.72rem/1 "Space Mono", monospace; color: var(--muted); letter-spacing: 0.03em; }
+      .xp-label b { color: var(--ink); }
+
+      /* ---- XP sources ---- */
+      .xp-list { display: grid; gap: 8px; max-width: 520px; margin: 0 auto; }
+      .xp-row {
+        display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px;
+        border: 2px solid var(--ink); background: var(--surface); box-shadow: 3px 3px 0 var(--ink); padding: 10px 13px;
+      }
+      .xp-row .xr-ico { font-size: 1.15rem; }
+      .xp-row .xr-txt { font: 700 0.86rem/1.2 "Playfair Display", Georgia, serif; }
+      .xp-row .xr-txt small { display: block; font: 400 0.72rem/1.2 "Space Mono", monospace; color: var(--muted); margin-top: 2px; }
+      .xp-row .xr-amt { font: 950 0.9rem/1 "Space Mono", monospace; color: var(--green); white-space: nowrap; }
+      [data-theme="dark"] .xp-row .xr-amt { color: #4fc9a6; }
+
+      /* ---- Rank ladder ---- */
+      .ladder { display: grid; gap: 6px; max-width: 520px; margin: 0 auto; }
+      .rung {
+        display: grid; grid-template-columns: 34px 1fr auto; align-items: center; gap: 12px;
+        border: 2px solid var(--ink); background: var(--paper); padding: 9px 13px;
+      }
+      .rung.done { opacity: 0.6; }
+      .rung.current { background: var(--gold); box-shadow: 3px 3px 0 var(--ink); }
+      .rung .rg-ico { font-size: 1.2rem; text-align: center; }
+      .rung .rg-name { font: 800 0.92rem/1.1 "Playfair Display", Georgia, serif; }
+      .rung.current .rg-name { color: #151413; }
+      .rung .rg-xp { font: 700 0.68rem/1 "Space Mono", monospace; color: var(--muted); }
+      .rung.current .rg-xp { color: #151413; }
+      .rung.locked .rg-name { color: var(--muted); }
+
+      /* ---- Leaderboard preview with rank chips ---- */
+      .lbp { max-width: 520px; margin: 0 auto; display: grid; gap: 6px; }
+      .lbp-row {
+        display: grid; grid-template-columns: 34px 1fr auto; align-items: center; gap: 10px;
+        border: 2px solid var(--ink); background: var(--paper); padding: 9px 12px;
+      }
+      .lbp-rank { font: 900 1rem/1 "Space Mono", monospace; text-align: center; }
+      .lbp-name { font: 700 0.9rem/1.2 "Playfair Display", Georgia, serif; display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+      .rank-chip {
+        font: 800 0.56rem/1 "Space Mono", monospace; letter-spacing: 0.04em; text-transform: uppercase;
+        padding: 3px 7px; border: 1.5px solid var(--ink); border-radius: 999px; white-space: nowrap;
+      }
+      .chip-gray { background: #d9d3c6; color: #3a352c; }
+      .chip-bronze { background: #cd9b6a; color: #3a2410; }
+      .chip-blue { background: #7fb0d0; color: #0c2a3d; }
+      .chip-purple { background: #b79ad6; color: #2b1a44; }
+      .chip-gold { background: var(--gold); color: #3a2c05; }
+      .lbp-score { display: grid; place-items: center; min-width: 40px; height: 30px; background: var(--ink-bg); color: var(--chalk); font: 950 0.95rem/1 "Space Mono", monospace; }
+
+      .callout { border: 2px dashed rgba(21,20,19,0.3); border-radius: 8px; padding: 14px 16px; max-width: 560px; margin: 0 auto; font: 400 0.86rem/1.5 "Playfair Display", Georgia, serif; color: var(--ink); }
+      [data-theme="dark"] .callout { border-color: rgba(243,236,219,0.3); }
+      .callout strong { color: var(--court); }
+    </style>
+  </head>
+  <body>
+    <div class="preview-banner">🏀 Rank / XP system — design preview · not live</div>
+    <div class="pw">
+
+      <!-- HERO -->
+      <div class="section-label"><span>Your rank</span></div>
+      <p class="note">Every game earns XP. XP levels you up through the ranks — from Rookie all the way to GOAT.</p>
+      <div class="rank-card">
+        <div class="rank-emblem" aria-hidden="true">⭐</div>
+        <div class="rank-kicker">Rank 6 of 12</div>
+        <div class="rank-title">All-Star</div>
+        <div class="rank-lvl">Level 24</div>
+        <div class="xp-bar-wrap">
+          <div class="xp-bar"><div class="xp-fill" style="width:60%"></div></div>
+          <div class="xp-label"><b>6,800</b> / 8,000 XP — <b>1,200 XP</b> to <b>All-NBA</b></div>
+        </div>
+      </div>
+
+      <!-- XP SOURCES -->
+      <div class="section-label"><span>How you earn XP</span></div>
+      <p class="note">Rewards showing up, coming back, and building well — not just winning.</p>
+      <div class="xp-list">
+        <div class="xp-row"><span class="xr-ico">📅</span><span class="xr-txt">Play the Daily<small>Once per day</small></span><span class="xr-amt">+50</span></div>
+        <div class="xp-row"><span class="xr-ico">🎮</span><span class="xr-txt">Play Classic or Blind<small>Any run</small></span><span class="xr-amt">+20</span></div>
+        <div class="xp-row"><span class="xr-ico">🔥</span><span class="xr-txt">Daily streak bonus<small>Per day of your current streak</small></span><span class="xr-amt">+10 ×🔥</span></div>
+        <div class="xp-row"><span class="xr-ico">⭐</span><span class="xr-txt">Good build (90+)<small>Score 90 or higher</small></span><span class="xr-amt">+25</span></div>
+        <div class="xp-row"><span class="xr-ico">🎯</span><span class="xr-txt">Elite build (97+)<small>Score 97 or higher</small></span><span class="xr-amt">+50</span></div>
+        <div class="xp-row"><span class="xr-ico">💯</span><span class="xr-txt">Perfect 100<small>The rare air</small></span><span class="xr-amt">+150</span></div>
+        <div class="xp-row"><span class="xr-ico">🏆</span><span class="xr-txt">Unlock a trophy<small>Each achievement</small></span><span class="xr-amt">+100</span></div>
+      </div>
+
+      <!-- LADDER -->
+      <div class="section-label"><span>The rank ladder</span></div>
+      <p class="note">12 ranks to climb. Each one takes a little more than the last.</p>
+      <div class="ladder">
+        <div class="rung done"><span class="rg-ico">🏀</span><span class="rg-name">Rookie</span><span class="rg-xp">0</span></div>
+        <div class="rung done"><span class="rg-ico">🪑</span><span class="rg-name">Benchwarmer</span><span class="rg-xp">300</span></div>
+        <div class="rung done"><span class="rg-ico">🧩</span><span class="rg-name">Role Player</span><span class="rg-xp">800</span></div>
+        <div class="rung done"><span class="rg-ico">🙌</span><span class="rg-name">Sixth Man</span><span class="rg-xp">1,600</span></div>
+        <div class="rung done"><span class="rg-ico">🏃</span><span class="rg-name">Starter</span><span class="rg-xp">3,000</span></div>
+        <div class="rung current"><span class="rg-ico">⭐</span><span class="rg-name">All-Star</span><span class="rg-xp">5,000</span></div>
+        <div class="rung locked"><span class="rg-ico">🌟</span><span class="rg-name">All-NBA</span><span class="rg-xp">8,000</span></div>
+        <div class="rung locked"><span class="rg-ico">🏛️</span><span class="rg-name">Franchise Player</span><span class="rg-xp">12,000</span></div>
+        <div class="rung locked"><span class="rg-ico">👑</span><span class="rg-name">MVP</span><span class="rg-xp">18,000</span></div>
+        <div class="rung locked"><span class="rg-ico">🎖️</span><span class="rg-name">Hall of Famer</span><span class="rg-xp">26,000</span></div>
+        <div class="rung locked"><span class="rg-ico">💎</span><span class="rg-name">Legend</span><span class="rg-xp">38,000</span></div>
+        <div class="rung locked"><span class="rg-ico">🐐</span><span class="rg-name">GOAT</span><span class="rg-xp">55,000</span></div>
+      </div>
+
+      <!-- LEADERBOARD -->
+      <div class="section-label"><span>On the leaderboard</span></div>
+      <p class="note">Your rank rides next to your name — the flex everyone sees when they open the board.</p>
+      <div class="lbp">
+        <div class="lbp-row"><span class="lbp-rank">1</span><span class="lbp-name">MJ_stan_23 <span class="rank-chip chip-gold">🐐 GOAT</span></span><span class="lbp-score">100</span></div>
+        <div class="lbp-row"><span class="lbp-rank">2</span><span class="lbp-name">hoopsdynasty <span class="rank-chip chip-gold">Legend</span></span><span class="lbp-score">99</span></div>
+        <div class="lbp-row"><span class="lbp-rank">3</span><span class="lbp-name">splashbro <span class="rank-chip chip-purple">MVP</span></span><span class="lbp-score">99</span></div>
+        <div class="lbp-row"><span class="lbp-rank">4</span><span class="lbp-name">ringzculture <span class="rank-chip chip-blue">All-Star</span></span><span class="lbp-score">98</span></div>
+        <div class="lbp-row"><span class="lbp-rank">5</span><span class="lbp-name">you <span class="rank-chip chip-blue">All-Star</span></span><span class="lbp-score">96</span></div>
+        <div class="lbp-row"><span class="lbp-rank">6</span><span class="lbp-name">rookie_hooper <span class="rank-chip chip-gray">Rookie</span></span><span class="lbp-score">88</span></div>
+      </div>
+
+      <!-- FREE vs PASS -->
+      <div class="section-label"><span>Free vs GOAT Pass</span></div>
+      <div class="callout">
+        <p style="margin:0 0 8px"><strong>Everyone earns XP and levels up</strong> — that's the retention hook that keeps people playing daily.</p>
+        <p style="margin:0"><strong>GOAT Pass shows it off:</strong> only pass holders display their rank chip &amp; color on the public leaderboard and get the animated level-up moments. Free players see their rank privately and see everyone else flexing theirs — which is exactly what makes them want the Pass. 🐐</p>
+      </div>
+
+    </div>
+  </body>
+</html>
