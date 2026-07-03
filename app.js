@@ -3517,7 +3517,12 @@ function player(name, feet, inches, number, ratings) {
 }
 
 function shuffle(items) {
-  return [...items].sort(() => Math.random() - 0.5);
+  const a = [...items];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
 
 function formatHeight(player) {
@@ -5243,11 +5248,12 @@ updateBody(null);
     }
     // After recalc: local is authoritative — push everything local up to cloud
     try { localStorage.setItem(DAILY_KEY, JSON.stringify(merged)); } catch (e) {}
+    const toPush = {};
     for (const [date, entry] of Object.entries(merged)) {
-      if (recalcPending || !cloud[date] || (entry.score || 0) > (cloud[date].score || 0)) {
-        Auth.putDailyHistory(date, entry).catch(console.error);
-      }
+      if (recalcPending || !cloud[date] || (entry.score || 0) > (cloud[date].score || 0)) toPush[date] = entry;
     }
+    // One batched commit instead of a separate network write per day.
+    if (Object.keys(toPush).length) Auth.putDailyHistoryBatch(toPush).catch(console.error);
     if (recalcPending) try { localStorage.removeItem("goatlab_recalc_pending"); } catch (e) {}
     try { updateDailyCard(); } catch (e) {}
   }
@@ -5833,6 +5839,12 @@ updateBody(null);
   // top player used. Falls back to the theoretical no-respin best if no build
   // has been stored yet.
   async function getTopBuild(dateStr) {
+    // Reuse the leaderboard cache if it's warm — avoids a separate limit(1) read.
+    const cached = _lbCache[dateStr];
+    const ctop = cached && cached.rows && cached.rows[0];
+    if (ctop && Array.isArray(ctop.picks) && ctop.picks.length) {
+      return { picks: ctop.picks, score: ctop.score, name: ctop.name || null };
+    }
     try {
       const rows = await Auth.getDailyLeaderboard(dateStr, 1);
       const top = rows && rows[0];
@@ -6423,10 +6435,19 @@ updateBody(null);
       try {
         const todayStr = getTodayStr();
         const entry = getDailyHistory()[todayStr];
-        if (entry) Auth.submitDailyScore(todayStr, {
-          name: currentHandle, score: entry.score, tier: entry.tier || getTier(entry.score),
-          franchise: entry.franchise || false, franchiseTeam: entry.franchiseTeam || null, picks: entry.picks || null,
-        }).catch(console.error);
+        if (entry) {
+          // Skip the redundant read-before-write submit on a plain reload when
+          // the score + pass status already match what we last sent.
+          const sig = `${entry.score}:${Auth.goatPassCached() ? 1 : 0}`;
+          const flagKey = "goatlab_lbsent_" + user.uid + "_" + todayStr;
+          let sent = null; try { sent = localStorage.getItem(flagKey); } catch (e) {}
+          if (sent !== sig) {
+            Auth.submitDailyScore(todayStr, {
+              name: currentHandle, score: entry.score, tier: entry.tier || getTier(entry.score),
+              franchise: entry.franchise || false, franchiseTeam: entry.franchiseTeam || null, picks: entry.picks || null,
+            }).then(() => { try { localStorage.setItem(flagKey, sig); } catch (e) {} }).catch(console.error);
+          }
+        }
       } catch (e) { console.error(e); }
       syncDailyHistory(); // merge cloud <-> local daily history + streak
       refreshSaveBtn();

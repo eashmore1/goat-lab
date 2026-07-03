@@ -20,6 +20,7 @@ window.GoatAuth = (() => {
   let enabled = false;
   let handleCache = null;
   let passCache = null; // GOAT Pass ownership, cached per sign-in (null = not yet read)
+  let profilePromise = null; // one shared read of users/{uid} feeding handle + pass
   const listeners = new Set();
 
   if (!isPlaceholder && typeof firebase !== "undefined") {
@@ -32,6 +33,7 @@ window.GoatAuth = (() => {
         user = u;
         handleCache = null; // reset on sign-in/out
         passCache = null;   // re-read GOAT Pass ownership for the new user
+        profilePromise = null;
         listeners.forEach((cb) => cb(u));
       });
     } catch (e) {
@@ -45,6 +47,24 @@ window.GoatAuth = (() => {
   const userDoc = () => db.collection("users").doc(user.uid);
   const buildsRef = () => userDoc().collection("builds");
   const entriesRef = (d) => db.collection("dailyLeaderboard").doc(d).collection("entries");
+
+  // Read users/{uid} ONCE per sign-in and feed both handle + pass caches from it
+  // (getHandle and hasGoatPass both need it — no reason to read the doc twice).
+  const loadProfile = () => {
+    if (!enabled || !user) return Promise.resolve(null);
+    if (!profilePromise) {
+      profilePromise = userDoc().get().then((doc) => {
+        const data = (doc.exists && doc.data()) || {};
+        if (handleCache == null) handleCache = data.handle || user.displayName || user.email || "Player";
+        if (passCache == null) passCache = !!data.goatPass;
+        return data;
+      }).catch((e) => {
+        profilePromise = null; // allow retry on transient failure
+        throw e;
+      });
+    }
+    return profilePromise;
+  };
 
   return {
     get enabled() { return enabled; },
@@ -69,13 +89,8 @@ window.GoatAuth = (() => {
     async getHandle() {
       if (!enabled || !user) return null;
       if (handleCache != null) return handleCache;
-      try {
-        const doc = await userDoc().get();
-        handleCache = (doc.exists && doc.data().handle) || this.displayName();
-      } catch (e) {
-        console.error(e);
-        handleCache = this.displayName();
-      }
+      try { await loadProfile(); } catch (e) { /* fall through to display name */ }
+      if (handleCache == null) handleCache = this.displayName();
       return handleCache;
     },
     async setHandle(name) {
@@ -91,19 +106,14 @@ window.GoatAuth = (() => {
     async hasGoatPass() {
       if (!enabled || !user) return false;
       if (passCache !== null) return passCache;
-      try {
-        const doc = await userDoc().get();
-        passCache = !!(doc.exists && doc.data().goatPass);
-        return passCache;
-      } catch (e) {
-        // Transient read failure (flaky mobile connection etc.): do NOT cache a
-        // false — leave it unresolved so the next check retries instead of
-        // requiring a page refresh.
-        return false;
-      }
+      // Shares the single users/{uid} read with getHandle. On a transient read
+      // failure we do NOT cache false — the profile promise is reset so the next
+      // check retries instead of requiring a page refresh.
+      try { await loadProfile(); } catch (e) { return false; }
+      return passCache === true;
     },
     // Force a fresh read (used to poll right after a purchase).
-    async refreshGoatPass() { passCache = null; return this.hasGoatPass(); },
+    async refreshGoatPass() { passCache = null; profilePromise = null; return this.hasGoatPass(); },
     // Synchronous best-effort read (may be null if not fetched yet).
     goatPassCached() { return passCache === true; },
     // Build the Stripe checkout URL, tagging it with this user's uid so the
@@ -258,6 +268,18 @@ window.GoatAuth = (() => {
     async putDailyHistory(dateStr, entry) {
       if (!enabled || !user) return;
       await userDoc().collection("dailyHistory2").doc(dateStr).set(entry);
+    },
+    // Write many days at once (one commit per 450 docs) instead of N separate
+    // network writes — used by the sign-in sync.
+    async putDailyHistoryBatch(entries) {
+      if (!enabled || !user) return;
+      const col = userDoc().collection("dailyHistory2");
+      const dates = Object.keys(entries || {});
+      for (let i = 0; i < dates.length; i += 450) {
+        const batch = db.batch();
+        dates.slice(i, i + 450).forEach((d) => batch.set(col.doc(d), entries[d]));
+        await batch.commit();
+      }
     },
     // Wipe THIS account's daily history (and its leaderboard entries for those
     // days). Used to clean up cross-account contamination from the old sync bug.
