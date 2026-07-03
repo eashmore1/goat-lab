@@ -6303,13 +6303,26 @@ updateBody(null);
   const goatPassPromo = document.querySelector("#goatPassPromo");
   if (goatPassPromo) goatPassPromo.addEventListener("click", openPassModal);
 
+  // The home GOAT Pass banner shows ONLY on the home screen (and only for
+  // non-holders) — never while playing, on results, leaderboard, or stats.
+  function syncPromo() {
+    const promo = document.querySelector("#goatPassPromo");
+    const home = document.querySelector("#modeScreen");
+    if (promo) promo.hidden = hasPass || !home || home.hidden;
+  }
+  (function watchHomeForPromo() {
+    const home = document.querySelector("#modeScreen");
+    if (!home) return;
+    try { new MutationObserver(syncPromo).observe(home, { attributes: true, attributeFilter: ["hidden"] }); } catch (e) {}
+    syncPromo();
+  })();
+
   // Reflect pass state across the UI (called on sign-in and after a refresh).
   function updatePassUI() {
     window.GoatPassActive = hasPass; // read by the share-image renderer (global scope)
     const pill = document.querySelector("#goatPassPill");
     if (pill) pill.hidden = !hasPass;
-    const promo = document.querySelector("#goatPassPromo");
-    if (promo) promo.hidden = hasPass; // show the home banner to everyone but holders
+    syncPromo(); // home banner: only for non-holders, and only on the home screen
     if (statsPage && !statsPage.hidden) renderStats();
     const box = document.querySelector("#goatPassResult");
     if (box && !box.hidden) { try { renderDailyExtras(getTodayStr()); } catch (e) {} }
