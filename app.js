@@ -5214,6 +5214,7 @@ updateBody(null);
   function submitToday(dateStr, score, tier, franchise, franchiseTeam) {
     if (!Auth.currentUser()) return;
     const picks = (getDailyHistory()[dateStr] || {}).picks || null;
+    try { delete _lbCache[dateStr]; } catch (e) {} // fresh play → refresh the board next open
     Auth.submitDailyScore(dateStr, { score, tier, franchise, franchiseTeam, picks }).catch(console.error);
   }
   function showResultButton() {
@@ -5351,10 +5352,18 @@ updateBody(null);
     window._lbCountdownTimer = setInterval(tick, 1000);
   }
 
+  // Short-lived cache so re-opening the board / switching Today↔Yesterday is
+  // instant instead of re-hitting Firestore every time. Token guards against
+  // stale renders when the user switches tabs quickly.
+  const _lbCache = {}; // dateStr -> { rows, hist, ts }
+  const LB_CACHE_MS = 60000;
+  let _lbToken = 0;
+
   async function renderLeaderboard(dateStr) {
     const isToday = !dateStr || dateStr === getTodayStr();
     const targetDate = dateStr || getTodayStr();
     const me = Auth.currentUser();
+    const myToken = ++_lbToken;
     lbHint.hidden = true;
     if (lbPlayerCount) lbPlayerCount.hidden = true;
     if (lbRankBanner) lbRankBanner.hidden = true;
@@ -5367,17 +5376,39 @@ updateBody(null);
     lbList.hidden = false;
     lbList.innerHTML = `<p class="lb-empty">Loading ${isToday ? "today" : "yesterday"}'s board…</p>`;
 
-    // Fire both reads simultaneously — leaderboard (top 75) + the daily aggregate
-    // (ONE doc: player count + score histogram) for count, distribution, and rank.
-    const aggPromise = Auth.getDailyAggregate(targetDate).catch(() => null);
-    let rows;
-    try {
-      rows = await Auth.getDailyLeaderboard(targetDate, 75);
-    } catch (e) {
-      console.error(e);
-      lbList.innerHTML = '<p class="lb-empty">Couldn\'t load the leaderboard.</p>';
-      return;
+    // Fresh cache → render instantly, no network. Otherwise fetch the board
+    // (top 75) + the daily aggregate (one doc: count + score histogram) in
+    // parallel, and heal/cache the histogram.
+    const cached = _lbCache[targetDate];
+    const fresh = cached && (Date.now() - cached.ts < LB_CACHE_MS);
+    let rows, histPromise;
+    if (fresh) {
+      rows = cached.rows;
+      histPromise = Promise.resolve(cached.hist);
+    } else {
+      const aggPromise = Auth.getDailyAggregate(targetDate).catch(() => null);
+      try {
+        rows = await Auth.getDailyLeaderboard(targetDate, 75);
+      } catch (e) {
+        console.error(e);
+        if (myToken === _lbToken) lbList.innerHTML = '<p class="lb-empty">Couldn\'t load the leaderboard.</p>';
+        return;
+      }
+      if (myToken !== _lbToken) return; // superseded by a newer open/tab-switch
+      histPromise = aggPromise.then(async (agg) => {
+        let hist = agg && agg.hist ? agg.hist : {};
+        const count = agg ? (agg.count || 0) : 0;
+        if (histTotal(hist) === 0 || histTotal(hist) < count) {
+          try {
+            const scores = await Auth.getAllDailyScores(targetDate);
+            if (scores.length) { hist = scoresToHist(scores); Auth.writeDailyHist(targetDate, hist, scores.length); }
+          } catch (e) {}
+        }
+        return hist;
+      });
+      histPromise.then((hist) => { _lbCache[targetDate] = { rows, hist, ts: Date.now() }; });
     }
+    if (myToken !== _lbToken) return;
     const isMine = (r) => me && r.uid === me.uid;
 
     // Render the main board immediately once top-75 arrives.
@@ -5405,22 +5436,10 @@ updateBody(null);
         : '<p class="lb-empty lb-empty-rest">Only the podium so far — climb on!</p>';
     }
 
-    // Distribution bar + exact rank fill in once the aggregate resolves
-    // (non-blocking). The summary covers EVERY player who's played; if it looks
-    // incomplete (missing, or fewer than the tracked player count), read the
-    // full set once, use it, and write the summary back so later views are cheap.
-    aggPromise.then(async agg => {
-      let hist = agg && agg.hist ? agg.hist : {};
-      const count = agg ? (agg.count || 0) : 0;
-      if (histTotal(hist) === 0 || histTotal(hist) < count) {
-        try {
-          const scores = await Auth.getAllDailyScores(targetDate);
-          if (scores.length) {
-            hist = scoresToHist(scores);
-            Auth.writeDailyHist(targetDate, hist, scores.length); // fire-and-forget backfill
-          }
-        } catch (e) {}
-      }
+    // Distribution bar + exact rank fill in once the histogram resolves
+    // (non-blocking), covering EVERY player who's played.
+    histPromise.then((hist) => {
+      if (myToken !== _lbToken) return;
       renderDistBar(hist);
       renderRankBanner(hist, rows, me, isToday);
     });
