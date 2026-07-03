@@ -6353,6 +6353,23 @@ updateBody(null);
   // Auth state drives the UI. Load handle, then back-fill today's score.
   Auth.onChange(async (user) => {
     if (user) {
+      // Per-account isolation: the daily result/streak and mode stats are cached
+      // in device localStorage. If a DIFFERENT account was last active on this
+      // device, clear those caches so this account starts from its OWN cloud data
+      // instead of inheriting the previous account's daily (or submitting it as
+      // this account's leaderboard entry). First-ever sign-in keeps any anonymous
+      // progress so it carries into the account.
+      try {
+        const lastUid = localStorage.getItem("goatlab_active_uid");
+        if (lastUid && lastUid !== user.uid) {
+          localStorage.removeItem(DAILY_KEY);
+          localStorage.removeItem(MODE_STATS_KEY);
+          localStorage.removeItem(PB_KEY);
+          _cloudModeStats = null;
+          try { updateDailyCard(); updatePBDisplay(); } catch (e) {}
+        }
+        localStorage.setItem("goatlab_active_uid", user.uid);
+      } catch (e) {}
       signedOut.hidden = true;
       signedIn.hidden = false;
       const acctItems = document.querySelector("#settingsAccountItems");
