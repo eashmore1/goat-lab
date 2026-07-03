@@ -5418,8 +5418,8 @@ updateBody(null);
       renderRankBanner(hist, rows, me, isToday);
     });
 
-    // Perfect-build reveal for the viewed day (pass holders) / unlock teaser.
-    renderLbOptimal(targetDate);
+    // Top-build reveal for the viewed day (pass holders) / unlock teaser.
+    renderLbOptimal(targetDate, rows);
 
     // Only pin the user's own score when viewing today's board.
     if (isToday && me && !rows.some((r) => r.uid === me.uid)) {
@@ -5775,55 +5775,63 @@ updateBody(null);
   function miniChip(p, best) {
     return `<div class="mini-chip${best ? " mc-best" : ""}"><span class="mc-stat">${esc(p.attrLabel || p.attrShort || "")}</span><span class="mc-name">${esc(p.playerName || "—")}</span></div>`;
   }
-  function optimalCardHTML(opt, footId = "optimalFoot", kicker = "🐐 Best build from today's draft") {
+  // Render a build (picks with {attrLabel/attrShort, playerName, score}) as a card.
+  function buildCardHTML(build, opts) {
+    opts = opts || {};
+    const kicker = opts.kicker || "🐐 Top build";
+    const footText = opts.footText || "The highest-scoring build played — the one to beat.";
     let bestIdx = 0, bestScore = -1;
-    opt.picks.forEach((p, i) => { if (p.score > bestScore) { bestScore = p.score; bestIdx = i; } });
-    const chips = opt.picks.map((p, i) => miniChip(p, i === bestIdx)).join("");
+    build.picks.forEach((p, i) => { const sc = p.score ?? 0; if (sc > bestScore) { bestScore = sc; bestIdx = i; } });
+    const chips = build.picks.map((p, i) => miniChip(p, i === bestIdx)).join("");
     return `
       <div class="optimal-card">
         <div class="optimal-head">
           <span class="optimal-kicker">${kicker}</span>
-          <span class="optimal-score">${esc(opt.score)}</span>
+          <span class="optimal-score">${esc(build.score)}</span>
         </div>
         <div class="optimal-grid">${chips}</div>
-        <div class="optimal-foot" id="${footId}">The highest score possible from that day's exact draft.</div>
+        <div class="optimal-foot">${esc(footText)}</div>
       </div>`;
   }
-  async function fillOptimalRarity(dateStr, optScore, footId = "optimalFoot") {
+  // The actual highest-scoring build played that day — reflects the re-rolls the
+  // top player used. Falls back to the theoretical no-respin best if no build
+  // has been stored yet.
+  async function getTopBuild(dateStr) {
     try {
-      const agg = await Auth.getDailyAggregate(dateStr);
-      let hist = agg && agg.hist ? agg.hist : {};
-      const count = agg ? (agg.count || 0) : 0;
-      if (histTotal(hist) === 0 || histTotal(hist) < count) {
-        const scores = await Auth.getAllDailyScores(dateStr);
-        if (scores.length) { hist = scoresToHist(scores); Auth.writeDailyHist(dateStr, hist, scores.length); }
+      const rows = await Auth.getDailyLeaderboard(dateStr, 1);
+      const top = rows && rows[0];
+      if (top && Array.isArray(top.picks) && top.picks.length) {
+        return { picks: top.picks, score: top.score, name: top.name || null };
       }
-      const foot = document.querySelector("#" + footId);
-      const total = histTotal(hist);
-      if (!foot || !total) return;
-      const n = histAbove(hist, optScore - 1); // scores >= optScore
-      const pct = Math.max(1, Math.round((n / total) * 100));
-      const isToday = dateStr === getTodayStr();
-      foot.textContent = n === 0
-        ? `No one has matched ${optScore}${isToday ? " yet today" : ""} — the draft's ceiling still stands.`
-        : `Only ${pct}% of ${isToday ? "today's" : "that day's"} players matched this score (${optScore}).`;
     } catch (e) {}
+    const opt = computeOptimalDaily(dateStr);
+    return opt ? { picks: opt.picks, score: opt.score, name: null } : null;
   }
-  // Collapsible "perfect build" reveal on the leaderboard (any viewed date).
-  function renderLbOptimal(dateStr) {
+  function topKicker(dateStr, name) {
+    const isToday = dateStr === getTodayStr();
+    return `🐐 ${isToday ? "Today's" : "The"} top build${name ? " · " + esc(name) : ""}`;
+  }
+  // Collapsible top-build reveal on the leaderboard (uses the already-fetched rows).
+  function renderLbOptimal(dateStr, rows) {
     const box = document.querySelector("#lbOptimal");
     if (!box) return;
-    const opt = computeOptimalDaily(dateStr);
-    if (!opt) { box.hidden = true; box.innerHTML = ""; return; }
+    const top = rows && rows[0];
+    const topHasBuild = top && Array.isArray(top.picks) && top.picks.length;
+    const opt = topHasBuild ? null : computeOptimalDaily(dateStr);
+    if (!topHasBuild && !opt) { box.hidden = true; box.innerHTML = ""; return; }
     if (!hasPass) {
-      box.innerHTML = `<button class="lb-optimal-toggle" type="button" id="lbOptimalUnlock">🐐 See the perfect build for this day — <strong>GOAT Pass</strong></button>`;
+      box.innerHTML = `<button class="lb-optimal-toggle" type="button" id="lbOptimalUnlock">🐐 See the top build for this day — <strong>GOAT Pass</strong></button>`;
       const u = document.querySelector("#lbOptimalUnlock");
       if (u) u.addEventListener("click", openPassModal);
       box.hidden = false;
       return;
     }
+    const tb = topHasBuild
+      ? { picks: top.picks, score: top.score, name: top.name || null }
+      : { picks: opt.picks, score: opt.score, name: null };
+    const isToday = dateStr === getTodayStr();
     box.innerHTML = `
-      <button class="lb-optimal-toggle" type="button" id="lbOptimalToggle" aria-expanded="false">🐐 Reveal the perfect build ▾</button>
+      <button class="lb-optimal-toggle" type="button" id="lbOptimalToggle" aria-expanded="false">🐐 Reveal ${isToday ? "today's" : "the"} top build ▾</button>
       <div id="lbOptimalBody" hidden></div>`;
     const toggle = document.querySelector("#lbOptimalToggle");
     const body = document.querySelector("#lbOptimalBody");
@@ -5832,11 +5840,10 @@ updateBody(null);
         const show = body.hidden;
         body.hidden = !show;
         toggle.setAttribute("aria-expanded", String(show));
-        toggle.innerHTML = show ? "🐐 Hide the perfect build ▴" : "🐐 Reveal the perfect build ▾";
+        toggle.innerHTML = show ? "🐐 Hide the top build ▴" : `🐐 Reveal ${isToday ? "today's" : "the"} top build ▾`;
         if (show && !body.dataset.filled) {
-          body.innerHTML = optimalCardHTML(opt, "lbOptimalFoot", "🐐 The perfect build");
+          body.innerHTML = buildCardHTML(tb, { kicker: topKicker(dateStr, tb.name) });
           body.dataset.filled = "1";
-          fillOptimalRarity(dateStr, opt.score, "lbOptimalFoot");
         }
       });
     }
@@ -5858,19 +5865,25 @@ updateBody(null);
       </div>
       <div class="tease-wrap" aria-hidden="true"><div class="tease-grid">${tease}</div></div>`;
   }
-  function renderDailyExtras(dateStr) {
+  async function renderDailyExtras(dateStr) {
     const box = document.querySelector("#goatPassResult");
     if (!box) return;
+    if (hasPass) {
+      box.hidden = false;
+      box.innerHTML = `<p class="lb-empty" style="text-align:center;margin:10px 0">Loading the top build…</p>`;
+      const tb = await getTopBuild(dateStr);
+      if (!tb) { box.hidden = true; box.innerHTML = ""; return; }
+      box.innerHTML = buildCardHTML(tb, {
+        kicker: topKicker(dateStr, tb.name),
+        footText: "The highest-scoring build played so far — the one to beat.",
+      });
+      return;
+    }
     const opt = computeOptimalDaily(dateStr);
     if (!opt) { box.hidden = true; box.innerHTML = ""; return; }
-    if (hasPass) {
-      box.innerHTML = optimalCardHTML(opt);
-      fillOptimalRarity(dateStr, opt.score);
-    } else {
-      box.innerHTML = unlockStripHTML(opt);
-      const btn = box.querySelector("[data-unlock]");
-      if (btn) btn.addEventListener("click", openPassModal);
-    }
+    box.innerHTML = unlockStripHTML(opt);
+    const btn = box.querySelector("[data-unlock]");
+    if (btn) btn.addEventListener("click", openPassModal);
     box.hidden = false;
   }
 
