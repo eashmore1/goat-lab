@@ -269,6 +269,28 @@ window.GoatAuth = (() => {
         });
       } catch (e) {}
     },
+    // One-time seed: copy this device's LOCAL Classic/Blind totals into the cloud,
+    // but only for a mode the cloud has nothing for yet — so historical/signed-out
+    // plays start counting without ever double-counting cloud-tracked games.
+    async seedModeStats(local) {
+      if (!enabled || !user || !local) return;
+      const ref = userDoc().collection("stats").doc("modes");
+      try {
+        await db.runTransaction(async (tx) => {
+          const doc = await tx.get(ref);
+          const data = doc.exists ? (doc.data() || {}) : {};
+          let changed = false;
+          ["classic", "blind"].forEach((mode) => {
+            const l = local[mode];
+            if (l && (l.plays || 0) > 0 && (!data[mode] || !(data[mode].plays || 0))) {
+              data[mode] = l;
+              changed = true;
+            }
+          });
+          if (changed) tx.set(ref, data, { merge: true });
+        });
+      } catch (e) {}
+    },
     async getDailyLeaderboard(dateStr, topN = 100) {
       if (!enabled) return [];
       const snap = await entriesRef(dateStr).orderBy("score", "desc").limit(topN).get();

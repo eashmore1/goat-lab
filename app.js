@@ -6472,6 +6472,19 @@ updateBody(null);
           }
         }
       } catch (e) { console.error(e); }
+      // One-time: seed cloud Classic/Blind totals from this device's local tally
+      // (so historical / signed-out games start counting). No-op after first run.
+      try {
+        const localModes = getModeStats();
+        if (localModes && (localModes.classic || localModes.blind)) {
+          const seedFlag = "goatlab_modeseed_" + user.uid;
+          if (!localStorage.getItem(seedFlag)) {
+            await Auth.seedModeStats(localModes);
+            try { localStorage.setItem(seedFlag, "1"); } catch (e) {}
+            _cloudModeStats = null; // force a fresh read next time stats open
+          }
+        }
+      } catch (e) {}
       syncDailyHistory(); // merge cloud <-> local daily history + streak
       refreshSaveBtn();
     } else {
