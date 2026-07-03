@@ -6370,6 +6370,16 @@ updateBody(null);
         }
         localStorage.setItem("goatlab_active_uid", user.uid);
       } catch (e) {}
+      // Maintenance: playgoatlab.com/?resetdaily wipes THIS account's daily
+      // history + leaderboard entries (cleans old cross-account contamination).
+      try {
+        if (new URLSearchParams(location.search).has("resetdaily")) {
+          localStorage.removeItem(DAILY_KEY);
+          await Auth.clearDailyHistory();
+          history.replaceState(null, "", location.pathname);
+          try { updateDailyCard(); } catch (e) {}
+        }
+      } catch (e) {}
       signedOut.hidden = true;
       signedIn.hidden = false;
       const acctItems = document.querySelector("#settingsAccountItems");

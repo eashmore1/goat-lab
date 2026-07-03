@@ -259,6 +259,16 @@ window.GoatAuth = (() => {
       if (!enabled || !user) return;
       await userDoc().collection("dailyHistory2").doc(dateStr).set(entry);
     },
+    // Wipe THIS account's daily history (and its leaderboard entries for those
+    // days). Used to clean up cross-account contamination from the old sync bug.
+    async clearDailyHistory() {
+      if (!enabled || !user) return;
+      const uid = user.uid;
+      const snap = await userDoc().collection("dailyHistory2").get();
+      await Promise.all(snap.docs.map((d) => d.ref.delete().catch(() => {})));
+      await Promise.all(snap.docs.map((d) =>
+        db.collection("dailyLeaderboard").doc(d.id).collection("entries").doc(uid).delete().catch(() => {})));
+    },
 
     // --- Delete account + all associated data ------------------------------
     async deleteAccount() {
