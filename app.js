@@ -4160,6 +4160,8 @@ function finish() {
       window.GoatLeaderboard.showResultButton();
       if (window.GoatLeaderboard.showDailyExtras) window.GoatLeaderboard.showDailyExtras(todayStr);
     }
+    // Soft-ask for daily reminders shortly after the result lands.
+    if (window.GoatPushNudge) setTimeout(() => { try { window.GoatPushNudge(); } catch (e) {} }, 1400);
     resultTitle.textContent = `Daily — ${score}: ${tier}`;
     resultCopy.textContent = dailyData?.franchise
       ? `${archetype}. Greatest ${dailyData.franchiseTeamName} build in the books. Come back tomorrow.`
@@ -6541,6 +6543,35 @@ updateBody(null);
     btn.disabled = false;
     reflect();
   });
+
+  // --- Soft ask: after a Daily, invite the user to turn reminders on ---------
+  const nudge = document.querySelector("#pushNudge");
+  const nudgeYes = document.querySelector("#pushNudgeYes");
+  const nudgeNo = document.querySelector("#pushNudgeNo");
+  const NUDGE_LAST = "goatlab_push_nudge_last";
+  const NUDGE_COUNT = "goatlab_push_nudge_count";
+  function hideNudge() { if (nudge) nudge.hidden = true; }
+  function maybeShowNudge() {
+    if (!nudge || !Auth.pushSupported() || Auth.pushEnabled()) return;
+    if (Auth.notifPermission() === "denied") return; // browser won't let us re-ask
+    let count = 0, last = 0;
+    try { count = +(localStorage.getItem(NUDGE_COUNT) || 0); last = +(localStorage.getItem(NUDGE_LAST) || 0); } catch (e) {}
+    if (count >= 3) return;                              // stop nagging after 3 asks
+    if (last && Date.now() - last < 2 * 86400000) return; // snooze 2 days between asks
+    nudge.hidden = false;
+    try { localStorage.setItem(NUDGE_LAST, String(Date.now())); localStorage.setItem(NUDGE_COUNT, String(count + 1)); } catch (e) {}
+  }
+  if (nudgeYes) nudgeYes.addEventListener("click", async () => {
+    nudgeYes.disabled = true; nudgeYes.textContent = "…";
+    try {
+      const res = await Auth.enablePush();
+      if (res.ok) { try { localStorage.setItem(NUDGE_COUNT, "9"); } catch (e) {} } // done, never nag again
+    } catch (e) {}
+    hideNudge();
+    reflect();
+  });
+  if (nudgeNo) nudgeNo.addEventListener("click", hideNudge);
+  window.GoatPushNudge = maybeShowNudge; // called after a Daily finishes
 })();
 
 // ===== Add to Home Screen prompt (gentle mobile capture) =====
