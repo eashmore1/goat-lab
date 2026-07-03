@@ -5300,9 +5300,11 @@ updateBody(null);
   }
 
   function getYesterdayStr() {
+    // Local date, matching getTodayStr — using UTC here made the "Yesterday" tab
+    // show the wrong day (often today) for users west of UTC in the evening.
     const d = new Date();
     d.setDate(d.getDate() - 1);
-    return d.toISOString().slice(0, 10);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   }
 
   // Score tier bands for distribution bar
@@ -6292,13 +6294,16 @@ updateBody(null);
       statsBody.innerHTML = renderTrophiesHTML();
       return;
     }
-    // Classic / Blind — pull saved builds + the account's cloud totals
-    // (once per stats-page open).
-    if (_statsBuilds === null) {
+    // Classic / Blind — pull saved builds + the account's cloud totals. Fetch
+    // each independently: a transient cloud-read failure (null) must be retried
+    // on the next tab switch, not stay stuck at 0 because builds already loaded.
+    const needBuilds = _statsBuilds === null;
+    const needCloud = !!Auth.currentUser() && _cloudModeStats === null;
+    if (needBuilds || needCloud) {
       statsBody.innerHTML = `<p class="lb-empty" style="text-align:center;margin-top:18px">Loading…</p>`;
       const [builds, cloud] = await Promise.all([
-        Auth.listBuilds().catch(() => []),
-        Auth.currentUser() ? Auth.getModeStatsCloud().catch(() => null) : Promise.resolve(null),
+        needBuilds ? Auth.listBuilds().catch(() => []) : Promise.resolve(_statsBuilds),
+        needCloud ? Auth.getModeStatsCloud().catch(() => null) : Promise.resolve(_cloudModeStats),
       ]);
       _statsBuilds = builds;
       _cloudModeStats = cloud;
@@ -6379,7 +6384,23 @@ updateBody(null);
       tries++;
       let ok = false;
       try { ok = await Auth.refreshGoatPass(); } catch (e) {}
-      if (ok) { hasPass = true; updatePassUI(); _passPollRunning = false; try { history.replaceState(null, "", location.pathname); } catch (e) {} return; }
+      if (ok) {
+        hasPass = true; updatePassUI(); _passPollRunning = false;
+        try { history.replaceState(null, "", location.pathname); } catch (e) {}
+        // Re-submit today's entry so the 🐐 badge lands on the public leaderboard
+        // row immediately (not just after a reload).
+        try {
+          const today = getTodayStr();
+          const entry = getDailyHistory()[today];
+          const u = Auth.currentUser();
+          if (entry && u) {
+            try { localStorage.removeItem("goatlab_lbsent_" + u.uid + "_" + today); } catch (e) {}
+            delete _lbCache[today];
+            submitToday(today, entry.score, entry.tier || getTier(entry.score), entry.franchise || false, entry.franchiseTeam || null);
+          }
+        } catch (e) {}
+        return;
+      }
       if (tries < 8) setTimeout(tick, 2500); // ~20s of retries
       else { _passPollRunning = false; try { history.replaceState(null, "", location.pathname); } catch (e) {} }
     };
