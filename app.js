@@ -5826,10 +5826,19 @@ updateBody(null);
       box.hidden = false;
       return;
     }
+    const isToday = dateStr === getTodayStr();
+    // Anti-cheat: never reveal TODAY's top build until the user has played today,
+    // or they could just copy it. Past days (yesterday) are always fine.
+    let playedToday = false;
+    try { playedToday = !!getDailyHistory()[getTodayStr()]; } catch (e) {}
+    if (isToday && !playedToday) {
+      box.innerHTML = `<div class="lb-optimal-locked">🐐 Play today's Daily to unlock the top build.</div>`;
+      box.hidden = false;
+      return;
+    }
     const tb = topHasBuild
       ? { picks: top.picks, score: top.score, name: top.name || null }
       : { picks: opt.picks, score: opt.score, name: null };
-    const isToday = dateStr === getTodayStr();
     box.innerHTML = `
       <button class="lb-optimal-toggle" type="button" id="lbOptimalToggle" aria-expanded="false">🐐 Reveal ${isToday ? "today's" : "the"} top build ▾</button>
       <div id="lbOptimalBody" hidden></div>`;
