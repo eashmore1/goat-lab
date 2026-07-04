@@ -2848,7 +2848,7 @@ h1 {
 .locked-gate .lock-txt { font: 700 0.82rem/1.4 "Space Mono", ui-monospace, monospace; color: var(--ink); max-width: 280px; }
 
 /* Unlock modal */
-.pass-modal { max-width: 380px; padding: 0; overflow: hidden; }
+.pass-modal { max-width: 580px; width: 100%; padding: 0; overflow: hidden; max-height: 92vh; display: flex; flex-direction: column; }
 .pass-modal .modal-close { position: absolute; top: 10px; right: 10px; z-index: 2; color: var(--ink); }
 .pass-top { background: var(--gold); color: var(--ink); padding: 22px 20px 16px; text-align: center; border-bottom: 3px solid var(--ink); }
 .pass-top .pass-goat { font-size: 2.3rem; line-height: 1; }
@@ -2857,8 +2857,9 @@ h1 {
 .pass-price s { opacity: 0.5; font-weight: 400; }
 .pass-price small { font-size: 0.68rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.06em; }
 .pass-launch { margin-top: 7px; display: inline-block; background: var(--court); color: #fff; border: 2px solid var(--ink); padding: 3px 10px; font: 700 0.56rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.08em; text-transform: uppercase; }
-.pass-body { padding: 20px; }
-.pass-perks { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 13px; }
+.pass-body { padding: 20px; overflow-y: auto; flex: 1 1 auto; min-height: 0; }
+/* Two columns on wider screens so the modal reads landscape, not a tall phone strip. */
+.pass-perks { list-style: none; margin: 0 0 14px; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 18px; }
 .pass-perks li { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; }
 .pass-perks .perk-ico { width: 34px; height: 34px; display: grid; place-items: center; flex-shrink: 0; border: 2px solid var(--ink); background: var(--surface); font-size: 1.05rem; }
 .pass-perks .perk-txt strong { display: block; font: 700 0.9rem/1.2 "Playfair Display", Georgia, serif; }
@@ -2867,6 +2868,11 @@ h1 {
 .pass-cta { width: 100%; padding: 14px; cursor: pointer; background: var(--court); color: #fff; border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); font: 800 0.92rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.04em; text-transform: uppercase; transition: transform 0.1s ease, box-shadow 0.1s ease; }
 .pass-cta:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
 .pass-fine { text-align: center; margin: 12px 0 0; color: var(--muted); font: 400 0.74rem/1.4 "Playfair Display", Georgia, serif; }
+/* Narrow screens: single column, back to a phone-friendly width. */
+@media (max-width: 540px) {
+  .pass-modal { max-width: 400px; }
+  .pass-perks { grid-template-columns: 1fr; }
+}
 
 @media (max-width: 460px) {
   .stat-tiles { grid-template-columns: repeat(2, 1fr); }

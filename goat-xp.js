@@ -34,7 +34,8 @@ window.GoatXP = (function () {
     score97: 50,
     score100: 150,
     trophy: 100,          // per trophy unlocked
-    passMultiplier: 1.25, // GOAT Pass: +25% on everything
+    passMultiplier: 1.0,  // GOAT Pass gives NO XP advantage — everyone earns equally
+                          // (set >1 to re-enable a pass boost; kept as a knob)
   };
   const LEVEL_STEP = 250;              // 1 cosmetic "level" per this much XP
   const LS_KEY = "goatlab_xp_v1";      // per-device meta + signed-out XP
@@ -74,6 +75,13 @@ window.GoatXP = (function () {
   }
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const commas = (n) => Math.round(n || 0).toLocaleString("en-US");
+  // Roman numerals for the rank emblem (1..12 -> I..XII). No emoji.
+  function roman(n) {
+    const map = [["X", 10], ["IX", 9], ["V", 5], ["IV", 4], ["I", 1]];
+    let s = "";
+    for (const [r, v] of map) { while (n >= v) { s += r; n -= v; } }
+    return s || "I";
+  }
 
   // ==== Pure rank math ======================================================
   const CHIP_BY_NAME = {};
@@ -262,18 +270,16 @@ window.GoatXP = (function () {
   function injectStyles() {
     if (document.getElementById("goatXpStyles")) return;
     const css = `
-    .grank-card{border:3px solid var(--ink,#151413);background:var(--paper,#fbf7ee);box-shadow:var(--shadow,4px 4px 0 #151413);padding:14px 16px;margin:0 0 14px;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;cursor:pointer;text-align:left;font-family:"Playfair Display",Georgia,serif}
-    .grank-emblem{width:52px;height:52px;display:grid;place-items:center;border:3px solid var(--ink,#151413);border-radius:50%;font-size:1.7rem;background:var(--gold,#e6b843);box-shadow:2px 2px 0 var(--ink,#151413)}
-    .grank-main{min-width:0}
-    .grank-kicker{font:700 .58rem/1 "Space Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#8a8272)}
-    .grank-title{margin:2px 0 6px;font:900 1.3rem/1 "Playfair Display",Georgia,serif;color:var(--ink,#151413);display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-    .grank-lvl{font:700 .6rem/1 "Space Mono",monospace;color:var(--court,#c0512f);text-transform:uppercase;letter-spacing:.05em}
-    .grank-bar{height:9px;background:rgba(21,20,19,.12);border:2px solid var(--ink,#151413);border-radius:999px;overflow:hidden}
-    [data-theme="dark"] .grank-bar{background:rgba(243,236,219,.14)}
+    /* Slim rank bar (home, top of page) */
+    .grank-strip{display:flex;align-items:center;gap:11px;width:100%;border:2px solid var(--ink,#151413);background:var(--paper,#fbf7ee);box-shadow:3px 3px 0 var(--ink,#151413);padding:7px 12px;margin:0 0 12px;cursor:pointer;text-align:left;font-family:"Playfair Display",Georgia,serif}
+    .grank-emblem{flex:none;width:30px;height:30px;display:grid;place-items:center;border:2px solid var(--ink,#151413);border-radius:50%;background:var(--gold,#e6b843);color:#3a2c05;font:800 .68rem/1 "Space Mono",monospace;box-shadow:1px 1px 0 var(--ink,#151413)}
+    .grank-name{flex:none;font:800 .92rem/1 "Playfair Display",Georgia,serif;color:var(--ink,#151413);white-space:nowrap}
+    .grank-lvl{font:700 .54rem/1 "Space Mono",monospace;color:var(--muted,#8a8272);text-transform:uppercase;letter-spacing:.05em;margin-left:6px}
+    .grank-track{flex:1 1 auto;min-width:36px;height:8px;background:rgba(21,20,19,.12);border:2px solid var(--ink,#151413);border-radius:999px;overflow:hidden}
+    [data-theme="dark"] .grank-track{background:rgba(243,236,219,.14)}
     .grank-fill{height:100%;background:var(--court,#c0512f);border-radius:999px;transition:width .5s ease}
-    .grank-xp{margin-top:5px;font:700 .62rem/1.3 "Space Mono",monospace;color:var(--muted,#8a8272)}
-    .grank-xp b{color:var(--ink,#151413)}
-    .grank-cta{font:700 .56rem/1 "Space Mono",monospace;color:var(--court,#c0512f);text-transform:uppercase;letter-spacing:.06em;margin-top:6px}
+    .grank-next{flex:none;font:700 .58rem/1 "Space Mono",monospace;color:var(--muted,#8a8272);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+    @media (max-width:560px){.grank-next{display:none}}
     /* Rank chip (leaderboards) */
     .grank-chip{display:inline-block;font:800 .56rem/1 "Space Mono",monospace;letter-spacing:.04em;text-transform:uppercase;padding:3px 7px;border:1.5px solid var(--ink,#151413);border-radius:999px;white-space:nowrap;vertical-align:middle}
     .grank-chip.chip-gray{background:#d9d3c6;color:#3a352c}
@@ -285,7 +291,7 @@ window.GoatXP = (function () {
     /* Level-up celebration */
     .grank-lvlup{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:rgba(21,20,19,.6);animation:grankFade .25s ease}
     .grank-lvlup-card{position:relative;overflow:hidden;background:var(--paper,#fbf7ee);border:3px solid var(--ink,#151413);box-shadow:8px 8px 0 var(--ink,#151413);padding:30px 34px;text-align:center;max-width:340px;animation:grankPop .4s cubic-bezier(.2,1.3,.4,1)}
-    .grank-lvlup-emblem{width:96px;height:96px;margin:0 auto 12px;display:grid;place-items:center;border:3px solid var(--ink,#151413);border-radius:50%;font-size:3rem;background:var(--gold,#e6b843);box-shadow:4px 4px 0 var(--ink,#151413)}
+    .grank-lvlup-emblem{width:96px;height:96px;margin:0 auto 12px;display:grid;place-items:center;border:3px solid var(--ink,#151413);border-radius:50%;font:800 2.1rem/1 "Space Mono",monospace;color:#3a2c05;background:var(--gold,#e6b843);box-shadow:4px 4px 0 var(--ink,#151413)}
     .grank-lvlup-kicker{font:700 .7rem/1 "Space Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--court,#c0512f)}
     .grank-lvlup-title{margin:6px 0 2px;font:900 2rem/1 "Playfair Display",Georgia,serif;color:var(--ink,#151413)}
     .grank-lvlup-sub{font:400 .9rem/1.4 "Playfair Display",Georgia,serif;color:var(--muted,#8a8272)}
@@ -313,15 +319,19 @@ window.GoatXP = (function () {
     document.head.appendChild(s);
   }
 
-  // ==== Home rank card ======================================================
+  // ==== Home rank bar (slim strip, top of the home screen) ==================
   function ensureCard() {
     if (document.getElementById("goatRankCard")) return;
     const home = document.getElementById("modeScreen");
     if (!home || !home.parentNode) return;
+    // Sit at the very top of the home content — above the GOAT Pass promo if it's
+    // there, otherwise directly above the mode section.
+    const anchor = document.getElementById("goatPassPromo") || home;
     const el = document.createElement("button");
-    el.id = "goatRankCard"; el.type = "button"; el.className = "grank-card"; el.hidden = true;
+    el.id = "goatRankCard"; el.type = "button"; el.className = "grank-strip"; el.hidden = true;
+    el.title = "View the all-time XP leaderboard";
     el.addEventListener("click", openBoard);
-    home.parentNode.insertBefore(el, home);
+    anchor.parentNode.insertBefore(el, anchor);
     try {
       new MutationObserver(syncCardVisible).observe(home, { attributes: true, attributeFilter: ["hidden"] });
     } catch (e) {}
@@ -337,18 +347,12 @@ window.GoatXP = (function () {
     const el = document.getElementById("goatRankCard");
     if (!el) return;
     const r = rankInfo(curXp);
-    const label = r.isMax
-      ? `<b>${commas(r.xp)} XP</b> — max rank reached 🐐`
-      : `<b>${commas(r.xp)}</b> / ${commas(r.nextXp)} XP — <b>${commas(r.toNext)}</b> to <b>${esc(r.next)}</b>`;
+    const next = r.isMax ? "Max rank" : `${commas(r.toNext)} XP &rarr; ${esc(r.next)}`;
     el.innerHTML = `
-      <span class="grank-emblem" aria-hidden="true">${r.icon}</span>
-      <span class="grank-main">
-        <span class="grank-kicker">Rank ${r.index + 1} of ${r.total} · Lvl ${r.level}</span>
-        <span class="grank-title">${esc(r.name)}</span>
-        <span class="grank-bar"><span class="grank-fill" style="width:${r.pct}%"></span></span>
-        <span class="grank-xp">${label}</span>
-        <span class="grank-cta">View XP leaderboard →</span>
-      </span>`;
+      <span class="grank-emblem" aria-hidden="true">${roman(r.index + 1)}</span>
+      <span class="grank-name">${esc(r.name)}<span class="grank-lvl">Lvl ${r.level}</span></span>
+      <span class="grank-track"><span class="grank-fill" style="width:${r.pct}%"></span></span>
+      <span class="grank-next">${next}</span>`;
   }
 
   // ==== Level-up celebration ================================================
@@ -368,7 +372,7 @@ window.GoatXP = (function () {
     ov.innerHTML = `
       <div class="grank-lvlup-card">
         ${confetti}
-        <div class="grank-lvlup-emblem" aria-hidden="true">${info.icon}</div>
+        <div class="grank-lvlup-emblem" aria-hidden="true">${roman(info.index + 1)}</div>
         <div class="grank-lvlup-kicker">Rank up!</div>
         <div class="grank-lvlup-title">${esc(info.name)}</div>
         <div class="grank-lvlup-sub">${info.isMax ? "You've reached the summit. You are the GOAT." : "Keep climbing — next up: " + esc(info.next) + "."}</div>
