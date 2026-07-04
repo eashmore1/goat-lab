@@ -4125,6 +4125,10 @@ function finish() {
   }
   updatePBDisplay();
 
+  // Award XP for this game (all modes). Runs before the daily leaderboard submit
+  // below so the entry carries the player's up-to-date rank.
+  try { if (window.GoatXP) window.GoatXP.onGameFinish({ mode: gameMode, score }); } catch (e) {}
+
   if (resultBreakdown) {
     if (score === 100) {
       resultBreakdown.textContent = `Perfect build. Nobody does this.`;
@@ -5283,6 +5287,12 @@ updateBody(null);
   function goatBadge(on) {
     return on ? ' <span class="goat-badge-sm" title="GOAT Pass holder" aria-label="GOAT Pass">🐐</span>' : "";
   }
+  // Pass holders show a gold-bordered rank chip (the XP-system badge). Free
+  // players show nothing. Falls back to the plain 🐐 if the XP system isn't up.
+  function rankChip(goatPass, rankName) {
+    if (window.GoatXP && window.GoatXP.chipFor) return window.GoatXP.chipFor(rankName, goatPass);
+    return goatBadge(goatPass);
+  }
   // Strip the 🐐 from any display name so the badge can never be faked in a
   // handle (defends even against direct database writes — the badge only ever
   // comes from the verified goatPass flag).
@@ -5295,7 +5305,7 @@ updateBody(null);
       <div class="lb-pod lb-pod-${place}${mine ? " lb-pod-me" : ""}">
         <span class="lb-pod-medal" aria-hidden="true">${medal}</span>
         <span class="lb-pod-rank">${place}</span>
-        <span class="lb-pod-name${r.goatPass ? " gp-name" : ""}">${lbName(r.name)}${goatBadge(r.goatPass)}${mine ? " (you)" : ""}</span>
+        <span class="lb-pod-name${r.goatPass ? " gp-name" : ""}">${lbName(r.name)}${rankChip(r.goatPass, r.rank)}${mine ? " (you)" : ""}</span>
         <span class="lb-pod-score">${esc(r.score)}</span>
         <span class="lb-pod-step" aria-hidden="true"></span>
       </div>`;
@@ -5439,7 +5449,7 @@ updateBody(null);
             return `
               <div class="lb-row${mine ? " lb-row-me" : ""}">
                 <span class="lb-rank">${i + 4}</span>
-                <span class="lb-name${r.goatPass ? " gp-name" : ""}">${lbName(r.name)}${goatBadge(r.goatPass)}${mine ? " (you)" : ""}</span>
+                <span class="lb-name${r.goatPass ? " gp-name" : ""}">${lbName(r.name)}${rankChip(r.goatPass, r.rank)}${mine ? " (you)" : ""}</span>
                 <span class="lb-score">${esc(r.score)}</span>
               </div>`;
           }).join("")
@@ -5467,7 +5477,7 @@ updateBody(null);
         lbList.insertAdjacentHTML("beforeend", `
           <div class="lb-row lb-row-me lb-row-you" style="border-top:2px dashed var(--ink,#151413);margin-top:6px">
             <span class="lb-rank">-</span>
-            <span class="lb-name${hasPass ? " gp-name" : ""}">${lbName(myName)}${goatBadge(hasPass)} (you)</span>
+            <span class="lb-name${hasPass ? " gp-name" : ""}">${lbName(myName)}${rankChip(hasPass, window.GoatXP && window.GoatXP.rankName ? window.GoatXP.rankName() : null)} (you)</span>
             <span class="lb-score">${esc(myScore)}</span>
           </div>`);
       }
@@ -6256,6 +6266,14 @@ updateBody(null);
     }).join("");
     return `<div class="trophy-head">🏆 ${unlocked} / ${ACHIEVEMENTS.length} unlocked</div><div class="trophy-grid">${cards}</div>`;
   }
+  // Published for the XP system (goat-xp.js): each trophy's done-state by id, so
+  // it can award XP per unlock and seed the one-time backfill. Guarded caller.
+  window.GoatTrophies = function () {
+    try {
+      const s = gatherAchvStats();
+      return ACHIEVEMENTS.map((a) => ({ id: a.id, done: a.cur(s) >= a.target }));
+    } catch (e) { return []; }
+  };
   function updateStatsTabUI() {
     [[statsTabDaily, "daily"], [statsTabClassic, "classic"], [statsTabBlind, "blind"], [statsTabTrophies, "trophies"]].forEach(([btn, t]) => {
       if (btn) { btn.classList.toggle("lb-tab-active", statsTab === t); btn.setAttribute("aria-selected", String(statsTab === t)); }

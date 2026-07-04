@@ -24,6 +24,7 @@ window.GoatAuth = (() => {
   let enabled = false;
   let handleCache = null;
   let passCache = null; // GOAT Pass ownership, cached per sign-in (null = not yet read)
+  let xpCache = null;   // total XP for the rank system (null = not yet read / not backfilled)
   let profilePromise = null; // one shared read of users/{uid} feeding handle + pass
   let messaging = null;      // Firebase Cloud Messaging (push), lazy-initialised
   const listeners = new Set();
@@ -38,6 +39,7 @@ window.GoatAuth = (() => {
         user = u;
         handleCache = null; // reset on sign-in/out
         passCache = null;   // re-read GOAT Pass ownership for the new user
+        xpCache = null;     // re-read XP for the new user
         profilePromise = null;
         listeners.forEach((cb) => cb(u));
       });
@@ -62,6 +64,9 @@ window.GoatAuth = (() => {
         const data = (doc.exists && doc.data()) || {};
         if (handleCache == null) handleCache = data.handle || user.displayName || user.email || "Player";
         if (passCache == null) passCache = !!data.goatPass;
+        // null (field absent) is meaningful: it tells the XP system this account
+        // has never been backfilled yet. A real 0 is stored as the number 0.
+        if (xpCache == null) xpCache = (typeof data.xp === "number") ? data.xp : null;
         return data;
       }).catch((e) => {
         profilePromise = null; // allow retry on transient failure
@@ -194,6 +199,10 @@ window.GoatAuth = (() => {
         franchiseTeam: data.franchiseTeam || null,
         picks: data.picks || null, // stored for auditability (detect/purge fake scores)
         goatPass: passCache === true, // drives the 🐐 badge; rules verify it's real
+        // Current rank name (e.g. "All-Star") so the leaderboard can show a rank
+        // chip next to pass holders without an extra read per row.
+        rank: (typeof window !== "undefined" && window.GoatXP && window.GoatXP.rankName)
+          ? (window.GoatXP.rankName() || null) : null,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
       // Maintain a running tally on the daily doc so the leaderboard can read ONE
@@ -307,6 +316,59 @@ window.GoatAuth = (() => {
         });
       }
       return rows;
+    },
+
+    // --- XP / rank system --------------------------------------------------
+    // Cached best-effort XP read (null until loadProfile runs, or if the account
+    // has never been backfilled — the caller treats null as "needs backfill").
+    xpCached() { return xpCache; },
+    // Read XP, loading the profile if needed. Returns a number, or null if the
+    // account has no xp field yet (not backfilled).
+    async getXp() {
+      if (!enabled || !user) return null;
+      if (xpCache !== null) return xpCache;
+      try { await loadProfile(); } catch (e) { return null; }
+      return xpCache;
+    },
+    // Atomically add XP (used on every award). Keeps the cache in sync so the UI
+    // updates instantly without a re-read.
+    async addXp(n) {
+      if (!enabled || !user || !n) return;
+      const delta = Math.round(Number(n) || 0);
+      if (!delta) return;
+      xpCache = Math.max(0, (typeof xpCache === "number" ? xpCache : 0) + delta);
+      try { await userDoc().set({ xp: firebase.firestore.FieldValue.increment(delta) }, { merge: true }); }
+      catch (e) {}
+    },
+    // Set XP to an exact value (used by the one-time backfill).
+    async setXp(n) {
+      if (!enabled || !user) return;
+      const v = Math.max(0, Math.round(Number(n) || 0));
+      xpCache = v;
+      try { await userDoc().set({ xp: v }, { merge: true }); } catch (e) {}
+    },
+    // Upsert this player's entry on the all-time XP leaderboard
+    // (xpLeaderboard/{uid}).
+    async submitXpEntry(xp, rankName, name) {
+      if (!enabled || !user) return;
+      try {
+        await db.collection("xpLeaderboard").doc(user.uid).set({
+          xp: Math.max(0, Math.round(Number(xp) || 0)),
+          name: String(name || handleCache || this.displayName()).slice(0, 40),
+          goatPass: passCache === true,
+          rank: rankName ? String(rankName).slice(0, 24) : null,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
+      } catch (e) {}
+    },
+    // Top-N players by total XP, all-time.
+    async getXpLeaderboard(topN = 50) {
+      if (!enabled) return [];
+      try {
+        const snap = await db.collection("xpLeaderboard")
+          .orderBy("xp", "desc").limit(topN).get();
+        return snap.docs.map((d) => ({ uid: d.id, ...d.data() }));
+      } catch (e) { return []; }
     },
 
     // --- Private saved builds ("My Builds") --------------------------------

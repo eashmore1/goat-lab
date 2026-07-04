@@ -29,6 +29,23 @@ service cloud.firestore {
       allow delete: if request.auth != null && request.auth.uid == uid;
     }
 
+    // All-time XP leaderboard (the "grind" board — total XP earned, never resets).
+    // Public read; you may only write your OWN entry, xp must be a non-negative
+    // number, and a claimed goatPass badge must be backed by the real flag.
+    match /xpLeaderboard/{uid} {
+      allow read: if true;
+      allow create, update: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.xp is number
+        && request.resource.data.xp >= 0
+        && request.resource.data.name is string
+        && request.resource.data.name.size() <= 40
+        && (!('goatPass' in request.resource.data)
+          || request.resource.data.goatPass == false
+          || get(/databases/$(database)/documents/users/$(uid)).data.goatPass == true);
+      allow delete: if request.auth != null && request.auth.uid == uid;
+    }
+
     // Global all-time player counter. Public read; anonymous writes allowed
     // but constrained: only the totalPlayers field, only +1 increments.
     match /globalStats/totals {
