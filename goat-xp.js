@@ -530,8 +530,12 @@ window.GoatXP = (function () {
   // Pass holders show a gold-bordered rank chip; free players show no chip.
   function chipFor(rankName, goatPass) {
     if (!goatPass) return "";
-    const nm = rankName || "GOAT Pass";
-    return ` <span class="grank-chip pass ${chipColor(rankName)}">${esc(nm)}</span>`;
+    // Pass holder whose rank isn't stored on their entry yet (submitted before the
+    // rank system, or before goat-xp loaded). Show the classic gold badge instead
+    // of a bogus "GOAT Pass" word-chip — it self-heals to a real rank chip on their
+    // next Daily submit.
+    if (!rankName) return ' <span class="goat-badge-sm" title="GOAT Pass holder" aria-label="GOAT Pass">🐐</span>';
+    return ` <span class="grank-chip pass ${chipColor(rankName)}">${esc(rankName)}</span>`;
   }
 
   // ==== Init ================================================================
