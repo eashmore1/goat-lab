@@ -287,7 +287,7 @@ window.GoatXP = (function () {
     .grank-lvl{font:700 .54rem/1 "Space Mono",monospace;color:var(--muted,#8a8272);text-transform:uppercase;letter-spacing:.05em;margin-left:6px}
     .grank-track{flex:1 1 auto;min-width:36px;height:10px;background:rgba(21,20,19,.12);border:2px solid var(--ink,#151413);border-radius:999px;overflow:hidden}
     [data-theme="dark"] .grank-track{background:rgba(243,236,219,.14)}
-    .grank-fill{height:100%;background:var(--court,#c0512f);border-radius:999px;transition:width .5s ease}
+    .grank-fill{display:block;height:100%;background:var(--court,#c9673d);border-radius:999px;transition:width .5s ease}
     .grank-next{flex:none;font:700 .58rem/1 "Space Mono",monospace;color:var(--muted,#8a8272);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
     @media (max-width:560px){.grank-next{display:none}}
     /* Rank chip (leaderboards) */
@@ -383,11 +383,8 @@ window.GoatXP = (function () {
     el.innerHTML = `
       <span class="grank-emblem" aria-hidden="true">${roman(r.index + 1)}</span>
       <span class="grank-name">${esc(r.name)}<span class="grank-lvl">Rank ${r.index + 1}/${r.total}</span></span>
-      <span class="grank-track"><span class="grank-fill" style="width:0%"></span></span>
+      <span class="grank-track"><span class="grank-fill" style="width:${r.pct}%"></span></span>
       <span class="grank-next">${next}</span>`;
-    // Animate the fill from 0 so it visibly sweeps to the player's progress.
-    const fill = el.querySelector(".grank-fill");
-    if (fill) requestAnimationFrame(() => requestAnimationFrame(() => { fill.style.width = r.pct + "%"; }));
   }
 
   // ==== Level-up celebration ================================================
@@ -509,7 +506,7 @@ window.GoatXP = (function () {
           <span class="grank-emblem" aria-hidden="true">${roman(r.index + 1)}</span>
           <span class="gxhow-me">
             <span class="gxhow-mename">${esc(r.name)}</span>
-            <span class="grank-track"><span class="grank-fill" style="width:0%"></span></span>
+            <span class="grank-track"><span class="grank-fill" style="width:${r.pct}%"></span></span>
             <span class="gxhow-mexp">${commas(r.xp)} XP · ${youNext}</span>
           </span>
         </div>
@@ -522,8 +519,6 @@ window.GoatXP = (function () {
     ov.querySelector(".gxpb-back").addEventListener("click", () => ov.remove());
     ov.addEventListener("click", (e) => { if (e.target === ov) ov.remove(); });
     document.body.appendChild(ov);
-    const fill = ov.querySelector(".grank-fill");
-    if (fill) requestAnimationFrame(() => requestAnimationFrame(() => { fill.style.width = r.pct + "%"; }));
   }
 
   // ==== Leaderboard chip helper (called from app.js daily board rows) ========
