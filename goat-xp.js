@@ -155,7 +155,17 @@ window.GoatXP = (function () {
     const meta = loadMeta();
     meta.xp = curXp;                 // mirror locally so sign-out keeps progress
     saveMeta(meta);
-    if (signedIn()) { try { A().addXp(delta); } catch (e) {} submitBoard(); }
+    if (signedIn()) {
+      // addXp reconciles with the real cloud value; sync curXp to it once it
+      // resolves so a sign-in race can't leave us showing a stale number.
+      try {
+        Promise.resolve(A().addXp(delta)).then(() => {
+          const c = A().xpCached();
+          if (typeof c === "number" && isFinite(c) && c !== curXp) { curXp = c; renderCard(); }
+          submitBoard();
+        });
+      } catch (e) { submitBoard(); }
+    }
     const after = rankInfo(curXp);
     renderCard();
     if (after.index > before.index) celebrate(after);
@@ -275,7 +285,7 @@ window.GoatXP = (function () {
     .grank-emblem{flex:none;width:30px;height:30px;display:grid;place-items:center;border:2px solid var(--ink,#151413);border-radius:50%;background:var(--gold,#e6b843);color:#3a2c05;font:800 .68rem/1 "Space Mono",monospace;box-shadow:1px 1px 0 var(--ink,#151413)}
     .grank-name{flex:none;font:800 .92rem/1 "Playfair Display",Georgia,serif;color:var(--ink,#151413);white-space:nowrap}
     .grank-lvl{font:700 .54rem/1 "Space Mono",monospace;color:var(--muted,#8a8272);text-transform:uppercase;letter-spacing:.05em;margin-left:6px}
-    .grank-track{flex:1 1 auto;min-width:36px;height:8px;background:rgba(21,20,19,.12);border:2px solid var(--ink,#151413);border-radius:999px;overflow:hidden}
+    .grank-track{flex:1 1 auto;min-width:36px;height:10px;background:rgba(21,20,19,.12);border:2px solid var(--ink,#151413);border-radius:999px;overflow:hidden}
     [data-theme="dark"] .grank-track{background:rgba(243,236,219,.14)}
     .grank-fill{height:100%;background:var(--court,#c0512f);border-radius:999px;transition:width .5s ease}
     .grank-next{flex:none;font:700 .58rem/1 "Space Mono",monospace;color:var(--muted,#8a8272);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
@@ -313,7 +323,29 @@ window.GoatXP = (function () {
     .gxpb-name{font:700 .9rem/1.2 "Playfair Display",Georgia,serif;color:var(--ink,#151413);display:flex;align-items:center;gap:7px;flex-wrap:wrap;min-width:0}
     .gxpb-xp{display:flex;align-items:baseline;gap:3px;font:950 .82rem/1 "Space Mono",monospace;color:var(--ink,#151413);white-space:nowrap}
     .gxpb-xp::after{content:"XP";font-size:.6rem;opacity:.6}
-    .gxpb-empty{text-align:center;color:var(--muted,#8a8272);font:400 .95rem/1.5 "Playfair Display",Georgia,serif;padding:30px 10px}`;
+    .gxpb-empty{text-align:center;color:var(--muted,#8a8272);font:400 .95rem/1.5 "Playfair Display",Georgia,serif;padding:30px 10px}
+    .gxpb-how{font:700 .72rem/1 "Space Mono",monospace;background:var(--court,#c0512f);color:#fff;border:2px solid var(--ink,#151413);padding:8px 12px;cursor:pointer;text-transform:uppercase;letter-spacing:.04em}
+    /* How-XP explainer */
+    .gxhow-you{display:flex;align-items:center;gap:11px;border:2px solid var(--ink,#151413);background:var(--paper,#fbf7ee);box-shadow:3px 3px 0 var(--ink,#151413);padding:10px 13px;margin:0 0 8px}
+    .gxhow-you .grank-emblem{width:38px;height:38px;font-size:.82rem}
+    .gxhow-you .gxhow-me{flex:1 1 auto;min-width:0}
+    .gxhow-you .gxhow-mename{font:800 1.05rem/1 "Playfair Display",Georgia,serif;color:var(--ink,#151413)}
+    .gxhow-you .grank-track{margin-top:7px;height:9px}
+    .gxhow-you .gxhow-mexp{font:700 .62rem/1.3 "Space Mono",monospace;color:var(--muted,#8a8272);margin-top:5px}
+    .gxhow-sec{font:700 .66rem/1 "Space Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--court,#c0512f);margin:22px 0 8px}
+    .gxhow-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border:2px solid var(--ink,#151413);background:var(--paper,#fbf7ee);padding:9px 12px;margin-bottom:6px}
+    .gxhow-txt{font:700 .86rem/1.2 "Playfair Display",Georgia,serif;color:var(--ink,#151413)}
+    .gxhow-txt small{display:block;font:400 .7rem/1.3 "Space Mono",monospace;color:var(--muted,#8a8272);margin-top:2px}
+    .gxhow-amt{font:800 .82rem/1 "Space Mono",monospace;color:var(--green,#157f68);white-space:nowrap}
+    [data-theme="dark"] .gxhow-amt{color:#4fc9a6}
+    .gxhow-rung{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;border:2px solid var(--ink,#151413);background:var(--paper,#fbf7ee);padding:7px 11px;margin-bottom:5px}
+    .gxhow-rung.now{background:var(--gold,#e6b843);box-shadow:2px 2px 0 var(--ink,#151413)}
+    .gxhow-rn{font:800 .72rem/1 "Space Mono",monospace;text-align:center;color:var(--ink,#151413)}
+    .gxhow-nm{font:800 .88rem/1 "Playfair Display",Georgia,serif;color:var(--ink,#151413)}
+    .gxhow-xp{font:700 .66rem/1 "Space Mono",monospace;color:var(--muted,#8a8272)}
+    .gxhow-rung.now .gxhow-xp{color:#3a2c05}
+    .gxhow-foot{border:2px dashed rgba(21,20,19,.3);border-radius:8px;padding:12px 14px;margin-top:18px;font:400 .82rem/1.5 "Playfair Display",Georgia,serif;color:var(--ink,#151413)}
+    [data-theme="dark"] .gxhow-foot{border-color:rgba(243,236,219,.3)}`;
     const s = document.createElement("style");
     s.id = "goatXpStyles"; s.textContent = css;
     document.head.appendChild(s);
@@ -351,8 +383,11 @@ window.GoatXP = (function () {
     el.innerHTML = `
       <span class="grank-emblem" aria-hidden="true">${roman(r.index + 1)}</span>
       <span class="grank-name">${esc(r.name)}<span class="grank-lvl">Rank ${r.index + 1}/${r.total}</span></span>
-      <span class="grank-track"><span class="grank-fill" style="width:${r.pct}%"></span></span>
+      <span class="grank-track"><span class="grank-fill" style="width:0%"></span></span>
       <span class="grank-next">${next}</span>`;
+    // Animate the fill from 0 so it visibly sweeps to the player's progress.
+    const fill = el.querySelector(".grank-fill");
+    if (fill) requestAnimationFrame(() => requestAnimationFrame(() => { fill.style.width = r.pct + "%"; }));
   }
 
   // ==== Level-up celebration ================================================
@@ -391,12 +426,13 @@ window.GoatXP = (function () {
     ov.className = "gxpb";
     ov.innerHTML = `
       <div class="gxpb-inner">
-        <div class="gxpb-top"><button class="gxpb-back" type="button">← Back</button></div>
+        <div class="gxpb-top"><button class="gxpb-back" type="button">← Back</button><button class="gxpb-how" type="button">How XP works</button></div>
         <h1 class="gxpb-h">All-Time XP Leaderboard</h1>
         <p class="gxpb-note">Total XP earned — the grind, not a single score. Never resets.</p>
         <div class="gxpb-list" id="gxpbList"><p class="gxpb-empty">Loading…</p></div>
       </div>`;
     ov.querySelector(".gxpb-back").addEventListener("click", () => ov.remove());
+    ov.querySelector(".gxpb-how").addEventListener("click", openHowXp);
     ov.addEventListener("click", (e) => { if (e.target === ov) ov.remove(); });
     document.body.appendChild(ov);
 
@@ -433,6 +469,61 @@ window.GoatXP = (function () {
           </div>`);
       }
     }
+  }
+
+  // ==== "How XP works" explainer (generated from config, never goes stale) ==
+  function openHowXp() {
+    injectStyles();
+    const r = rankInfo(curXp);
+    const A2 = AWARDS;
+    const earn = [
+      ["Play the Daily", "Once a day", `+${A2.dailyPlay}`],
+      ["Daily streak bonus", `+${A2.streakPer} for each day in your streak (up to +${A2.streakCap})`, `+${A2.streakPer}/day`],
+      ["Classic or Blind run", `+${A2.modePlay} for your first ${A2.modeFullRuns} runs a day, +${A2.modePlayTaper} after`, `+${A2.modePlay}`],
+      ["Score 90+ on any build", "Good build", `+${A2.score90}`],
+      ["Score 97+ on any build", "Elite build", `+${A2.score97}`],
+      ["Perfect 100", "The rare air", `+${A2.score100}`],
+      ["Unlock a trophy", "Each achievement", `+${A2.trophy}`],
+    ];
+    const earnHtml = earn.map((e) => `
+      <div class="gxhow-row">
+        <span class="gxhow-txt">${esc(e[0])}<small>${esc(e[1])}</small></span>
+        <span class="gxhow-amt">${esc(e[2])} XP</span>
+      </div>`).join("");
+    const ladderHtml = RANKS.map((rk, i) => `
+      <div class="gxhow-rung${i === r.index ? " now" : ""}">
+        <span class="gxhow-rn">${roman(i + 1)}</span>
+        <span class="gxhow-nm">${esc(rk.name)}</span>
+        <span class="gxhow-xp">${commas(rk.xp)} XP</span>
+      </div>`).join("");
+    const youNext = r.isMax ? "Max rank reached" : `${commas(r.toNext)} XP to ${esc(r.next)}`;
+
+    const ov = document.createElement("div");
+    ov.className = "gxpb";
+    ov.innerHTML = `
+      <div class="gxpb-inner">
+        <div class="gxpb-top"><button class="gxpb-back" type="button">← Back</button></div>
+        <h1 class="gxpb-h">How XP & Ranks Work</h1>
+        <p class="gxpb-note">Every game earns XP. XP levels you up through ${RANKS.length} ranks, from Rookie all the way to GOAT.</p>
+        <div class="gxhow-you">
+          <span class="grank-emblem" aria-hidden="true">${roman(r.index + 1)}</span>
+          <span class="gxhow-me">
+            <span class="gxhow-mename">${esc(r.name)}</span>
+            <span class="grank-track"><span class="grank-fill" style="width:0%"></span></span>
+            <span class="gxhow-mexp">${commas(r.xp)} XP · ${youNext}</span>
+          </span>
+        </div>
+        <div class="gxhow-sec">Ways to earn XP</div>
+        ${earnHtml}
+        <div class="gxhow-sec">The ${RANKS.length} ranks</div>
+        ${ladderHtml}
+        <div class="gxhow-foot">Everyone earns XP at the same rate — free or GOAT Pass. The Pass doesn't earn faster; it just lets you <strong>show your rank chip</strong> on the public leaderboard.</div>
+      </div>`;
+    ov.querySelector(".gxpb-back").addEventListener("click", () => ov.remove());
+    ov.addEventListener("click", (e) => { if (e.target === ov) ov.remove(); });
+    document.body.appendChild(ov);
+    const fill = ov.querySelector(".grank-fill");
+    if (fill) requestAnimationFrame(() => requestAnimationFrame(() => { fill.style.width = r.pct + "%"; }));
   }
 
   // ==== Leaderboard chip helper (called from app.js daily board rows) ========
@@ -479,6 +570,7 @@ window.GoatXP = (function () {
     xp: () => curXp,
     chipFor,
     openBoard,
+    openHowXp,
     refresh: syncXp,
     // exposed for tuning/debugging
     _rankInfo: rankInfo,

@@ -38,6 +38,7 @@ service cloud.firestore {
         && request.auth.uid == uid
         && request.resource.data.xp is number
         && request.resource.data.xp >= 0
+        && request.resource.data.xp <= 100000000 // sanity ceiling (XP is client-computed)
         && request.resource.data.name is string
         && request.resource.data.name.size() <= 40
         && (!('goatPass' in request.resource.data)

@@ -6445,6 +6445,7 @@ updateBody(null);
           localStorage.removeItem(DAILY_KEY);
           localStorage.removeItem(MODE_STATS_KEY);
           localStorage.removeItem(PB_KEY);
+          localStorage.removeItem("goatlab_xp_v1"); // XP meta + per-day guards are per-account
           _cloudModeStats = null;
           try { updateDailyCard(); updatePBDisplay(); } catch (e) {}
         }

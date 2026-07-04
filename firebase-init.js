@@ -66,7 +66,7 @@ window.GoatAuth = (() => {
         if (passCache == null) passCache = !!data.goatPass;
         // null (field absent) is meaningful: it tells the XP system this account
         // has never been backfilled yet. A real 0 is stored as the number 0.
-        if (xpCache == null) xpCache = (typeof data.xp === "number") ? data.xp : null;
+        if (xpCache == null) xpCache = (typeof data.xp === "number" && isFinite(data.xp)) ? data.xp : null;
         return data;
       }).catch((e) => {
         profilePromise = null; // allow retry on transient failure
@@ -336,7 +336,11 @@ window.GoatAuth = (() => {
       if (!enabled || !user || !n) return;
       const delta = Math.round(Number(n) || 0);
       if (!delta) return;
-      xpCache = Math.max(0, (typeof xpCache === "number" ? xpCache : 0) + delta);
+      // Read the real cloud XP before mutating the local cache — otherwise a game
+      // finishing during sign-in (xpCache still null) would desync it to a low value.
+      if (xpCache == null) { try { await loadProfile(); } catch (e) {} }
+      const base = (typeof xpCache === "number" && isFinite(xpCache)) ? xpCache : 0;
+      xpCache = Math.max(0, base + delta);
       try { await userDoc().set({ xp: firebase.firestore.FieldValue.increment(delta) }, { merge: true }); }
       catch (e) {}
     },
