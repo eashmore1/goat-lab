@@ -55,6 +55,25 @@ window.GoatAuth = (() => {
   const buildsRef = () => userDoc().collection("builds");
   const entriesRef = (d) => db.collection("dailyLeaderboard").doc(d).collection("entries");
 
+  // Merge two per-mode stat records so NO field can ever decrease. Counters take
+  // the max; sum + recent follow whichever side has more plays (keeps avg/last-30
+  // self-consistent). Used by seedModeStats — mirrors the same merge in app.js.
+  function mergeModeRecord(a, b) {
+    a = a || {}; b = b || {};
+    const ap = a.plays || 0, bp = b.plays || 0;
+    const fuller = bp >= ap ? b : a; // more plays = more complete sum/recent
+    const aLen = Array.isArray(a.recent) ? a.recent.length : 0;
+    const bLen = Array.isArray(b.recent) ? b.recent.length : 0;
+    return {
+      plays:   Math.max(ap, bp),
+      best:    Math.max(a.best    || 0, b.best    || 0),
+      elite:   Math.max(a.elite   || 0, b.elite   || 0),
+      perfect: Math.max(a.perfect || 0, b.perfect || 0),
+      sum:     fuller.sum || 0,
+      recent:  (bLen >= aLen ? b.recent : a.recent) || [],
+    };
+  }
+
   // Read users/{uid} ONCE per sign-in and feed both handle + pass caches from it
   // (getHandle and hasGoatPass both need it — no reason to read the doc twice).
   const loadProfile = () => {
@@ -278,11 +297,12 @@ window.GoatAuth = (() => {
         });
       } catch (e) { console.warn("[GoatAuth] bumpModeStats failed:", e); }
     },
-    // Reconcile: lift this device's LOCAL Classic/Blind totals into the cloud for
-    // any mode where local is AHEAD of cloud. Runs on every sign-in — catches games
-    // played signed-out (which never hit bumpModeStats), not just the first sign-in.
-    // Local is a superset of cloud on a single device, so replacing the mode object
-    // is safe and never double-counts (it's a set-to-local, not an increment).
+    // Reconcile this device's LOCAL Classic/Blind totals into the cloud. Runs on
+    // every sign-in + stats-open — catches games played signed-out (which never
+    // hit bumpModeStats). FIELD-WISE MAX MERGE so no stat can ever DECREASE: a
+    // device with more plays but a lower best won't clobber an all-time high.
+    // plays converges to the higher device's count (a true cross-device SUM would
+    // double-count games re-synced through the cloud, so max is the safe choice).
     async seedModeStats(local) {
       if (!enabled || !user || !local) return;
       const ref = userDoc().collection("stats").doc("modes");
@@ -293,15 +313,14 @@ window.GoatAuth = (() => {
           let changed = false;
           ["classic", "blind"].forEach((mode) => {
             const l = local[mode];
-            const cloudPlays = data[mode] ? (data[mode].plays || 0) : 0;
-            if (l && (l.plays || 0) > cloudPlays) {
-              data[mode] = l;
-              changed = true;
-            }
+            if (!l) return;
+            const c = data[mode] || {};
+            const merged = mergeModeRecord(c, l);
+            if (JSON.stringify(merged) !== JSON.stringify(c)) { data[mode] = merged; changed = true; }
           });
           if (changed) tx.set(ref, data, { merge: true });
         });
-      } catch (e) { console.warn("[GoatAuth] seedModeStats (reconcile) failed:", e); }
+      } catch (e) { console.warn("[GoatAuth] seedModeStats (merge) failed:", e); }
     },
     async getDailyLeaderboard(dateStr, topN = 100) {
       if (!enabled) return [];

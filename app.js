@@ -6216,7 +6216,23 @@ updateBody(null);
     ["classic", "blind"].forEach((mode) => {
       const l = local[mode];
       const c = cloud && cloud[mode];
-      if (c && (c.plays || 0) > ((l && l.plays) || 0)) { local[mode] = c; localChanged = true; }
+      if (!c) return;
+      // Field-wise MAX merge (mirrors mergeModeRecord in firebase-init.js): no
+      // stat can decrease. plays = max; best/elite/perfect = all-time high;
+      // sum + recent follow whichever side has more plays.
+      const ap = (l && l.plays) || 0, bp = c.plays || 0;
+      const fuller = bp >= ap ? c : (l || {});
+      const aLen = l && Array.isArray(l.recent) ? l.recent.length : 0;
+      const bLen = Array.isArray(c.recent) ? c.recent.length : 0;
+      const merged = {
+        plays:   Math.max(ap, bp),
+        best:    Math.max((l && l.best)    || 0, c.best    || 0),
+        elite:   Math.max((l && l.elite)   || 0, c.elite   || 0),
+        perfect: Math.max((l && l.perfect) || 0, c.perfect || 0),
+        sum:     fuller.sum || 0,
+        recent:  (bLen >= aLen ? c.recent : (l && l.recent)) || [],
+      };
+      if (JSON.stringify(merged) !== JSON.stringify(l || {})) { local[mode] = merged; localChanged = true; }
     });
     if (localChanged) { try { localStorage.setItem(MODE_STATS_KEY, JSON.stringify(local)); } catch (e) {} }
     if (signedIn && ((local.classic && local.classic.plays) || (local.blind && local.blind.plays))) {
