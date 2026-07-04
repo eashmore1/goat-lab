@@ -254,7 +254,7 @@ window.GoatAuth = (() => {
       try {
         const doc = await userDoc().collection("stats").doc("modes").get();
         return doc.exists ? (doc.data() || {}) : {};
-      } catch (e) { return null; }
+      } catch (e) { console.warn("[GoatAuth] getModeStatsCloud failed:", e); return null; }
     },
     // Add one Classic/Blind result to the account's running totals. A transaction
     // keeps it correct even if two devices finish games at the same time.
@@ -276,11 +276,13 @@ window.GoatAuth = (() => {
           data[mode] = m;
           tx.set(ref, data, { merge: true });
         });
-      } catch (e) {}
+      } catch (e) { console.warn("[GoatAuth] bumpModeStats failed:", e); }
     },
-    // One-time seed: copy this device's LOCAL Classic/Blind totals into the cloud,
-    // but only for a mode the cloud has nothing for yet — so historical/signed-out
-    // plays start counting without ever double-counting cloud-tracked games.
+    // Reconcile: lift this device's LOCAL Classic/Blind totals into the cloud for
+    // any mode where local is AHEAD of cloud. Runs on every sign-in — catches games
+    // played signed-out (which never hit bumpModeStats), not just the first sign-in.
+    // Local is a superset of cloud on a single device, so replacing the mode object
+    // is safe and never double-counts (it's a set-to-local, not an increment).
     async seedModeStats(local) {
       if (!enabled || !user || !local) return;
       const ref = userDoc().collection("stats").doc("modes");
@@ -291,14 +293,15 @@ window.GoatAuth = (() => {
           let changed = false;
           ["classic", "blind"].forEach((mode) => {
             const l = local[mode];
-            if (l && (l.plays || 0) > 0 && (!data[mode] || !(data[mode].plays || 0))) {
+            const cloudPlays = data[mode] ? (data[mode].plays || 0) : 0;
+            if (l && (l.plays || 0) > cloudPlays) {
               data[mode] = l;
               changed = true;
             }
           });
           if (changed) tx.set(ref, data, { merge: true });
         });
-      } catch (e) {}
+      } catch (e) { console.warn("[GoatAuth] seedModeStats (reconcile) failed:", e); }
     },
     async getDailyLeaderboard(dateStr, topN = 100) {
       if (!enabled) return [];

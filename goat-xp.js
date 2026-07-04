@@ -328,9 +328,9 @@ window.GoatXP = (function () {
     /* How-XP explainer */
     .gxhow-you{display:flex;align-items:center;gap:11px;border:2px solid var(--ink,#151413);background:var(--paper,#fbf7ee);box-shadow:3px 3px 0 var(--ink,#151413);padding:10px 13px;margin:0 0 8px}
     .gxhow-you .grank-emblem{width:38px;height:38px;font-size:.82rem}
-    .gxhow-you .gxhow-me{flex:1 1 auto;min-width:0}
+    .gxhow-you .gxhow-me{flex:1 1 auto;min-width:0;display:flex;flex-direction:column}
     .gxhow-you .gxhow-mename{font:800 1.05rem/1 "Playfair Display",Georgia,serif;color:var(--ink,#151413)}
-    .gxhow-you .grank-track{margin-top:7px;height:9px}
+    .gxhow-you .grank-track{flex:0 0 auto;width:100%;margin-top:8px;height:9px}
     .gxhow-you .gxhow-mexp{font:700 .62rem/1.3 "Space Mono",monospace;color:var(--muted,#8a8272);margin-top:5px}
     .gxhow-sec{font:700 .66rem/1 "Space Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--court,#c0512f);margin:22px 0 8px}
     .gxhow-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border:2px solid var(--ink,#151413);background:var(--paper,#fbf7ee);padding:9px 12px;margin-bottom:6px}

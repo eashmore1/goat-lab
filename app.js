@@ -6025,6 +6025,7 @@ updateBody(null);
   let statsTab = "daily";
   let _statsBuilds = null; // cached saved builds for the Classic/Blind tabs
   let _cloudModeStats = null; // cached cloud Classic/Blind totals (signed in)
+  let _statsRenderToken = 0; // guards against a stale/concurrent render clobbering the wrong tab
 
   function isoUTC(d) {
     return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
@@ -6300,6 +6301,7 @@ updateBody(null);
     }
     if (statsTabsBar) statsTabsBar.hidden = false;
     updateStatsTabUI();
+    const myToken = ++_statsRenderToken; // any newer render (tab switch / auth re-emit) supersedes this one
     if (statsTab === "daily") {
       const history = getDailyHistory();
       const today = getTodayStr();
@@ -6312,7 +6314,7 @@ updateBody(null);
       if (Auth.currentUser() && _cloudModeStats === null) {
         statsBody.innerHTML = `<p class="lb-empty" style="text-align:center;margin-top:18px">Loading…</p>`;
         try { _cloudModeStats = (await Auth.getModeStatsCloud()) || {}; } catch (e) { _cloudModeStats = {}; }
-        if (statsTab !== "trophies" || (statsPage && statsPage.hidden)) return;
+        if (myToken !== _statsRenderToken || (statsPage && statsPage.hidden)) return;
       }
       statsBody.innerHTML = renderTrophiesHTML();
       return;
@@ -6330,7 +6332,7 @@ updateBody(null);
       ]);
       _statsBuilds = builds;
       _cloudModeStats = cloud;
-      if (statsTab === "daily" || (statsPage && statsPage.hidden)) return; // user moved on
+      if (myToken !== _statsRenderToken || (statsPage && statsPage.hidden)) return; // user moved on
     }
     statsBody.innerHTML = renderModeStatsHTML(statsTab);
     wireStatsToggles();
@@ -6494,17 +6496,16 @@ updateBody(null);
           }
         }
       } catch (e) { console.error(e); }
-      // One-time: seed cloud Classic/Blind totals from this device's local tally
-      // (so historical / signed-out games start counting). No-op after first run.
+      // Reconcile Classic/Blind totals: lift this device's local surplus into the
+      // cloud. Runs on EVERY sign-in (not one-shot) so games played while signed
+      // out — which never hit bumpModeStats — always sync up, not just on the very
+      // first sign-in. seedModeStats only writes when local is ahead of cloud, so
+      // it's a safe no-op on secondary devices and won't double-count.
       try {
         const localModes = getModeStats();
-        if (localModes && (localModes.classic || localModes.blind)) {
-          const seedFlag = "goatlab_modeseed_" + user.uid;
-          if (!localStorage.getItem(seedFlag)) {
-            await Auth.seedModeStats(localModes);
-            try { localStorage.setItem(seedFlag, "1"); } catch (e) {}
-            _cloudModeStats = null; // force a fresh read next time stats open
-          }
+        if (localModes && ((localModes.classic && localModes.classic.plays) || (localModes.blind && localModes.blind.plays))) {
+          await Auth.seedModeStats(localModes);
+          _cloudModeStats = null; // force a fresh read next time stats open
         }
       } catch (e) {}
       syncDailyHistory(); // merge cloud <-> local daily history + streak
