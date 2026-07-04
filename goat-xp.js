@@ -311,7 +311,7 @@ window.GoatXP = (function () {
     @keyframes grankFall{to{transform:translateY(360px) rotate(540deg);opacity:0}}
     /* XP leaderboard overlay */
     .gxpb{position:fixed;inset:0;z-index:9998;background:var(--bg,#f3ecdb);overflow-y:auto;animation:grankFade .2s ease}
-    .gxpb-inner{max-width:560px;margin:0 auto;padding:20px 16px 60px}
+    .gxpb-inner{max-width:560px;margin:0 auto;padding:calc(20px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-right,0px)) calc(60px + env(safe-area-inset-bottom,0px)) calc(16px + env(safe-area-inset-left,0px))}
     .gxpb-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
     .gxpb-back{font:700 .8rem/1 "Space Mono",monospace;background:none;border:2px solid var(--ink,#151413);padding:8px 12px;cursor:pointer;color:var(--ink,#151413)}
     .gxpb-h{font:900 1.6rem/1.1 "Playfair Display",Georgia,serif;color:var(--ink,#151413);margin:14px 0 2px}
