@@ -98,6 +98,8 @@
       .rank-chip.pass { border: 2px solid var(--gold); box-shadow: 0 0 0 2px rgba(230,184,67,0.4); }
       .free-tag { font: 700 0.6rem/1 "Space Mono", monospace; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.6; }
       .lbp-score { display: grid; place-items: center; min-width: 40px; height: 30px; background: var(--ink-bg); color: var(--chalk); font: 950 0.95rem/1 "Space Mono", monospace; }
+      .lbp-score.xp { display: flex; align-items: baseline; justify-content: center; gap: 3px; min-width: 74px; padding: 0 9px; font-size: 0.82rem; letter-spacing: 0.02em; }
+      .lbp-score.xp::after { content: "XP"; font-size: 0.6rem; opacity: 0.6; }
 
       .callout { border: 2px dashed rgba(21,20,19,0.3); border-radius: 8px; padding: 14px 16px; max-width: 560px; margin: 0 auto; font: 400 0.86rem/1.5 "Playfair Display", Georgia, serif; color: var(--ink); }
       [data-theme="dark"] .callout { border-color: rgba(243,236,219,0.3); }
@@ -127,7 +129,7 @@
       <p class="note">Rewards showing up, coming back, and building well — not just winning.</p>
       <div class="xp-list">
         <div class="xp-row"><span class="xr-ico">📅</span><span class="xr-txt">Play the Daily<small>Once per day</small></span><span class="xr-amt">+50</span></div>
-        <div class="xp-row"><span class="xr-ico">🎮</span><span class="xr-txt">Play Classic or Blind<small>Any run</small></span><span class="xr-amt">+20</span></div>
+        <div class="xp-row"><span class="xr-ico">🎮</span><span class="xr-txt">Play Classic or Blind<small>+20 for your first 5 runs a day, +5 each after — play all you want, it just tapers</small></span><span class="xr-amt">+20</span></div>
         <div class="xp-row"><span class="xr-ico">🔥</span><span class="xr-txt">Daily streak bonus<small>+10 per streak day, capped at +150/day (15-day streak)</small></span><span class="xr-amt">+10 ×🔥</span></div>
         <div class="xp-row"><span class="xr-ico">⭐</span><span class="xr-txt">Good build (90+)<small>Score 90 or higher</small></span><span class="xr-amt">+25</span></div>
         <div class="xp-row"><span class="xr-ico">🎯</span><span class="xr-txt">Elite build (97+)<small>Score 97 or higher</small></span><span class="xr-amt">+50</span></div>
@@ -167,13 +169,33 @@
       </div>
       <p class="note" style="margin-top:12px">Rows 3 &amp; 6 are free players — no chip. The <strong>gold border</strong> = GOAT Pass; the color/word = their rank.</p>
 
+      <!-- XP LEADERBOARD -->
+      <div class="section-label"><span>All-time XP leaderboard</span></div>
+      <p class="note">A second board ranked by total XP earned — the grind, not a single score. All-time only, never resets, so climbing it means something. Rewards the players who show up day after day.</p>
+      <div class="lbp">
+        <div class="lbp-row"><span class="lbp-rank">1</span><span class="lbp-name">gymrat_hooper <span class="rank-chip chip-gold pass">GOAT</span></span><span class="lbp-score xp">61,240</span></div>
+        <div class="lbp-row"><span class="lbp-rank">2</span><span class="lbp-name">MJ_stan_23 <span class="rank-chip chip-gold pass">Legend</span></span><span class="lbp-score xp">33,910</span></div>
+        <div class="lbp-row"><span class="lbp-rank">3</span><span class="lbp-name">dailygrinder</span><span class="lbp-score xp">28,400</span></div>
+        <div class="lbp-row"><span class="lbp-rank">4</span><span class="lbp-name">hoopsdynasty <span class="rank-chip chip-purple pass">MVP</span></span><span class="lbp-score xp">16,720</span></div>
+        <div class="lbp-row"><span class="lbp-rank">5</span><span class="lbp-name">you <span class="rank-chip chip-blue pass">All-Star</span></span><span class="lbp-score xp">5,500</span></div>
+      </div>
+      <p class="note" style="margin-top:12px">Note how <strong>dailygrinder</strong> (a free player, no chip) still ranks 3rd — the XP board rewards the daily grind, and their high spot is a standing invitation to grab the Pass and finally show a chip.</p>
+
       <!-- FREE vs PASS -->
       <div class="section-label"><span>Free vs GOAT Pass</span></div>
       <div class="callout">
         <p style="margin:0 0 8px"><strong>Everyone earns XP and levels up</strong> — that's the retention hook that keeps people playing daily.</p>
         <p style="margin:0 0 8px"><strong>The GOAT Pass badge becomes the rank chip:</strong> the plain 🐐 goes away, and instead pass holders show their <strong>gold-bordered rank chip</strong> on the public leaderboard. The gold border signals "pass holder," the color &amp; title signal how good they are — one badge doing both jobs, and it levels up over time.</p>
-        <p style="margin:0 0 8px"><strong>Free players</strong> earn XP and have a rank privately, but show no chip on the board — so they watch everyone else flexing theirs. That's what makes them want the Pass.</p>
+        <p style="margin:0 0 8px"><strong>Free players see their own rank &amp; XP bar</strong> on their home screen — they always know how close the next rank is. They just don't get the chip on the <em>public</em> leaderboard, so they watch everyone else flexing theirs. That's what makes them want the Pass.</p>
+        <p style="margin:0 0 8px"><strong>Everyone gets a level-up moment</strong> — hit a new rank and you get a celebration either way (that's the hook that makes free players want to show it off). Pass holders get the upgraded animated version.</p>
         <p style="margin:0"><strong>+ Pass holders earn 25% more XP</strong>, so they climb the ranks noticeably faster — another reason the Pass feels worth it. (The exact % is easy to tune.)</p>
+      </div>
+
+      <!-- LAUNCH BACKFILL -->
+      <div class="section-label"><span>At launch: nobody starts from zero</span></div>
+      <div class="callout">
+        <p style="margin:0 0 8px"><strong>Existing players start at the rank they've already earned.</strong> On launch we do a one-time backfill — every account's XP is computed from its history (dailies played, streaks kept, scores posted, trophies unlocked) so loyal players open the update already sitting at, say, All-Star instead of Rookie.</p>
+        <p style="margin:0">Without this, someone with 60 dailies behind them opens the app as a "Rookie" and feels punished for playing early. The backfill makes the rollout feel like a reward, not a reset.</p>
       </div>
 
     </div>
