@@ -350,7 +350,7 @@ window.GoatXP = (function () {
     const next = r.isMax ? "Max rank" : `${commas(r.toNext)} XP &rarr; ${esc(r.next)}`;
     el.innerHTML = `
       <span class="grank-emblem" aria-hidden="true">${roman(r.index + 1)}</span>
-      <span class="grank-name">${esc(r.name)}<span class="grank-lvl">Lvl ${r.level}</span></span>
+      <span class="grank-name">${esc(r.name)}<span class="grank-lvl">Rank ${r.index + 1}/${r.total}</span></span>
       <span class="grank-track"><span class="grank-fill" style="width:${r.pct}%"></span></span>
       <span class="grank-next">${next}</span>`;
   }
