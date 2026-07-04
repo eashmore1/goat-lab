@@ -4120,8 +4120,16 @@ function finish() {
 
   if (gameMode !== "daily") {
     savePB(gameMode, score);
-    recordModePlay(gameMode, score);
-    try { if (window.GoatAuth && window.GoatAuth.currentUser && window.GoatAuth.currentUser()) window.GoatAuth.bumpModeStats(gameMode, score); } catch (e) {}
+    recordModePlay(gameMode, score); // local first (no auth needed) — always records
+    // Then push straight to the cloud so a signed-in game shows on every device
+    // right away. GoatModeSync pushes the full local total (set-based, self-heals
+    // a missed write); fall back to the incremental write if it isn't ready yet.
+    try {
+      if (window.GoatAuth && window.GoatAuth.currentUser && window.GoatAuth.currentUser()) {
+        if (window.GoatModeSync) window.GoatModeSync();
+        else window.GoatAuth.bumpModeStats(gameMode, score);
+      }
+    } catch (e) {}
   }
   updatePBDisplay();
 
@@ -6187,6 +6195,40 @@ updateBody(null);
     });
   }
 
+  // Make sure a game you played actually shows up. The two stores (this device's
+  // localStorage + the account's cloud doc) drift apart because the cloud is only
+  // written on a signed-in finish or a one-shot seed — so signed-out games, or a
+  // device where you never re-open stats, never reach the cloud, and a fresh
+  // device shows 0. This converges them BOTH ways, and runs on sign-in and every
+  // time the stats page opens:
+  //   • pull  — if the cloud is ahead for a mode (played on another device),
+  //             cache it locally so tiles + trophies reflect it immediately.
+  //   • push  — lift this device's local totals up to the cloud (set-based via
+  //             seedModeStats, so it also self-heals any incremental write that
+  //             was ever missed or denied). No double-count: it only writes a
+  //             mode where local is ahead.
+  async function reconcileModeStats() {
+    const signedIn = !!Auth.currentUser();
+    const local = getModeStats();
+    let cloud = null;
+    if (signedIn) { try { cloud = await Auth.getModeStatsCloud(); } catch (e) { cloud = null; } }
+    let localChanged = false;
+    ["classic", "blind"].forEach((mode) => {
+      const l = local[mode];
+      const c = cloud && cloud[mode];
+      if (c && (c.plays || 0) > ((l && l.plays) || 0)) { local[mode] = c; localChanged = true; }
+    });
+    if (localChanged) { try { localStorage.setItem(MODE_STATS_KEY, JSON.stringify(local)); } catch (e) {} }
+    if (signedIn && ((local.classic && local.classic.plays) || (local.blind && local.blind.plays))) {
+      try { await Auth.seedModeStats(local); } catch (e) {}
+    }
+    if (signedIn) { try { _cloudModeStats = await Auth.getModeStatsCloud(); } catch (e) {} }
+    return local;
+  }
+  // Exposed so the game-finish path (module scope) can push a just-played game
+  // straight to the cloud, without waiting for the next stats open or sign-in.
+  window.GoatModeSync = reconcileModeStats;
+
   // --- Trophy case: achievements across Daily / Classic / Blind -----------
   const ACHIEVEMENTS = [
     // Daily
@@ -6350,6 +6392,9 @@ updateBody(null);
     _cloudModeStats = null; // refetch cloud mode totals
     window.scrollTo(0, 0);
     renderStats();
+    // Converge local <-> cloud, then re-render so any games missing from one
+    // store (signed-out play, another device, a missed write) show up now.
+    reconcileModeStats().then(() => { if (statsPage && !statsPage.hidden) renderStats(); }).catch(() => {});
   }
   function closeStats() {
     if (statsPage) statsPage.hidden = true;
@@ -6496,18 +6541,11 @@ updateBody(null);
           }
         }
       } catch (e) { console.error(e); }
-      // Reconcile Classic/Blind totals: lift this device's local surplus into the
-      // cloud. Runs on EVERY sign-in (not one-shot) so games played while signed
-      // out — which never hit bumpModeStats — always sync up, not just on the very
-      // first sign-in. seedModeStats only writes when local is ahead of cloud, so
-      // it's a safe no-op on secondary devices and won't double-count.
-      try {
-        const localModes = getModeStats();
-        if (localModes && ((localModes.classic && localModes.classic.plays) || (localModes.blind && localModes.blind.plays))) {
-          await Auth.seedModeStats(localModes);
-          _cloudModeStats = null; // force a fresh read next time stats open
-        }
-      } catch (e) {}
+      // Reconcile Classic/Blind totals BOTH ways on every sign-in: push this
+      // device's local surplus up (games played signed out never hit
+      // bumpModeStats) AND pull the cloud's surplus down (games from another
+      // device) so this device's tiles/trophies are correct immediately.
+      try { await reconcileModeStats(); } catch (e) {}
       syncDailyHistory(); // merge cloud <-> local daily history + streak
       refreshSaveBtn();
     } else {
