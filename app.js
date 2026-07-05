@@ -5280,7 +5280,7 @@ updateBody(null);
   }
 
   // All-time player count — update manually over time.
-  const PLAYER_COUNT_DISPLAY = "45,700+";
+  const PLAYER_COUNT_DISPLAY = "53,300+";
   (function showTotalPlayers() {
     const el = document.querySelector("#homeTotalPlayers");
     const numEl = document.querySelector("#homeTotalPlayersNum");
