@@ -1,7 +1,7 @@
 // GOAT Lab service worker — conservative, network-first with cache fallback.
 // Only same-origin GETs are handled; Firebase, Google auth, fonts, and analytics
 // (all cross-origin) are never intercepted, so sign-in/Firestore are untouched.
-const CACHE = "goatlab-v3";
+const CACHE = "goatlab-v4";
 const CORE = [
   "/", "/index.html", "/styles.css", "/manifest.json",
   "/GOATLABLOGO.webp", "/GOATLABLOGO.png",

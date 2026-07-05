@@ -383,7 +383,7 @@ window.GoatXP = (function () {
     el.innerHTML = `
       <span class="grank-emblem" aria-hidden="true">${roman(r.index + 1)}</span>
       <span class="grank-name">${esc(r.name)}<span class="grank-lvl">Rank ${r.index + 1}/${r.total}</span></span>
-      <span class="grank-track"><span class="grank-fill" style="width:${r.pct}%"></span></span>
+      <span class="grank-track"><span class="grank-fill" style="width:${r.pct === 0 ? 0 : Math.max(r.pct, 3)}%"></span></span>
       <span class="grank-next">${next}</span>`;
   }
 
@@ -506,7 +506,7 @@ window.GoatXP = (function () {
           <span class="grank-emblem" aria-hidden="true">${roman(r.index + 1)}</span>
           <span class="gxhow-me">
             <span class="gxhow-mename">${esc(r.name)}</span>
-            <span class="grank-track"><span class="grank-fill" style="width:${r.pct}%"></span></span>
+            <span class="grank-track"><span class="grank-fill" style="width:${r.pct === 0 ? 0 : Math.max(r.pct, 3)}%"></span></span>
             <span class="gxhow-mexp">${commas(r.xp)} XP · ${youNext}</span>
           </span>
         </div>
