@@ -5353,6 +5353,17 @@ updateBody(null);
     p,
     new Promise((_, rej) => setTimeout(() => rej(new Error("timed out after " + ms + "ms")), ms)),
   ]);
+  // Retry a cloud read a few times before giving up — the FIRST query on a cold
+  // Firestore connection routinely fails once then succeeds (the "close it and
+  // re-open" symptom). Each attempt is time-boxed so it can't hang.
+  async function retryFetch(fn, tries = 3, ms = 8000) {
+    let lastErr;
+    for (let i = 0; i < tries; i++) {
+      try { return await withTimeout(fn(), ms); }
+      catch (e) { lastErr = e; }
+    }
+    throw lastErr;
+  }
   function scoresToHist(scores) { const h = {}; scores.forEach(s => { const k = Math.max(0, Math.min(100, Math.round(s))); h[k] = (h[k] || 0) + 1; }); return h; }
 
   function renderDistBar(hist) {
@@ -5407,8 +5418,8 @@ updateBody(null);
     try {
       const d = getTodayStr();
       if (_lbCache[d] && Date.now() - _lbCache[d].ts < LB_CACHE_MS) return;
-      const aggP = Auth.getDailyAggregate(d).catch(() => null);
-      const rows = await withTimeout(Auth.getDailyLeaderboard(d, 75), 15000);
+      const aggP = retryFetch(() => Auth.getDailyAggregate(d), 3, 8000).catch(() => null);
+      const rows = await retryFetch(() => Auth.getDailyLeaderboard(d, 75), 3, 8000);
       const agg = await aggP;
       const hist = agg && agg.hist ? agg.hist : {};
       // Only cache a useful snapshot — otherwise let the tap path do the full
@@ -5444,18 +5455,12 @@ updateBody(null);
       rows = cached.rows;
       histPromise = Promise.resolve(cached.hist);
     } else {
-      const aggPromise = Auth.getDailyAggregate(targetDate).catch(() => null);
+      const aggPromise = retryFetch(() => Auth.getDailyAggregate(targetDate), 3, 8000).catch(() => null);
       try {
-        // Two automatic attempts before bothering the user: the first query on a
-        // cold/flaky connection often fails once and succeeds immediately after —
-        // the "close it and re-open" fix, done silently.
-        try {
-          rows = await withTimeout(Auth.getDailyLeaderboard(targetDate, 75), 8000);
-        } catch (e1) {
-          console.warn("[lb] first attempt failed, auto-retrying:", e1);
-          if (myToken !== _lbToken) return;
-          rows = await withTimeout(Auth.getDailyLeaderboard(targetDate, 75), 10000);
-        }
+        // Up to 3 silent attempts before bothering the user — the first query on a
+        // cold/flaky connection often fails once and succeeds right after (the
+        // "close it and re-open" fix, done automatically).
+        rows = await retryFetch(() => Auth.getDailyLeaderboard(targetDate, 75), 3, 8000);
       } catch (e) {
         console.error("[lb] load failed:", e);
         if (myToken === _lbToken) {
@@ -5471,7 +5476,7 @@ updateBody(null);
         const count = agg ? (agg.count || 0) : 0;
         if (histTotal(hist) === 0 || histTotal(hist) < count) {
           try {
-            const scores = await Auth.getAllDailyScores(targetDate);
+            const scores = await retryFetch(() => Auth.getAllDailyScores(targetDate), 2, 8000);
             if (scores.length) { hist = scoresToHist(scores); Auth.writeDailyHist(targetDate, hist, scores.length); }
           } catch (e) {}
         }
@@ -5526,7 +5531,7 @@ updateBody(null);
       try { myScore = getDailyHistory()[targetDate]?.score ?? null; } catch (e) {}
       if (myScore == null) {
         try {
-          const mine = await Auth.getMyEntry(targetDate);
+          const mine = await retryFetch(() => Auth.getMyEntry(targetDate), 2, 8000);
           if (myToken !== _lbToken) return;
           if (mine && typeof mine.score === "number") myScore = mine.score;
         } catch (e) {}
@@ -6093,7 +6098,7 @@ updateBody(null);
     // read this account's own entry so the banner still shows (works on Yesterday too).
     if (myScore == null && myIdx < 0) {
       try {
-        const mine = await Auth.getMyEntry(targetDate);
+        const mine = await retryFetch(() => Auth.getMyEntry(targetDate), 2, 8000);
         if (token !== _lbToken) return;
         if (mine && typeof mine.score === "number") myScore = mine.score;
       } catch (e) {}
@@ -6109,7 +6114,7 @@ updateBody(null);
       const strictlyAbove = histAbove(hist, myScore);
       let tieIdx = 0;
       try {
-        const ties = await Auth.getEntriesAtScore(targetDate, myScore);
+        const ties = await retryFetch(() => Auth.getEntriesAtScore(targetDate, myScore), 3, 8000);
         if (token !== _lbToken) return; // superseded by a newer board open/switch
         ties.sort((a, b) => {
           const bestA = Array.isArray(a.picks) ? Math.max(...a.picks.map((p) => p.score ?? 0)) : 0;
