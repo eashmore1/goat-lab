@@ -5469,7 +5469,7 @@ updateBody(null);
     histPromise.then((hist) => {
       if (myToken !== _lbToken) return;
       renderDistBar(hist);
-      renderRankBanner(hist, rows, me, isToday);
+      renderRankBanner(hist, rows, me, isToday, targetDate);
     });
 
     // Top-build reveal for the viewed day (pass holders) / unlock teaser.
@@ -5990,8 +5990,9 @@ updateBody(null);
   }
 
   // --- Exact rank + percentile on the leaderboard -------------------------
-  function renderRankBanner(hist, rows, me, isToday) {
+  async function renderRankBanner(hist, rows, me, isToday, targetDate) {
     if (!lbRankBanner) return;
+    const token = _lbToken; // bail if the board is switched while we fetch below
     const total = histTotal(hist);
     if (!me || !total) { lbRankBanner.hidden = true; return; }
     let myScore = null;
@@ -6003,11 +6004,33 @@ updateBody(null);
     const myIdx = rows.findIndex((r) => r.uid === me.uid);
     const myRow = myIdx >= 0 ? rows[myIdx] : null;
     if (myRow) myScore = myRow.score;
-    else if (isToday) { try { myScore = getDailyHistory()[getTodayStr()]?.score ?? null; } catch (e) {} }
+    else { try { myScore = getDailyHistory()[targetDate]?.score ?? null; } catch (e) {} }
     if (myScore == null) { lbRankBanner.hidden = true; return; }
-    // On the board: exact line position. Off the board (beyond the fetched top N):
-    // best-effort estimate from the score histogram.
-    const rank = myIdx >= 0 ? myIdx + 1 : histAbove(hist, myScore) + 1;
+    let rank;
+    if (myIdx >= 0) {
+      rank = myIdx + 1; // on the fetched board: exact line position
+    } else {
+      // Off the board: everyone strictly above (from the histogram, free) plus my
+      // position within the tie group at my own score, ordered by the SAME
+      // tiebreaker the board uses — so the number is exact, not tie-collapsed.
+      const strictlyAbove = histAbove(hist, myScore);
+      let tieIdx = 0;
+      try {
+        const ties = await Auth.getEntriesAtScore(targetDate, myScore);
+        if (token !== _lbToken) return; // superseded by a newer board open/switch
+        ties.sort((a, b) => {
+          const bestA = Array.isArray(a.picks) ? Math.max(...a.picks.map((p) => p.score ?? 0)) : 0;
+          const bestB = Array.isArray(b.picks) ? Math.max(...b.picks.map((p) => p.score ?? 0)) : 0;
+          if (bestB !== bestA) return bestB - bestA;
+          const tA = a.createdAt?.toMillis?.() ?? 0;
+          const tB = b.createdAt?.toMillis?.() ?? 0;
+          return tA - tB;
+        });
+        const i = ties.findIndex((r) => r.uid === me.uid);
+        tieIdx = i >= 0 ? i : Math.max(0, ties.length - 1);
+      } catch (e) {}
+      rank = strictlyAbove + tieIdx + 1;
+    }
     const pct = Math.max(1, Math.round((rank / total) * 100));
     if (hasPass) {
       lbRankBanner.innerHTML = `

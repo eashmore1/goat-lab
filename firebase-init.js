@@ -259,6 +259,16 @@ window.GoatAuth = (() => {
         return snap.docs.map((d) => d.data().score).filter((s) => typeof s === "number");
       } catch (e) { return []; }
     },
+    // Every entry tied at exactly `score` — used to compute a player's exact rank
+    // when they're beyond the fetched top-N (the score histogram gives everyone
+    // strictly above for free; this fills in the tie group at their own score).
+    async getEntriesAtScore(dateStr, score) {
+      if (!enabled) return [];
+      try {
+        const snap = await entriesRef(dateStr).where("score", "==", score).get();
+        return snap.docs.map((d) => ({ uid: d.id, picks: d.data().picks, createdAt: d.data().createdAt }));
+      } catch (e) { console.warn("[GoatAuth] getEntriesAtScore failed:", e); return []; }
+    },
     // Overwrite the daily summary with an accurate snapshot (backfill).
     async writeDailyHist(dateStr, hist, count) {
       if (!enabled) return;
