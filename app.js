@@ -5995,11 +5995,19 @@ updateBody(null);
     const total = histTotal(hist);
     if (!me || !total) { lbRankBanner.hidden = true; return; }
     let myScore = null;
-    const myRow = rows.find((r) => r.uid === me.uid);
+    // Use the player's ACTUAL ordinal position on the sorted board when they're on
+    // it, so the banner matches the row they see when they scroll. histAbove() gives
+    // a "competition rank" (everyone tied at a score shares the top spot), which
+    // reads too low whenever other players are tied at your score and sorted above
+    // you by the tiebreaker — e.g. showing #39 when you're really line #45.
+    const myIdx = rows.findIndex((r) => r.uid === me.uid);
+    const myRow = myIdx >= 0 ? rows[myIdx] : null;
     if (myRow) myScore = myRow.score;
     else if (isToday) { try { myScore = getDailyHistory()[getTodayStr()]?.score ?? null; } catch (e) {} }
     if (myScore == null) { lbRankBanner.hidden = true; return; }
-    const rank = histAbove(hist, myScore) + 1;
+    // On the board: exact line position. Off the board (beyond the fetched top N):
+    // best-effort estimate from the score histogram.
+    const rank = myIdx >= 0 ? myIdx + 1 : histAbove(hist, myScore) + 1;
     const pct = Math.max(1, Math.round((rank / total) * 100));
     if (hasPass) {
       lbRankBanner.innerHTML = `
