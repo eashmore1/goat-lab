@@ -434,9 +434,27 @@ window.GoatXP = (function () {
     document.body.appendChild(ov);
 
     const listEl = ov.querySelector("#gxpbList");
-    let rows = [];
-    try { rows = (A() && A().getXpLeaderboard) ? await A().getXpLeaderboard(50) : []; } catch (e) { rows = []; }
+    // Fetch with a timeout and an explicit failure state: a dead connection gets
+    // an error + "Try again", never an infinite spinner or a fake-empty board.
+    const load = async () => {
+      listEl.innerHTML = `<p class="gxpb-empty">Loading…</p>`;
+      let rows = null;
+      try {
+        const p = (A() && A().getXpLeaderboard) ? A().getXpLeaderboard(50) : Promise.resolve([]);
+        rows = await Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 12000))]);
+      } catch (e) { console.warn("[GoatXP] board load failed:", e); rows = null; }
+      if (!document.body.contains(ov)) return; // closed while loading
+      if (rows === null) {
+        listEl.innerHTML = `<p class="gxpb-empty">Couldn't load the board — check your connection.</p>
+          <p style="text-align:center;margin-top:4px"><button class="gxpb-back" type="button" id="gxpbRetry">Try again</button></p>`;
+        const rb = ov.querySelector("#gxpbRetry");
+        if (rb) rb.addEventListener("click", load);
+        return;
+      }
+      renderRows(rows);
+    };
 
+    const renderRows = (rows) => {
     const me = signedIn() ? A().currentUser() : null;
     if (!rows.length) {
       listEl.innerHTML = signedIn()
@@ -466,6 +484,8 @@ window.GoatXP = (function () {
           </div>`);
       }
     }
+    };
+    await load();
   }
 
   // ==== "How XP works" explainer (generated from config, never goes stale) ==

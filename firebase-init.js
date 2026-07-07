@@ -34,6 +34,10 @@ window.GoatAuth = (() => {
       firebase.initializeApp(firebaseConfig);
       auth = firebase.auth();
       db = firebase.firestore();
+      // Some networks/proxies silently kill Firestore's streaming (WebChannel)
+      // connection, which shows up as requests that hang forever ("board never
+      // loads"). Auto-detect and fall back to long-polling on those networks.
+      try { db.settings({ experimentalAutoDetectLongPolling: true, merge: true }); } catch (e) {}
       enabled = true;
       auth.onAuthStateChanged((u) => {
         user = u;
@@ -406,14 +410,13 @@ window.GoatAuth = (() => {
         }, { merge: true });
       } catch (e) {}
     },
-    // Top-N players by total XP, all-time.
+    // Top-N players by total XP, all-time. Throws on failure so the caller can
+    // show an error + retry instead of a misleading "empty board".
     async getXpLeaderboard(topN = 50) {
       if (!enabled) return [];
-      try {
-        const snap = await db.collection("xpLeaderboard")
-          .orderBy("xp", "desc").limit(topN).get();
-        return snap.docs.map((d) => ({ uid: d.id, ...d.data() }));
-      } catch (e) { return []; }
+      const snap = await db.collection("xpLeaderboard")
+        .orderBy("xp", "desc").limit(topN).get();
+      return snap.docs.map((d) => ({ uid: d.id, ...d.data() }));
     },
 
     // --- Private saved builds ("My Builds") --------------------------------

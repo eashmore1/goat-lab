@@ -5341,6 +5341,12 @@ updateBody(null);
   function histTotal(hist) { let n = 0; for (const k in hist) n += hist[k] || 0; return n; }
   function histBetween(hist, min, max) { let n = 0; for (const k in hist) { const v = +k; if (v >= min && v <= max) n += hist[k] || 0; } return n; }
   function histAbove(hist, x) { let n = 0; for (const k in hist) { if (+k > x) n += hist[k] || 0; } return n; }
+  // A cloud fetch that never settles must become an error we can show + retry,
+  // not an infinite "Loading…" spinner.
+  const withTimeout = (p, ms) => Promise.race([
+    p,
+    new Promise((_, rej) => setTimeout(() => rej(new Error("timed out after " + ms + "ms")), ms)),
+  ]);
   function scoresToHist(scores) { const h = {}; scores.forEach(s => { const k = Math.max(0, Math.min(100, Math.round(s))); h[k] = (h[k] || 0) + 1; }); return h; }
 
   function renderDistBar(hist) {
@@ -5416,10 +5422,14 @@ updateBody(null);
     } else {
       const aggPromise = Auth.getDailyAggregate(targetDate).catch(() => null);
       try {
-        rows = await Auth.getDailyLeaderboard(targetDate, 75);
+        rows = await withTimeout(Auth.getDailyLeaderboard(targetDate, 75), 12000);
       } catch (e) {
-        console.error(e);
-        if (myToken === _lbToken) lbList.innerHTML = '<p class="lb-empty">Couldn\'t load the leaderboard.</p>';
+        console.error("[lb] load failed:", e);
+        if (myToken === _lbToken) {
+          lbList.innerHTML = '<p class="lb-empty">Couldn\'t load the leaderboard — check your connection.<br><button type="button" class="lb-retry" id="lbRetryBtn">Try again</button></p>';
+          const rb = document.querySelector("#lbRetryBtn");
+          if (rb) rb.addEventListener("click", () => { delete _lbCache[targetDate]; renderLeaderboard(targetDate); });
+        }
         return;
       }
       if (myToken !== _lbToken) return; // superseded by a newer open/tab-switch
@@ -6421,7 +6431,7 @@ updateBody(null);
       // Needs the account's cloud mode totals for the Classic/Blind achievements.
       if (Auth.currentUser() && _cloudModeStats === null) {
         statsBody.innerHTML = `<p class="lb-empty" style="text-align:center;margin-top:18px">Loading…</p>`;
-        try { _cloudModeStats = (await Auth.getModeStatsCloud()) || {}; } catch (e) { _cloudModeStats = {}; }
+        try { _cloudModeStats = (await withTimeout(Auth.getModeStatsCloud(), 12000)) || {}; } catch (e) { _cloudModeStats = {}; }
         if (myToken !== _statsRenderToken || (statsPage && statsPage.hidden)) return;
       }
       statsBody.innerHTML = renderTrophiesHTML();
@@ -6435,8 +6445,8 @@ updateBody(null);
     if (needBuilds || needCloud) {
       statsBody.innerHTML = `<p class="lb-empty" style="text-align:center;margin-top:18px">Loading…</p>`;
       const [builds, cloud] = await Promise.all([
-        needBuilds ? Auth.listBuilds().catch(() => []) : Promise.resolve(_statsBuilds),
-        needCloud ? Auth.getModeStatsCloud().catch(() => null) : Promise.resolve(_cloudModeStats),
+        needBuilds ? withTimeout(Auth.listBuilds(), 12000).catch(() => []) : Promise.resolve(_statsBuilds),
+        needCloud ? withTimeout(Auth.getModeStatsCloud(), 12000).catch(() => null) : Promise.resolve(_cloudModeStats),
       ]);
       _statsBuilds = builds;
       _cloudModeStats = cloud;
