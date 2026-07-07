@@ -259,6 +259,15 @@ window.GoatAuth = (() => {
         return snap.docs.map((d) => d.data().score).filter((s) => typeof s === "number");
       } catch (e) { return []; }
     },
+    // This account's own entry for a given day (score etc.) — lets the rank banner
+    // work even when the device has no local record for that date (played elsewhere).
+    async getMyEntry(dateStr) {
+      if (!enabled || !user) return null;
+      try {
+        const doc = await entriesRef(dateStr).doc(user.uid).get();
+        return doc.exists ? doc.data() : null;
+      } catch (e) { console.warn("[GoatAuth] getMyEntry failed:", e); return null; }
+    },
     // Every entry tied at exactly `score` — used to compute a player's exact rank
     // when they're beyond the fetched top-N (the score histogram gives everyone
     // strictly above for free; this fills in the tie group at their own score).

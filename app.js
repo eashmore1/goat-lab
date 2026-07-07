@@ -6005,6 +6005,15 @@ updateBody(null);
     const myRow = myIdx >= 0 ? rows[myIdx] : null;
     if (myRow) myScore = myRow.score;
     else { try { myScore = getDailyHistory()[targetDate]?.score ?? null; } catch (e) {} }
+    // Off-board and no local record for this date (e.g. played on another device) —
+    // read this account's own entry so the banner still shows (works on Yesterday too).
+    if (myScore == null && myIdx < 0) {
+      try {
+        const mine = await Auth.getMyEntry(targetDate);
+        if (token !== _lbToken) return;
+        if (mine && typeof mine.score === "number") myScore = mine.score;
+      } catch (e) {}
+    }
     if (myScore == null) { lbRankBanner.hidden = true; return; }
     let rank;
     if (myIdx >= 0) {
