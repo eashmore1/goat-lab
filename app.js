@@ -4069,6 +4069,12 @@ function finish() {
   const score = calculateScore();
   const values = attributes.map((attribute) => build[attribute.key]);
   const tier = getTier(score);
+  // Context for the post-game GOAT Pass prompt (peak-moment ask). Read the PB
+  // BEFORE savePB below updates it, so "new personal best" is detectable.
+  try {
+    const _pb = getPB()[gameMode] || 0;
+    window.GoatLastResult = { mode: gameMode, score, newPB: gameMode !== "daily" && score > _pb };
+  } catch (e) { window.GoatLastResult = { mode: gameMode, score, newPB: false }; }
   const archetype = makeArchetype(values);
   const weakSpot = [...values].sort((a, b) => a.score - b.score)[0];
   const bestPick = [...values].sort((a, b) => b.score - a.score)[0];
@@ -5393,6 +5399,24 @@ updateBody(null);
   const LB_CACHE_MS = 60000;
   let _lbToken = 0;
 
+  // Warm-up: quietly prefetch today's board shortly after page load. Two wins —
+  // the leaderboard opens instantly from cache, and Firestore's FIRST connection
+  // (by far the flakiest request) happens in the background instead of on the
+  // user's tap. Silent on failure; the tap path has its own retries.
+  setTimeout(async () => {
+    try {
+      const d = getTodayStr();
+      if (_lbCache[d] && Date.now() - _lbCache[d].ts < LB_CACHE_MS) return;
+      const aggP = Auth.getDailyAggregate(d).catch(() => null);
+      const rows = await withTimeout(Auth.getDailyLeaderboard(d, 75), 15000);
+      const agg = await aggP;
+      const hist = agg && agg.hist ? agg.hist : {};
+      // Only cache a useful snapshot — otherwise let the tap path do the full
+      // fetch-and-heal (it rebuilds a missing histogram; this warm-up doesn't).
+      if (rows.length && histTotal(hist) > 0) _lbCache[d] = { rows, hist, ts: Date.now() };
+    } catch (e) { /* warm-up only */ }
+  }, 1800);
+
   async function renderLeaderboard(dateStr) {
     const isToday = !dateStr || dateStr === getTodayStr();
     const targetDate = dateStr || getTodayStr();
@@ -5422,7 +5446,16 @@ updateBody(null);
     } else {
       const aggPromise = Auth.getDailyAggregate(targetDate).catch(() => null);
       try {
-        rows = await withTimeout(Auth.getDailyLeaderboard(targetDate, 75), 12000);
+        // Two automatic attempts before bothering the user: the first query on a
+        // cold/flaky connection often fails once and succeeds immediately after —
+        // the "close it and re-open" fix, done silently.
+        try {
+          rows = await withTimeout(Auth.getDailyLeaderboard(targetDate, 75), 8000);
+        } catch (e1) {
+          console.warn("[lb] first attempt failed, auto-retrying:", e1);
+          if (myToken !== _lbToken) return;
+          rows = await withTimeout(Auth.getDailyLeaderboard(targetDate, 75), 10000);
+        }
       } catch (e) {
         console.error("[lb] load failed:", e);
         if (myToken === _lbToken) {
@@ -5985,15 +6018,15 @@ updateBody(null);
     if (btn) btn.addEventListener("click", openPassModal);
     box.hidden = false;
   }
-  // Generic GOAT Pass prompt shown on Classic/Blind results (non-holders).
-  function genericUnlockStripHTML() {
+  // GOAT Pass prompt shown on Classic/Blind results (non-holders).
+  function genericUnlockStripHTML(head, sub) {
     return `
       <div class="unlock-strip">
         <div class="us-left">
           <div class="us-goat" aria-hidden="true">🐐</div>
           <div class="us-txt">
-            <strong>Unlock the GOAT Pass</strong>
-            <span>Gold badge, full stats, the trophy case &amp; more — one time, just $2.99</span>
+            <strong>${head || "Unlock the GOAT Pass"}</strong>
+            <span>${sub || "Gold badge, full stats, the trophy case &amp; more — one time, just $2.99"}</span>
           </div>
         </div>
         <button class="unlock-cta" type="button" data-unlock>Unlock · $2.99</button>
@@ -6003,10 +6036,41 @@ updateBody(null);
     const box = document.querySelector("#goatPassResult");
     if (!box) return;
     if (hasPass) { box.hidden = true; box.innerHTML = ""; return; }
-    box.innerHTML = genericUnlockStripHTML();
+    // Peak-moment ask: tie the pitch to what just happened. A static banner
+    // converts poorly; the same ask right after a great score converts because
+    // the desire (flex it, track it) already exists.
+    const r = window.GoatLastResult || {};
+    let head = null, sub = null;
+    if (r.score === 100) {
+      head = "A perfect 100 🏆";
+      sub = "Immortalize it — gold rank badge, trophy case &amp; full stats. One time, $2.99";
+    } else if (r.score >= 97) {
+      head = `${r.score} — that's rare air`;
+      sub = "Elite builds deserve the gold badge &amp; trophy case. One time, $2.99";
+    } else if (r.newPB) {
+      head = "New personal best 🎉";
+      sub = "Track every run — full stats, trophies &amp; the gold badge. One time, $2.99";
+    } else if (r.score >= 90) {
+      head = `${r.score} — strong build`;
+      sub = "See your full stats &amp; chase the trophy case. One time, $2.99";
+    }
+    box.innerHTML = genericUnlockStripHTML(head, sub);
     const btn = box.querySelector("[data-unlock]");
     if (btn) btn.addEventListener("click", openPassModal);
     box.hidden = false;
+  }
+
+  // Friendly approximate percentile band for free-player teasers. Deliberately
+  // coarse — the exact number is the GOAT Pass. Returns null below the top half
+  // (teasing a bad placement doesn't sell anything).
+  function approxPctBand(rank, total) {
+    const pct = Math.max(1, Math.round((rank / total) * 100));
+    if (pct <= 2) return "~1%";
+    if (pct <= 7) return "~5%";
+    if (pct <= 13) return "~10%";
+    if (pct <= 30) return "~25%";
+    if (pct <= 50) return "half";
+    return null;
   }
 
   // --- Exact rank + percentile on the leaderboard -------------------------
@@ -6071,7 +6135,15 @@ updateBody(null);
           <div class="lb-rank-pct"><div class="lb-rank-pct-num">Top ${pct}%</div><div class="lb-rank-pct-label">of players</div></div>
         </div>`;
     } else {
-      lbRankBanner.innerHTML = `<button class="lb-rank-teaser" type="button" id="lbRankTeaser">🔒 See your exact rank &amp; percentile — <strong>GOAT Pass</strong></button>`;
+      // Curiosity gap: show the free player the BALLPARK from data we already
+      // have — knowing you're "around the top ~10%" makes the exact number
+      // (the Pass feature) much harder to resist than a plain lock.
+      const band = approxPctBand(rank, total);
+      lbRankBanner.innerHTML = `<button class="lb-rank-teaser" type="button" id="lbRankTeaser">${
+        band
+          ? `📊 You're around the <strong>top ${band === "half" ? "half" : band}</strong>${isToday ? " today" : ""} — see your <strong>exact rank &amp; percentile</strong> with GOAT Pass`
+          : `🔒 See your exact rank &amp; percentile — <strong>GOAT Pass</strong>`
+      }</button>`;
       const t = document.querySelector("#lbRankTeaser");
       if (t) t.addEventListener("click", openPassModal);
     }

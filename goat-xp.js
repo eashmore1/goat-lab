@@ -439,11 +439,15 @@ window.GoatXP = (function () {
     const load = async () => {
       listEl.innerHTML = `<p class="gxpb-empty">Loading…</p>`;
       let rows = null;
-      try {
-        const p = (A() && A().getXpLeaderboard) ? A().getXpLeaderboard(50) : Promise.resolve([]);
-        rows = await Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 12000))]);
-      } catch (e) { console.warn("[GoatXP] board load failed:", e); rows = null; }
-      if (!document.body.contains(ov)) return; // closed while loading
+      // Two automatic attempts — a first query on a cold connection often fails
+      // once and succeeds right after; retry silently before showing an error.
+      for (let attempt = 0; attempt < 2 && rows === null; attempt++) {
+        try {
+          const p = (A() && A().getXpLeaderboard) ? A().getXpLeaderboard(50) : Promise.resolve([]);
+          rows = await Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 9000))]);
+        } catch (e) { console.warn("[GoatXP] board load attempt " + (attempt + 1) + " failed:", e); rows = null; }
+        if (!document.body.contains(ov)) return; // closed while loading
+      }
       if (rows === null) {
         listEl.innerHTML = `<p class="gxpb-empty">Couldn't load the board — check your connection.</p>
           <p style="text-align:center;margin-top:4px"><button class="gxpb-back" type="button" id="gxpbRetry">Try again</button></p>`;
