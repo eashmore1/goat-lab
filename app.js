@@ -5475,13 +5475,23 @@ updateBody(null);
     // Top-build reveal for the viewed day (pass holders) / unlock teaser.
     renderLbOptimal(targetDate, rows);
 
-    // Only pin the user's own score when viewing today's board.
-    if (isToday && me && !rows.some((r) => r.uid === me.uid)) {
+    // Pin the user's own row at the bottom when they're off the fetched board —
+    // on BOTH Today and Yesterday. Score comes from local history for the viewed
+    // date, falling back to the cloud entry if this device has no record for it.
+    if (me && !rows.some((r) => r.uid === me.uid)) {
       let myScore = null;
-      try { myScore = getDailyHistory()[getTodayStr()]?.score ?? null; } catch (e) {}
+      try { myScore = getDailyHistory()[targetDate]?.score ?? null; } catch (e) {}
+      if (myScore == null) {
+        try {
+          const mine = await Auth.getMyEntry(targetDate);
+          if (myToken !== _lbToken) return;
+          if (mine && typeof mine.score === "number") myScore = mine.score;
+        } catch (e) {}
+      }
       if (myScore != null) {
         let myName = Auth.displayName();
         try { myName = await Auth.getHandle(); } catch (e) {}
+        if (myToken !== _lbToken) return;
         lbList.insertAdjacentHTML("beforeend", `
           <div class="lb-row lb-row-me lb-row-you" style="border-top:2px dashed var(--ink,#151413);margin-top:6px">
             <span class="lb-rank">-</span>
