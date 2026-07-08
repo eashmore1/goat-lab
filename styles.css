@@ -2786,6 +2786,15 @@ h1 {
 [data-theme="dark"] .lb-rank-teaser { border-color: rgba(243,236,219,0.35); }
 .lb-rank-teaser strong { color: var(--court); }
 .lb-rank-teaser:hover { background: rgba(201,103,61,0.08); }
+/* Blurred exact rank (outside top 75) — the "so close, unlock to reveal" hook. */
+.lb-rank-blur {
+  filter: blur(6px);
+  -webkit-filter: blur(6px);
+  user-select: none;
+  font-weight: 900;
+  color: var(--court);
+  padding: 0 2px;
+}
 
 /* My Stats page */
 .stats-page { padding: 8px 4px 40px; animation: lb-fade 0.2s ease; }

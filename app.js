@@ -6165,15 +6165,17 @@ updateBody(null);
           <div class="lb-rank-pct"><div class="lb-rank-pct-num">Top ${pct}%</div><div class="lb-rank-pct-label">of players</div></div>
         </div>`;
     } else {
-      // Curiosity gap: show the free player the BALLPARK from data we already
-      // have — knowing you're "around the top ~10%" makes the exact number
-      // (the Pass feature) much harder to resist than a plain lock.
+      // Curiosity gap for free players. If they're IN the fetched top-75 list they
+      // can already see their exact rank on their own highlighted row, so never
+      // blur it there — show it openly and tease the percentile + full stats.
+      // Only OUTSIDE the top 75 (rank not shown anywhere) do we blur the number as
+      // the hook: "we know exactly where you landed; unlock to see."
       const band = approxPctBand(rank, total);
-      lbRankBanner.innerHTML = `<button class="lb-rank-teaser" type="button" id="lbRankTeaser">${
-        band
-          ? `📊 You're around the <strong>top ${band === "half" ? "half" : band}</strong>${isToday ? " today" : ""} — see your <strong>exact rank &amp; percentile</strong> with GOAT Pass`
-          : `🔒 See your exact rank &amp; percentile — <strong>GOAT Pass</strong>`
-      }</button>`;
+      const bandTxt = band ? ` · around the <strong>top ${band === "half" ? "half" : band}</strong>` : "";
+      const inList = myIdx >= 0;
+      lbRankBanner.innerHTML = inList
+        ? `<button class="lb-rank-teaser" type="button" id="lbRankTeaser">📊 You're <strong>#${rank.toLocaleString()}</strong> of ${total.toLocaleString()}${isToday ? " today" : ""}${bandTxt} — unlock your <strong>exact percentile &amp; full stats</strong> with GOAT Pass</button>`
+        : `<button class="lb-rank-teaser" type="button" id="lbRankTeaser">🔒 You ranked <span class="lb-rank-blur">#${rank.toLocaleString()}</span> of ${total.toLocaleString()}${isToday ? " today" : ""}${bandTxt} — tap to reveal your <strong>exact rank &amp; percentile</strong></button>`;
       const t = document.querySelector("#lbRankTeaser");
       if (t) t.addEventListener("click", openPassModal);
     }
