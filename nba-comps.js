@@ -7,9 +7,13 @@
 window.GoatComps = (function () {
   "use strict";
 
-  const HEIGHT_WEIGHT = 0.15; // vs 1.0 for every other attribute — tune freely
-  const OVERALL_WEIGHT = 2.6; // pulls the match toward a player of similar CALIBER,
-                              // so a solid-not-great build won't land on prime LeBron
+  // The match is driven by SHAPE — your relative strengths & weaknesses — so it's
+  // specific to what you actually built and varies widely, instead of every strong
+  // build collapsing onto the same "most complete" stars. Caliber keeps it in tier;
+  // height barely matters (builds always max it).
+  const SHAPE_WEIGHT = 1.0;   // profile of strengths/weaknesses (the main driver)
+  const LEVEL_WEIGHT = 1.5;   // overall caliber — keeps an 88 build off prime LeBron
+  const HEIGHT_WEIGHT = 0.04; // height contributes only a whisper
   const ATTRS = ["height", "shooting", "finishing", "handles", "passing", "defense", "rebounding", "athleticism", "iq"];
   const LABELS = { height: "Height", shooting: "Shooting", finishing: "Finishing", handles: "Handles", passing: "Passing", defense: "Defense", rebounding: "Rebounding", athleticism: "Athleticism", iq: "IQ" };
 
@@ -108,37 +112,39 @@ window.GoatComps = (function () {
 
   // Most similar player to a build ({height, shooting, ...} scores). Height is
   // down-weighted so the skill profile decides the match.
-  // Overall caliber = mean of the 8 SKILL attributes (height excluded, since builds
-  // always max it). Precomputed per player.
+  // Profile of a build/player: caliber (mean of the 8 SKILL attrs, height excluded)
+  // and the per-attribute deviation from that mean (its shape of strengths/weaks).
   const SKILL = ATTRS.filter((k) => k !== "height");
-  const levelOf = (obj) => SKILL.reduce((s, k) => s + (obj[k] || 0), 0) / SKILL.length;
-  COMP_PLAYERS.forEach((p) => { p._lvl = levelOf(p.a); });
+  function profile(obj) {
+    let sum = 0;
+    for (const k of SKILL) sum += obj[k] || 0;
+    const mean = sum / SKILL.length;
+    const dev = {};
+    for (const k of SKILL) dev[k] = (obj[k] || 0) - mean;
+    return { mean, dev };
+  }
+  COMP_PLAYERS.forEach((p) => { p._p = profile(p.a); });
 
   function findMatch(build) {
     if (!build) return null;
-    const buildLevel = levelOf(build);
+    const b = profile(build);
     let best = null, bestD = Infinity;
     for (const p of COMP_PLAYERS) {
-      let d = 0;
-      for (const k of ATTRS) {
-        const w = k === "height" ? HEIGHT_WEIGHT : 1;
-        const diff = (build[k] || 0) - (p.a[k] || 0);
-        d += w * diff * diff;
-      }
-      // Caliber term: keep the match in the build's tier (no 88 build → LeBron).
-      const lvlDiff = buildLevel - p._lvl;
-      d += OVERALL_WEIGHT * lvlDiff * lvlDiff;
+      // Shape: how closely your relative strengths/weaknesses line up with theirs.
+      let shape = 0;
+      for (const k of SKILL) { const d = b.dev[k] - p._p.dev[k]; shape += d * d; }
+      const lvl = b.mean - p._p.mean;
+      const hgt = (build.height || 0) - (p.a.height || 0);
+      const d = SHAPE_WEIGHT * shape + LEVEL_WEIGHT * lvl * lvl + HEIGHT_WEIGHT * hgt * hgt;
       if (d < bestD) { bestD = d; best = p; }
     }
     if (!best) return null;
-    const wsum = 8 + HEIGHT_WEIGHT + OVERALL_WEIGHT;
-    const similarity = Math.max(55, Math.min(99, Math.round(100 - Math.sqrt(bestD / wsum))));
-    // The build's signature strengths the matched player also shares (both high),
-    // for a "why this player" line. Fall back to the build's top attributes.
-    const skill = ATTRS.filter((k) => k !== "height");
-    const order = skill.slice().sort((x, y) => (build[y] || 0) - (build[x] || 0));
-    const shared = order.filter((k) => (build[k] || 0) >= 82 && (best.a[k] || 0) >= 82).slice(0, 3);
-    const strengths = (shared.length ? shared : order.slice(0, 3)).map((k) => LABELS[k]);
+    const similarity = Math.max(55, Math.min(99, Math.round(100 - Math.sqrt(bestD / (SKILL.length + LEVEL_WEIGHT)))));
+    // "Why this player": the build's top RELATIVE strengths (its signature) that
+    // the matched player also leans on — so the reason is specific to the shape.
+    const byDev = SKILL.slice().sort((x, y) => b.dev[y] - b.dev[x]);
+    const shared = byDev.filter((k) => b.dev[k] > 0 && best._p.dev[k] > -3).slice(0, 3);
+    const strengths = (shared.length ? shared : byDev.slice(0, 3)).map((k) => LABELS[k]);
     return { name: best.name, era: best.era, similarity, strengths };
   }
 
