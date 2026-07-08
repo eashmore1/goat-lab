@@ -12,7 +12,8 @@ window.GoatComps = (function () {
   // build collapsing onto the same "most complete" stars. Caliber keeps it in tier;
   // height barely matters (builds always max it).
   const SHAPE_WEIGHT = 1.0;   // profile of strengths/weaknesses (the main driver)
-  const LEVEL_WEIGHT = 1.5;   // overall caliber — keeps an 88 build off prime LeBron
+  const LEVEL_WEIGHT = 3.2;   // overall caliber — keeps an 88 build off prime LeBron
+                              // and tiers balanced (shapeless) builds by level
   const HEIGHT_WEIGHT = 0.04; // height contributes only a whisper
   const ATTRS = ["height", "shooting", "finishing", "handles", "passing", "defense", "rebounding", "athleticism", "iq"];
   const LABELS = { height: "Height", shooting: "Shooting", finishing: "Finishing", handles: "Handles", passing: "Passing", defense: "Defense", rebounding: "Rebounding", athleticism: "Athleticism", iq: "IQ" };
