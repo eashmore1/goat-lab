@@ -785,6 +785,7 @@ h1 {
   100% { background-position: 220% 0; }
 }
 .golden-badge {
+  position: relative;
   display: block;
   width: fit-content;
   margin: 0 auto 6px;
@@ -799,6 +800,42 @@ h1 {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   text-align: center;
+}
+/* Small "i" that explains a Golden Roll (esp. for first-timers in Blind mode). */
+.golden-info {
+  display: inline-grid;
+  place-items: center;
+  vertical-align: middle;
+  width: 15px;
+  height: 15px;
+  margin-left: 7px;
+  padding: 0;
+  border: 1.5px solid #5a3d00;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  color: #5a3d00;
+  font: italic 800 0.66rem/1 Georgia, serif;
+  cursor: pointer;
+}
+.golden-tip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: min(80vw, 280px);
+  z-index: 60;
+  padding: 9px 12px;
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  background: var(--ink-bg, #151413);
+  color: var(--chalk, #f3ecdb);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
+  font: 400 0.74rem/1.45 "Playfair Display", Georgia, serif;
+  text-transform: none;
+  letter-spacing: normal;
+  text-align: left;
+  white-space: normal;
 }
 #prompt.is-golden {
   text-align: center;

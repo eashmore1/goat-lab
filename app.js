@@ -3845,7 +3845,7 @@ function lockRound(token, animate) {
   cards.classList.toggle("is-golden", golden);
   const isSoloCard = golden && currentTeamEra.players.length === 1;
   prompt.innerHTML =
-    (golden ? `<span class="golden-badge">✦ Golden Roll ✦</span>` : "") +
+    (golden ? `<span class="golden-badge">✦ Golden Roll ✦<button type="button" class="golden-info" aria-label="What is a Golden Roll?" aria-expanded="false">i</button><span class="golden-tip" role="tooltip" hidden>Rare! You landed on a legendary, all-time-stacked team — every player here is elite. Even in Blind, whoever you pick will rate near the top for this stat.</span></span>` : "") +
     `<span class="roll-team">${currentTeamEra.era} ${currentTeamEra.team}</span>` +
     `<span class="roll-div">/</span>` +
     `<span class="roll-attr">${isSoloCard ? "Any Stat" : currentAttribute.label}</span>`;
@@ -3858,6 +3858,22 @@ function lockRound(token, animate) {
   roundLocked = true;
   updateRespinButtons();
 }
+
+// Golden Roll explainer popover. Delegated on document because the badge is
+// re-rendered every round; toggles the tip and closes on an outside click.
+document.addEventListener("click", (e) => {
+  const info = e.target.closest ? e.target.closest(".golden-info") : null;
+  const open = document.querySelectorAll(".golden-tip:not([hidden])");
+  if (info) {
+    e.preventDefault(); e.stopPropagation();
+    const tip = info.parentElement.querySelector(".golden-tip");
+    const show = !!(tip && tip.hidden);
+    open.forEach((t) => { t.hidden = true; });
+    if (tip) { tip.hidden = !show; info.setAttribute("aria-expanded", String(show)); }
+    return;
+  }
+  if (!(e.target.closest && e.target.closest(".golden-tip"))) open.forEach((t) => { t.hidden = true; });
+});
 
 function renderRound() {
   if (round >= runAttributes.length) {
