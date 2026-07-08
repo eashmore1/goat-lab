@@ -122,6 +122,11 @@ window.GoatComps = (function () {
     { name: "Rick Barry", era: "'70s Warriors", a: { height: 80, shooting: 88, finishing: 86, handles: 82, passing: 88, defense: 78, rebounding: 78, athleticism: 82, iq: 88 } },
     { name: "Domantas Sabonis", era: "modern", a: { height: 84, shooting: 74, finishing: 86, handles: 70, passing: 88, defense: 76, rebounding: 92, athleticism: 74, iq: 88 } },
     { name: "Pascal Siakam", era: "modern", a: { height: 82, shooting: 80, finishing: 86, handles: 80, passing: 78, defense: 84, rebounding: 76, athleticism: 88, iq: 82 } },
+    { name: "Kevin McHale", era: "'80s Celtics", a: { height: 86, shooting: 70, finishing: 92, handles: 66, passing: 68, defense: 88, rebounding: 82, athleticism: 76, iq: 88 } },
+    { name: "James Worthy", era: "'80s Lakers", a: { height: 81, shooting: 78, finishing: 90, handles: 82, passing: 78, defense: 78, rebounding: 70, athleticism: 92, iq: 84 } },
+    { name: "Tyrese Haliburton", era: "modern", a: { height: 78, shooting: 86, finishing: 76, handles: 84, passing: 95, defense: 70, rebounding: 60, athleticism: 80, iq: 92 } },
+    { name: "Kristaps Porzingis", era: "modern", a: { height: 95, shooting: 84, finishing: 84, handles: 66, passing: 64, defense: 88, rebounding: 82, athleticism: 78, iq: 80 } },
+    { name: "Bradley Beal", era: "modern", a: { height: 76, shooting: 88, finishing: 84, handles: 84, passing: 78, defense: 70, rebounding: 60, athleticism: 82, iq: 82 } },
   ];
 
   // Most similar player to a build ({height, shooting, ...} scores). Height is
