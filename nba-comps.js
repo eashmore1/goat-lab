@@ -48,7 +48,7 @@ window.GoatComps = (function () {
     { name: "Klay Thompson", era: "Warriors", a: { height: 79, shooting: 97, finishing: 78, handles: 74, passing: 70, defense: 84, rebounding: 62, athleticism: 80, iq: 84 } },
     { name: "Anthony Edwards", era: "modern", a: { height: 76, shooting: 84, finishing: 90, handles: 86, passing: 78, defense: 82, rebounding: 62, athleticism: 96, iq: 82 } },
     // Forwards
-    { name: "LeBron James", era: "modern", a: { height: 82, shooting: 82, finishing: 96, handles: 90, passing: 96, defense: 88, rebounding: 84, athleticism: 97, iq: 98 } },
+    { name: "LeBron James", era: "modern", a: { height: 82, shooting: 76, finishing: 96, handles: 90, passing: 97, defense: 88, rebounding: 84, athleticism: 98, iq: 99 } },
     { name: "Larry Bird", era: "'80s Celtics", a: { height: 81, shooting: 94, finishing: 84, handles: 82, passing: 94, defense: 78, rebounding: 84, athleticism: 68, iq: 98 } },
     { name: "Kevin Durant", era: "modern", a: { height: 83, shooting: 96, finishing: 92, handles: 88, passing: 82, defense: 84, rebounding: 74, athleticism: 86, iq: 92 } },
     { name: "Kawhi Leonard", era: "modern", a: { height: 79, shooting: 88, finishing: 88, handles: 82, passing: 76, defense: 97, rebounding: 74, athleticism: 88, iq: 92 } },
@@ -109,6 +109,19 @@ window.GoatComps = (function () {
     { name: "Kyle Lowry", era: "'10s Raptors", a: { height: 66, shooting: 84, finishing: 76, handles: 84, passing: 88, defense: 86, rebounding: 64, athleticism: 74, iq: 90 } },
     { name: "Andre Iguodala", era: "'10s Warriors", a: { height: 78, shooting: 72, finishing: 82, handles: 80, passing: 84, defense: 90, rebounding: 66, athleticism: 90, iq: 88 } },
     { name: "Rasheed Wallace", era: "'00s Pistons", a: { height: 88, shooting: 82, finishing: 82, handles: 66, passing: 72, defense: 90, rebounding: 82, athleticism: 82, iq: 82 } },
+    // +12 for a wider pool
+    { name: "Gary Payton", era: "'90s Sonics", a: { height: 74, shooting: 80, finishing: 82, handles: 88, passing: 88, defense: 96, rebounding: 62, athleticism: 86, iq: 90 } },
+    { name: "Clyde Drexler", era: "'90s Blazers", a: { height: 78, shooting: 82, finishing: 90, handles: 86, passing: 82, defense: 82, rebounding: 74, athleticism: 96, iq: 86 } },
+    { name: "Dwight Howard", era: "'00s Magic", a: { height: 92, shooting: 40, finishing: 90, handles: 56, passing: 58, defense: 94, rebounding: 96, athleticism: 94, iq: 76 } },
+    { name: "Bam Adebayo", era: "modern", a: { height: 86, shooting: 64, finishing: 86, handles: 72, passing: 82, defense: 94, rebounding: 86, athleticism: 90, iq: 86 } },
+    { name: "Trae Young", era: "modern", a: { height: 64, shooting: 92, finishing: 76, handles: 90, passing: 96, defense: 54, rebounding: 56, athleticism: 72, iq: 88 } },
+    { name: "Zion Williamson", era: "modern", a: { height: 80, shooting: 66, finishing: 96, handles: 80, passing: 76, defense: 76, rebounding: 82, athleticism: 97, iq: 80 } },
+    { name: "Jrue Holiday", era: "modern", a: { height: 76, shooting: 80, finishing: 80, handles: 82, passing: 84, defense: 94, rebounding: 64, athleticism: 84, iq: 88 } },
+    { name: "Chauncey Billups", era: "'00s Pistons", a: { height: 74, shooting: 86, finishing: 78, handles: 82, passing: 86, defense: 84, rebounding: 58, athleticism: 74, iq: 92 } },
+    { name: "Bob Pettit", era: "'60s Hawks", a: { height: 84, shooting: 78, finishing: 90, handles: 68, passing: 74, defense: 82, rebounding: 92, athleticism: 86, iq: 86 } },
+    { name: "Rick Barry", era: "'70s Warriors", a: { height: 80, shooting: 88, finishing: 86, handles: 82, passing: 88, defense: 78, rebounding: 78, athleticism: 82, iq: 88 } },
+    { name: "Domantas Sabonis", era: "modern", a: { height: 84, shooting: 74, finishing: 86, handles: 70, passing: 88, defense: 76, rebounding: 92, athleticism: 74, iq: 88 } },
+    { name: "Pascal Siakam", era: "modern", a: { height: 82, shooting: 80, finishing: 86, handles: 80, passing: 78, defense: 84, rebounding: 76, athleticism: 88, iq: 82 } },
   ];
 
   // Most similar player to a build ({height, shooting, ...} scores). Height is
