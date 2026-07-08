@@ -4143,6 +4143,15 @@ function finish() {
   // below so the entry carries the player's up-to-date rank.
   try { if (window.GoatXP) window.GoatXP.onGameFinish({ mode: gameMode, score }); } catch (e) {}
 
+  // Real-player comparison (all modes): "your build plays like ___".
+  try {
+    if (window.GoatComps) {
+      const compAttrs = {};
+      attributes.forEach((attr) => { const p = build[attr.key]; if (p) compAttrs[attr.key] = p.score; });
+      window.GoatComps.render(compAttrs);
+    }
+  } catch (e) {}
+
   if (resultBreakdown) {
     if (score === 100) {
       resultBreakdown.textContent = `Perfect build. Nobody does this.`;
