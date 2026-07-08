@@ -8,6 +8,8 @@ window.GoatComps = (function () {
   "use strict";
 
   const HEIGHT_WEIGHT = 0.15; // vs 1.0 for every other attribute — tune freely
+  const OVERALL_WEIGHT = 2.6; // pulls the match toward a player of similar CALIBER,
+                              // so a solid-not-great build won't land on prime LeBron
   const ATTRS = ["height", "shooting", "finishing", "handles", "passing", "defense", "rebounding", "athleticism", "iq"];
   const LABELS = { height: "Height", shooting: "Shooting", finishing: "Finishing", handles: "Handles", passing: "Passing", defense: "Defense", rebounding: "Rebounding", athleticism: "Athleticism", iq: "IQ" };
 
@@ -77,12 +79,44 @@ window.GoatComps = (function () {
     { name: "Rudy Gobert", era: "modern", a: { height: 94, shooting: 40, finishing: 86, handles: 52, passing: 58, defense: 98, rebounding: 94, athleticism: 84, iq: 78 } },
     { name: "Dikembe Mutombo", era: "'90s", a: { height: 94, shooting: 44, finishing: 78, handles: 52, passing: 56, defense: 97, rebounding: 94, athleticism: 80, iq: 80 } },
     { name: "Ben Wallace", era: "'00s Pistons", a: { height: 86, shooting: 32, finishing: 70, handles: 54, passing: 60, defense: 97, rebounding: 96, athleticism: 88, iq: 82 } },
+    // More legends (fill era gaps)
+    { name: "Jerry West", era: "'60s-'70s", a: { height: 76, shooting: 90, finishing: 86, handles: 86, passing: 86, defense: 86, rebounding: 62, athleticism: 86, iq: 92 } },
+    { name: "Oscar Robertson", era: "'60s-'70s", a: { height: 78, shooting: 84, finishing: 86, handles: 88, passing: 94, defense: 82, rebounding: 80, athleticism: 86, iq: 94 } },
+    { name: "Elgin Baylor", era: "'60s Lakers", a: { height: 78, shooting: 80, finishing: 90, handles: 82, passing: 80, defense: 72, rebounding: 84, athleticism: 92, iq: 84 } },
+    { name: "George Gervin", era: "'70s-'80s", a: { height: 80, shooting: 90, finishing: 92, handles: 84, passing: 72, defense: 66, rebounding: 64, athleticism: 86, iq: 84 } },
+    { name: "Moses Malone", era: "'80s", a: { height: 90, shooting: 56, finishing: 88, handles: 56, passing: 58, defense: 86, rebounding: 97, athleticism: 86, iq: 82 } },
+    { name: "Dominique Wilkins", era: "'80s-'90s", a: { height: 80, shooting: 80, finishing: 94, handles: 82, passing: 70, defense: 70, rebounding: 72, athleticism: 97, iq: 78 } },
+    { name: "Alonzo Mourning", era: "'90s", a: { height: 90, shooting: 56, finishing: 88, handles: 56, passing: 56, defense: 94, rebounding: 86, athleticism: 86, iq: 80 } },
+    { name: "Chris Webber", era: "'00s Kings", a: { height: 86, shooting: 78, finishing: 88, handles: 78, passing: 86, defense: 82, rebounding: 90, athleticism: 86, iq: 86 } },
+    { name: "Yao Ming", era: "'00s Rockets", a: { height: 98, shooting: 74, finishing: 88, handles: 56, passing: 72, defense: 86, rebounding: 84, athleticism: 64, iq: 84 } },
+    // Modern / very-good tier (so strong-not-GOAT builds have real comps)
+    { name: "Carmelo Anthony", era: "'00s-'10s", a: { height: 80, shooting: 88, finishing: 88, handles: 82, passing: 72, defense: 68, rebounding: 72, athleticism: 82, iq: 82 } },
+    { name: "Devin Booker", era: "modern", a: { height: 78, shooting: 90, finishing: 84, handles: 86, passing: 84, defense: 72, rebounding: 60, athleticism: 80, iq: 86 } },
+    { name: "Donovan Mitchell", era: "modern", a: { height: 74, shooting: 86, finishing: 88, handles: 86, passing: 78, defense: 74, rebounding: 58, athleticism: 92, iq: 82 } },
+    { name: "Blake Griffin", era: "'10s", a: { height: 82, shooting: 74, finishing: 94, handles: 76, passing: 82, defense: 76, rebounding: 86, athleticism: 96, iq: 82 } },
+    { name: "Chris Bosh", era: "'10s Heat", a: { height: 84, shooting: 82, finishing: 84, handles: 66, passing: 72, defense: 80, rebounding: 84, athleticism: 82, iq: 82 } },
+    { name: "Al Horford", era: "modern", a: { height: 86, shooting: 80, finishing: 80, handles: 62, passing: 80, defense: 88, rebounding: 82, athleticism: 76, iq: 90 } },
+    { name: "Paul Pierce", era: "'00s Celtics", a: { height: 79, shooting: 88, finishing: 84, handles: 82, passing: 80, defense: 76, rebounding: 70, athleticism: 76, iq: 88 } },
+    { name: "DeMar DeRozan", era: "modern", a: { height: 78, shooting: 78, finishing: 88, handles: 84, passing: 80, defense: 70, rebounding: 60, athleticism: 82, iq: 84 } },
+    { name: "Tony Parker", era: "'00s Spurs", a: { height: 74, shooting: 78, finishing: 88, handles: 90, passing: 86, defense: 72, rebounding: 50, athleticism: 90, iq: 88 } },
+    { name: "Manu Ginobili", era: "'00s Spurs", a: { height: 78, shooting: 86, finishing: 84, handles: 88, passing: 88, defense: 82, rebounding: 58, athleticism: 86, iq: 92 } },
+    { name: "Shawn Marion", era: "'00s Suns", a: { height: 80, shooting: 72, finishing: 86, handles: 68, passing: 72, defense: 90, rebounding: 86, athleticism: 94, iq: 80 } },
+    { name: "Kyle Lowry", era: "'10s Raptors", a: { height: 66, shooting: 84, finishing: 76, handles: 84, passing: 88, defense: 86, rebounding: 64, athleticism: 74, iq: 90 } },
+    { name: "Andre Iguodala", era: "'10s Warriors", a: { height: 78, shooting: 72, finishing: 82, handles: 80, passing: 84, defense: 90, rebounding: 66, athleticism: 90, iq: 88 } },
+    { name: "Rasheed Wallace", era: "'00s Pistons", a: { height: 88, shooting: 82, finishing: 82, handles: 66, passing: 72, defense: 90, rebounding: 82, athleticism: 82, iq: 82 } },
   ];
 
   // Most similar player to a build ({height, shooting, ...} scores). Height is
   // down-weighted so the skill profile decides the match.
+  // Overall caliber = mean of the 8 SKILL attributes (height excluded, since builds
+  // always max it). Precomputed per player.
+  const SKILL = ATTRS.filter((k) => k !== "height");
+  const levelOf = (obj) => SKILL.reduce((s, k) => s + (obj[k] || 0), 0) / SKILL.length;
+  COMP_PLAYERS.forEach((p) => { p._lvl = levelOf(p.a); });
+
   function findMatch(build) {
     if (!build) return null;
+    const buildLevel = levelOf(build);
     let best = null, bestD = Infinity;
     for (const p of COMP_PLAYERS) {
       let d = 0;
@@ -91,10 +125,13 @@ window.GoatComps = (function () {
         const diff = (build[k] || 0) - (p.a[k] || 0);
         d += w * diff * diff;
       }
+      // Caliber term: keep the match in the build's tier (no 88 build → LeBron).
+      const lvlDiff = buildLevel - p._lvl;
+      d += OVERALL_WEIGHT * lvlDiff * lvlDiff;
       if (d < bestD) { bestD = d; best = p; }
     }
     if (!best) return null;
-    const wsum = 8 + HEIGHT_WEIGHT;
+    const wsum = 8 + HEIGHT_WEIGHT + OVERALL_WEIGHT;
     const similarity = Math.max(55, Math.min(99, Math.round(100 - Math.sqrt(bestD / wsum))));
     // The build's signature strengths the matched player also shares (both high),
     // for a "why this player" line. Fall back to the build's top attributes.
