@@ -63,7 +63,7 @@ window.GoatComps = (function () {
     { name: "Tim Duncan", era: "'00s Spurs", a: { height: 90, shooting: 74, finishing: 90, handles: 66, passing: 82, defense: 97, rebounding: 94, athleticism: 80, iq: 98 } },
     { name: "Kevin Garnett", era: "'00s", a: { height: 88, shooting: 80, finishing: 86, handles: 72, passing: 84, defense: 96, rebounding: 92, athleticism: 88, iq: 94 } },
     { name: "Karl Malone", era: "'90s Jazz", a: { height: 86, shooting: 78, finishing: 92, handles: 70, passing: 78, defense: 84, rebounding: 90, athleticism: 90, iq: 88 } },
-    { name: "Charles Barkley", era: "'90s", a: { height: 82, shooting: 74, finishing: 92, handles: 78, passing: 82, defense: 82, rebounding: 94, athleticism: 90, iq: 88 } },
+    { name: "Charles Barkley", era: "'90s", a: { height: 82, shooting: 74, finishing: 95, handles: 78, passing: 82, defense: 82, rebounding: 94, athleticism: 90, iq: 88 } },
     { name: "Dirk Nowitzki", era: "'00s Mavs", a: { height: 90, shooting: 96, finishing: 84, handles: 74, passing: 76, defense: 72, rebounding: 84, athleticism: 72, iq: 92 } },
     { name: "Giannis Antetokounmpo", era: "modern", a: { height: 88, shooting: 68, finishing: 97, handles: 82, passing: 84, defense: 94, rebounding: 92, athleticism: 97, iq: 86 } },
     { name: "Anthony Davis", era: "modern", a: { height: 90, shooting: 78, finishing: 92, handles: 72, passing: 74, defense: 96, rebounding: 90, athleticism: 90, iq: 86 } },
