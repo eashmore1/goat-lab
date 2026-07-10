@@ -34,8 +34,8 @@ window.GoatXP = (function () {
     score97: 50,
     score100: 150,
     trophy: 100,          // per trophy unlocked
-    passMultiplier: 1.0,  // GOAT Pass gives NO XP advantage — everyone earns equally
-                          // (set >1 to re-enable a pass boost; kept as a knob)
+    passMultiplier: 1.25, // GOAT Pass perk: +25% XP on every gain (and on the
+                          // one-time history backfill for pass holders)
   };
   const LEVEL_STEP = 250;              // 1 cosmetic "level" per this much XP
   const LS_KEY = "goatlab_xp_v1";      // per-device meta + signed-out XP
@@ -538,7 +538,7 @@ window.GoatXP = (function () {
         ${earnHtml}
         <div class="gxhow-sec">The ${RANKS.length} ranks</div>
         ${ladderHtml}
-        <div class="gxhow-foot">Everyone earns XP at the same rate — free or GOAT Pass. The Pass doesn't earn faster; it just lets you <strong>show your rank chip</strong> on the public leaderboard.</div>
+        <div class="gxhow-foot">Everyone earns XP, free or GOAT Pass. Pass holders earn <strong>+25% XP</strong> on every game and get to <strong>show their rank chip</strong> on the public leaderboard.</div>
       </div>`;
     ov.querySelector(".gxpb-back").addEventListener("click", () => ov.remove());
     ov.addEventListener("click", (e) => { if (e.target === ov) ov.remove(); });

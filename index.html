@@ -134,7 +134,7 @@
 
       <button class="gp-promo" id="goatPassPromo" type="button" hidden>
         <span class="gp-promo-goat" aria-hidden="true">🐐</span>
-        <span class="gp-promo-txt"><strong>Get the GOAT Pass</strong> — your gold rank badge, full stats &amp; the trophy case</span>
+        <span class="gp-promo-txt"><strong>Get the GOAT Pass</strong> — reveal ratings in Blind &amp; Daily, +25% XP, gold badge &amp; full stats</span>
         <span class="gp-promo-price">Unlock · $2.99</span>
       </button>
 
@@ -225,6 +225,10 @@
               </button>
               <button class="respin-btn" id="respinAttr" type="button" data-respin="attribute" title="Roll a different stat (one use per game)">
                 <span class="respin-text">Stat</span>
+                <span class="respin-token">1×</span>
+              </button>
+              <button class="respin-btn reveal-btn" id="revealRatingsBtn" type="button" hidden title="GOAT Pass: reveal every player's rating for this stat (one use per round)">
+                <span class="respin-text">Reveal</span>
                 <span class="respin-token">1×</span>
               </button>
             </div>
@@ -329,13 +333,15 @@
         </div>
         <div class="pass-body">
           <ul class="pass-perks">
+            <li><span class="perk-ico">👁</span><span class="perk-txt"><strong>Reveal ratings in Blind &amp; Daily</strong><span>Once per round, tap Reveal to see every player's number for the stat on the table — then pick with confidence. One use per round; a respin deals fresh, hidden cards.</span></span></li>
+            <li><span class="perk-ico">⚡</span><span class="perk-txt"><strong>+25% XP on every game</strong><span>Every finish earns 25% more XP, so you climb the 12 ranks from Rookie to GOAT faster.</span></span></li>
             <li><span class="perk-ico">🐐</span><span class="perk-txt"><strong>Your rank badge, on your name</strong><span>A gold-bordered rank chip rides on your name across every leaderboard and shared scorecard — leveling up from Rookie to GOAT as you climb. Everyone earns a rank; only pass holders show it off.</span></span></li>
             <li><span class="perk-ico">📈</span><span class="perk-txt"><strong>Your full career stats</strong><span>Your whole GOAT Lab story in one place — every build you've made, streaks, averages, elite finishes, and a play calendar. Watch yourself climb.</span></span></li>
             <li><span class="perk-ico">🏆</span><span class="perk-txt"><strong>Trophy case &amp; achievements</strong><span>27 milestone badges to unlock across Daily, Classic &amp; Blind. Chase 100% and prove you've mastered them all.</span></span></li>
             <li><span class="perk-ico">🎯</span><span class="perk-txt"><strong>The top build, revealed</strong><span>After every Daily, see the exact build that topped the board — the one to beat, and how the best pulled it off.</span></span></li>
             <li><span class="perk-ico">📊</span><span class="perk-txt"><strong>Your exact rank &amp; percentile</strong><span>Know precisely where you land every day — "#312 of 2,847 · top 11%" — even outside the top 75.</span></span></li>
           </ul>
-          <p class="pass-free-note">GOAT Lab is 100% free — the Pass is just optional extra fun. No gameplay is ever locked.</p>
+          <p class="pass-free-note">GOAT Lab is 100% free to play — every mode is open to everyone. The Pass adds boosts and extras on top; it's never required.</p>
           <button class="pass-cta" id="passCtaBtn" type="button">Unlock GOAT Pass · $2.99</button>
           <p class="pass-fine" id="passFine">One-time purchase. No subscription. Secure checkout via Stripe.</p>
         </div>
