@@ -3992,10 +3992,8 @@ function updateRevealButton() {
   // if Firebase never initialized there's nothing to sell, so don't tease it.
   revealBtn.hidden = !blindMode || (!holder && !window.GoatOpenPassModal);
   if (revealBtn.hidden) return;
-  const token = revealBtn.querySelector(".respin-token");
   revealBtn.classList.toggle("is-locked", !holder);
   revealBtn.classList.toggle("is-used", holder && revealUsed);
-  if (token) token.textContent = holder ? "1×" : "🐐";
   revealBtn.title = holder
     ? "Reveal every player's rating for this stat (one use per round; a respin re-hides the new cards)"
     : "GOAT Pass perk — reveal every player's rating for this stat, once per round. Tap to unlock.";
