@@ -3994,6 +3994,10 @@ function updateRevealButton() {
   if (revealBtn.hidden) return;
   revealBtn.classList.toggle("is-locked", !holder);
   revealBtn.classList.toggle("is-used", holder && revealUsed);
+  // Non-holders get a 🔒 in the token slot so it's clearly a paid feature
+  // before they tap; holders get the "1×" use counter.
+  const token = revealBtn.querySelector(".respin-token");
+  if (token) token.textContent = holder ? "1×" : "🔒";
   revealBtn.title = holder
     ? "Reveal every player's rating for this stat (one use per round; a respin re-hides the new cards)"
     : "GOAT Pass perk — reveal every player's rating for this stat, once per round. Tap to unlock.";
