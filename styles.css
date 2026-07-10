@@ -1626,6 +1626,34 @@ h1 {
   color: var(--muted);
 }
 
+/* GOAT Pass ratings reveal (Blind & Daily) — gold treatment, eye glyph */
+.respin-btn.reveal-btn::before {
+  content: "\1F441"; /* 👁 */
+}
+
+.respin-btn.reveal-btn {
+  border-color: var(--gold);
+  box-shadow: 4px 4px 0 var(--gold);
+}
+
+.respin-btn.reveal-btn:hover:not(:disabled) {
+  box-shadow: 2px 2px 0 var(--gold);
+}
+
+.respin-btn.reveal-btn.is-locked {
+  opacity: 0.82;
+}
+
+.respin-btn.reveal-btn.is-locked .respin-token {
+  background: transparent;
+}
+
+.blind-note.is-revealed {
+  border-style: solid;
+  border-color: var(--gold);
+  color: var(--ink);
+}
+
 /* Share modal */
 .share-modal {
   width: min(500px, 100%);

@@ -3456,6 +3456,11 @@ let currentAttribute = null;
 let build = {};
 let gameMode = "classic";
 let respinsUsed = { era: false, team: false, attribute: false };
+// GOAT Pass reveal (Blind/Daily): one use per round, shows every player's
+// rating for the active stat. A respin re-hides the new cards and the use
+// doesn't come back until the next round.
+let revealUsed = false;
+let revealActive = false;
 let roundLocked = false;
 let dailyData = null;
 
@@ -3474,6 +3479,7 @@ const respinBar = document.querySelector("#respins");
 const respinEraBtn = document.querySelector("#respinEra");
 const respinTeamBtn = document.querySelector("#respinTeam");
 const respinAttrBtn = document.querySelector("#respinAttr");
+const revealBtn = document.querySelector("#revealRatingsBtn");
 const helpButton = document.querySelector("#helpButton");
 const helpModal = document.querySelector("#helpModal");
 const helpClose = document.querySelector("#helpClose");
@@ -3763,7 +3769,7 @@ function renderCards(animate) {
   const isSoloCard = golden && currentTeamEra.players.length === 1;
   currentTeamEra.players.forEach((playerData, index) => {
     const score = playerData.ratings[currentAttribute.key];
-    const isBlind = gameMode === "blind" || gameMode === "daily";
+    const isBlind = (gameMode === "blind" || gameMode === "daily") && !revealActive;
     const card = document.createElement("button");
     card.className = (animate ? "card is-dealing" : "card") + (golden ? " is-golden" : "");
     card.type = "button";
@@ -3787,7 +3793,9 @@ function renderCards(animate) {
             ? `<p class="golden-bio">${currentTeamEra.note}</p>`
             : isBlind
               ? `<div class="blind-note">Ratings hidden until selected</div>`
-              : `<div class="bars">
+              : revealActive
+                ? `<div class="blind-note is-revealed">👁 ${currentAttribute.label} revealed — GOAT Pass</div>`
+                : `<div class="bars">
                   ${renderBar(currentAttribute.label, score)}
                   ${renderBar("Height", playerData.ratings.height)}
                   ${renderBar("IQ", playerData.ratings.iq)}
@@ -3894,6 +3902,8 @@ function renderRound() {
 
   // Lock until the roll settles — respins do NOT recharge between rounds.
   roundLocked = false;
+  revealUsed = false;   // the GOAT Pass reveal DOES recharge each round
+  revealActive = false;
   if (respinBar) respinBar.hidden = false;
   updateRespinButtons();
 
@@ -3961,10 +3971,51 @@ function updateRespinButtons() {
     btn.disabled = !respinAvailable(type);
     btn.classList.toggle("is-used", respinsUsed[type]);
   });
+  updateRevealButton();
+}
+
+// --- GOAT Pass: once-per-round ratings reveal (Blind & Daily) ---------------
+
+function revealAvailable() {
+  if (!roundLocked || revealUsed || revealActive) return false;
+  if (gameMode !== "blind" && gameMode !== "daily") return false;
+  // Golden solo cards have no stat on the table (you assign the 100 yourself).
+  if (currentTeamEra && currentTeamEra.golden && currentTeamEra.players.length === 1) return false;
+  return true;
+}
+
+function updateRevealButton() {
+  if (!revealBtn) return;
+  const blindMode = gameMode === "blind" || gameMode === "daily";
+  const holder = !!window.GoatPassActive;
+  // Non-holders only see the (locked) button when the buy modal is reachable —
+  // if Firebase never initialized there's nothing to sell, so don't tease it.
+  revealBtn.hidden = !blindMode || (!holder && !window.GoatOpenPassModal);
+  if (revealBtn.hidden) return;
+  revealBtn.classList.toggle("is-locked", !holder);
+  revealBtn.classList.toggle("is-used", holder && revealUsed);
+  revealBtn.title = holder
+    ? "Reveal every player's rating for this stat (one use per round; a respin re-hides the new cards)"
+    : "GOAT Pass perk — reveal every player's rating for this stat, once per round. Tap to unlock.";
+  // Non-holders keep it tappable: the click opens the GOAT Pass modal.
+  revealBtn.disabled = holder ? !revealAvailable() : !roundLocked;
+}
+
+function revealRatings() {
+  if (!window.GoatPassActive) {
+    if (window.GoatOpenPassModal) window.GoatOpenPassModal();
+    return;
+  }
+  if (!revealAvailable()) return;
+  revealUsed = true;
+  revealActive = true;
+  renderCards(false);
+  updateRespinButtons();
 }
 
 // Re-stamp the prompt and re-deal the cards after a respin (quick deal, no slot roll).
 function relayRound() {
+  revealActive = false; // a used reveal never carries onto respun cards
   const token = ++rollToken;
   prompt.classList.remove("is-rolling");
   cards.classList.remove("is-rolling");
@@ -4235,6 +4286,8 @@ function reset() {
   scoreEl.textContent = "--";
   cards.className = "cards";
   respinsUsed = { era: false, team: false, attribute: false };
+  revealUsed = false;
+  revealActive = false;
   parts.forEach((p) => {
     p.classList.remove("is-new", "is-current");
     delete p.dataset.tier;
@@ -4294,6 +4347,8 @@ function startGame(mode) {
   cards.className = "cards";
   cards.innerHTML = "";
   respinsUsed = { era: false, team: false, attribute: false };
+  revealUsed = false;
+  revealActive = false;
   parts.forEach((p) => {
     p.classList.remove("is-new", "is-current");
     delete p.dataset.tier;
@@ -4660,6 +4715,7 @@ backButton.addEventListener("click", goBack);
 respinEraBtn.addEventListener("click", respinEra);
 respinTeamBtn.addEventListener("click", respinTeam);
 respinAttrBtn.addEventListener("click", respinAttribute);
+if (revealBtn) revealBtn.addEventListener("click", revealRatings);
 shareButton.addEventListener("click", shareResult);
 
 const playAgainBtn = document.querySelector("#playAgainBtn");
@@ -5917,6 +5973,8 @@ updateBody(null);
   }
   if (passModalClose) passModalClose.addEventListener("click", closePassModal);
   if (passCtaBtn) passCtaBtn.addEventListener("click", startCheckout);
+  // Game-scope code (reveal button) opens the buy modal through this hook.
+  window.GoatOpenPassModal = openPassModal;
 
   // --- Results-screen reveal / unlock strip -------------------------------
   function miniChip(p, best) {
@@ -6020,7 +6078,7 @@ updateBody(null);
           <div class="us-goat" aria-hidden="true">🐐</div>
           <div class="us-txt">
             <strong>See the best build from today's draft</strong>
-            <span>+ your exact rank &amp; the 🐐 badge on every board</span>
+            <span>+ a once-a-round ratings reveal, +25% XP &amp; the 🐐 badge</span>
           </div>
         </div>
         <button class="unlock-cta" type="button" data-unlock>Unlock · $2.99</button>
@@ -6056,7 +6114,7 @@ updateBody(null);
           <div class="us-goat" aria-hidden="true">🐐</div>
           <div class="us-txt">
             <strong>${head || "Unlock the GOAT Pass"}</strong>
-            <span>${sub || "Gold badge, full stats, the trophy case &amp; more — one time, just $2.99"}</span>
+            <span>${sub || "Reveal ratings in Blind, +25% XP, gold badge &amp; the trophy case — one time, just $2.99"}</span>
           </div>
         </div>
         <button class="unlock-cta" type="button" data-unlock>Unlock · $2.99</button>
@@ -6082,7 +6140,7 @@ updateBody(null);
       sub = "Track every run — full stats, trophies &amp; the gold badge. One time, $2.99";
     } else if (r.score >= 90) {
       head = `${r.score} — strong build`;
-      sub = "See your full stats &amp; chase the trophy case. One time, $2.99";
+      sub = "Go higher with the ratings reveal, +25% XP &amp; full stats. One time, $2.99";
     }
     box.innerHTML = genericUnlockStripHTML(head, sub);
     const btn = box.querySelector("[data-unlock]");
@@ -6611,6 +6669,7 @@ updateBody(null);
   // Reflect pass state across the UI (called on sign-in and after a refresh).
   function updatePassUI() {
     window.GoatPassActive = hasPass; // read by the share-image renderer (global scope)
+    try { updateRespinButtons(); } catch (e) {} // reveal button locks/unlocks with the pass
     const pill = document.querySelector("#goatPassPill");
     if (pill) pill.hidden = !hasPass;
     syncPromo(); // home banner: only for non-holders, and only on the home screen
