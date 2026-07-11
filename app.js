@@ -3456,9 +3456,9 @@ let currentAttribute = null;
 let build = {};
 let gameMode = "classic";
 let respinsUsed = { era: false, team: false, attribute: false };
-// GOAT Pass reveal (Blind/Daily): one use per round, shows every player's
-// rating for the active stat. A respin re-hides the new cards and the use
-// doesn't come back until the next round.
+// GOAT Pass reveal (Blind/Daily): one use per game, shows every player's
+// rating for the active stat. A respin re-hides the cards and spends the use;
+// it does not recharge between rounds (persists until the next game).
 let revealUsed = false;
 let revealActive = false;
 let roundLocked = false;
@@ -3900,10 +3900,10 @@ function renderRound() {
     : gameMode === "blind" ? "Blind mode: ratings reveal after your pick."
     : "Classic mode: ratings are visible before you pick.";
 
-  // Lock until the roll settles — respins do NOT recharge between rounds.
+  // Lock until the roll settles — respins do NOT recharge between rounds,
+  // and neither does the GOAT Pass reveal (one use for the whole game).
   roundLocked = false;
-  revealUsed = false;   // the GOAT Pass reveal DOES recharge each round
-  revealActive = false;
+  revealActive = false; // new round always deals hidden; revealUsed persists all game
   if (respinBar) respinBar.hidden = false;
   updateRespinButtons();
 
@@ -3974,7 +3974,7 @@ function updateRespinButtons() {
   updateRevealButton();
 }
 
-// --- GOAT Pass: once-per-round ratings reveal (Blind & Daily) ---------------
+// --- GOAT Pass: once-per-game ratings reveal (Blind & Daily) ----------------
 
 function revealAvailable() {
   if (!roundLocked || revealUsed || revealActive) return false;
@@ -3999,8 +3999,8 @@ function updateRevealButton() {
   const token = revealBtn.querySelector(".respin-token");
   if (token) token.textContent = holder ? "1×" : "🔒";
   revealBtn.title = holder
-    ? "Reveal every player's rating for this stat (one use per round; a respin re-hides the new cards)"
-    : "GOAT Pass perk — reveal every player's rating for this stat, once per round. Tap to unlock.";
+    ? "Reveal every player's rating for this stat (one use per game; a respin re-hides the cards and spends it)"
+    : "GOAT Pass perk — reveal every player's rating for this stat, once per game. Tap to unlock.";
   // Non-holders keep it tappable: the click opens the GOAT Pass modal.
   revealBtn.disabled = holder ? !revealAvailable() : !roundLocked;
 }
@@ -6082,7 +6082,7 @@ updateBody(null);
           <div class="us-goat" aria-hidden="true">🐐</div>
           <div class="us-txt">
             <strong>See the best build from today's draft</strong>
-            <span>+ a once-a-round ratings reveal, +25% XP &amp; the 🐐 badge</span>
+            <span>+ a once-a-game ratings reveal, +25% XP &amp; the 🐐 badge</span>
           </div>
         </div>
         <button class="unlock-cta" type="button" data-unlock>Unlock · $2.99</button>
