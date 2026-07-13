@@ -3042,6 +3042,8 @@ h1 {
 .pass-perks .perk-ico { width: 34px; height: 34px; display: grid; place-items: center; flex-shrink: 0; border: 2px solid var(--ink); background: var(--surface); font-size: 1.05rem; }
 .pass-perks .perk-txt strong { display: block; font: 700 0.9rem/1.2 "Playfair Display", Georgia, serif; }
 .pass-perks .perk-txt span { display: block; margin-top: 2px; color: var(--muted); font-size: 0.8rem; line-height: 1.35; }
+/* Shorter mobile-only descriptions: full text on desktop, .perk-sm on phones. */
+.pass-perks .perk-txt .perk-sm { display: none; }
 .pass-free-note { margin: 0 0 14px; text-align: center; color: var(--muted); font: 400 0.78rem/1.4 "Playfair Display", Georgia, serif; }
 .pass-cta { width: 100%; padding: 14px; cursor: pointer; background: var(--court); color: #fff; border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); font: 800 0.92rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.04em; text-transform: uppercase; transition: transform 0.1s ease, box-shadow 0.1s ease; }
 .pass-cta:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
@@ -3061,8 +3063,10 @@ h1 {
   .pass-perks li { gap: 9px; }
   .pass-perks .perk-ico { width: 28px; height: 28px; font-size: 0.9rem; }
   .pass-perks .perk-txt strong { font-size: 0.82rem; }
-  /* Clamp descriptions to two lines so all 7 perks fit a phone screen. */
-  .pass-perks .perk-txt span { font-size: 0.72rem; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  /* Swap to the short descriptions so every perk fits fully — no truncation. */
+  .pass-perks .perk-txt > span:not(.perk-sm) { display: none; }
+  .pass-perks .perk-txt .perk-sm { display: block; }
+  .pass-perks .perk-txt span { font-size: 0.74rem; line-height: 1.3; }
   .pass-free-note { margin: 0 0 8px; font-size: 0.7rem; }
   .pass-cta { flex-shrink: 0; padding: 12px; }
   .pass-fine { flex-shrink: 0; margin-top: 8px; font-size: 0.66rem; }
