@@ -6906,6 +6906,11 @@ updateBody(null);
   const scrim = document.getElementById("a2hsScrim");
   if (!el || !scrim) return;
 
+  // Keep the original iOS-Safari steps so the on-demand opener can restore them
+  // after showing a different platform's instructions.
+  const stepsEl = document.getElementById("a2hsSteps");
+  const IOS_STEPS_HTML = stepsEl ? stepsEl.innerHTML : "";
+
   const ls = {
     get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
     set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
@@ -6982,11 +6987,94 @@ updateBody(null);
   document.getElementById("a2hsGotIt").addEventListener("click", hide);
   scrim.addEventListener("click", hide);
 
+  // On-demand open (from the Settings menu). Unlike the auto-prompt this ignores
+  // snooze/frequency caps and works on every platform, picking the right steps.
+  const isAndroid = () => /android/i.test(navigator.userAgent);
+  function openFromSettings() {
+    // Close the Settings dropdown first.
+    const menu = document.getElementById("settingsMenu");
+    const sBtn = document.getElementById("settingsBtn");
+    if (menu) menu.hidden = true;
+    if (sBtn) sBtn.setAttribute("aria-expanded", "false");
+
+    const actions = document.getElementById("a2hsActions");
+    const steps = document.getElementById("a2hsSteps");
+    const iosActions = document.getElementById("a2hsActionsIos");
+    const title = document.getElementById("a2hsTitle");
+    const sub = document.getElementById("a2hsSub");
+
+    const setSteps = (html) => { if (steps) steps.innerHTML = html; };
+    const showButtons = (native) => {
+      if (actions) actions.hidden = !native;   // native "Add to Home Screen" prompt
+      if (steps) steps.hidden = native;        // manual steps
+      if (iosActions) iosActions.hidden = native; // "Got it" for the manual path
+    };
+
+    if (isStandalone()) {
+      ls.set(K_INSTALLED, "1");
+      title.textContent = "You're all set 🎉";
+      sub.textContent = "GOAT Lab is already installed on this device — open it from your home screen anytime.";
+      showButtons(false);
+      setSteps(`<li><span class="a2hs-num">✓</span> Already on your home screen. Nothing else to do!</li>`);
+    } else if (deferredPrompt) {
+      // Android/Chromium: offer the real one-tap install prompt.
+      title.textContent = "Add GOAT Lab to your home screen";
+      sub.textContent = "Play tomorrow's Daily in one tap — no app store, no download.";
+      showButtons(true);
+    } else if (isiOSSafari()) {
+      title.textContent = "Add GOAT Lab to your home screen";
+      sub.textContent = "Keep tomorrow's Daily one tap away.";
+      setSteps(IOS_STEPS_HTML);
+      showButtons(false);
+    } else if (isiOS()) {
+      // iOS but not Safari (Chrome/Firefox on iOS can't install PWAs).
+      title.textContent = "Open in Safari to add it";
+      sub.textContent = "On iPhone/iPad, Add to Home Screen only works from Safari.";
+      setSteps(
+        `<li><span class="a2hs-num">1</span> Open <strong>playgoatlab.com</strong> in <strong>Safari</strong></li>` +
+        `<li><span class="a2hs-num">2</span> Tap the <span class="a2hs-share">Share &#x2191;</span> button, then <strong>Add to Home Screen</strong></li>` +
+        `<li><span class="a2hs-num">3</span> Tap <strong>Add</strong> — done!</li>`
+      );
+      showButtons(false);
+    } else if (isAndroid()) {
+      title.textContent = "Add GOAT Lab to your home screen";
+      sub.textContent = "Install it like an app — no Play Store needed.";
+      setSteps(
+        `<li><span class="a2hs-num">1</span> Tap the <strong>⋮</strong> menu in your browser's toolbar</li>` +
+        `<li><span class="a2hs-num">2</span> Choose <strong>Add to Home screen</strong> (or <strong>Install app</strong>)</li>` +
+        `<li><span class="a2hs-num">3</span> Confirm — done!</li>`
+      );
+      showButtons(false);
+    } else {
+      // Desktop / other: install as an app from the browser.
+      title.textContent = "Install GOAT Lab as an app";
+      sub.textContent = "Add it to your desktop or dock so it opens in its own window.";
+      setSteps(
+        `<li><span class="a2hs-num">1</span> Look for the <strong>install</strong> icon in your browser's address bar (or the <strong>⋮</strong> menu)</li>` +
+        `<li><span class="a2hs-num">2</span> Choose <strong>Install GOAT Lab</strong></li>` +
+        `<li><span class="a2hs-num">3</span> Confirm — it opens like a native app!</li>`
+      );
+      showButtons(false);
+    }
+
+    scrim.hidden = false;
+    el.hidden = false;
+    requestAnimationFrame(() => { el.classList.add("show"); scrim.classList.add("show"); });
+  }
+
+  const settingsAddBtn = document.getElementById("addHomeScreenBtn");
+  if (settingsAddBtn) {
+    // No point offering it once installed.
+    if (isStandalone()) settingsAddBtn.hidden = true;
+    settingsAddBtn.addEventListener("click", openFromSettings);
+  }
+
   window.GoatA2HS = {
     maybe() {
       if (!eligible()) return;
       shownThisSession = true; // claim now so a repeat call can't double-schedule
       setTimeout(show, 1200);  // let the result screen settle first
     },
+    open: openFromSettings,
   };
 })();
