@@ -85,20 +85,21 @@ window.GoatXP = (function () {
 
   // ==== Pure rank math ======================================================
   const CHIP_BY_NAME = {};
-  const ICON_BY_NAME = {};
-  RANKS.forEach((r) => { CHIP_BY_NAME[r.name] = r.chip; ICON_BY_NAME[r.name] = r.icon; });
+  const INDEX_BY_NAME = {};
+  RANKS.forEach((r, i) => { CHIP_BY_NAME[r.name] = r.chip; INDEX_BY_NAME[r.name] = i; });
   const TOP_RANK_NAME = RANKS[RANKS.length - 1].name; // "GOAT" — the max rank
 
   // Single source of truth for the GOAT Pass rank chip, so leaderboards, the XP
   // board and the share card all render the same evolving badge. The chip levels
-  // up visually across the 12 ranks: per-rank emblem, tier gradient (purple/gold),
-  // and a shimmer on the max rank.
+  // up visually across the 12 ranks: roman-numeral tier mark (matching the rank
+  // emblem elsewhere), tier gradient (purple/gold), and a shimmer on the max rank.
   function passChipHTML(rankName) {
     const cls = CHIP_BY_NAME[rankName] || "chip-gold";
-    const ico = ICON_BY_NAME[rankName] || "🐐";
+    const idx = INDEX_BY_NAME[rankName];
     const top = rankName === TOP_RANK_NAME ? " chip-goat" : "";
     const nm = rankName || "GOAT Pass";
-    return `<span class="grank-chip pass ${cls}${top}"><span class="grank-chip-ico" aria-hidden="true">${ico}</span>${esc(nm)}</span>`;
+    const tier = idx == null ? "" : `<span class="grank-chip-tier" aria-hidden="true">${roman(idx + 1)}</span>`;
+    return `<span class="grank-chip pass ${cls}${top}">${tier}${esc(nm)}</span>`;
   }
 
   function rankIndexForXp(xp) {
@@ -313,7 +314,7 @@ window.GoatXP = (function () {
     .grank-chip.chip-gold{background:var(--gold,#e6b843);color:#3a2c05}
     .grank-chip.pass{border:2px solid var(--gold,#e6b843);box-shadow:0 0 0 2px rgba(230,184,67,.4)}
     /* Evolving rank chip: per-rank emblem + escalating frame up the 12 ranks */
-    .grank-chip .grank-chip-ico{margin-right:3px;font-size:.92em;line-height:1;vertical-align:-1px}
+    .grank-chip .grank-chip-tier{margin-right:5px;padding-right:5px;border-right:1.5px solid currentColor;opacity:.75;font-size:.9em;letter-spacing:.02em}
     .grank-chip.pass.chip-purple{background:linear-gradient(135deg,#c8aee6,#a27fc9)}
     .grank-chip.pass.chip-gold{background:linear-gradient(135deg,#f2d47e,var(--gold,#e6b843))}
     .grank-chip.pass.chip-goat{position:relative;overflow:hidden;border-width:2px;box-shadow:0 0 0 2px rgba(230,184,67,.6),0 0 8px rgba(230,184,67,.5)}

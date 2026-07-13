@@ -4725,12 +4725,12 @@ function buildCardImageUrl() {
   return `/api/og?${params.toString()}`;
 }
 
-// GOAT Pass badge on the shared scorecard — shows the holder's evolving rank
-// (emblem + name), e.g. "🐐 ⭐ ALL-STAR", falling back to a plain pass label.
+// GOAT Pass badge on the shared scorecard — shows the holder's rank name,
+// e.g. "🐐 ALL-STAR", falling back to a plain pass label.
 function shareCardPassLabel() {
   try {
     const info = window.GoatXP && window.GoatXP.info && window.GoatXP.info();
-    if (info && info.name) return `🐐 ${info.icon || ""} ${info.name}`.replace(/\s+/g, " ").trim().toUpperCase();
+    if (info && info.name) return `🐐 ${info.name}`.toUpperCase();
   } catch (e) {}
   return "🐐 GOAT PASS";
 }
