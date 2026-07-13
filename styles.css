@@ -3015,7 +3015,7 @@ h1 {
 .locked-gate .lock-txt { font: 700 0.82rem/1.4 "Space Mono", ui-monospace, monospace; color: var(--ink); max-width: 280px; }
 
 /* Unlock modal */
-.pass-modal { max-width: 580px; width: 100%; padding: 0; overflow: hidden; max-height: min(92vh, calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 24px)); display: flex; flex-direction: column; }
+.pass-modal { position: relative; max-width: 580px; width: 100%; padding: 0; overflow: hidden; max-height: min(92vh, calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 24px)); display: flex; flex-direction: column; }
 /* On phones, CENTER the buy modal in the visible viewport (the shared overlay
    uses flex-start for the long share card, which on iOS pins this modal's ✕
    up behind the status/address bar — "too high, can't hit the X"). Safe-area
