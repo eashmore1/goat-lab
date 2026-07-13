@@ -2180,7 +2180,10 @@ h1 {
 .account-btn-trophy { background: var(--gold); }
 .account-btn-archive { background: var(--surface); }
 
-/* Past-Daily archive list (GOAT Pass) */
+/* Past-Daily archive (GOAT Pass) — match the leaderboard/stats page framing so
+   the header clears the score tile above it instead of overlapping it. */
+.archive-page { padding: 8px 4px 40px; animation: lb-fade 0.2s ease; }
+@media (max-width: 640px) { .archive-page { padding: 6px 8px 40px; } }
 .archive-list { display: grid; gap: 8px; max-width: 640px; margin: 0 auto; padding: 4px 0 40px; }
 .arch-row {
   display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 12px;
@@ -3012,7 +3015,17 @@ h1 {
 .locked-gate .lock-txt { font: 700 0.82rem/1.4 "Space Mono", ui-monospace, monospace; color: var(--ink); max-width: 280px; }
 
 /* Unlock modal */
-.pass-modal { max-width: 580px; width: 100%; padding: 0; overflow: hidden; max-height: min(92vh, calc(100dvh - 24px)); display: flex; flex-direction: column; }
+.pass-modal { max-width: 580px; width: 100%; padding: 0; overflow: hidden; max-height: min(92vh, calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 24px)); display: flex; flex-direction: column; }
+/* On phones, CENTER the buy modal in the visible viewport (the shared overlay
+   uses flex-start for the long share card, which on iOS pins this modal's ✕
+   up behind the status/address bar — "too high, can't hit the X"). Safe-area
+   padding keeps it clear of the notch and home indicator. */
+@media (max-width: 640px) {
+  #passModal {
+    align-items: center;
+    padding: max(12px, env(safe-area-inset-top)) 10px max(12px, env(safe-area-inset-bottom));
+  }
+}
 .pass-modal .modal-close { position: absolute; top: 8px; right: 8px; z-index: 2; color: var(--ink); border: none; background: transparent; border-radius: 50%; font-size: 1.2rem; line-height: 1; opacity: 0.7; }
 .pass-modal .modal-close:hover { background: rgba(21, 20, 19, 0.12); border-color: transparent; opacity: 1; transform: none; box-shadow: none; }
 .pass-top { background: var(--gold); color: var(--ink); padding: 22px 20px 16px; text-align: center; border-bottom: 3px solid var(--ink); }
