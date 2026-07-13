@@ -71,14 +71,19 @@
         <div>
           <h1>Build the perfect hooper from basketball history.</h1>
         </div>
-        <button id="goatPassTop" class="coffee-top" type="button" title="GOAT Pass — unlock the extras">
-          <span class="coffee-top-mark" aria-hidden="true">🐐</span>
-          <span class="coffee-top-text">GOAT Pass</span>
-        </button>
-        <button id="helpButtonTop" class="help-top" type="button" title="How to Play">
-          <span class="help-top-mark" aria-hidden="true">?</span>
-          <span class="help-top-text">How to Play</span>
-        </button>
+        <div class="hero-actions">
+          <div class="hero-actions-top">
+            <button id="goatPassTop" class="coffee-top" type="button" title="GOAT Pass — unlock the extras">
+              <span class="coffee-top-mark" aria-hidden="true">🐐</span>
+              <span class="coffee-top-text">GOAT Pass</span>
+            </button>
+            <button id="helpButtonTop" class="help-top" type="button" title="How to Play">
+              <span class="help-top-mark" aria-hidden="true">?</span>
+              <span class="help-top-text">How to Play</span>
+            </button>
+          </div>
+          <button id="archiveTopBtn" class="help-top hero-archive-btn" type="button" title="Play past Daily challenges (GOAT Pass)">Past Dailies</button>
+        </div>
         <div class="score-tile" aria-live="polite">
           <span id="score">--</span>
           <small>GOAT Score</small>
@@ -94,15 +99,9 @@
       </div>
 
       <div class="account-bar" id="accountBar" hidden>
-        <div class="account-nav">
-          <button id="leaderboardBtn" class="account-btn account-btn-trophy" type="button">
-            <span aria-hidden="true">🏆</span> Daily Leaderboard
-          </button>
-          <button id="archiveBtn" class="account-btn account-btn-archive" type="button" title="Play past Daily challenges (GOAT Pass)">
-            <span aria-hidden="true">📅</span> Past Dailies
-          </button>
-        </div>
-        <div class="account-side">
+        <button id="leaderboardBtn" class="account-btn account-btn-trophy" type="button">
+          <span aria-hidden="true">🏆</span> Daily Leaderboard
+        </button>
         <span class="players-pill" id="homeTotalPlayers" hidden>
           <span id="homeTotalPlayersNum">74,900+</span> players worldwide
         </span>
@@ -144,7 +143,6 @@
               </div>
             </div>
           </div>
-        </div>
         </div>
       </div>
 

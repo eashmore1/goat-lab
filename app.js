@@ -6658,7 +6658,9 @@ updateBody(null);
     if (statsTab === "daily") {
       const history = getDailyHistory();
       const today = getTodayStr();
-      statsBody.innerHTML = statsTilesHTML(history, today) + heatmapHTML(history, today) + historyListHTML(history);
+      statsBody.innerHTML =
+        `<div class="stats-archive-cta"><button id="statsArchiveBtn" class="account-btn account-btn-ghost" type="button">Play past Dailies →</button></div>` +
+        statsTilesHTML(history, today) + heatmapHTML(history, today) + historyListHTML(history);
       wireStatsToggles();
       return;
     }
@@ -6720,7 +6722,7 @@ updateBody(null);
   if (statsTabTrophies) statsTabTrophies.addEventListener("click", () => setStatsTab("trophies"));
 
   // --- Past-Daily archive (GOAT Pass practice) -----------------------------
-  const archiveBtn = document.querySelector("#archiveBtn");
+  const archiveTopBtn = document.querySelector("#archiveTopBtn");
   const archivePage = document.querySelector("#archivePage");
   const archiveList = document.querySelector("#archiveList");
   const archiveBackBtn = document.querySelector("#archiveBackBtn");
@@ -6764,24 +6766,50 @@ updateBody(null);
       btn.addEventListener("click", () => startArchiveGame(btn.dataset.date));
     });
   }
-  function openArchive() {
-    if (!hasPass) { openPassModal(); return; }
+  const ARCHIVE_PATH = "/past-dailies";
+  function setArchiveUrl(on) {
+    try {
+      if (on && location.pathname !== ARCHIVE_PATH) history.pushState({ archive: 1 }, "", ARCHIVE_PATH);
+      else if (!on && location.pathname === ARCHIVE_PATH) history.pushState({}, "", "/");
+    } catch (e) {}
+  }
+  function openArchive(fromUrl) {
+    if (!hasPass) { if (!fromUrl) openPassModal(); return; }
     mainScreens().forEach((s) => { if (s) s.hidden = true; });
     if (lbPage) lbPage.hidden = true;
     if (statsPage) statsPage.hidden = true;
     renderArchiveList();
     if (archivePage) archivePage.hidden = false;
+    if (!fromUrl) setArchiveUrl(true);
     window.scrollTo(0, 0);
   }
   function closeArchive() {
     if (archivePage) archivePage.hidden = true;
     const home = document.querySelector("#modeScreen");
     if (home) home.hidden = false;
+    setArchiveUrl(false);
     window.scrollTo(0, 0);
   }
-  if (archiveBtn) archiveBtn.addEventListener("click", openArchive);
+  if (archiveTopBtn) archiveTopBtn.addEventListener("click", () => openArchive());
   if (archiveBackBtn) archiveBackBtn.addEventListener("click", closeArchive);
-  window.GoatArchive = { open: openArchive }; // goBack() returns here after a practice run
+  // Stats page "Past Dailies" button (rendered inside the Daily tab).
+  if (statsBody) statsBody.addEventListener("click", (e) => {
+    if (e.target.closest && e.target.closest("#statsArchiveBtn")) openArchive();
+  });
+  window.GoatArchive = { open: () => openArchive() }; // goBack() returns here after a practice run
+
+  // Own URL: /past-dailies opens the archive on load (once pass is known) and
+  // browser back/forward toggles it.
+  let _archiveUrlChecked = false;
+  function maybeOpenArchiveFromUrl() {
+    if (_archiveUrlChecked) return;
+    if (location.pathname === ARCHIVE_PATH && hasPass) { _archiveUrlChecked = true; openArchive(true); }
+  }
+  window.GoatArchiveUrlCheck = maybeOpenArchiveFromUrl;
+  window.addEventListener("popstate", () => {
+    if (location.pathname === ARCHIVE_PATH) openArchive(true);
+    else if (archivePage && !archivePage.hidden) closeArchive();
+  });
 
   // Top-of-page GOAT Pass button: holders jump to their stats, others see the unlock.
   const goatPassTopBtn = document.querySelector("#goatPassTop");
@@ -6834,6 +6862,7 @@ updateBody(null);
     const pill = document.querySelector("#goatPassPill");
     if (pill) pill.hidden = !hasPass;
     syncFinalDayBar(); // hide the final-day bar the moment they buy
+    try { maybeOpenArchiveFromUrl(); } catch (e) {} // /past-dailies deep link
     syncPromo(); // home banner: only for non-holders, and only on the home screen
     if (statsPage && !statsPage.hidden) renderStats();
     const box = document.querySelector("#goatPassResult");

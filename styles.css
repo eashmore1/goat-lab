@@ -1887,6 +1887,12 @@ h1 {
 /* Support / "buy the dev a coffee" — always-visible header CTA so visitors who
    never finish a full game still see the ask. Mirrors .help-top but in gold.
    It carries the margin-left:auto so it + Help + score-tile group on the right. */
+/* Hero action cluster: GOAT Pass + How to Play on top, Past Dailies beneath. */
+.hero-actions { display: flex; flex-direction: column; gap: 8px; margin-left: auto; }
+.hero-actions-top { display: flex; gap: 8px; }
+.hero-actions .coffee-top { margin-left: 0; }
+.hero-archive-btn { width: 100%; justify-content: center; }
+
 .coffee-top {
   display: inline-flex;
   align-items: center;
@@ -2159,12 +2165,7 @@ h1 {
   flex-wrap: wrap;
   font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
-/* Two clean clusters: nav buttons on the left, everything else on the right.
-   Keeps the bar from orphaning "Settings" onto its own line when the Past
-   Dailies button makes the signed-out row too wide. */
-.account-nav { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; flex-shrink: 0; }
-.account-side { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: flex-end; flex: 1 1 auto; min-width: 0; }
-.account-auth { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
+.account-auth { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .account-signedout, .account-signedin { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .account-msg, .account-who { font-size: 0.8rem; color: var(--ink); }
 .account-btn {
@@ -2180,10 +2181,13 @@ h1 {
   transition: transform 140ms ease, box-shadow 140ms ease;
 }
 .account-btn:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
-.account-btn-google, .account-btn-ghost, .account-btn-trophy, .account-btn-archive { background: var(--surface); color: var(--ink); }
+.account-btn-google, .account-btn-ghost, .account-btn-trophy { background: var(--surface); color: var(--ink); }
 .account-btn-google { display: inline-flex; align-items: center; gap: 9px; }
 .account-btn-trophy { background: var(--gold); }
-.account-btn-archive { background: var(--surface); }
+
+/* "Play past Dailies" button at the top of the Daily stats tab. */
+.stats-archive-cta { max-width: 620px; margin: 0 auto 14px; display: flex; justify-content: flex-end; }
+.stats-archive-cta .account-btn { background: var(--gold); }
 
 /* Past-Daily archive (GOAT Pass) — match the leaderboard/stats page framing so
    the header clears the score tile above it instead of overlapping it. */

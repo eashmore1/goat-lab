@@ -1,4 +1,7 @@
 {
+  "rewrites": [
+    { "source": "/past-dailies", "destination": "/index.html" }
+  ],
   "crons": [
     { "path": "/api/send-daily-push", "schedule": "0 16 * * *" },
     { "path": "/api/send-final-day-push", "schedule": "0 15 15 7 *" }
