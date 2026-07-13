@@ -3012,7 +3012,7 @@ h1 {
 .locked-gate .lock-txt { font: 700 0.82rem/1.4 "Space Mono", ui-monospace, monospace; color: var(--ink); max-width: 280px; }
 
 /* Unlock modal */
-.pass-modal { max-width: 580px; width: 100%; padding: 0; overflow: hidden; max-height: 92vh; display: flex; flex-direction: column; }
+.pass-modal { max-width: 580px; width: 100%; padding: 0; overflow: hidden; max-height: min(92vh, calc(100dvh - 24px)); display: flex; flex-direction: column; }
 .pass-modal .modal-close { position: absolute; top: 10px; right: 10px; z-index: 2; color: var(--ink); }
 .pass-top { background: var(--gold); color: var(--ink); padding: 22px 20px 16px; text-align: center; border-bottom: 3px solid var(--ink); }
 .pass-top .pass-goat { font-size: 2.3rem; line-height: 1; }
@@ -3032,10 +3032,43 @@ h1 {
 .pass-cta { width: 100%; padding: 14px; cursor: pointer; background: var(--court); color: #fff; border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); font: 800 0.92rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.04em; text-transform: uppercase; transition: transform 0.1s ease, box-shadow 0.1s ease; }
 .pass-cta:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
 .pass-fine { text-align: center; margin: 12px 0 0; color: var(--muted); font: 400 0.74rem/1.4 "Playfair Display", Georgia, serif; }
-/* Narrow screens: single column, back to a phone-friendly width. */
+/* Narrow screens: single column, compressed, and the CTA pinned below the
+   scrolling perks list — so the price, buy button and ✕ are ALWAYS on screen
+   and only the perk list scrolls. */
 @media (max-width: 540px) {
   .pass-modal { max-width: 400px; }
-  .pass-perks { grid-template-columns: 1fr; }
+  .pass-top { padding: 14px 16px 10px; }
+  .pass-top .pass-goat { font-size: 1.7rem; }
+  .pass-top h3 { margin: 3px 0 2px; font-size: 1.3rem; }
+  .pass-price { font-size: 0.92rem; }
+  .pass-launch { margin-top: 5px; }
+  .pass-body { display: flex; flex-direction: column; padding: 12px 14px 14px; }
+  .pass-perks { grid-template-columns: 1fr; gap: 9px; margin: 0 0 10px; overflow-y: auto; flex: 1 1 auto; min-height: 0; -webkit-overflow-scrolling: touch; }
+  .pass-perks li { gap: 9px; }
+  .pass-perks .perk-ico { width: 28px; height: 28px; font-size: 0.9rem; }
+  .pass-perks .perk-txt strong { font-size: 0.82rem; }
+  /* Clamp descriptions to two lines so all 7 perks fit a phone screen. */
+  .pass-perks .perk-txt span { font-size: 0.72rem; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .pass-free-note { margin: 0 0 8px; font-size: 0.7rem; }
+  .pass-cta { flex-shrink: 0; padding: 12px; }
+  .pass-fine { flex-shrink: 0; margin-top: 8px; font-size: 0.66rem; }
+}
+/* Short phone screens: squeeze the header/footer chrome so the full perk list
+   still fits without scrolling. */
+@media (max-width: 540px) and (max-height: 720px) {
+  .pass-top { padding: 8px 14px 8px; }
+  .pass-top .pass-goat { display: none; }
+  .pass-top h3 { margin: 0 0 1px; font-size: 1.12rem; }
+  .pass-price { font-size: 0.84rem; }
+  .pass-launch { margin-top: 4px; padding: 2px 8px; font-size: 0.5rem; }
+  .pass-body { padding: 10px 12px 12px; }
+  .pass-perks { gap: 7px; }
+  .pass-perks .perk-ico { width: 24px; height: 24px; font-size: 0.8rem; }
+  .pass-perks .perk-txt strong { font-size: 0.78rem; }
+  .pass-perks .perk-txt span { font-size: 0.68rem; line-height: 1.25; }
+  .pass-free-note { display: none; }
+  .pass-cta { padding: 10px; font-size: 0.84rem; }
+  .pass-fine { margin-top: 6px; font-size: 0.6rem; }
 }
 
 @media (max-width: 460px) {
