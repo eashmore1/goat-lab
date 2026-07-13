@@ -2159,7 +2159,12 @@ h1 {
   flex-wrap: wrap;
   font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
-.account-auth { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+/* Two clean clusters: nav buttons on the left, everything else on the right.
+   Keeps the bar from orphaning "Settings" onto its own line when the Past
+   Dailies button makes the signed-out row too wide. */
+.account-nav { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; flex-shrink: 0; }
+.account-side { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: flex-end; flex: 1 1 auto; min-width: 0; }
+.account-auth { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
 .account-signedout, .account-signedin { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .account-msg, .account-who { font-size: 0.8rem; color: var(--ink); }
 .account-btn {
