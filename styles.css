@@ -3013,7 +3013,8 @@ h1 {
 
 /* Unlock modal */
 .pass-modal { max-width: 580px; width: 100%; padding: 0; overflow: hidden; max-height: min(92vh, calc(100dvh - 24px)); display: flex; flex-direction: column; }
-.pass-modal .modal-close { position: absolute; top: 10px; right: 10px; z-index: 2; color: var(--ink); }
+.pass-modal .modal-close { position: absolute; top: 8px; right: 8px; z-index: 2; color: var(--ink); border: none; background: transparent; border-radius: 50%; font-size: 1.2rem; line-height: 1; opacity: 0.7; }
+.pass-modal .modal-close:hover { background: rgba(21, 20, 19, 0.12); border-color: transparent; opacity: 1; transform: none; box-shadow: none; }
 .pass-top { background: var(--gold); color: var(--ink); padding: 22px 20px 16px; text-align: center; border-bottom: 3px solid var(--ink); }
 .pass-top .pass-goat { font-size: 2.3rem; line-height: 1; }
 .pass-top h3 { margin: 6px 0 2px; font-family: "Playfair Display", Georgia, serif; font-size: 1.6rem; }
