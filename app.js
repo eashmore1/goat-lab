@@ -3463,6 +3463,9 @@ let revealUsed = false;
 let revealActive = false;
 let roundLocked = false;
 let dailyData = null;
+// When set, we're replaying a PAST Daily as GOAT Pass practice: same blind
+// draft as that day, but no XP, streak, leaderboard, or saved result.
+let archiveDate = null;
 
 const modeScreen = document.querySelector("#modeScreen");
 const modeButtons = Array.from(document.querySelectorAll(".mode-card"));
@@ -3895,7 +3898,9 @@ function renderRound() {
     : pickTeamEra();
   roundLabel.textContent = `Round ${round + 1} of ${runAttributes.length}`;
   context.textContent = "";
-  modeLabel.textContent = gameMode === "daily"
+  modeLabel.textContent = archiveDate
+    ? (dailyData?.franchise ? `Archive · Daily #${getDailyNumber(archiveDate)} · ${dailyData.franchiseTeamName} · practice` : `Archive · Daily #${getDailyNumber(archiveDate)} · practice — no XP or leaderboard`)
+    : gameMode === "daily"
     ? (dailyData?.franchise ? `Franchise Friday · ${dailyData.franchiseTeamName} only · Blind` : `Daily #${getDailyNumber()} · Blind`)
     : gameMode === "blind" ? "Blind mode: ratings reveal after your pick."
     : "Classic mode: ratings are visible before you pick.";
@@ -4210,9 +4215,10 @@ function finish() {
   }
   updatePBDisplay();
 
-  // Award XP for this game (all modes). Runs before the daily leaderboard submit
-  // below so the entry carries the player's up-to-date rank.
-  try { if (window.GoatXP) window.GoatXP.onGameFinish({ mode: gameMode, score }); } catch (e) {}
+  // Award XP for this game (all modes EXCEPT archive practice, which never
+  // touches XP). Runs before the daily leaderboard submit below so the entry
+  // carries the player's up-to-date rank.
+  try { if (window.GoatXP && !archiveDate) window.GoatXP.onGameFinish({ mode: gameMode, score }); } catch (e) {}
 
   // Real-player comparison (all modes): "your build plays like ___".
   try {
@@ -4242,7 +4248,15 @@ function finish() {
     }
   }
 
-  if (gameMode === "daily") {
+  if (archiveDate) {
+    // Archive practice: show the score, save/submit/award NOTHING.
+    const _gpr = document.querySelector("#goatPassResult");
+    if (_gpr) { _gpr.hidden = true; _gpr.innerHTML = ""; }
+    const n = getDailyNumber(archiveDate);
+    resultTitle.textContent = `Archive Daily #${n} — ${score}: ${tier}`;
+    resultCopy.textContent = `Practice run — no XP, streak, or leaderboard. ${archetype}.`;
+    hideResultCountdown();
+  } else if (gameMode === "daily") {
     const todayStr = getTodayStr();
     const dailyPicks = attributes.map(attr => {
       const p = build[attr.key];
@@ -4326,6 +4340,7 @@ function openDailyResultView(entry) {
 
 function startGame(mode) {
   gameMode = mode;
+  archiveDate = null; // any live game clears archive-practice state
 
   // Set up daily data before anything else
   if (mode === "daily") {
@@ -4373,23 +4388,67 @@ function startGame(mode) {
   renderRound();
 }
 
+// GOAT Pass: replay a past Daily as practice. Deterministic same draft as that
+// day (generateDailyData), played blind, but nothing is recorded.
+function startArchiveGame(dateStr) {
+  gameMode = "daily";
+  archiveDate = dateStr;
+  dailyData = generateDailyData(dateStr);
+  runAttributes = dailyData.rounds.map(r => r.attribute);
+
+  const archivePage = document.querySelector("#archivePage");
+  if (archivePage) archivePage.hidden = true;
+  modeScreen.hidden = true;
+  gameGrid.hidden = false;
+
+  round = 0;
+  build = {};
+  currentTeamEra = null;
+  currentAttribute = null;
+  result.hidden = true;
+  scoreEl.textContent = "--";
+  cards.className = "cards";
+  cards.innerHTML = "";
+  respinsUsed = { era: false, team: false, attribute: false };
+  revealUsed = false;
+  revealActive = false;
+  parts.forEach((p) => { p.classList.remove("is-new", "is-current"); delete p.dataset.tier; });
+  clearTimeout(draftToastTimer);
+  draftToast.classList.remove("is-visible");
+  draftToast.hidden = true;
+  renderBuildList();
+  updateBody(null);
+
+  if (respinTeamBtn) respinTeamBtn.hidden = !!dailyData.franchise;
+
+  const n = getDailyNumber(dateStr);
+  modeLabel.textContent = dailyData.franchise
+    ? `Archive · Daily #${n} · ${dailyData.franchiseTeamName} · practice`
+    : `Archive · Daily #${n} · practice — no XP or leaderboard`;
+  renderRound();
+}
+
 function goBack() {
   if (!result.hidden) {
     // Already finished — safe to go back, no confirm needed
   } else if (round > 0 && !confirm("Leave this run? Your progress will be lost.")) {
     return;
   }
+  const wasArchive = !!archiveDate;
   gameGrid.hidden = true;
   result.hidden = true;
-  modeScreen.hidden = false;
   round = 0;
   build = {};
   currentTeamEra = null;
   currentAttribute = null;
   dailyData = null;
+  archiveDate = null;
   scoreEl.textContent = "--";
   if (respinTeamBtn) respinTeamBtn.hidden = false;
   updatePBDisplay();
+  // Archive practice returns to the archive list you came from, not the home screen.
+  if (wasArchive && window.GoatArchive && window.GoatArchive.open) { window.GoatArchive.open(); return; }
+  modeScreen.hidden = false;
 }
 
 function drawRadarOnCanvas(ctx, cx, cy, maxR) {
@@ -4666,6 +4725,16 @@ function buildCardImageUrl() {
   return `/api/og?${params.toString()}`;
 }
 
+// GOAT Pass badge on the shared scorecard — shows the holder's evolving rank
+// (emblem + name), e.g. "🐐 ⭐ ALL-STAR", falling back to a plain pass label.
+function shareCardPassLabel() {
+  try {
+    const info = window.GoatXP && window.GoatXP.info && window.GoatXP.info();
+    if (info && info.name) return `🐐 ${info.icon || ""} ${info.name}`.replace(/\s+/g, " ").trim().toUpperCase();
+  } catch (e) {}
+  return "🐐 GOAT PASS";
+}
+
 function openShareModal() {
   const score = calculateScore();
   const tier = getTier(score);
@@ -4690,7 +4759,7 @@ function openShareModal() {
   });
 
   const gpEl = document.querySelector("#shareCardGP");
-  if (gpEl) gpEl.hidden = !window.GoatPassActive;
+  if (gpEl) { gpEl.hidden = !window.GoatPassActive; gpEl.textContent = shareCardPassLabel(); }
   if (shareBtnLeaderboard) shareBtnLeaderboard.hidden = gameMode !== "daily";
   showModal(shareModal, document.activeElement instanceof HTMLElement ? document.activeElement : shareButton);
   primeShareImage();
@@ -4838,7 +4907,7 @@ function openShareModalFromSaved(b) {
   });
 
   const gpEl2 = document.querySelector("#shareCardGP");
-  if (gpEl2) gpEl2.hidden = !window.GoatPassActive;
+  if (gpEl2) { gpEl2.hidden = !window.GoatPassActive; gpEl2.textContent = shareCardPassLabel(); }
   if (shareBtnLeaderboard) shareBtnLeaderboard.hidden = gameMode !== "daily";
   showModal(shareModal, null);
   primeShareImage();
@@ -6649,6 +6718,70 @@ updateBody(null);
   if (statsTabClassic) statsTabClassic.addEventListener("click", () => setStatsTab("classic"));
   if (statsTabBlind) statsTabBlind.addEventListener("click", () => setStatsTab("blind"));
   if (statsTabTrophies) statsTabTrophies.addEventListener("click", () => setStatsTab("trophies"));
+
+  // --- Past-Daily archive (GOAT Pass practice) -----------------------------
+  const archiveBtn = document.querySelector("#archiveBtn");
+  const archivePage = document.querySelector("#archivePage");
+  const archiveList = document.querySelector("#archiveList");
+  const archiveBackBtn = document.querySelector("#archiveBackBtn");
+  const ARCHIVE_START = "2026-06-10"; // Daily #1
+
+  function eachArchiveDate() {
+    const out = [];
+    const start = new Date(ARCHIVE_START + "T12:00:00");
+    const today = new Date(getTodayStr() + "T12:00:00");
+    for (let t = today.getTime() - 86400000; t >= start.getTime(); t -= 86400000) {
+      const d = new Date(t);
+      out.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`);
+    }
+    return out; // newest first
+  }
+  function fmtArchiveDate(ds) {
+    const M = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const d = new Date(ds + "T12:00:00");
+    return `${M[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+  }
+  function renderArchiveList() {
+    if (!archiveList) return;
+    const dates = eachArchiveDate();
+    if (!dates.length) {
+      archiveList.innerHTML = `<p class="arch-empty">No past Dailies yet — check back tomorrow.</p>`;
+      return;
+    }
+    let hist = {};
+    try { hist = getDailyHistory() || {}; } catch (e) {}
+    archiveList.innerHTML = dates.map((ds) => {
+      const n = getDailyNumber(ds);
+      const fr = isFranchiseDay(ds);
+      const mine = hist[ds] && typeof hist[ds].score === "number" ? hist[ds].score : null;
+      return `<button class="arch-row" type="button" data-date="${ds}">
+        <span class="arch-num">#${n}</span>
+        <span class="arch-meta"><span class="arch-date">${fmtArchiveDate(ds)}</span>${fr ? `<span class="arch-tag">Franchise Friday</span>` : ""}</span>
+        <span class="arch-score">${mine != null ? `you: ${mine}` : "▶ play"}</span>
+      </button>`;
+    }).join("");
+    archiveList.querySelectorAll(".arch-row").forEach((btn) => {
+      btn.addEventListener("click", () => startArchiveGame(btn.dataset.date));
+    });
+  }
+  function openArchive() {
+    if (!hasPass) { openPassModal(); return; }
+    mainScreens().forEach((s) => { if (s) s.hidden = true; });
+    if (lbPage) lbPage.hidden = true;
+    if (statsPage) statsPage.hidden = true;
+    renderArchiveList();
+    if (archivePage) archivePage.hidden = false;
+    window.scrollTo(0, 0);
+  }
+  function closeArchive() {
+    if (archivePage) archivePage.hidden = true;
+    const home = document.querySelector("#modeScreen");
+    if (home) home.hidden = false;
+    window.scrollTo(0, 0);
+  }
+  if (archiveBtn) archiveBtn.addEventListener("click", openArchive);
+  if (archiveBackBtn) archiveBackBtn.addEventListener("click", closeArchive);
+  window.GoatArchive = { open: openArchive }; // goBack() returns here after a practice run
 
   // Top-of-page GOAT Pass button: holders jump to their stats, others see the unlock.
   const goatPassTopBtn = document.querySelector("#goatPassTop");

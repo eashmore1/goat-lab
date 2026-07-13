@@ -2175,9 +2175,26 @@ h1 {
   transition: transform 140ms ease, box-shadow 140ms ease;
 }
 .account-btn:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
-.account-btn-google, .account-btn-ghost, .account-btn-trophy { background: var(--surface); color: var(--ink); }
+.account-btn-google, .account-btn-ghost, .account-btn-trophy, .account-btn-archive { background: var(--surface); color: var(--ink); }
 .account-btn-google { display: inline-flex; align-items: center; gap: 9px; }
 .account-btn-trophy { background: var(--gold); }
+.account-btn-archive { background: var(--surface); }
+
+/* Past-Daily archive list (GOAT Pass) */
+.archive-list { display: grid; gap: 8px; max-width: 640px; margin: 0 auto; padding: 4px 0 40px; }
+.arch-row {
+  display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 12px;
+  width: 100%; text-align: left; cursor: pointer; padding: 12px 14px;
+  border: 2px solid var(--ink); background: var(--paper); box-shadow: 3px 3px 0 var(--ink);
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+.arch-row:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+.arch-num { font: 900 1rem/1 "Space Mono", ui-monospace, monospace; color: var(--court); }
+.arch-meta { display: flex; flex-direction: column; gap: 2px; }
+.arch-date { font: 700 0.95rem/1.1 "Playfair Display", Georgia, serif; color: var(--ink); }
+.arch-tag { font: 800 0.56rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.06em; text-transform: uppercase; color: var(--court); }
+.arch-score { font: 800 0.72rem/1 "Space Mono", ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); white-space: nowrap; }
+.arch-empty { text-align: center; color: var(--muted); font-family: "Playfair Display", Georgia, serif; padding: 30px; }
 .players-pill {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 5px 11px; border-radius: 999px;
