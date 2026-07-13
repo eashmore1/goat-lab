@@ -97,6 +97,9 @@
         <button id="leaderboardBtn" class="account-btn account-btn-trophy" type="button">
           <span aria-hidden="true">🏆</span> Daily Leaderboard
         </button>
+        <button id="archiveBtn" class="account-btn account-btn-archive" type="button" title="Play past Daily challenges (GOAT Pass)">
+          <span aria-hidden="true">📅</span> Past Dailies
+        </button>
         <span class="players-pill" id="homeTotalPlayers" hidden>
           <span id="homeTotalPlayersNum">74,900+</span> players worldwide
         </span>
@@ -314,6 +317,18 @@
           <button id="statsTabTrophies" class="lb-tab" type="button" role="tab">Trophies</button>
         </div>
         <div id="statsBody"></div>
+      </section>
+
+      <section class="archive-page" id="archivePage" hidden aria-label="Past Daily archive">
+        <div class="lb-page-head">
+          <div>
+            <p class="kicker">GOAT Pass</p>
+            <h2 class="lb-page-title">Past Dailies</h2>
+            <p class="lb-date">Replay any past Daily — practice only. No XP, streak, or leaderboard.</p>
+          </div>
+          <button id="archiveBackBtn" class="lb-back" type="button">← Back</button>
+        </div>
+        <div id="archiveList" class="archive-list"></div>
       </section>
     </main>
 

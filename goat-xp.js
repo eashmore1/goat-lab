@@ -85,7 +85,21 @@ window.GoatXP = (function () {
 
   // ==== Pure rank math ======================================================
   const CHIP_BY_NAME = {};
-  RANKS.forEach((r) => { CHIP_BY_NAME[r.name] = r.chip; });
+  const ICON_BY_NAME = {};
+  RANKS.forEach((r) => { CHIP_BY_NAME[r.name] = r.chip; ICON_BY_NAME[r.name] = r.icon; });
+  const TOP_RANK_NAME = RANKS[RANKS.length - 1].name; // "GOAT" — the max rank
+
+  // Single source of truth for the GOAT Pass rank chip, so leaderboards, the XP
+  // board and the share card all render the same evolving badge. The chip levels
+  // up visually across the 12 ranks: per-rank emblem, tier gradient (purple/gold),
+  // and a shimmer on the max rank.
+  function passChipHTML(rankName) {
+    const cls = CHIP_BY_NAME[rankName] || "chip-gold";
+    const ico = ICON_BY_NAME[rankName] || "🐐";
+    const top = rankName === TOP_RANK_NAME ? " chip-goat" : "";
+    const nm = rankName || "GOAT Pass";
+    return `<span class="grank-chip pass ${cls}${top}"><span class="grank-chip-ico" aria-hidden="true">${ico}</span>${esc(nm)}</span>`;
+  }
 
   function rankIndexForXp(xp) {
     let idx = 0;
@@ -298,6 +312,14 @@ window.GoatXP = (function () {
     .grank-chip.chip-purple{background:#b79ad6;color:#2b1a44}
     .grank-chip.chip-gold{background:var(--gold,#e6b843);color:#3a2c05}
     .grank-chip.pass{border:2px solid var(--gold,#e6b843);box-shadow:0 0 0 2px rgba(230,184,67,.4)}
+    /* Evolving rank chip: per-rank emblem + escalating frame up the 12 ranks */
+    .grank-chip .grank-chip-ico{margin-right:3px;font-size:.92em;line-height:1;vertical-align:-1px}
+    .grank-chip.pass.chip-purple{background:linear-gradient(135deg,#c8aee6,#a27fc9)}
+    .grank-chip.pass.chip-gold{background:linear-gradient(135deg,#f2d47e,var(--gold,#e6b843))}
+    .grank-chip.pass.chip-goat{position:relative;overflow:hidden;border-width:2px;box-shadow:0 0 0 2px rgba(230,184,67,.6),0 0 8px rgba(230,184,67,.5)}
+    .grank-chip.pass.chip-goat::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 38%,rgba(255,255,255,.72) 50%,transparent 62%);transform:translateX(-130%);animation:grankShimmer 2.8s ease-in-out .4s infinite;pointer-events:none}
+    @keyframes grankShimmer{0%,55%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
+    @media (prefers-reduced-motion: reduce){.grank-chip.pass.chip-goat::after{animation:none;opacity:0}}
     /* Level-up celebration */
     .grank-lvlup{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:rgba(21,20,19,.6);animation:grankFade .25s ease}
     .grank-lvlup-card{position:relative;overflow:hidden;background:var(--paper,#fbf7ee);border:3px solid var(--ink,#151413);box-shadow:8px 8px 0 var(--ink,#151413);padding:30px 34px;text-align:center;max-width:340px;animation:grankPop .4s cubic-bezier(.2,1.3,.4,1)}
@@ -468,8 +490,7 @@ window.GoatXP = (function () {
       listEl.innerHTML = rows.map((r, i) => {
         const mine = me && r.uid === me.uid;
         const nm = esc(String(r.name || "Anonymous").replace(/\u{1F410}[️‍]?/gu, "").trim() || "Anonymous");
-        const chip = (r.goatPass && r.rank)
-          ? `<span class="grank-chip pass ${chipColor(r.rank)}">${esc(r.rank)}</span>` : "";
+        const chip = (r.goatPass && r.rank) ? passChipHTML(r.rank) : "";
         return `<div class="gxpb-row${mine ? " me" : ""}">
           <span class="gxpb-rank">${i + 1}</span>
           <span class="gxpb-name">${nm}${chip}${mine ? " (you)" : ""}</span>
@@ -479,7 +500,7 @@ window.GoatXP = (function () {
       // Pin the signed-in user if they're not in the top 50.
       if (me && !rows.some((r) => r.uid === me.uid)) {
         const r = rankInfo(curXp);
-        const chip = hasPass() ? `<span class="grank-chip pass ${r.chip}">${esc(r.name)}</span>` : "";
+        const chip = hasPass() ? passChipHTML(r.name) : "";
         listEl.insertAdjacentHTML("beforeend", `
           <div class="gxpb-row me" style="border-top:2px dashed var(--ink,#151413);margin-top:6px">
             <span class="gxpb-rank">–</span>
@@ -552,8 +573,7 @@ window.GoatXP = (function () {
     // Pass holder whose rank isn't stored on their entry yet (submitted before the
     // rank system, or before goat-xp loaded) falls back to a "GOAT Pass" chip;
     // it self-heals to a real rank chip on their next Daily submit.
-    const nm = rankName || "GOAT Pass";
-    return ` <span class="grank-chip pass ${chipColor(rankName)}">${esc(nm)}</span>`;
+    return " " + passChipHTML(rankName);
   }
 
   // ==== Init ================================================================
