@@ -3,7 +3,7 @@
 // Flow:
 //   1. Signed-in player taps "Unlock" → we send them to the Stripe payment link
 //      with ?client_reference_id=<firebase uid> appended.
-//   2. Stripe processes the $2.99 payment and fires a `checkout.session.completed`
+//   2. Stripe processes the payment and fires a `checkout.session.completed`
 //      webhook at this endpoint.
 //   3. We verify the signature, read the uid from client_reference_id, and set
 //      `goatPass: true` on that user's Firestore doc (Admin SDK, bypasses rules).
