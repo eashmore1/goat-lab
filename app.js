@@ -5979,8 +5979,8 @@ updateBody(null);
 
   updatePBDisplay();
 
-  // ===== GOAT Pass — optional one-time unlock ($2.99 launch price) =========
-  const GOAT_PASS_URL = "https://buy.stripe.com/5kQaEY8wV4vldQF1v68Zq01";
+  // ===== GOAT Pass — optional one-time unlock ($3.99) =========
+  const GOAT_PASS_URL = "https://buy.stripe.com/00wfZi14t7HxdQF1v68Zq03";
   let hasPass = false;
 
   // --- Optimal build: best achievable from a day's exact draft (no respins) ---
@@ -6018,10 +6018,10 @@ updateBody(null);
   // mismatched-email buys). Two explicit steps: sign in → then confirm purchase.
   function updatePassModalState() {
     const u = Auth.currentUser();
-    if (passCtaBtn) passCtaBtn.textContent = u ? "Unlock GOAT Pass · $2.99" : "Sign in with Google to continue";
+    if (passCtaBtn) passCtaBtn.textContent = u ? "Unlock GOAT Pass · $3.99" : "Sign in with Google to continue";
     if (passFine) passFine.textContent = u
       ? `Your Pass locks to ${u.email || "your account"} and restores on any device. One-time · secure Stripe checkout.`
-      : "Sign in first so your Pass ties to your Google account — you'll confirm the $2.99 on the next step. This keeps every purchase matched to the right account.";
+      : "Sign in first so your Pass ties to your Google account — you'll confirm the $3.99 on the next step. This keeps every purchase matched to the right account.";
   }
   function openPassModal() {
     if (!passModal) return;
@@ -6154,7 +6154,7 @@ updateBody(null);
             <span>+ a once-a-game ratings reveal, +25% XP &amp; the 🐐 badge</span>
           </div>
         </div>
-        <button class="unlock-cta" type="button" data-unlock>Unlock · $2.99</button>
+        <button class="unlock-cta" type="button" data-unlock>Unlock · $3.99</button>
       </div>
       <div class="tease-wrap" aria-hidden="true"><div class="tease-grid">${tease}</div></div>`;
   }
@@ -6187,10 +6187,10 @@ updateBody(null);
           <div class="us-goat" aria-hidden="true">🐐</div>
           <div class="us-txt">
             <strong>${head || "Unlock the GOAT Pass"}</strong>
-            <span>${sub || "Reveal ratings in Blind, +25% XP, gold badge &amp; the trophy case — one time, just $2.99"}</span>
+            <span>${sub || "Reveal ratings in Blind, +25% XP, gold badge &amp; the trophy case — one time, just $3.99"}</span>
           </div>
         </div>
-        <button class="unlock-cta" type="button" data-unlock>Unlock · $2.99</button>
+        <button class="unlock-cta" type="button" data-unlock>Unlock · $3.99</button>
       </div>`;
   }
   function showResultUnlock() {
@@ -6204,16 +6204,16 @@ updateBody(null);
     let head = null, sub = null;
     if (r.score === 100) {
       head = "A perfect 100 🏆";
-      sub = "Immortalize it — gold rank badge, trophy case &amp; full stats. One time, $2.99";
+      sub = "Immortalize it — gold rank badge, trophy case &amp; full stats. One time, $3.99";
     } else if (r.score >= 97) {
       head = `${r.score} — that's rare air`;
-      sub = "Elite builds deserve the gold badge &amp; trophy case. One time, $2.99";
+      sub = "Elite builds deserve the gold badge &amp; trophy case. One time, $3.99";
     } else if (r.newPB) {
       head = "New personal best 🎉";
-      sub = "Track every run — full stats, trophies &amp; the gold badge. One time, $2.99";
+      sub = "Track every run — full stats, trophies &amp; the gold badge. One time, $3.99";
     } else if (r.score >= 90) {
       head = `${r.score} — strong build`;
-      sub = "Go higher with the ratings reveal, +25% XP &amp; full stats. One time, $2.99";
+      sub = "Go higher with the ratings reveal, +25% XP &amp; full stats. One time, $3.99";
     }
     box.innerHTML = genericUnlockStripHTML(head, sub);
     const btn = box.querySelector("[data-unlock]");
@@ -6645,7 +6645,7 @@ updateBody(null);
           <div class="locked-gate">
             <div class="lock-ico" aria-hidden="true">🔒</div>
             <div class="lock-txt">Your full career stats — history, streaks, builds, and calendar — are part of the GOAT Pass.</div>
-            <button class="gp-pill gp-pill-btn" type="button" id="statsUnlockBtn">🐐 Unlock · $2.99</button>
+            <button class="gp-pill gp-pill-btn" type="button" id="statsUnlockBtn">🐐 Unlock · $3.99</button>
           </div>
         </div>`;
       const b = document.querySelector("#statsUnlockBtn");
