@@ -6817,36 +6817,12 @@ updateBody(null);
   const goatPassPromo = document.querySelector("#goatPassPromo");
   if (goatPassPromo) goatPassPromo.addEventListener("click", openPassModal);
 
-  // --- Final-day launch-price banner ---------------------------------------
-  // Shows ONLY on the last $2.99 day, for non-holders, until dismissed. Gated by
-  // the local date so it can't appear before Wednesday. Flip PRICE_FINAL_DAY if
-  // the deadline moves; after this day the price becomes $3.99.
-  const PRICE_FINAL_DAY = "2026-07-15";
-  const finalDayBar = document.querySelector("#finalDayBar");
-  const finalDayCta = document.querySelector("#finalDayCta");
-  const finalDayClose = document.querySelector("#finalDayClose");
-  const FINAL_DAY_DISMISS_KEY = "goatlab_finalday_dismissed_" + PRICE_FINAL_DAY;
-  const finalDayDismissed = () => { try { return localStorage.getItem(FINAL_DAY_DISMISS_KEY) === "1"; } catch (e) { return false; } };
-  const isFinalDay = () => { try { return getTodayStr() === PRICE_FINAL_DAY; } catch (e) { return false; } };
-  function syncFinalDayBar() {
-    if (!finalDayBar) return;
-    finalDayBar.hidden = hasPass || !isFinalDay() || finalDayDismissed();
-  }
-  if (finalDayCta) finalDayCta.addEventListener("click", openPassModal);
-  if (finalDayClose) finalDayClose.addEventListener("click", () => {
-    try { localStorage.setItem(FINAL_DAY_DISMISS_KEY, "1"); } catch (e) {}
-    syncFinalDayBar();
-  });
-  syncFinalDayBar();
-
   // The home GOAT Pass banner shows ONLY on the home screen (and only for
   // non-holders) — never while playing, on results, leaderboard, or stats.
-  // On the final day the urgency bar takes over, so suppress the evergreen promo.
   function syncPromo() {
     const promo = document.querySelector("#goatPassPromo");
     const home = document.querySelector("#modeScreen");
-    const finalDayShowing = finalDayBar && !finalDayBar.hidden;
-    if (promo) promo.hidden = hasPass || !home || home.hidden || finalDayShowing;
+    if (promo) promo.hidden = hasPass || !home || home.hidden;
   }
   (function watchHomeForPromo() {
     const home = document.querySelector("#modeScreen");
@@ -6861,7 +6837,6 @@ updateBody(null);
     try { updateRespinButtons(); } catch (e) {} // reveal button locks/unlocks with the pass
     const pill = document.querySelector("#goatPassPill");
     if (pill) pill.hidden = !hasPass;
-    syncFinalDayBar(); // hide the final-day bar the moment they buy
     try { maybeOpenArchiveFromUrl(); } catch (e) {} // /past-dailies deep link
     syncPromo(); // home banner: only for non-holders, and only on the home screen
     if (statsPage && !statsPage.hidden) renderStats();
