@@ -1461,14 +1461,16 @@ h1 {
 }
 .a2hs-share { font-weight: 700; color: var(--court); }
 
-.footer-x {
+.footer-x,
+.footer-ig {
   display: inline-flex;
   align-items: center;
   border-bottom: none !important;
   opacity: 0.55;
   transition: opacity 140ms ease !important;
 }
-.footer-x:hover {
+.footer-x:hover,
+.footer-ig:hover {
   opacity: 1;
   border-bottom-color: transparent !important;
 }
