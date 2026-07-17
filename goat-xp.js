@@ -253,6 +253,12 @@ window.GoatXP = (function () {
     return Math.max(0, Math.round(xp));
   }
   async function backfillSignedIn() {
+    // Another device may have set or grown the cloud XP between our getXp()===null
+    // check and now — never clobber a real cloud total with a local recompute.
+    try {
+      const existing = await (A().refreshXp ? A().refreshXp() : Promise.resolve(null));
+      if (typeof existing === "number" && existing > 0) { curXp = existing; renderCard(); return; }
+    } catch (e) {}
     let dh = {};
     try { dh = (await A().fetchDailyHistory()) || {}; } catch (e) {}
     if (!Object.keys(dh).length) dh = dailyHistory();
@@ -599,6 +605,17 @@ window.GoatXP = (function () {
         }
       });
     }
+    // Cross-device XP: when you return to this device (tab focus / app resume),
+    // re-read the true cloud total so it reflects games played elsewhere.
+    try {
+      const resync = () => {
+        if (signedIn() && A().refreshXp) {
+          Promise.resolve(A().refreshXp()).then(() => syncXp()).catch(() => {});
+        }
+      };
+      document.addEventListener("visibilitychange", () => { if (!document.hidden) resync(); });
+      window.addEventListener("focus", resync);
+    } catch (e) {}
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
