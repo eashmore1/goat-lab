@@ -137,16 +137,32 @@ window.GoatXP = (function () {
   let lastRankIndex = 0;
 
   function readXp() {
+    const local = loadMeta().xp || 0;
     if (signedIn()) {
       const c = A().xpCached && A().xpCached();
-      if (typeof c === "number") return c;
+      // XP only ever goes up — never show LESS than this device has earned
+      // locally, even if the cloud momentarily reads lower (a device with less
+      // data must never drag the display down).
+      if (typeof c === "number") return Math.max(c, local);
     }
-    return loadMeta().xp || 0;
+    return local;
   }
   function syncXp() {
     curXp = readXp();
+    // Mirror the max back into local so progress persists and can re-lift the
+    // cloud later if it ever regressed.
+    const meta = loadMeta();
+    if (curXp > (meta.xp || 0)) { meta.xp = curXp; saveMeta(meta); }
     lastRankIndex = rankInfo(curXp).index;
     renderCard();
+  }
+  // Reconcile UP: push this device's local XP into the cloud via a max
+  // transaction, so a device that has more never loses it and the account
+  // total converges to the highest value across all devices.
+  async function reconcileXpUp() {
+    if (!signedIn()) return;
+    if (A().raiseXp) { try { await A().raiseXp(loadMeta().xp || 0); } catch (e) {} }
+    syncXp();
   }
 
   // ==== Trophies (via the hook app.js publishes) ============================
@@ -176,7 +192,9 @@ window.GoatXP = (function () {
       try {
         Promise.resolve(A().addXp(delta)).then(() => {
           const c = A().xpCached();
-          if (typeof c === "number" && isFinite(c) && c !== curXp) { curXp = c; renderCard(); }
+          // Only ever RAISE to the cloud total (picks up other devices' games) —
+          // never lower, so a regressed cloud can't undo this device's progress.
+          if (typeof c === "number" && isFinite(c) && c > curXp) { curXp = c; renderCard(); }
           submitBoard();
         });
       } catch (e) { submitBoard(); }
@@ -596,7 +614,11 @@ window.GoatXP = (function () {
         if (user) {
           let xp = null;
           try { xp = await A().getXp(); } catch (e) {}
-          if (xp === null) { await backfillSignedIn(); }
+          // Brand-new account with nothing local either → backfill from history.
+          // Otherwise reconcile UP (max of cloud + this device's local) so no
+          // device can ever lower the account total.
+          if (xp === null && (loadMeta().xp || 0) === 0) { await backfillSignedIn(); }
+          else { await reconcileXpUp(); }
           syncXp();
           submitBoard();
         } else {
@@ -612,11 +634,7 @@ window.GoatXP = (function () {
     // Belt-and-suspenders: also re-read on focus/resume in case the live stream
     // was throttled while the tab was backgrounded.
     try {
-      const resync = () => {
-        if (signedIn() && A().refreshXp) {
-          Promise.resolve(A().refreshXp()).then(() => syncXp()).catch(() => {});
-        }
-      };
+      const resync = () => { if (signedIn()) Promise.resolve(reconcileXpUp()).catch(() => {}); };
       document.addEventListener("visibilitychange", () => { if (!document.hidden) resync(); });
       window.addEventListener("focus", resync);
     } catch (e) {}

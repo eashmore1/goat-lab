@@ -438,12 +438,28 @@ window.GoatAuth = (() => {
       } catch (e) {}
       return xpCache;
     },
-    // Set XP to an exact value (used by the one-time backfill).
-    async setXp(n) {
-      if (!enabled || !user) return;
+    // Raise the account XP to AT LEAST n — a max transaction that can only ever
+    // INCREASE the stored total. This is the safe way to reconcile: a device with
+    // a higher local value lifts the cloud (recovering progress), and no device
+    // can ever lower another device's XP. Returns the resulting total.
+    async raiseXp(n) {
+      if (!enabled || !user) return xpCache;
       const v = Math.max(0, Math.round(Number(n) || 0));
-      xpCache = v;
-      try { await userDoc().set({ xp: v }, { merge: true }); } catch (e) {}
+      try {
+        await db.runTransaction(async (tx) => {
+          const doc = await tx.get(userDoc());
+          const cur = (doc.exists && typeof doc.data().xp === "number" && isFinite(doc.data().xp)) ? doc.data().xp : 0;
+          const next = Math.max(cur, v);
+          tx.set(userDoc(), { xp: next }, { merge: true });
+          xpCache = next;
+        });
+      } catch (e) {}
+      return xpCache;
+    },
+    // Set XP to an exact value — kept for compatibility, but writes are guarded so
+    // XP can never DECREASE (prevents a device with less data from clobbering it).
+    async setXp(n) {
+      return this.raiseXp(n);
     },
     // Upsert this player's entry on the all-time XP leaderboard
     // (xpLeaderboard/{uid}).
