@@ -6540,6 +6540,30 @@ updateBody(null);
   // straight to the cloud, without waiting for the next stats open or sign-in.
   window.GoatModeSync = reconcileModeStats;
 
+  // Classic/Blind stats — LIVE: the account's cloud stats doc is the source of
+  // truth. This fires the instant it changes on ANY device, so every signed-in
+  // device shows the same Classic/Blind numbers without a reload.
+  if (Auth.onData) {
+    Auth.onData((kind) => {
+      if (kind !== "modes") return;
+      const live = Auth.modeStatsCached && Auth.modeStatsCached();
+      if (!live) return;
+      _cloudModeStats = live; // read by modeSource() for the stats page
+      // Flow the account best into the local PB store so the mode-card "Personal
+      // Best" matches across devices too.
+      try {
+        const pb = getPB(); let changed = false;
+        ["classic", "blind"].forEach((m) => {
+          const cb = live[m] && live[m].best;
+          if (typeof cb === "number" && cb > (pb[m] || 0)) { pb[m] = cb; changed = true; }
+        });
+        if (changed) localStorage.setItem(PB_KEY, JSON.stringify(pb));
+      } catch (e) {}
+      try { updatePBDisplay(); } catch (e) {}
+      if (statsPage && !statsPage.hidden) { try { renderStats(); } catch (e) {} }
+    });
+  }
+
   // --- Trophy case: achievements across Daily / Classic / Blind -----------
   const ACHIEVEMENTS = [
     // Daily
