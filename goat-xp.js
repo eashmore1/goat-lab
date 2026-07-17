@@ -605,8 +605,12 @@ window.GoatXP = (function () {
         }
       });
     }
-    // Cross-device XP: when you return to this device (tab focus / app resume),
-    // re-read the true cloud total so it reflects games played elsewhere.
+    // Cross-device XP — LIVE: the cloud user doc is the single source of truth,
+    // and this fires the instant XP changes on ANY device, so the rank stays in
+    // lockstep everywhere without a reload.
+    try { if (A() && A().onData) A().onData((kind) => { if (kind === "xp") syncXp(); }); } catch (e) {}
+    // Belt-and-suspenders: also re-read on focus/resume in case the live stream
+    // was throttled while the tab was backgrounded.
     try {
       const resync = () => {
         if (signedIn() && A().refreshXp) {

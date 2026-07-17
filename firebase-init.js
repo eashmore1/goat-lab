@@ -25,9 +25,12 @@ window.GoatAuth = (() => {
   let handleCache = null;
   let passCache = null; // GOAT Pass ownership, cached per sign-in (null = not yet read)
   let xpCache = null;   // total XP for the rank system (null = not yet read / not backfilled)
+  let modeStatsCache = null; // live Classic/Blind cloud totals (null = not yet read)
   let profilePromise = null; // one shared read of users/{uid} feeding handle + pass
   let messaging = null;      // Firebase Cloud Messaging (push), lazy-initialised
+  let unsubUserDoc = null, unsubModeDoc = null; // live snapshot unsubscribers
   const listeners = new Set();
+  const dataListeners = new Set(); // notified ("xp"|"modes") when live cloud data changes
 
   if (!isPlaceholder && typeof firebase !== "undefined") {
     try {
@@ -44,7 +47,29 @@ window.GoatAuth = (() => {
         handleCache = null; // reset on sign-in/out
         passCache = null;   // re-read GOAT Pass ownership for the new user
         xpCache = null;     // re-read XP for the new user
+        modeStatsCache = null;
         profilePromise = null;
+        // Tear down the previous account's live listeners.
+        if (unsubUserDoc) { try { unsubUserDoc(); } catch (e) {} unsubUserDoc = null; }
+        if (unsubModeDoc) { try { unsubModeDoc(); } catch (e) {} unsubModeDoc = null; }
+        // Single source of truth: subscribe to the account's cloud docs so EVERY
+        // signed-in device reflects the same XP + Classic/Blind stats live, the
+        // instant they change on any device.
+        if (u) {
+          try {
+            const uref = db.collection("users").doc(u.uid);
+            unsubUserDoc = uref.onSnapshot((doc) => {
+              const d = (doc.exists && doc.data()) || {};
+              if (typeof d.xp === "number" && isFinite(d.xp)) xpCache = Math.max(0, d.xp);
+              if (typeof d.goatPass !== "undefined") passCache = !!d.goatPass;
+              dataListeners.forEach((cb) => { try { cb("xp"); } catch (e) {} });
+            }, () => {});
+            unsubModeDoc = uref.collection("stats").doc("modes").onSnapshot((doc) => {
+              modeStatsCache = doc.exists ? (doc.data() || {}) : {};
+              dataListeners.forEach((cb) => { try { cb("modes"); } catch (e) {} });
+            }, () => {});
+          } catch (e) {}
+        }
         listeners.forEach((cb) => cb(u));
       });
     } catch (e) {
@@ -367,6 +392,10 @@ window.GoatAuth = (() => {
     // Cached best-effort XP read (null until loadProfile runs, or if the account
     // has never been backfilled — the caller treats null as "needs backfill").
     xpCached() { return xpCache; },
+    modeStatsCached() { return modeStatsCache; },
+    // Subscribe to live cloud-data changes (kind = "xp" | "modes"). Returns an
+    // unsubscribe fn. Fires whenever the account's cloud docs update on ANY device.
+    onData(cb) { dataListeners.add(cb); return () => dataListeners.delete(cb); },
     // Read XP, loading the profile if needed. Returns a number, or null if the
     // account has no xp field yet (not backfilled).
     async getXp() {
