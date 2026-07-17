@@ -381,13 +381,33 @@ window.GoatAuth = (() => {
       if (!enabled || !user || !n) return;
       const delta = Math.round(Number(n) || 0);
       if (!delta) return;
-      // Read the real cloud XP before mutating the local cache — otherwise a game
-      // finishing during sign-in (xpCache still null) would desync it to a low value.
-      if (xpCache == null) { try { await loadProfile(); } catch (e) {} }
-      const base = (typeof xpCache === "number" && isFinite(xpCache)) ? xpCache : 0;
-      xpCache = Math.max(0, base + delta);
-      try { await userDoc().set({ xp: firebase.firestore.FieldValue.increment(delta) }, { merge: true }); }
-      catch (e) {}
+      try {
+        // Atomic server-side increment: merges every device's games into one total.
+        await userDoc().set({ xp: firebase.firestore.FieldValue.increment(delta) }, { merge: true });
+        // Read the TRUE post-increment total straight from the server so this
+        // device's XP converges with every other device on the account — a stale
+        // local base would otherwise drift below the real cross-device total.
+        const doc = await userDoc().get({ source: "server" });
+        const v = doc.exists ? doc.data().xp : null;
+        if (typeof v === "number" && isFinite(v)) xpCache = Math.max(0, v);
+      } catch (e) {
+        // Offline / read failed: optimistic local bump so the UI still moves; it
+        // reconciles with the server on the next refresh.
+        if (xpCache == null) { try { await loadProfile(); } catch (_) {} }
+        const base = (typeof xpCache === "number" && isFinite(xpCache)) ? xpCache : 0;
+        xpCache = Math.max(0, base + delta);
+      }
+    },
+    // Force a fresh server read of the account's XP total. Called when you return
+    // to a device so it reflects games played on your other devices.
+    async refreshXp() {
+      if (!enabled || !user) return null;
+      try {
+        const doc = await userDoc().get({ source: "server" });
+        const v = doc.exists ? doc.data().xp : null;
+        if (typeof v === "number" && isFinite(v)) xpCache = Math.max(0, v);
+      } catch (e) {}
+      return xpCache;
     },
     // Set XP to an exact value (used by the one-time backfill).
     async setXp(n) {
