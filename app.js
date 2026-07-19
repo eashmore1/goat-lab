@@ -1732,7 +1732,7 @@ const teamEras = [
     team: "Bulls",
     note: "Rose won MVP at 22 and was the most electric point guard in the league. Then the knee happened.",
     players: [
-      player("Derrick Rose", 6, 3, 1, { height: 74, shooting: 84, finishing: 92, handles: 96, passing: 88, defense: 76, rebounding: 62, athleticism: 98, iq: 90 }),
+      player("Derrick Rose", 6, 3, 1, { height: 74, shooting: 84, finishing: 94, handles: 96, passing: 88, defense: 76, rebounding: 62, athleticism: 98, iq: 90 }),
       player("Joakim Noah", 6, 11, 13, { height: 96, shooting: 64, finishing: 74, handles: 62, passing: 84, defense: 94, rebounding: 96, athleticism: 80, iq: 87 }),
       player("Luol Deng", 6, 9, 9, { height: 90, shooting: 82, finishing: 80, handles: 74, passing: 74, defense: 88, rebounding: 74, athleticism: 80, iq: 80 }),
       player("Carlos Boozer", 6, 9, 5, { height: 90, shooting: 80, finishing: 84, handles: 68, passing: 72, defense: 70, rebounding: 90, athleticism: 76, iq: 78 }),
