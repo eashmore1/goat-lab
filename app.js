@@ -5457,8 +5457,8 @@ updateBody(null);
   }
   // Pass holders show a gold-bordered rank chip (the XP-system badge). Free
   // players show nothing. Falls back to the plain 🐐 if the XP system isn't up.
-  function rankChip(goatPass, rankName) {
-    if (window.GoatXP && window.GoatXP.chipFor) return window.GoatXP.chipFor(rankName, goatPass);
+  function rankChip(goatPass, rankName, prestige) {
+    if (window.GoatXP && window.GoatXP.chipFor) return window.GoatXP.chipFor(rankName, goatPass, prestige);
     return goatBadge(goatPass);
   }
   // Strip the 🐐 from any display name so the badge can never be faked in a
@@ -5473,7 +5473,7 @@ updateBody(null);
       <div class="lb-pod lb-pod-${place}${mine ? " lb-pod-me" : ""}">
         <span class="lb-pod-medal" aria-hidden="true">${medal}</span>
         <span class="lb-pod-rank">${place}</span>
-        <span class="lb-pod-name${r.goatPass ? " gp-name" : ""}">${lbName(r.name)}${rankChip(r.goatPass, r.rank)}${mine ? " (you)" : ""}</span>
+        <span class="lb-pod-name${r.goatPass ? " gp-name" : ""}">${lbName(r.name)}${rankChip(r.goatPass, r.rank, r.prestige)}${mine ? " (you)" : ""}</span>
         <span class="lb-pod-score">${esc(r.score)}</span>
         <span class="lb-pod-step" aria-hidden="true"></span>
       </div>`;
@@ -5659,7 +5659,7 @@ updateBody(null);
             return `
               <div class="lb-row${mine ? " lb-row-me" : ""}">
                 <span class="lb-rank">${i + 4}</span>
-                <span class="lb-name${r.goatPass ? " gp-name" : ""}">${lbName(r.name)}${rankChip(r.goatPass, r.rank)}${mine ? " (you)" : ""}</span>
+                <span class="lb-name${r.goatPass ? " gp-name" : ""}">${lbName(r.name)}${rankChip(r.goatPass, r.rank, r.prestige)}${mine ? " (you)" : ""}</span>
                 <span class="lb-score">${esc(r.score)}</span>
               </div>`;
           }).join("")
@@ -5697,7 +5697,7 @@ updateBody(null);
         lbList.insertAdjacentHTML("beforeend", `
           <div class="lb-row lb-row-me lb-row-you" style="border-top:2px dashed var(--ink,#151413);margin-top:6px">
             <span class="lb-rank">-</span>
-            <span class="lb-name${hasPass ? " gp-name" : ""}">${lbName(myName)}${rankChip(hasPass, window.GoatXP && window.GoatXP.rankName ? window.GoatXP.rankName() : null)} (you)</span>
+            <span class="lb-name${hasPass ? " gp-name" : ""}">${lbName(myName)}${rankChip(hasPass, window.GoatXP && window.GoatXP.rankName ? window.GoatXP.rankName() : null, window.GoatXP && window.GoatXP.prestige ? window.GoatXP.prestige() : 0)} (you)</span>
             <span class="lb-score">${esc(myScore)}</span>
           </div>`);
       }

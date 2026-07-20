@@ -38,12 +38,20 @@ window.GoatXP = (function () {
                           // one-time history backfill for pass holders)
   };
   const LEVEL_STEP = 250;              // 1 cosmetic "level" per this much XP
+  // Prestige: once a player's LEVEL XP (XP earned since their last prestige)
+  // reaches this, a Prestige button appears. Prestiging resets their rank to
+  // Rookie (level XP back to 0) but NEVER touches their all-time XP total — the
+  // all-time XP leaderboard keeps climbing. GOAT is the top rank at 42,000, so
+  // this sits a short grind above it.
+  const PRESTIGE_XP = 46000;
   const LS_KEY = "goatlab_xp_v1";      // per-device meta + signed-out XP
 
   // ==== Small deps (all guarded — app.js globals may not exist in previews) ==
   const A = () => window.GoatAuth;
   const signedIn = () => { const a = A(); return !!(a && a.currentUser && a.currentUser()); };
   const hasPass = () => { const a = A(); return !!(a && a.goatPassCached && a.goatPassCached()); };
+  // Roman numerals capped for display. Diamonds/marks reuse this cap idea.
+  const PRESTIGE_MARK_CAP = 5; // show up to this many ◆; beyond, show "◆×N"
   function todayStr() {
     try { if (window.getTodayStr) return window.getTodayStr(); } catch (e) {}
     const d = new Date();
@@ -93,13 +101,28 @@ window.GoatXP = (function () {
   // board and the share card all render the same evolving badge. The chip levels
   // up visually across the 12 ranks: roman-numeral tier mark (matching the rank
   // emblem elsewhere), tier gradient (purple/gold), and a shimmer on the max rank.
-  function passChipHTML(rankName) {
+  // Prestige diamond marks (Concept C): ◆ per prestige, collapsing to "◆×N"
+  // past the cap so a high count never overflows the chip. Empty if prestige 0.
+  function prestigeMarkHTML(p) {
+    p = Math.max(0, Math.round(p || 0));
+    if (!p) return "";
+    const dia = p <= PRESTIGE_MARK_CAP ? "◆".repeat(p) : `◆×${p}`;
+    return `<span class="grank-dia" aria-hidden="true">${dia}</span>`;
+  }
+  function prestigeLabel(p) {
+    p = Math.max(0, Math.round(p || 0));
+    return p ? `Prestige ${p}` : "";
+  }
+  function passChipHTML(rankName, prestigeCount) {
     const cls = CHIP_BY_NAME[rankName] || "chip-gold";
     const idx = INDEX_BY_NAME[rankName];
     const top = rankName === TOP_RANK_NAME ? " chip-goat" : "";
     const nm = rankName || "GOAT Pass";
     const tier = idx == null ? "" : `<span class="grank-chip-tier" aria-hidden="true">${roman(idx + 1)}</span>`;
-    return `<span class="grank-chip pass ${cls}${top}">${tier}${esc(nm)}</span>`;
+    const p = Math.max(0, Math.round(prestigeCount || 0));
+    const chip = `<span class="grank-chip pass ${cls}${top}">${tier}${esc(nm)}${prestigeMarkHTML(p)}</span>`;
+    // Prestiged players wear a permanent gold laurel around the chip.
+    return p ? `<span class="grank-laurel" title="${esc(prestigeLabel(p))}">${chip}</span>` : chip;
   }
 
   function rankIndexForXp(xp) {
@@ -133,8 +156,16 @@ window.GoatXP = (function () {
   function saveMeta(m) { try { localStorage.setItem(LS_KEY, JSON.stringify(m)); } catch (e) {} }
 
   // ==== Current XP (synchronous source of truth for the UI) =================
+  // curXp is the ALL-TIME total (feeds the leaderboard, never resets). prestige
+  // is how many times the player has reset; prestigeBase is the all-time XP at
+  // the moment of the last prestige. LEVEL XP — what drives the rank/badge — is
+  // curXp minus prestigeBase, so a prestige drops the rank to Rookie while the
+  // all-time total keeps climbing untouched.
   let curXp = 0;
+  let prestige = 0;
+  let prestigeBase = 0;
   let lastRankIndex = 0;
+  const levelXp = () => Math.max(0, curXp - prestigeBase);
 
   function readXp() {
     const local = loadMeta().xp || 0;
@@ -147,13 +178,34 @@ window.GoatXP = (function () {
     }
     return local;
   }
+  // Reconcile prestige across cloud + local by MAX prestige (an explicit,
+  // one-way action — a device that hasn't seen it yet must never undo it). The
+  // winning record's XP anchor comes with it.
+  function readPrestige() {
+    const meta = loadMeta();
+    let p = Math.max(0, Math.round(meta.prestige || 0));
+    let base = Math.max(0, Math.round(meta.prestigeBase || 0));
+    if (signedIn() && A().prestigeCached) {
+      const cp = A().prestigeCached();
+      const cb = A().prestigeBaseCached ? A().prestigeBaseCached() : 0;
+      if (typeof cp === "number" && cp > p) { p = cp; base = Math.max(0, Math.round(cb || 0)); }
+      else if (typeof cp === "number" && cp === p) { base = Math.max(base, Math.max(0, Math.round(cb || 0))); }
+    }
+    return { prestige: p, base };
+  }
   function syncXp() {
     curXp = readXp();
+    const pr = readPrestige();
+    prestige = pr.prestige;
+    prestigeBase = Math.min(pr.base, curXp); // never let the anchor exceed all-time
     // Mirror the max back into local so progress persists and can re-lift the
     // cloud later if it ever regressed.
     const meta = loadMeta();
-    if (curXp > (meta.xp || 0)) { meta.xp = curXp; saveMeta(meta); }
-    lastRankIndex = rankInfo(curXp).index;
+    let dirty = false;
+    if (curXp > (meta.xp || 0)) { meta.xp = curXp; dirty = true; }
+    if (prestige > (meta.prestige || 0)) { meta.prestige = prestige; meta.prestigeBase = prestigeBase; dirty = true; }
+    if (dirty) saveMeta(meta);
+    lastRankIndex = rankInfo(levelXp()).index;
     renderCard();
   }
   // Reconcile UP: push this device's local XP into the cloud via a max
@@ -162,6 +214,12 @@ window.GoatXP = (function () {
   async function reconcileXpUp() {
     if (!signedIn()) return;
     if (A().raiseXp) { try { await A().raiseXp(loadMeta().xp || 0); } catch (e) {} }
+    // Re-push a prestige done on this device (e.g. while offline) — max-wins, so
+    // it can only ever advance the cloud, never undo another device's prestige.
+    const meta = loadMeta();
+    if ((meta.prestige || 0) > 0 && A().commitPrestige) {
+      try { await A().commitPrestige(meta.prestige, meta.prestigeBase || 0); } catch (e) {}
+    }
     syncXp();
   }
 
@@ -181,7 +239,7 @@ window.GoatXP = (function () {
   // the card, fires a level-up celebration if the rank went up.
   function applyGain(delta) {
     if (!delta) return;
-    const before = rankInfo(curXp);
+    const before = rankInfo(levelXp());
     curXp = Math.max(0, curXp + delta);
     const meta = loadMeta();
     meta.xp = curXp;                 // mirror locally so sign-out keeps progress
@@ -199,7 +257,7 @@ window.GoatXP = (function () {
         });
       } catch (e) { submitBoard(); }
     }
-    const after = rankInfo(curXp);
+    const after = rankInfo(levelXp());
     renderCard();
     if (after.index > before.index) celebrate(after);
     lastRankIndex = after.index;
@@ -311,7 +369,7 @@ window.GoatXP = (function () {
     if (!signedIn()) return;
     clearTimeout(_boardTimer);
     _boardTimer = setTimeout(() => {
-      try { A().submitXpEntry(curXp, rankInfo(curXp).name); } catch (e) {}
+      try { A().submitXpEntry(curXp, rankInfo(levelXp()).name, undefined, prestige); } catch (e) {}
     }, 400);
   }
 
@@ -345,6 +403,28 @@ window.GoatXP = (function () {
     .grank-chip.pass.chip-goat::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 38%,rgba(255,255,255,.72) 50%,transparent 62%);transform:translateX(-130%);animation:grankShimmer 2.8s ease-in-out .4s infinite;pointer-events:none}
     @keyframes grankShimmer{0%,55%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
     @media (prefers-reduced-motion: reduce){.grank-chip.pass.chip-goat::after{animation:none;opacity:0}}
+    /* Prestige — diamond count inside the chip + permanent gold laurel around it */
+    .grank-chip .grank-dia{margin-left:5px;padding-left:5px;border-left:1.5px solid currentColor;font-size:.8em;letter-spacing:.02em;opacity:.85}
+    .grank-laurel{position:relative;display:inline-flex;align-items:center;padding:0 9px;vertical-align:middle}
+    .grank-laurel::before,.grank-laurel::after{content:"";position:absolute;top:50%;width:13px;height:24px;transform:translateY(-50%);background:var(--gold,#e6b843);opacity:.92;-webkit-mask:radial-gradient(circle at 100% 50%,transparent 8px,#000 9px);mask:radial-gradient(circle at 100% 50%,transparent 8px,#000 9px)}
+    .grank-laurel::before{left:-3px}
+    .grank-laurel::after{right:-3px;transform:translateY(-50%) scaleX(-1)}
+    /* Prestige diamonds on the home rank strip name */
+    .grank-strip-dia{color:#a9791a;font:800 .62rem/1 "Space Mono",monospace;letter-spacing:.04em;margin-left:5px;vertical-align:middle}
+    [data-theme="dark"] .grank-strip-dia{color:var(--gold,#e6b843)}
+    /* Prestige CTA (appears under the rank strip when unlocked) */
+    .grank-prestige-cta{display:flex;align-items:center;gap:11px;width:100%;border:2px solid var(--ink,#151413);background:linear-gradient(135deg,#f2d47e,var(--gold,#e6b843));box-shadow:3px 3px 0 var(--ink,#151413);padding:9px 12px;margin:0 0 12px;cursor:pointer;text-align:left;color:#2b2205}
+    .grank-prestige-cta:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink,#151413)}
+    .grank-prestige-cta .gpc-mark{flex:none;width:28px;height:28px;display:grid;place-items:center;border:2px solid var(--ink,#151413);border-radius:50%;background:var(--paper,#fbf7ee);color:#a9791a;font:800 .8rem/1 "Space Mono",monospace;box-shadow:1px 1px 0 var(--ink,#151413)}
+    .grank-prestige-cta .gpc-txt{flex:1 1 auto;min-width:0;font:800 .9rem/1.1 "Playfair Display",Georgia,serif}
+    .grank-prestige-cta .gpc-txt small{display:block;font:700 .56rem/1.2 "Space Mono",monospace;text-transform:uppercase;letter-spacing:.03em;opacity:.75;margin-top:3px}
+    .grank-prestige-cta .gpc-go{flex:none;font:800 .66rem/1 "Space Mono",monospace;text-transform:uppercase;letter-spacing:.05em;border:2px solid var(--ink,#151413);background:var(--ink,#151413);color:var(--gold,#e6b843);padding:7px 9px}
+    /* Prestige confirm/celebration emblem override (gold diamonds, tighter type) */
+    .grank-lvlup-emblem.gpc-emblem{font-size:1.5rem;letter-spacing:.04em;background:linear-gradient(135deg,#f2d47e,var(--gold,#e6b843))}
+    .gprestige-actions{display:flex;gap:10px;justify-content:center;margin-top:20px}
+    .gprestige-cancel{font:700 .78rem/1 "Space Mono",monospace;background:none;border:2px solid var(--ink,#151413);padding:10px 14px;cursor:pointer;color:var(--ink,#151413)}
+    .gprestige-go{font:800 .78rem/1 "Space Mono",monospace;text-transform:uppercase;letter-spacing:.04em;background:var(--court,#c0512f);color:#fff;border:2px solid var(--ink,#151413);box-shadow:3px 3px 0 var(--ink,#151413);padding:10px 16px;cursor:pointer}
+    .gprestige-go:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink,#151413)}
     /* Level-up celebration */
     .grank-lvlup{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:rgba(21,20,19,.6);animation:grankFade .25s ease}
     .grank-lvlup-card{position:relative;overflow:hidden;background:var(--paper,#fbf7ee);border:3px solid var(--ink,#151413);box-shadow:8px 8px 0 var(--ink,#151413);padding:30px 34px;text-align:center;max-width:340px;animation:grankPop .4s cubic-bezier(.2,1.3,.4,1)}
@@ -420,18 +500,123 @@ window.GoatXP = (function () {
     const el = document.getElementById("goatRankCard");
     const home = document.getElementById("modeScreen");
     if (el && home) el.hidden = !!home.hidden;
+    const cta = document.getElementById("goatPrestigeCta");
+    if (cta && home) cta.hidden = !!home.hidden;
+  }
+  function stripDiaHTML() {
+    if (prestige <= 0) return "";
+    const d = prestige <= PRESTIGE_MARK_CAP ? "◆".repeat(prestige) : `◆×${prestige}`;
+    return ` <span class="grank-strip-dia" aria-hidden="true" title="${esc(prestigeLabel(prestige))}">${d}</span>`;
   }
   function renderCard() {
     ensureCard();
     const el = document.getElementById("goatRankCard");
     if (!el) return;
-    const r = rankInfo(curXp);
-    const next = r.isMax ? "Max rank" : `${commas(r.toNext)} XP &rarr; ${esc(r.next)}`;
+    const lx = levelXp();
+    const r = rankInfo(lx);
+    const eligible = lx >= PRESTIGE_XP;
+    let next, pct;
+    if (r.isMax) {
+      // At GOAT the bar tracks the last stretch to the prestige threshold, so the
+      // top rank still has something to climb toward.
+      const goatXp = RANKS[RANKS.length - 1].xp;
+      if (eligible) { next = "Ready to Prestige"; pct = 100; }
+      else {
+        pct = Math.max(3, Math.min(100, Math.round((lx - goatXp) / (PRESTIGE_XP - goatXp) * 100)));
+        next = `${commas(PRESTIGE_XP - lx)} XP &rarr; Prestige`;
+      }
+    } else {
+      next = `${commas(r.toNext)} XP &rarr; ${esc(r.next)}`;
+      pct = r.pct === 0 ? 0 : Math.max(r.pct, 3);
+    }
+    el.classList.toggle("is-prestige", prestige > 0);
     el.innerHTML = `
       <span class="grank-emblem" aria-hidden="true">${roman(r.index + 1)}</span>
-      <span class="grank-name">${esc(r.name)}<span class="grank-lvl">Rank ${r.index + 1}/${r.total}</span></span>
-      <span class="grank-track"><span class="grank-fill" style="width:${r.pct === 0 ? 0 : Math.max(r.pct, 3)}%"></span></span>
+      <span class="grank-name">${esc(r.name)}${stripDiaHTML()}<span class="grank-lvl">Rank ${r.index + 1}/${r.total}</span></span>
+      <span class="grank-track"><span class="grank-fill" style="width:${pct}%"></span></span>
       <span class="grank-next">${next}</span>`;
+    renderPrestigeCta(eligible);
+  }
+
+  // ==== Prestige — the reset button that keeps all-time XP ===================
+  function renderPrestigeCta(eligible) {
+    const card = document.getElementById("goatRankCard");
+    let cta = document.getElementById("goatPrestigeCta");
+    if (!eligible || !card || !card.parentNode) { if (cta) cta.remove(); return; }
+    if (!cta) {
+      cta = document.createElement("button");
+      cta.id = "goatPrestigeCta";
+      cta.type = "button";
+      cta.className = "grank-prestige-cta";
+      cta.addEventListener("click", openPrestigeConfirm);
+      card.parentNode.insertBefore(cta, card.nextSibling);
+    }
+    cta.innerHTML = `
+      <span class="gpc-mark" aria-hidden="true">◆</span>
+      <span class="gpc-txt">Prestige ${prestige + 1} unlocked<small>Reset to Rookie — your all-time XP is safe</small></span>
+      <span class="gpc-go" aria-hidden="true">Prestige →</span>`;
+    cta.hidden = !!(document.getElementById("modeScreen") || {}).hidden;
+  }
+  function openPrestigeConfirm() {
+    injectStyles();
+    const nextP = prestige + 1;
+    const ov = document.createElement("div");
+    ov.className = "grank-lvlup gprestige-confirm";
+    ov.innerHTML = `
+      <div class="grank-lvlup-card">
+        <div class="grank-lvlup-emblem gpc-emblem" aria-hidden="true">◆</div>
+        <div class="grank-lvlup-kicker">Prestige ${nextP}</div>
+        <div class="grank-lvlup-title">Reset &amp; rise again?</div>
+        <div class="grank-lvlup-sub">Your rank drops back to <strong>Rookie</strong> and you climb the ladder fresh — but your <strong>all-time XP keeps every point</strong> and stays right where it is on the leaderboard. Your badge earns a permanent laurel with <strong>${nextP} diamond${nextP === 1 ? "" : "s"}</strong>.</div>
+        <div class="gprestige-actions">
+          <button type="button" class="gprestige-cancel">Not yet</button>
+          <button type="button" class="gprestige-go">Prestige ${nextP} →</button>
+        </div>
+      </div>`;
+    const close = () => ov.remove();
+    ov.addEventListener("click", (e) => { if (e.target === ov) close(); });
+    ov.querySelector(".gprestige-cancel").addEventListener("click", close);
+    ov.querySelector(".gprestige-go").addEventListener("click", () => { close(); doPrestige(); });
+    document.body.appendChild(ov);
+  }
+  async function doPrestige() {
+    if (levelXp() < PRESTIGE_XP) return;
+    const nextP = prestige + 1;
+    const base = curXp; // anchor at the current all-time total → level XP resets to 0
+    prestige = nextP;
+    prestigeBase = base;
+    const meta = loadMeta();
+    meta.prestige = nextP; meta.prestigeBase = base;
+    saveMeta(meta);
+    if (signedIn() && A().commitPrestige) {
+      try { const res = await A().commitPrestige(nextP, base); if (res) { prestige = res.prestige; prestigeBase = res.base; } } catch (e) {}
+    }
+    syncXp();
+    submitBoard();
+    celebratePrestige(prestige);
+  }
+  function celebratePrestige(p) {
+    injectStyles();
+    const ov = document.createElement("div");
+    ov.className = "grank-lvlup";
+    const colors = ["#e6b843", "#c0512f", "#157f68", "#7fb0d0", "#b79ad6"];
+    const confetti = Array.from({ length: 28 }, (_, i) => {
+      const left = (i / 28) * 100, dur = 1.1 + (i % 5) * 0.25, delay = (i % 7) * 0.08;
+      return `<span class="grank-confetti" style="left:${left}%;background:${colors[i % colors.length]};animation-duration:${dur}s;animation-delay:${delay}s"></span>`;
+    }).join("");
+    const dia = p <= PRESTIGE_MARK_CAP ? "◆".repeat(p) : `◆×${p}`;
+    ov.innerHTML = `
+      <div class="grank-lvlup-card">
+        ${confetti}
+        <div class="grank-lvlup-emblem gpc-emblem" aria-hidden="true">${dia}</div>
+        <div class="grank-lvlup-kicker">Prestige ${p}!</div>
+        <div class="grank-lvlup-title">Reborn as Rookie</div>
+        <div class="grank-lvlup-sub">The laurel is yours forever. Your all-time XP kept climbing — now run it back.</div>
+      </div>`;
+    const close = () => ov.remove();
+    ov.addEventListener("click", close);
+    document.body.appendChild(ov);
+    setTimeout(close, 4200);
   }
 
   // ==== Level-up celebration ================================================
@@ -515,7 +700,7 @@ window.GoatXP = (function () {
       listEl.innerHTML = rows.map((r, i) => {
         const mine = me && r.uid === me.uid;
         const nm = esc(String(r.name || "Anonymous").replace(/\u{1F410}[️‍]?/gu, "").trim() || "Anonymous");
-        const chip = (r.goatPass && r.rank) ? passChipHTML(r.rank) : "";
+        const chip = (r.goatPass && r.rank) ? passChipHTML(r.rank, r.prestige) : "";
         return `<div class="gxpb-row${mine ? " me" : ""}">
           <span class="gxpb-rank">${i + 1}</span>
           <span class="gxpb-name">${nm}${chip}${mine ? " (you)" : ""}</span>
@@ -524,8 +709,8 @@ window.GoatXP = (function () {
       }).join("");
       // Pin the signed-in user if they're not in the top 50.
       if (me && !rows.some((r) => r.uid === me.uid)) {
-        const r = rankInfo(curXp);
-        const chip = hasPass() ? passChipHTML(r.name) : "";
+        const r = rankInfo(levelXp());
+        const chip = hasPass() ? passChipHTML(r.name, prestige) : "";
         listEl.insertAdjacentHTML("beforeend", `
           <div class="gxpb-row me" style="border-top:2px dashed var(--ink,#151413);margin-top:6px">
             <span class="gxpb-rank">–</span>
@@ -541,7 +726,9 @@ window.GoatXP = (function () {
   // ==== "How XP works" explainer (generated from config, never goes stale) ==
   function openHowXp() {
     injectStyles();
-    const r = rankInfo(curXp);
+    const lx = levelXp();
+    const r = rankInfo(lx);
+    const eligible = lx >= PRESTIGE_XP;
     const A2 = AWARDS;
     const earn = [
       ["Play the Daily", "Once a day", `+${A2.dailyPlay}`],
@@ -563,7 +750,27 @@ window.GoatXP = (function () {
         <span class="gxhow-nm">${esc(rk.name)}</span>
         <span class="gxhow-xp">${commas(rk.xp)} XP</span>
       </div>`).join("");
-    const youNext = r.isMax ? "Max rank reached" : `${commas(r.toNext)} XP to ${esc(r.next)}`;
+    let youNext;
+    if (!r.isMax) youNext = `${commas(r.toNext)} XP to ${esc(r.next)}`;
+    else if (eligible) youNext = "Ready to Prestige";
+    else youNext = `${commas(PRESTIGE_XP - lx)} XP to Prestige`;
+    const youDia = prestige > 0
+      ? ` <span class="grank-strip-dia" title="${esc(prestigeLabel(prestige))}">${prestige <= PRESTIGE_MARK_CAP ? "◆".repeat(prestige) : "◆×" + prestige}</span>`
+      : "";
+
+    // Prestige section — always explained; the button only appears when unlocked.
+    const prestigeBtn = eligible
+      ? `<div style="text-align:center;margin-top:12px"><button type="button" class="gprestige-go" id="gxhowPrestige">Prestige ${prestige + 1} →</button></div>`
+      : "";
+    const prestigeFoot = `
+        <div class="gxhow-sec">Prestige</div>
+        <div class="gxhow-foot" style="border-style:solid;border-color:var(--gold,#e6b843)">
+          Reach the top rank and keep grinding to <strong>${commas(PRESTIGE_XP)} XP</strong> and you unlock
+          <strong>Prestige</strong>. Prestiging resets your rank all the way back to <strong>Rookie</strong> so
+          you can climb again — but your <strong>all-time XP is never touched</strong> and keeps rising on the
+          leaderboard. Each prestige adds a permanent <strong>gold laurel</strong> to your badge, with a
+          <strong>◆ diamond</strong> for every time you've done it.${prestigeBtn}
+        </div>`;
 
     const ov = document.createElement("div");
     ov.className = "gxpb";
@@ -571,34 +778,37 @@ window.GoatXP = (function () {
       <div class="gxpb-inner">
         <div class="gxpb-top"><button class="gxpb-back" type="button">← Back</button></div>
         <h1 class="gxpb-h">How XP & Ranks Work</h1>
-        <p class="gxpb-note">Every game earns XP. XP levels you up through ${RANKS.length} ranks, from Rookie all the way to GOAT.</p>
+        <p class="gxpb-note">Every game earns XP. XP levels you up through ${RANKS.length} ranks, from Rookie all the way to GOAT — then <strong>Prestige</strong> to run it back.</p>
         <div class="gxhow-you">
           <span class="grank-emblem" aria-hidden="true">${roman(r.index + 1)}</span>
           <span class="gxhow-me">
-            <span class="gxhow-mename">${esc(r.name)}</span>
+            <span class="gxhow-mename">${esc(r.name)}${youDia}</span>
             <span class="grank-track"><span class="grank-fill" style="width:${r.pct === 0 ? 0 : Math.max(r.pct, 3)}%"></span></span>
-            <span class="gxhow-mexp">${commas(r.xp)} XP · ${youNext}</span>
+            <span class="gxhow-mexp">${commas(curXp)} XP all-time · ${youNext}</span>
           </span>
         </div>
         <div class="gxhow-sec">Ways to earn XP</div>
         ${earnHtml}
         <div class="gxhow-sec">The ${RANKS.length} ranks</div>
         ${ladderHtml}
+        ${prestigeFoot}
         <div class="gxhow-foot">Everyone earns XP, free or GOAT Pass. Pass holders earn <strong>+25% XP</strong> on every game and get to <strong>show their rank chip</strong> on the public leaderboard.</div>
       </div>`;
     ov.querySelector(".gxpb-back").addEventListener("click", () => ov.remove());
     ov.addEventListener("click", (e) => { if (e.target === ov) ov.remove(); });
+    const pb = ov.querySelector("#gxhowPrestige");
+    if (pb) pb.addEventListener("click", () => { ov.remove(); openPrestigeConfirm(); });
     document.body.appendChild(ov);
   }
 
   // ==== Leaderboard chip helper (called from app.js daily board rows) ========
   // Pass holders show a gold-bordered rank chip; free players show no chip.
-  function chipFor(rankName, goatPass) {
+  function chipFor(rankName, goatPass, prestigeCount) {
     if (!goatPass) return "";
     // Pass holder whose rank isn't stored on their entry yet (submitted before the
     // rank system, or before goat-xp loaded) falls back to a "GOAT Pass" chip;
     // it self-heals to a real rank chip on their next Daily submit.
-    return " " + passChipHTML(rankName);
+    return " " + passChipHTML(rankName, prestigeCount);
   }
 
   // ==== Init ================================================================
@@ -644,12 +854,19 @@ window.GoatXP = (function () {
 
   // ==== Public API ==========================================================
   return {
-    RANKS, AWARDS,
+    RANKS, AWARDS, PRESTIGE_XP,
     onGameFinish,
-    rankName: () => rankInfo(curXp).name,
-    rankIndex: () => rankInfo(curXp).index,
-    info: () => rankInfo(curXp),
+    // Rank now reflects LEVEL XP (post-prestige), while xp() stays the all-time
+    // total that feeds the leaderboard.
+    rankName: () => rankInfo(levelXp()).name,
+    rankIndex: () => rankInfo(levelXp()).index,
+    info: () => rankInfo(levelXp()),
     xp: () => curXp,
+    levelXp: () => levelXp(),
+    prestige: () => prestige,
+    canPrestige: () => levelXp() >= PRESTIGE_XP,
+    doPrestige,
+    openPrestige: openPrestigeConfirm,
     chipFor,
     openBoard,
     openHowXp,
