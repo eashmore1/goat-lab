@@ -25,6 +25,8 @@ window.GoatAuth = (() => {
   let handleCache = null;
   let passCache = null; // GOAT Pass ownership, cached per sign-in (null = not yet read)
   let xpCache = null;   // total XP for the rank system (null = not yet read / not backfilled)
+  let prestigeCache = null;     // times the player has prestiged (null = not yet read)
+  let prestigeBaseCache = null; // all-time XP snapshot at the last prestige (level XP = xp - this)
   let modeStatsCache = null; // live Classic/Blind cloud totals (null = not yet read)
   let profilePromise = null; // one shared read of users/{uid} feeding handle + pass
   let messaging = null;      // Firebase Cloud Messaging (push), lazy-initialised
@@ -47,6 +49,8 @@ window.GoatAuth = (() => {
         handleCache = null; // reset on sign-in/out
         passCache = null;   // re-read GOAT Pass ownership for the new user
         xpCache = null;     // re-read XP for the new user
+        prestigeCache = null;
+        prestigeBaseCache = null;
         modeStatsCache = null;
         profilePromise = null;
         // Tear down the previous account's live listeners.
@@ -62,6 +66,8 @@ window.GoatAuth = (() => {
               const d = (doc.exists && doc.data()) || {};
               if (typeof d.xp === "number" && isFinite(d.xp)) xpCache = Math.max(0, d.xp);
               if (typeof d.goatPass !== "undefined") passCache = !!d.goatPass;
+              if (typeof d.prestige === "number" && isFinite(d.prestige)) prestigeCache = Math.max(0, Math.round(d.prestige));
+              if (typeof d.prestigeBase === "number" && isFinite(d.prestigeBase)) prestigeBaseCache = Math.max(0, Math.round(d.prestigeBase));
               dataListeners.forEach((cb) => { try { cb("xp"); } catch (e) {} });
             }, () => {});
             unsubModeDoc = uref.collection("stats").doc("modes").onSnapshot((doc) => {
@@ -115,6 +121,8 @@ window.GoatAuth = (() => {
         // null (field absent) is meaningful: it tells the XP system this account
         // has never been backfilled yet. A real 0 is stored as the number 0.
         if (xpCache == null) xpCache = (typeof data.xp === "number" && isFinite(data.xp)) ? data.xp : null;
+        if (prestigeCache == null) prestigeCache = (typeof data.prestige === "number" && isFinite(data.prestige)) ? Math.max(0, Math.round(data.prestige)) : 0;
+        if (prestigeBaseCache == null) prestigeBaseCache = (typeof data.prestigeBase === "number" && isFinite(data.prestigeBase)) ? Math.max(0, Math.round(data.prestigeBase)) : 0;
         return data;
       }).catch((e) => {
         profilePromise = null; // allow retry on transient failure
@@ -251,6 +259,9 @@ window.GoatAuth = (() => {
         // chip next to pass holders without an extra read per row.
         rank: (typeof window !== "undefined" && window.GoatXP && window.GoatXP.rankName)
           ? (window.GoatXP.rankName() || null) : null,
+        // Prestige count so the leaderboard can wrap the chip in its laurel badge.
+        prestige: (typeof window !== "undefined" && window.GoatXP && window.GoatXP.prestige)
+          ? Math.max(0, Math.round(window.GoatXP.prestige() || 0)) : 0,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
       // Maintain a running tally on the daily doc so the leaderboard can read ONE
@@ -393,6 +404,34 @@ window.GoatAuth = (() => {
     // has never been backfilled — the caller treats null as "needs backfill").
     xpCached() { return xpCache; },
     modeStatsCached() { return modeStatsCache; },
+    // Prestige count + the all-time XP anchor at the last prestige (best-effort,
+    // 0 until read). Level XP = xp - prestigeBase.
+    prestigeCached() { return prestigeCache; },
+    prestigeBaseCached() { return prestigeBaseCache; },
+    // Advance prestige forward by writing the new count + XP anchor. A max-wins
+    // transaction: prestige can only ever go UP, so a stale device can never undo
+    // a prestige done on another device. Returns the resulting { prestige, base }.
+    async commitPrestige(nextPrestige, nextBase) {
+      if (!enabled || !user) return { prestige: prestigeCache || 0, base: prestigeBaseCache || 0 };
+      const np = Math.max(0, Math.round(Number(nextPrestige) || 0));
+      const nb = Math.max(0, Math.round(Number(nextBase) || 0));
+      try {
+        await db.runTransaction(async (tx) => {
+          const doc = await tx.get(userDoc());
+          const data = (doc.exists && doc.data()) || {};
+          const cur = (typeof data.prestige === "number" && isFinite(data.prestige)) ? data.prestige : 0;
+          if (np > cur) {
+            tx.set(userDoc(), { prestige: np, prestigeBase: nb }, { merge: true });
+            prestigeCache = np; prestigeBaseCache = nb;
+          } else {
+            prestigeCache = cur;
+            prestigeBaseCache = (typeof data.prestigeBase === "number" && isFinite(data.prestigeBase))
+              ? data.prestigeBase : (prestigeBaseCache || 0);
+          }
+        });
+      } catch (e) { console.warn("[GoatAuth] commitPrestige failed:", e); }
+      return { prestige: prestigeCache || 0, base: prestigeBaseCache || 0 };
+    },
     // Subscribe to live cloud-data changes (kind = "xp" | "modes"). Returns an
     // unsubscribe fn. Fires whenever the account's cloud docs update on ANY device.
     onData(cb) { dataListeners.add(cb); return () => dataListeners.delete(cb); },
@@ -463,7 +502,7 @@ window.GoatAuth = (() => {
     },
     // Upsert this player's entry on the all-time XP leaderboard
     // (xpLeaderboard/{uid}).
-    async submitXpEntry(xp, rankName, name) {
+    async submitXpEntry(xp, rankName, name, prestige) {
       if (!enabled || !user) return;
       try {
         await db.collection("xpLeaderboard").doc(user.uid).set({
@@ -471,6 +510,7 @@ window.GoatAuth = (() => {
           name: String(name || handleCache || this.displayName()).slice(0, 40),
           goatPass: passCache === true,
           rank: rankName ? String(rankName).slice(0, 24) : null,
+          prestige: Math.max(0, Math.round(Number(prestige) || 0)),
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         }, { merge: true });
       } catch (e) {}
