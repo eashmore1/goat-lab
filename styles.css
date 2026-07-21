@@ -3029,6 +3029,23 @@ h1 {
 /* Shorter mobile-only descriptions: full text on desktop, .perk-sm on phones. */
 .pass-perks .perk-txt .perk-sm { display: none; }
 .pass-free-note { margin: 0 0 14px; text-align: center; color: var(--muted); font: 400 0.78rem/1.4 "Playfair Display", Georgia, serif; }
+/* Flash Deal popup — limited-time GOAT Pass discount, shown on the home screen */
+.flash-modal { position: relative; overflow: hidden; max-width: 360px; width: calc(100% - 40px); text-align: center; padding: 30px 26px 24px; border: 3px solid var(--ink); background: var(--paper, #fbf7ee); box-shadow: 8px 8px 0 var(--ink); animation: flashPop 0.35s cubic-bezier(0.2, 1.3, 0.4, 1); }
+.flash-modal .modal-close { position: absolute; top: 8px; right: 8px; z-index: 3; width: 30px; height: 30px; color: var(--ink); border: none; background: transparent; border-radius: 50%; font-size: 1.2rem; line-height: 1; opacity: 0.6; box-shadow: none; }
+.flash-modal .modal-close:hover { background: rgba(21, 20, 19, 0.12); border-color: transparent; opacity: 1; transform: none; box-shadow: none; }
+.flash-burst { position: absolute; top: -45%; left: 50%; transform: translateX(-50%); width: 210%; height: 90%; background: radial-gradient(ellipse at center top, rgba(230, 184, 67, 0.4), transparent 62%); pointer-events: none; }
+.flash-kicker { position: relative; display: inline-block; font: 800 0.72rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.12em; text-transform: uppercase; color: #fff; background: var(--court); border: 2px solid var(--ink); padding: 6px 12px; box-shadow: 2px 2px 0 var(--ink); }
+.flash-title { position: relative; margin: 16px 0 6px; font: 900 1.85rem/1.05 "Playfair Display", Georgia, serif; color: var(--ink); }
+.flash-sub { position: relative; margin: 0 0 5px; font: 500 0.95rem/1.4 "Playfair Display", Georgia, serif; color: var(--ink); }
+.flash-sub b { font-weight: 800; color: var(--court); letter-spacing: 0.05em; background: rgba(201, 103, 61, 0.12); padding: 1px 7px; border-radius: 3px; }
+.flash-scarcity { position: relative; margin: 0 0 20px; font: 700 0.72rem/1.3 "Space Mono", ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.flash-cta { position: relative; width: 100%; padding: 14px; cursor: pointer; background: var(--court); color: #fff; border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); font: 800 0.92rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: 0.04em; text-transform: uppercase; transition: transform 0.1s ease, box-shadow 0.1s ease; }
+.flash-cta:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+.flash-dismiss { position: relative; margin-top: 12px; background: none; border: none; cursor: pointer; font: 700 0.74rem/1 "Space Mono", ui-monospace, monospace; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+.flash-dismiss:hover { color: var(--ink); }
+@keyframes flashPop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .flash-modal { animation: none; } }
+
 .pass-promo { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; padding: 9px 12px; border: 2px dashed var(--court); background: rgba(201, 103, 61, 0.09); color: var(--ink); text-align: center; font: 700 0.78rem/1.3 "Space Mono", ui-monospace, monospace; }
 .pass-promo b { color: var(--court); letter-spacing: 0.06em; }
 .pass-promo-tag { flex: none; background: var(--court); color: #fff; padding: 2px 7px; border: 1.5px solid var(--ink); font-size: 0.66rem; letter-spacing: 0.05em; }

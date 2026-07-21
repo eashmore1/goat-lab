@@ -4839,6 +4839,45 @@ if (helpButtonTop) helpButtonTop.addEventListener("click", () => showModal(helpM
 helpClose.addEventListener("click", () => hideModal(helpModal));
 helpModal.addEventListener("click", (e) => { if (e.target === helpModal) hideModal(helpModal); });
 
+// --- Flash Deal popup (limited-time GOAT Pass discount) --------------------
+// Lives at top level (not inside the Firebase-gated account code) so the promo
+// still shows even if Firebase is slow/unavailable. Shows once per visitor,
+// only to non-holders, only on the home screen, and only when no other modal
+// is up. Tapping the CTA drops them into the full Pass modal (code repeated).
+(function initFlashDeal() {
+  const FLASH_SEEN_KEY = "goatlab_flashdeal_seen_v1";
+  const flashModal = document.querySelector("#flashDealModal");
+  if (!flashModal) return;
+  const flashSeen = () => { try { return localStorage.getItem(FLASH_SEEN_KEY) === "1"; } catch (e) { return false; } };
+  const markSeen = () => { try { localStorage.setItem(FLASH_SEEN_KEY, "1"); } catch (e) {} };
+  const isHolder = () => !!(window.GoatPassActive
+    || (window.GoatAuth && window.GoatAuth.goatPassCached && window.GoatAuth.goatPassCached()));
+  function closeFlash() { hideModal(flashModal); markSeen(); }
+  setupModal(flashModal, closeFlash);
+  flashModal.addEventListener("click", (e) => { if (e.target === flashModal) closeFlash(); });
+  const fc = document.querySelector("#flashDealClose");
+  if (fc) fc.addEventListener("click", closeFlash);
+  const fd = document.querySelector("#flashDealDismiss");
+  if (fd) fd.addEventListener("click", closeFlash);
+  const fcta = document.querySelector("#flashDealCta");
+  if (fcta) fcta.addEventListener("click", () => {
+    closeFlash();
+    if (window.GoatOpenPassModal) window.GoatOpenPassModal();
+  });
+  let tries = 0;
+  function maybeShow() {
+    if (flashSeen() || isHolder()) return;
+    const home = document.querySelector("#modeScreen");
+    const anyOpen = ["#passModal", "#helpModal", "#shareModal", "#statsModal"]
+      .some((s) => { const m = document.querySelector(s); return m && !m.hidden; });
+    // Wait for the coast to clear (first-time help modal, etc.) before showing.
+    if (!home || home.hidden || anyOpen) { if (tries++ < 20) setTimeout(maybeShow, 1200); return; }
+    showModal(flashModal, null);
+    markSeen(); // once per visitor, whether they act or dismiss
+  }
+  setTimeout(maybeShow, 1400); // let the page settle before the popup appears
+})();
+
 function closeShareModal() {
   _savedShareData = null;
   if (_buildSnapshot !== null) {
@@ -6857,6 +6896,8 @@ updateBody(null);
 
   // Reflect pass state across the UI (called on sign-in and after a refresh).
   function updatePassUI() {
+    // A holder should never see the discount popup (covers the sign-in race).
+    if (hasPass) { const fm = document.getElementById("flashDealModal"); if (fm && !fm.hidden) fm.hidden = true; }
     window.GoatPassActive = hasPass; // read by the share-image renderer (global scope)
     try { updateRespinButtons(); } catch (e) {} // reveal button locks/unlocks with the pass
     const pill = document.querySelector("#goatPassPill");
