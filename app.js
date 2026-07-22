@@ -5783,6 +5783,26 @@ updateBody(null);
       }
     }
 
+    // Guest nudge: their score is on the board under a "Guest #####" name — invite
+    // them to sign in to claim it with their real name (and save their progress).
+    // Signing in links the guest account, so their entry carries over and just
+    // takes their new name.
+    if (me && Auth.isGuest && Auth.isGuest()) {
+      const gname = lbName(Auth.displayName());
+      lbList.insertAdjacentHTML("afterbegin", `
+        <div class="lb-guest-cta">
+          <p class="lb-guest-txt">That's you on the board — <strong>${gname}</strong>. Sign in to show your <strong>real name</strong> and save your progress.</p>
+          <button type="button" class="account-btn account-btn-google lb-guest-btn" id="lbGuestSignIn"><span class="g-mark" aria-hidden="true">G</span> Sign in with Google</button>
+        </div>`);
+      const gbtn = document.getElementById("lbGuestSignIn");
+      if (gbtn) gbtn.addEventListener("click", async () => {
+        gbtn.disabled = true; gbtn.textContent = "…";
+        try { await Auth.signIn(); } catch (e) {}
+        // Re-render so their real name replaces the guest name once the entry updates.
+        setTimeout(() => { try { renderLeaderboard(targetDate); } catch (e) {} }, 1200);
+      });
+    }
+
     // "Come back tomorrow" nudge — only on today's board if the user has already played.
     if (isToday && lbTomorrow) {
       const playedToday = !!getDailyHistory()[getTodayStr()];
