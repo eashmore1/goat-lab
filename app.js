@@ -7077,7 +7077,7 @@ updateBody(null);
     const on = Auth.pushEnabled();
     btn.textContent = on ? "Turn off" : "Turn on";
     btn.setAttribute("aria-pressed", String(on));
-    if (testBtn) testBtn.hidden = !(isAdmin() && on); // owner only, and only when reminders are on
+    if (testBtn) testBtn.hidden = !isAdmin(); // owner only (row itself only shows where push is supported)
   };
   reflect();
 
