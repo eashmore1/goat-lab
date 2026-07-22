@@ -237,7 +237,7 @@ const teamEras = [
     note: "Shaq and Kobe create elite spikes, but the wrong category can still bite.",
     players: [
       player("Kobe Bryant", 6, 6, 8, { height: 82, shooting: 94, finishing: 96, handles: 94, passing: 82, defense: 96, rebounding: 68, athleticism: 96, iq: 92 }),
-      player("Shaquille O'Neal", 7, 1, 34, { height: 99, shooting: 48, finishing: 100, handles: 64, passing: 78, defense: 92, rebounding: 96, athleticism: 90, iq: 92 }),
+      player("Shaquille O'Neal", 7, 1, 34, { height: 99, shooting: 48, finishing: 100, handles: 64, passing: 78, defense: 92, rebounding: 99, athleticism: 90, iq: 92 }),
       player("Pau Gasol", 7, 0, 16, { height: 98, shooting: 82, finishing: 87, handles: 76, passing: 82, defense: 84, rebounding: 90, athleticism: 72, iq: 88 }),
       player("Derek Fisher", 6, 1, 2, { height: 68, shooting: 84, finishing: 72, handles: 80, passing: 80, defense: 78, rebounding: 55, athleticism: 70, iq: 92 }),
       player("Lamar Odom", 6, 10, 7, { height: 94, shooting: 78, finishing: 86, handles: 82, passing: 82, defense: 80, rebounding: 82, athleticism: 84, iq: 82 }),
@@ -588,7 +588,7 @@ const teamEras = [
     team: "Magic",
     note: "Shaq and Penny were a once-in-a-generation pairing before it all fell apart.",
     players: [
-      player("Shaquille O'Neal", 7, 1, 32, { height: 99, shooting: 48, finishing: 100, handles: 60, passing: 76, defense: 90, rebounding: 94, athleticism: 92, iq: 86 }),
+      player("Shaquille O'Neal", 7, 1, 32, { height: 99, shooting: 48, finishing: 100, handles: 60, passing: 76, defense: 90, rebounding: 97, athleticism: 92, iq: 86 }),
       player("Penny Hardaway", 6, 7, 1, { height: 84, shooting: 85, finishing: 83, handles: 85, passing: 85, defense: 84, rebounding: 68, athleticism: 90, iq: 88 }),
       player("Nick Anderson", 6, 6, 25, { height: 82, shooting: 80, finishing: 76, handles: 78, passing: 70, defense: 78, rebounding: 66, athleticism: 84, iq: 76 }),
       player("Horace Grant", 6, 10, 54, { height: 94, shooting: 72, finishing: 82, handles: 60, passing: 70, defense: 84, rebounding: 82, athleticism: 80, iq: 78 }),
@@ -1468,7 +1468,7 @@ const teamEras = [
     team: "Lakers",
     note: "From the post-Showtime years to the arrival of Shaq and a teenage Kobe — a franchise reloading into a dynasty.",
     players: [
-      player("Shaquille O'Neal", 7, 1, 34, { height: 100, shooting: 58, finishing: 96, handles: 68, passing: 76, defense: 90, rebounding: 92, athleticism: 96, iq: 84 }),
+      player("Shaquille O'Neal", 7, 1, 34, { height: 100, shooting: 58, finishing: 96, handles: 68, passing: 76, defense: 90, rebounding: 96, athleticism: 96, iq: 84 }),
       player("Kobe Bryant", 6, 6, 8, { height: 82, shooting: 84, finishing: 88, handles: 92, passing: 78, defense: 84, rebounding: 64, athleticism: 94, iq: 92 }),
       player("Eddie Jones", 6, 6, 6, { height: 82, shooting: 84, finishing: 84, handles: 80, passing: 78, defense: 88, rebounding: 64, athleticism: 90, iq: 80 }),
       player("Nick Van Exel", 6, 1, 9, { height: 68, shooting: 82, finishing: 80, handles: 90, passing: 86, defense: 72, rebounding: 54, athleticism: 80, iq: 84 }),
@@ -1557,7 +1557,7 @@ const teamEras = [
     note: "Wade and Shaq powered the 2006 title; Flash's relentless drives and a deep, physical roster defined the decade in Miami.",
     players: [
       player("Dwyane Wade", 6, 4, 3, { height: 77, shooting: 80, finishing: 90, handles: 85, passing: 84, defense: 84, rebounding: 64, athleticism: 94, iq: 82 }),
-      player("Shaquille O'Neal", 7, 1, 32, { height: 100, shooting: 54, finishing: 94, handles: 64, passing: 74, defense: 86, rebounding: 86, athleticism: 88, iq: 82 }),
+      player("Shaquille O'Neal", 7, 1, 32, { height: 100, shooting: 54, finishing: 94, handles: 64, passing: 74, defense: 86, rebounding: 92, athleticism: 88, iq: 82 }),
       player("Alonzo Mourning", 6, 10, 33, { height: 94, shooting: 72, finishing: 84, handles: 62, passing: 64, defense: 92, rebounding: 80, athleticism: 82, iq: 80 }),
       player("Eddie Jones", 6, 6, 6, { height: 82, shooting: 84, finishing: 82, handles: 80, passing: 76, defense: 86, rebounding: 62, athleticism: 88, iq: 80 }),
       player("Udonis Haslem", 6, 8, 40, { height: 86, shooting: 74, finishing: 78, handles: 64, passing: 68, defense: 82, rebounding: 82, athleticism: 78, iq: 78 }),
