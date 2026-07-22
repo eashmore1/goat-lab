@@ -4203,13 +4203,14 @@ function finish() {
   if (gameMode !== "daily") {
     savePB(gameMode, score);
     recordModePlay(gameMode, score); // local first (no auth needed) — always records
-    // Then push straight to the cloud so a signed-in game shows on every device
-    // right away. GoatModeSync pushes the full local total (set-based, self-heals
-    // a missed write); fall back to the incremental write if it isn't ready yet.
+    // Cloud is the authoritative counter: a signed-in game is added to the account
+    // total with ONE atomic increment (a true cross-device sum), and this device's
+    // watermark advances so the game is never re-counted on a later sync.
     try {
-      if (window.GoatAuth && window.GoatAuth.currentUser && window.GoatAuth.currentUser()) {
-        if (window.GoatModeSync) window.GoatModeSync();
-        else window.GoatAuth.bumpModeStats(gameMode, score);
+      const u = window.GoatAuth && window.GoatAuth.currentUser && window.GoatAuth.currentUser();
+      if (u) {
+        if (window.GoatAuth.bumpModeStats) window.GoatAuth.bumpModeStats(gameMode, score);
+        if (window.GoatModeMarkSynced) window.GoatModeMarkSynced(u.uid, gameMode, score);
       }
     } catch (e) {}
   }
@@ -5177,6 +5178,21 @@ function recordModePlay(mode, score) {
   m.recent = (m.recent || []).concat(score).slice(-30);
   all[mode] = m;
   try { localStorage.setItem(MODE_STATS_KEY, JSON.stringify(all)); } catch {}
+}
+// Per-account watermark: how many of THIS device's local games are already
+// counted in the cloud, so the cloud can be a true cross-device SUM without ever
+// double-counting a game on re-sync. Keyed by uid (an account may be used by
+// several people on a shared device). Always tracks both modes.
+const MODE_SYNC_KEY = "goatlab_modestats_synced_v1";
+function getSyncMarks() { try { return JSON.parse(localStorage.getItem(MODE_SYNC_KEY) || "{}"); } catch { return {}; } }
+function saveSyncMarks(all) { try { localStorage.setItem(MODE_SYNC_KEY, JSON.stringify(all)); } catch {} }
+function snapshotMark(local) {
+  const mk = {};
+  ["classic", "blind"].forEach((m) => {
+    const s = (local && local[m]) || {};
+    mk[m] = { plays: s.plays || 0, sum: s.sum || 0, elite: s.elite || 0, perfect: s.perfect || 0 };
+  });
+  return mk;
 }
 function updatePBDisplay() {
   const pb = getPB();
@@ -6492,12 +6508,16 @@ updateBody(null);
   // (cross-device, authoritative), but fall back to this device's local tally
   // when the cloud is behind — so a game you played always shows, in the stats
   // tiles AND the trophies.
+  const EMPTY_MODE = { plays: 0, best: 0, sum: 0, elite: 0, perfect: 0, recent: [] };
   function modeSource(mode) {
-    const cloudM = (Auth.currentUser() && _cloudModeStats && _cloudModeStats[mode]) || null;
-    const localM = getModeStats()[mode] || null;
-    const cp = (cloudM && cloudM.plays) || 0;
-    const lp = (localM && localM.plays) || 0;
-    return (cp >= lp ? (cloudM || localM) : localM) || { plays: 0, best: 0, sum: 0, elite: 0, perfect: 0, recent: [] };
+    // Signed in: the cloud doc is the authoritative cross-device total. Only fall
+    // back to local when the cloud hasn't loaded yet (so something shows on open).
+    if (Auth.currentUser()) {
+      const c = _cloudModeStats && _cloudModeStats[mode];
+      if (c) return c;
+      return getModeStats()[mode] || EMPTY_MODE;
+    }
+    return getModeStats()[mode] || EMPTY_MODE;
   }
   function renderModeStatsHTML(mode) {
     const label = mode === "classic" ? "Classic" : "Blind";
@@ -6542,41 +6562,73 @@ updateBody(null);
   //             was ever missed or denied). No double-count: it only writes a
   //             mode where local is ahead.
   async function reconcileModeStats() {
-    const signedIn = !!Auth.currentUser();
+    const u = Auth.currentUser();
     const local = getModeStats();
-    let cloud = null;
-    if (signedIn) { try { cloud = await Auth.getModeStatsCloud(); } catch (e) { cloud = null; } }
-    let localChanged = false;
-    ["classic", "blind"].forEach((mode) => {
-      const l = local[mode];
-      const c = cloud && cloud[mode];
-      if (!c) return;
-      // Field-wise MAX merge (mirrors mergeModeRecord in firebase-init.js): no
-      // stat can decrease. plays = max; best/elite/perfect = all-time high;
-      // sum + recent follow whichever side has more plays.
-      const ap = (l && l.plays) || 0, bp = c.plays || 0;
-      const fuller = bp >= ap ? c : (l || {});
-      const aLen = l && Array.isArray(l.recent) ? l.recent.length : 0;
-      const bLen = Array.isArray(c.recent) ? c.recent.length : 0;
-      const merged = {
-        plays:   Math.max(ap, bp),
-        best:    Math.max((l && l.best)    || 0, c.best    || 0),
-        elite:   Math.max((l && l.elite)   || 0, c.elite   || 0),
-        perfect: Math.max((l && l.perfect) || 0, c.perfect || 0),
-        sum:     fuller.sum || 0,
-        recent:  (bLen >= aLen ? c.recent : (l && l.recent)) || [],
-      };
-      if (JSON.stringify(merged) !== JSON.stringify(l || {})) { local[mode] = merged; localChanged = true; }
-    });
-    if (localChanged) { try { localStorage.setItem(MODE_STATS_KEY, JSON.stringify(local)); } catch (e) {} }
-    if (signedIn && ((local.classic && local.classic.plays) || (local.blind && local.blind.plays))) {
-      try { await Auth.seedModeStats(local); } catch (e) {}
+    if (!u) return local; // signed out → the local tally is all there is
+    const uid = u.uid;
+    const marks = getSyncMarks();
+    if (!marks[uid]) {
+      // First time this device syncs THIS account under the counter model. Treat
+      // whatever is already local as "already counted" (seed the cloud up to it
+      // once so the number never drops), then set the watermark. This avoids
+      // re-adding a device's historical local games to the cloud on upgrade.
+      const hasLocal = (local.classic && local.classic.plays) || (local.blind && local.blind.plays);
+      if (hasLocal) { try { await Auth.seedModeStats(local); } catch (e) {} }
+      marks[uid] = snapshotMark(local);
+      saveSyncMarks(marks);
+    } else {
+      // Push only the games this device has played since its last sync (e.g. while
+      // signed out) — a bounded delta — via atomic increments, then advance the
+      // watermark. A true add, so cross-device totals sum correctly.
+      const mk = marks[uid];
+      for (const mode of ["classic", "blind"]) {
+        const l = local[mode]; if (!l) continue;
+        const w = mk[mode] || { plays: 0, sum: 0, elite: 0, perfect: 0 };
+        const dPlays = (l.plays || 0) - (w.plays || 0);
+        if (dPlays > 0) {
+          const delta = {
+            plays: dPlays,
+            sum: (l.sum || 0) - (w.sum || 0),
+            elite: Math.max(0, (l.elite || 0) - (w.elite || 0)),
+            perfect: Math.max(0, (l.perfect || 0) - (w.perfect || 0)),
+            best: l.best || 0,
+            recent: (l.recent || []).slice(-Math.min(dPlays, 30)),
+          };
+          try { await Auth.addModeStats(mode, delta); } catch (e) {}
+        }
+      }
+      marks[uid] = snapshotMark(local);
+      saveSyncMarks(marks);
     }
-    if (signedIn) { try { _cloudModeStats = await Auth.getModeStatsCloud(); } catch (e) {} }
-    return local;
+    try { _cloudModeStats = await Auth.getModeStatsCloud(); } catch (e) {}
+    return _cloudModeStats || local;
   }
-  // Exposed so the game-finish path (module scope) can push a just-played game
-  // straight to the cloud, without waiting for the next stats open or sign-in.
+  // Exposed so the finish path (module scope) can advance the watermark and give
+  // instant on-screen feedback for a just-played signed-in game.
+  function markSynced(uid, mode, score) {
+    const marks = getSyncMarks();
+    if (marks[uid]) { // only advance an established watermark; else the next reconcile sets the baseline
+      const mk = marks[uid];
+      const w = mk[mode] || (mk[mode] = { plays: 0, sum: 0, elite: 0, perfect: 0 });
+      w.plays += 1; w.sum += score;
+      if (score >= 97) w.elite += 1;
+      if (score === 100) w.perfect += 1;
+      saveSyncMarks(marks);
+    }
+    // Optimistically reflect the game in the cloud cache so the tiles move now,
+    // before the live snapshot round-trips back.
+    if (!_cloudModeStats) _cloudModeStats = {};
+    const cm = _cloudModeStats[mode] || { plays: 0, best: 0, sum: 0, elite: 0, perfect: 0, recent: [] };
+    cm.plays = (cm.plays || 0) + 1;
+    cm.sum = (cm.sum || 0) + score;
+    if (score > (cm.best || 0)) cm.best = score;
+    if (score >= 97) cm.elite = (cm.elite || 0) + 1;
+    if (score === 100) cm.perfect = (cm.perfect || 0) + 1;
+    cm.recent = (cm.recent || []).concat(score).slice(-30);
+    _cloudModeStats[mode] = cm;
+    try { if (statsPage && !statsPage.hidden) renderStats(); } catch (e) {}
+  }
+  window.GoatModeMarkSynced = markSynced;
   window.GoatModeSync = reconcileModeStats;
 
   // Classic/Blind stats — LIVE: the account's cloud stats doc is the source of
