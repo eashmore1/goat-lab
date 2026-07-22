@@ -38,7 +38,12 @@
         <h2>1. Playing without an account</h2>
         <p>GOAT Lab is free to play with <strong>no account required</strong>. If you just play, the game
         runs in your browser and we do not require a login, email, or personal details. Your game
-        progress is stored locally on your device and is not transmitted to us.</p>
+        progress is stored locally on your device. The one exception is the leaderboard:
+        <strong>completing the Daily Challenge</strong> posts an anonymous <strong>&ldquo;Guest&rdquo;</strong>
+        entry &mdash; an auto-generated name like &ldquo;Guest&nbsp;41822&rdquo; plus your score &mdash; to the
+        public leaderboard (see Section&nbsp;3). This uses an anonymous sign-in that collects
+        <strong>no personal information</strong> (no email, name, or profile); the guest name is generated at
+        random and can&rsquo;t be tied to you.</p>
 
         <h2>2. Optional sign-in (Google)</h2>
         <p>If you choose to <strong>Sign in with Google</strong>, we use <strong>Google Firebase
@@ -47,11 +52,13 @@
         your daily results with your account. Signing in is entirely optional and not required to play.</p>
 
         <h2>3. The daily leaderboard is public</h2>
-        <p>If you sign in and complete the Daily Challenge, your <strong>display name and score are
-        submitted to a public global leaderboard</strong> (stored in Google Firebase / Firestore) that is
-        <strong>visible to everyone</strong> who uses GOAT Lab. Do not sign in if you do not want a name
-        associated with your scores shown publicly. We store one entry per day per account (your display
-        name, score, the build you submitted, and the date); if you own the GOAT Pass, a 🐐 badge appears
+        <p>When you complete the Daily Challenge, your <strong>score and a display name are submitted to a
+        public global leaderboard</strong> (stored in Google Firebase / Firestore) that is
+        <strong>visible to everyone</strong> who uses GOAT Lab. If you are <strong>signed in</strong>, that
+        name is your display name; if you are <strong>not signed in</strong>, it is an anonymous
+        <strong>&ldquo;Guest&nbsp;#####&rdquo;</strong> name generated at random (you can&rsquo;t change it, and
+        it isn&rsquo;t linked to any personal info). We store one entry per day per player (the name, score,
+        the build you submitted, and the date); if you own the GOAT Pass, a 🐐 badge appears
         next to your name. You can request removal of your leaderboard entries and account data at any time
         by emailing <a href="mailto:ethan@momentumapps.net">ethan@momentumapps.net</a>.</p>
 
