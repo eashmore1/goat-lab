@@ -2263,6 +2263,11 @@ h1 {
 }
 .lb-row-me .lb-score { background: var(--court-dark); }
 .lb-hint { margin: 12px 0 0; padding-top: 10px; border-top: 1px dashed rgba(21,20,19,0.25); font: 700 0.8rem/1.4 "Space Mono", ui-monospace, monospace; color: var(--green); }
+/* Guest → sign-in nudge at the top of the daily board */
+.lb-guest-cta { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; border: 2px solid var(--court); background: rgba(201, 103, 61, 0.09); box-shadow: 3px 3px 0 var(--ink); padding: 14px 16px; margin: 0 0 14px; }
+.lb-guest-txt { margin: 0; max-width: 44ch; font: 500 0.92rem/1.45 "Playfair Display", Georgia, serif; color: var(--ink); }
+.lb-guest-txt strong { font-weight: 800; }
+.lb-guest-cta .lb-guest-btn { flex: none; }
 
 /* ===== Full-screen leaderboard page ===== */
 .leaderboard-page {
