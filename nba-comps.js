@@ -7,14 +7,14 @@
 window.GoatComps = (function () {
   "use strict";
 
-  // The match is driven by SHAPE — your relative strengths & weaknesses — so it's
-  // specific to what you actually built and varies widely, instead of every strong
-  // build collapsing onto the same "most complete" stars. Caliber keeps it in tier;
-  // height barely matters (builds always max it).
-  const SHAPE_WEIGHT = 1.0;   // profile of strengths/weaknesses (the main driver)
-  const LEVEL_WEIGHT = 3.2;   // overall caliber — keeps an 88 build off prime LeBron
-                              // and tiers balanced (shapeless) builds by level
-  const HEIGHT_WEIGHT = 0.04; // height contributes only a whisper
+  // The match is driven by the DIRECTION of your strengths/weaknesses (cosine of
+  // the shape), not raw closeness — so a defense-leaning build finds a defender and
+  // a shooting-leaning build finds a shooter, even when every rating is high. This
+  // stops strong balanced builds from all collapsing onto the same few "most
+  // complete" players. Caliber keeps it in the right tier; height is a whisper.
+  const SHAPE_WEIGHT = 1.0;    // alignment of the strength/weakness pattern (main driver)
+  const LEVEL_WEIGHT = 0.012;  // caliber gap — keeps a weak build off prime LeBron
+  const HEIGHT_WEIGHT = 0.0004;// height contributes only a whisper
   const ATTRS = ["height", "shooting", "finishing", "handles", "passing", "defense", "rebounding", "athleticism", "iq"];
   const LABELS = { height: "Height", shooting: "Shooting", finishing: "Finishing", handles: "Handles", passing: "Passing", defense: "Defense", rebounding: "Rebounding", athleticism: "Athleticism", iq: "IQ" };
 
@@ -147,18 +147,29 @@ window.GoatComps = (function () {
   function findMatch(build) {
     if (!build) return null;
     const b = profile(build);
-    let best = null, bestD = Infinity;
+    // Magnitude of the build's shape vector (how pronounced its strengths are).
+    let bn = 0; for (const k of SKILL) bn += b.dev[k] * b.dev[k];
+    bn = Math.sqrt(bn) || 1e-6;
+    let best = null, bestD = Infinity, bestCos = 0, bestLvl = 0;
     for (const p of COMP_PLAYERS) {
-      // Shape: how closely your relative strengths/weaknesses line up with theirs.
-      let shape = 0;
-      for (const k of SKILL) { const d = b.dev[k] - p._p.dev[k]; shape += d * d; }
-      const lvl = b.mean - p._p.mean;
+      // Cosine of the two shape vectors: are your strengths/weaknesses pointed the
+      // same way as this player's? 1 = identical pattern, −1 = opposite.
+      let dot = 0, pn = 0;
+      for (const k of SKILL) { dot += b.dev[k] * p._p.dev[k]; pn += p._p.dev[k] * p._p.dev[k]; }
+      pn = Math.sqrt(pn) || 1e-6;
+      const cos = dot / (bn * pn);
+      const shapeDist = 1 - cos;             // 0 (same shape) .. 2 (opposite)
+      const lvl = b.mean - p._p.mean;        // caliber gap (keeps tier honest)
       const hgt = (build.height || 0) - (p.a.height || 0);
-      const d = SHAPE_WEIGHT * shape + LEVEL_WEIGHT * lvl * lvl + HEIGHT_WEIGHT * hgt * hgt;
-      if (d < bestD) { bestD = d; best = p; }
+      const d = SHAPE_WEIGHT * shapeDist + LEVEL_WEIGHT * lvl * lvl + HEIGHT_WEIGHT * hgt * hgt;
+      if (d < bestD) { bestD = d; best = p; bestCos = cos; bestLvl = lvl; }
     }
     if (!best) return null;
-    const similarity = Math.max(55, Math.min(99, Math.round(100 - Math.sqrt(bestD / (SKILL.length + LEVEL_WEIGHT)))));
+    // Similarity: mostly how well the shape aligns, plus how close the caliber is.
+    const shapeAlign = (bestCos + 1) / 2;                       // 0..1
+    const levelClose = Math.max(0, 1 - Math.abs(bestLvl) / 22); // 0..1
+    const similarity = Math.max(55, Math.min(99,
+      Math.round(55 + 44 * (0.68 * shapeAlign + 0.32 * levelClose))));
     // "Why this player": the build's top RELATIVE strengths (its signature) that
     // the matched player also leans on — so the reason is specific to the shape.
     const byDev = SKILL.slice().sort((x, y) => b.dev[y] - b.dev[x]);
