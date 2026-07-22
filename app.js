@@ -7063,12 +7063,47 @@ updateBody(null);
   const btn = document.querySelector("#pushToggleBtn");
   if (!Auth || !row || !btn || !Auth.pushSupported()) return; // hidden until configured/supported
   row.hidden = false;
+  // Owner-only "Send test" button. Visiting playgoatlab.com/?admin=1 once flips
+  // on a private flag stored on that device; the button then shows whenever
+  // reminders are enabled, so you can verify the whole pipeline in one tap.
+  const testBtn = document.querySelector("#pushTestBtn");
+  try {
+    const params = new URLSearchParams(location.search);
+    if (params.get("admin") === "1") localStorage.setItem("goatlab_admin", "1");
+  } catch (e) {}
+  const isAdmin = () => { try { return localStorage.getItem("goatlab_admin") === "1"; } catch (e) { return false; } };
+
   const reflect = () => {
     const on = Auth.pushEnabled();
     btn.textContent = on ? "Turn off" : "Turn on";
     btn.setAttribute("aria-pressed", String(on));
+    if (testBtn) testBtn.hidden = !(isAdmin() && on); // owner only, and only when reminders are on
   };
   reflect();
+
+  if (testBtn) testBtn.addEventListener("click", async () => {
+    if (testBtn.disabled) return;
+    let token = "";
+    try { token = localStorage.getItem("goatlab_push_token") || ""; } catch (e) {}
+    if (!token) { alert("Turn reminders on first (no device token yet)."); return; }
+    testBtn.disabled = true;
+    const label = testBtn.textContent;
+    testBtn.textContent = "…";
+    try {
+      const r = await fetch("/api/send-test-push", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
+      const j = await r.json().catch(() => ({}));
+      if (j && j.ok) alert("Test push sent — you should see it in a few seconds. (On iPhone it only arrives if you added GOAT Lab to your Home Screen.)");
+      else alert("Test failed: " + ((j && j.error) || r.status) + ". Check that reminders are on and try again.");
+    } catch (e) {
+      alert("Test failed to send — check your connection and try again.");
+    }
+    testBtn.textContent = label;
+    testBtn.disabled = false;
+  });
   btn.addEventListener("click", async () => {
     if (btn.disabled) return;
     btn.disabled = true;
