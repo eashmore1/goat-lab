@@ -2459,7 +2459,6 @@ h1 {
   padding: 10px 12px;
   border-bottom: 1px solid rgba(127, 116, 92, 0.32);
 }
-.push-row-btns { display: flex; align-items: center; gap: 6px; }
 .settings-row-label {
   font: 800 0.72rem/1 "Space Mono", ui-monospace, monospace;
   letter-spacing: 0.06em;
