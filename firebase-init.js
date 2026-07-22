@@ -334,27 +334,42 @@ window.GoatAuth = (() => {
         return doc.exists ? (doc.data() || {}) : {};
       } catch (e) { console.warn("[GoatAuth] getModeStatsCloud failed:", e); return null; }
     },
-    // Add one Classic/Blind result to the account's running totals. A transaction
-    // keeps it correct even if two devices finish games at the same time.
-    async bumpModeStats(mode, score) {
-      if (!enabled || !user) return;
-      if ((mode !== "classic" && mode !== "blind") || typeof score !== "number" || score <= 0) return;
+    // Add a batch of Classic/Blind games to the account's running totals via an
+    // atomic transaction — a TRUE cross-device sum (every device's games add up),
+    // not a max. delta = { plays, sum, elite, perfect, best, recent[] }. Callers
+    // guarantee each game is added exactly once (single-game bump on finish, or a
+    // watermarked batch for games played signed-out) so nothing double-counts.
+    async addModeStats(mode, delta) {
+      if (!enabled || !user || !delta) return;
+      if (mode !== "classic" && mode !== "blind") return;
+      const p = Math.max(0, Math.round(delta.plays || 0));
+      if (p <= 0) return;
       const ref = userDoc().collection("stats").doc("modes");
       try {
         await db.runTransaction(async (tx) => {
           const doc = await tx.get(ref);
           const data = doc.exists ? (doc.data() || {}) : {};
           const m = data[mode] || { plays: 0, best: 0, sum: 0, elite: 0, perfect: 0, recent: [] };
-          m.plays = (m.plays || 0) + 1;
-          m.sum = (m.sum || 0) + score;
-          if (score > (m.best || 0)) m.best = score;
-          if (score >= 97) m.elite = (m.elite || 0) + 1;
-          if (score === 100) m.perfect = (m.perfect || 0) + 1;
-          m.recent = (Array.isArray(m.recent) ? m.recent : []).concat(score).slice(-30);
+          m.plays   = (m.plays || 0) + p;
+          m.sum     = (m.sum || 0) + (delta.sum || 0);
+          m.elite   = (m.elite || 0) + Math.max(0, Math.round(delta.elite || 0));
+          m.perfect = (m.perfect || 0) + Math.max(0, Math.round(delta.perfect || 0));
+          if ((delta.best || 0) > (m.best || 0)) m.best = delta.best;
+          const add = Array.isArray(delta.recent) ? delta.recent : [];
+          m.recent = (Array.isArray(m.recent) ? m.recent : []).concat(add).slice(-30);
           data[mode] = m;
           tx.set(ref, data, { merge: true });
+          modeStatsCache = data; // keep the live cache in step with our own write
         });
-      } catch (e) { console.warn("[GoatAuth] bumpModeStats failed:", e); }
+      } catch (e) { console.warn("[GoatAuth] addModeStats failed:", e); }
+    },
+    // One finished game → one atomic increment (the common case on game finish).
+    async bumpModeStats(mode, score) {
+      if (typeof score !== "number" || score <= 0) return;
+      return this.addModeStats(mode, {
+        plays: 1, sum: score, elite: score >= 97 ? 1 : 0,
+        perfect: score === 100 ? 1 : 0, best: score, recent: [score],
+      });
     },
     // Reconcile this device's LOCAL Classic/Blind totals into the cloud. Runs on
     // every sign-in + stats-open — catches games played signed-out (which never
