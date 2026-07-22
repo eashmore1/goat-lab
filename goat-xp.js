@@ -48,7 +48,9 @@ window.GoatXP = (function () {
 
   // ==== Small deps (all guarded — app.js globals may not exist in previews) ==
   const A = () => window.GoatAuth;
-  const signedIn = () => { const a = A(); return !!(a && a.currentUser && a.currentUser()); };
+  // Anonymous "guest" sessions are treated as signed-out here — a guest's XP/rank
+  // stays local only and never syncs to the cloud.
+  const signedIn = () => { const a = A(); return !!(a && a.currentUser && a.currentUser() && !(a.isGuest && a.isGuest())); };
   const hasPass = () => { const a = A(); return !!(a && a.goatPassCached && a.goatPassCached()); };
   // Roman numerals capped for display. Diamonds/marks reuse this cap idea.
   const PRESTIGE_MARK_CAP = 5; // show up to this many ◆; beyond, show "◆×N"

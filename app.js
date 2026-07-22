@@ -4226,7 +4226,8 @@ function finish() {
     // watermark advances so the game is never re-counted on a later sync.
     try {
       const u = window.GoatAuth && window.GoatAuth.currentUser && window.GoatAuth.currentUser();
-      if (u) {
+      const guest = window.GoatAuth && window.GoatAuth.isGuest && window.GoatAuth.isGuest();
+      if (u && !guest) { // guests don't save Classic/Blind stats
         if (window.GoatAuth.bumpModeStats) window.GoatAuth.bumpModeStats(gameMode, score);
         if (window.GoatModeMarkSynced) window.GoatModeMarkSynced(u.uid, gameMode, score);
       }
@@ -5462,9 +5463,15 @@ updateBody(null);
 
   accountBar.hidden = false;
 
-  // Submit today's daily score to the global leaderboard (no-op if signed out).
-  function submitToday(dateStr, score, tier, franchise, franchiseTeam) {
-    if (!Auth.currentUser()) return;
+  // Submit today's daily score to the global leaderboard. A signed-out finisher
+  // is signed in ANONYMOUSLY first so they land on the board as a "Guest #####"
+  // (no personal info, no saved stats). If anonymous auth is unavailable it
+  // simply doesn't submit — exactly the old signed-out behavior, no regression.
+  async function submitToday(dateStr, score, tier, franchise, franchiseTeam) {
+    if (!Auth.currentUser()) {
+      if (Auth.signInAnonymously) { try { await Auth.signInAnonymously(); } catch (e) { return; } }
+      if (!Auth.currentUser()) return;
+    }
     const picks = (getDailyHistory()[dateStr] || {}).picks || null;
     try { delete _lbCache[dateStr]; } catch (e) {} // fresh play → refresh the board next open
     Auth.submitDailyScore(dateStr, { score, tier, franchise, franchiseTeam, picks }).catch(console.error);
@@ -5474,7 +5481,7 @@ updateBody(null);
   }
   // Push one day's local daily result up to the cloud.
   function pushDailyHistory(dateStr) {
-    if (!Auth.currentUser()) return;
+    if (!Auth.currentUser() || Auth.isGuest()) return; // guest daily lives locally; carries on upgrade
     const entry = getDailyHistory()[dateStr];
     if (entry) Auth.putDailyHistory(dateStr, entry).catch(console.error);
   }
@@ -5933,7 +5940,7 @@ updateBody(null);
   }
 
   function refreshSaveBtn() {
-    saveBuildButton.hidden = !(Auth.currentUser() && !result.hidden && buildComplete());
+    saveBuildButton.hidden = !(Auth.currentUser() && !Auth.isGuest() && !result.hidden && buildComplete());
   }
   // Reveal "Save Build" whenever a finished result is shown (any mode).
   if (typeof finish === "function") {
@@ -5945,7 +5952,7 @@ updateBody(null);
   function closeSave() { hideModal(saveModal); saveStatus.textContent = ""; }
   setupModal(saveModal, closeSave);
   saveBuildButton.addEventListener("click", () => {
-    if (!Auth.currentUser()) return;
+    if (!Auth.currentUser() || Auth.isGuest()) return;
     saveNameInput.value = `${calculateScore()} ${getTier(calculateScore())}`.slice(0, 40);
     saveStatus.textContent = "";
     showModal(saveModal, saveBuildButton);
@@ -6530,7 +6537,8 @@ updateBody(null);
   function modeSource(mode) {
     // Signed in: the cloud doc is the authoritative cross-device total. Only fall
     // back to local when the cloud hasn't loaded yet (so something shows on open).
-    if (Auth.currentUser()) {
+    // Guests are treated as signed-out — local only.
+    if (Auth.currentUser() && !Auth.isGuest()) {
       const c = _cloudModeStats && _cloudModeStats[mode];
       if (c) return c;
       return getModeStats()[mode] || EMPTY_MODE;
@@ -6582,7 +6590,7 @@ updateBody(null);
   async function reconcileModeStats() {
     const u = Auth.currentUser();
     const local = getModeStats();
-    if (!u) return local; // signed out → the local tally is all there is
+    if (!u || Auth.isGuest()) return local; // signed out / guest → the local tally is all there is
     const uid = u.uid;
     const marks = getSyncMarks();
     if (!marks[uid]) {
@@ -7019,7 +7027,7 @@ updateBody(null);
 
   // Auth state drives the UI. Load handle, then back-fill today's score.
   Auth.onChange(async (user) => {
-    if (user) {
+    if (user && !Auth.isGuest()) {
       // Per-account isolation: the daily result/streak and mode stats are cached
       // in device localStorage. If a DIFFERENT account was last active on this
       // device, clear those caches so this account starts from its OWN cloud data
@@ -7088,6 +7096,26 @@ updateBody(null);
       try { await reconcileModeStats(); } catch (e) {}
       syncDailyHistory(); // merge cloud <-> local daily history + streak
       refreshSaveBtn();
+    } else if (user && Auth.isGuest()) {
+      // Guest (anonymous): they're on the leaderboard, but nothing else. We do NOT
+      // touch goatlab_active_uid or clear local caches here, so their local Daily
+      // carries straight into a real account if they later sign in. No stats sync,
+      // no pass, no rename — the Sign in button (in the signed-out block) upgrades
+      // them via account linking.
+      signedOut.hidden = false;
+      signedIn.hidden = true;
+      const acctItems = document.querySelector("#settingsAccountItems");
+      if (acctItems) acctItems.hidden = true;
+      const acctActions = document.querySelector("#accountSignedInActions");
+      if (acctActions) acctActions.hidden = true;
+      currentHandle = null;
+      hasPass = false;
+      updatePassUI();
+      saveBuildButton.hidden = true;
+      try {
+        const msg = document.querySelector("#accountSignedOut .account-msg");
+        if (msg) msg.textContent = "You're on the leaderboard as " + Auth.displayName() + " — sign in to save your progress & pick a name.";
+      } catch (e) {}
     } else {
       signedOut.hidden = false;
       signedIn.hidden = true;
@@ -7099,6 +7127,10 @@ updateBody(null);
       hasPass = false;
       updatePassUI();
       saveBuildButton.hidden = true;
+      try {
+        const msg = document.querySelector("#accountSignedOut .account-msg");
+        if (msg) msg.textContent = "Optional — sign in to join the leaderboard & track your dailies.";
+      } catch (e) {}
     }
   });
 })();

@@ -132,10 +132,49 @@ window.GoatAuth = (() => {
     return profilePromise;
   };
 
+  // A guest (anonymous) player gets a stable, non-editable display name derived
+  // from their random uid — "Guest 41822" — so the leaderboard has something to
+  // show without collecting any personal info.
+  function guestName(uid) {
+    let h = 5381; const s = String(uid || "");
+    for (let i = 0; i < s.length; i++) h = (Math.imul(h, 33) ^ s.charCodeAt(i)) >>> 0;
+    return "Guest " + (10000 + (h % 90000));
+  }
+  const isAnon = () => !!(user && user.isAnonymous);
+
+  // Clean up THIS anonymous guest's board footprint before we abandon the guest
+  // account (used when a guest turns out to already have a Google account). Runs
+  // while still authed as the guest, so the rules permit the deletes. Removes the
+  // guest's entry for today and decrements that day's tally, so the real account's
+  // entry (submitted right after) doesn't leave a duplicate or an inflated count.
+  async function purgeGuestToday() {
+    if (!enabled || !user || !user.isAnonymous) return;
+    const uid = user.uid;
+    let date = null;
+    try { date = (typeof window !== "undefined" && window.getTodayStr) ? window.getTodayStr() : null; } catch (e) {}
+    if (!date) return;
+    try {
+      const ref = entriesRef(date).doc(uid);
+      const doc = await ref.get();
+      if (doc.exists) {
+        const raw = doc.data() || {};
+        const sc = Math.max(0, Math.min(100, Math.round(Number(raw.score) || 0)));
+        const inc = firebase.firestore.FieldValue.increment.bind(firebase.firestore.FieldValue);
+        await db.collection("dailyLeaderboard").doc(date)
+          .set({ playerCount: inc(-1), scoreHist: { [sc]: inc(-1) } }, { merge: true }).catch(() => {});
+        await ref.delete().catch(() => {});
+      }
+    } catch (e) {}
+  }
+
   return {
     get enabled() { return enabled; },
     currentUser: () => user,
-    displayName: () => (user && (user.displayName || user.email)) || "Player",
+    // True when the current session is an anonymous "guest" (played the Daily
+    // without signing in) — the rest of the app uses this to keep guests off
+    // everything except the daily leaderboard.
+    isGuest: () => isAnon(),
+    displayName: () => user ? (user.isAnonymous ? guestName(user.uid) : (user.displayName || user.email)) : "Player",
 
     onChange(cb) {
       listeners.add(cb);
@@ -143,9 +182,42 @@ window.GoatAuth = (() => {
       return () => listeners.delete(cb);
     },
 
+    // Silent anonymous sign-in — used only when a signed-out player finishes the
+    // Daily, so their score can land on the public board as a guest. If anonymous
+    // auth isn't enabled (or it errors), the caller falls back to doing nothing,
+    // exactly like before this feature existed.
+    async signInAnonymously() {
+      if (!enabled) return null;
+      if (user) return user;
+      const res = await auth.signInAnonymously();
+      return res.user;
+    },
     async signIn() {
       if (!enabled) return null;
       const provider = new firebase.auth.GoogleAuthProvider();
+      const cur = auth.currentUser;
+      // Upgrading a guest: link Google onto the SAME anonymous account so their
+      // Daily entry + history carry straight over and just get their real name.
+      if (cur && cur.isAnonymous) {
+        try {
+          const res = await cur.linkWithPopup(provider);
+          return res.user; // same uid — guest board entry becomes their account's
+        } catch (e) {
+          // They already have a Google account: the guest can't be merged into it,
+          // so scrub the guest's board entry, then sign into the real account. The
+          // real account's own Daily (from local history) submits right after, so
+          // there's no duplicate and existing users are untouched.
+          if (e && e.code === "auth/credential-already-in-use") {
+            let cred = null;
+            try { cred = firebase.auth.GoogleAuthProvider.credentialFromError
+              ? firebase.auth.GoogleAuthProvider.credentialFromError(e) : (e.credential || null); } catch (_) {}
+            try { await purgeGuestToday(); } catch (_) {}
+            if (cred) { const res = await auth.signInWithCredential(cred); return res.user; }
+            const res = await auth.signInWithPopup(provider); return res.user;
+          }
+          throw e; // popup-closed etc. bubble up exactly like today
+        }
+      }
       const res = await auth.signInWithPopup(provider);
       return res.user;
     },
@@ -198,23 +270,34 @@ window.GoatAuth = (() => {
     // --- Custom handle (leaderboard display name) --------------------------
     async getHandle() {
       if (!enabled || !user) return null;
+      if (user.isAnonymous) return guestName(user.uid); // guests can't set a handle
       if (handleCache != null) return handleCache;
       try { await loadProfile(); } catch (e) { /* fall through to display name */ }
       if (handleCache == null) handleCache = this.displayName();
       return handleCache;
     },
     async setHandle(name) {
-      if (!enabled || !user) return null;
+      if (!enabled || !user || user.isAnonymous) return null; // guests keep their auto name
       const h = String(name).trim().slice(0, 40) || this.displayName();
       await userDoc().set({ handle: h }, { merge: true });
       handleCache = h;
+      // Reflect the new name on today's leaderboard entry if it's already up
+      // (e.g. a guest who just upgraded and is renaming).
+      try {
+        const today = (typeof window !== "undefined" && window.getTodayStr) ? window.getTodayStr() : null;
+        if (today) {
+          const ref = entriesRef(today).doc(user.uid);
+          const doc = await ref.get();
+          if (doc.exists) await ref.update({ name: h });
+        }
+      } catch (e) {}
       return h;
     },
 
     // --- GOAT Pass (optional one-time purchase) ----------------------------
     // Reads the goatPass flag set by the Stripe webhook on the user's doc.
     async hasGoatPass() {
-      if (!enabled || !user) return false;
+      if (!enabled || !user || user.isAnonymous) return false; // guests never hold the pass
       if (passCache !== null) return passCache;
       // Shares the single users/{uid} read with getHandle. On a transient read
       // failure we do NOT cache false — the profile promise is reset so the next
@@ -241,7 +324,11 @@ window.GoatAuth = (() => {
     // --- Global daily leaderboard ------------------------------------------
     async submitDailyScore(dateStr, data) {
       if (!enabled || !user) return false;
-      const name = String(data.name || handleCache || this.displayName()).slice(0, 40);
+      // Guests always post under their auto-generated "Guest #####" name; they
+      // can't spoof a custom one.
+      const name = user.isAnonymous
+        ? guestName(user.uid)
+        : String(data.name || handleCache || this.displayName()).slice(0, 40);
       const entryRef = entriesRef(dateStr).doc(user.uid);
       const existing = await entryRef.get();
       const clamp = (s) => Math.max(0, Math.min(100, Math.round(Number(s) || 0)));
@@ -340,7 +427,7 @@ window.GoatAuth = (() => {
     // guarantee each game is added exactly once (single-game bump on finish, or a
     // watermarked batch for games played signed-out) so nothing double-counts.
     async addModeStats(mode, delta) {
-      if (!enabled || !user || !delta) return;
+      if (!enabled || !user || user.isAnonymous || !delta) return; // guests: stats don't save
       if (mode !== "classic" && mode !== "blind") return;
       const p = Math.max(0, Math.round(delta.plays || 0));
       if (p <= 0) return;
@@ -461,7 +548,7 @@ window.GoatAuth = (() => {
     // Atomically add XP (used on every award). Keeps the cache in sync so the UI
     // updates instantly without a re-read.
     async addXp(n) {
-      if (!enabled || !user || !n) return;
+      if (!enabled || !user || user.isAnonymous || !n) return; // guests: XP doesn't save
       const delta = Math.round(Number(n) || 0);
       if (!delta) return;
       try {
@@ -497,7 +584,7 @@ window.GoatAuth = (() => {
     // a higher local value lifts the cloud (recovering progress), and no device
     // can ever lower another device's XP. Returns the resulting total.
     async raiseXp(n) {
-      if (!enabled || !user) return xpCache;
+      if (!enabled || !user || user.isAnonymous) return xpCache; // guests: XP doesn't save
       const v = Math.max(0, Math.round(Number(n) || 0));
       try {
         await db.runTransaction(async (tx) => {
@@ -518,7 +605,7 @@ window.GoatAuth = (() => {
     // Upsert this player's entry on the all-time XP leaderboard
     // (xpLeaderboard/{uid}).
     async submitXpEntry(xp, rankName, name, prestige) {
-      if (!enabled || !user) return;
+      if (!enabled || !user || user.isAnonymous) return; // guests stay off the all-time XP board
       try {
         await db.collection("xpLeaderboard").doc(user.uid).set({
           xp: Math.max(0, Math.round(Number(xp) || 0)),
