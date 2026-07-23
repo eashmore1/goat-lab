@@ -432,22 +432,39 @@ window.GoatAuth = (() => {
       const p = Math.max(0, Math.round(delta.plays || 0));
       if (p <= 0) return;
       const ref = userDoc().collection("stats").doc("modes");
+      const inc = firebase.firestore.FieldValue.increment.bind(firebase.firestore.FieldValue);
+      // READ-FREE write (mirrors XP): the counters are atomic server-side
+      // increments, so a signed-in game is counted without a document READ. This
+      // survives read-quota throttling (a transaction's batchGet is the first thing
+      // to fail when the daily Firestore read quota is exhausted) and stops burning
+      // a read on every finished game. best/recent can't be incremented, so we fold
+      // them from the LIVE in-memory cache — kept current by the onSnapshot LISTEN
+      // stream, NOT a batchGet — so no server read is needed on this path either.
+      const e0 = Math.max(0, Math.round(delta.elite || 0));
+      const pf = Math.max(0, Math.round(delta.perfect || 0));
+      const su = delta.sum || 0;
+      const cur = (modeStatsCache && modeStatsCache[mode]) || {};
+      const newBest = Math.max(cur.best || 0, delta.best || 0);
+      const add = Array.isArray(delta.recent) ? delta.recent : [];
+      const newRecent = (Array.isArray(cur.recent) ? cur.recent : []).concat(add).slice(-30);
       try {
-        await db.runTransaction(async (tx) => {
-          const doc = await tx.get(ref);
-          const data = doc.exists ? (doc.data() || {}) : {};
-          const m = data[mode] || { plays: 0, best: 0, sum: 0, elite: 0, perfect: 0, recent: [] };
-          m.plays   = (m.plays || 0) + p;
-          m.sum     = (m.sum || 0) + (delta.sum || 0);
-          m.elite   = (m.elite || 0) + Math.max(0, Math.round(delta.elite || 0));
-          m.perfect = (m.perfect || 0) + Math.max(0, Math.round(delta.perfect || 0));
-          if ((delta.best || 0) > (m.best || 0)) m.best = delta.best;
-          const add = Array.isArray(delta.recent) ? delta.recent : [];
-          m.recent = (Array.isArray(m.recent) ? m.recent : []).concat(add).slice(-30);
-          data[mode] = m;
-          tx.set(ref, data, { merge: true });
-          modeStatsCache = data; // keep the live cache in step with our own write
-        });
+        await ref.set({ [mode]: {
+          plays: inc(p), sum: inc(su), elite: inc(e0), perfect: inc(pf),
+          best: newBest, recent: newRecent,
+        } }, { merge: true });
+        // Optimistically advance the in-memory cache so a rapid next game folds in
+        // the right best/recent before the write's snapshot round-trips back. The
+        // onSnapshot listener overwrites this with server truth moments later, so
+        // the counters can never drift or double-count.
+        if (!modeStatsCache) modeStatsCache = {};
+        const m = modeStatsCache[mode] || { plays: 0, best: 0, sum: 0, elite: 0, perfect: 0, recent: [] };
+        m.plays = (m.plays || 0) + p;
+        m.sum = (m.sum || 0) + su;
+        m.elite = (m.elite || 0) + e0;
+        m.perfect = (m.perfect || 0) + pf;
+        m.best = newBest;
+        m.recent = newRecent;
+        modeStatsCache[mode] = m;
       } catch (e) { console.warn("[GoatAuth] addModeStats failed:", e); }
     },
     // One finished game → one atomic increment (the common case on game finish).
