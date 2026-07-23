@@ -41,7 +41,7 @@ window.GoatComps = (function () {
     { name: "Michael Jordan", era: "'90s Bulls", a: { height: 78, shooting: 88, finishing: 96, handles: 92, passing: 85, defense: 94, rebounding: 76, athleticism: 99, iq: 97 } },
     { name: "Kobe Bryant", era: "'00s Lakers", a: { height: 78, shooting: 90, finishing: 94, handles: 94, passing: 84, defense: 90, rebounding: 72, athleticism: 94, iq: 94 } },
     { name: "Dwyane Wade", era: "'00s Heat", a: { height: 76, shooting: 78, finishing: 92, handles: 90, passing: 84, defense: 86, rebounding: 66, athleticism: 95, iq: 90 } },
-    { name: "Tracy McGrady", era: "'00s", a: { height: 80, shooting: 86, finishing: 90, handles: 90, passing: 84, defense: 78, rebounding: 72, athleticism: 94, iq: 86 } },
+    { name: "Tracy McGrady", era: "'00s", a: { height: 80, shooting: 86, finishing: 90, handles: 90, passing: 84, defense: 78, rebounding: 72, athleticism: 94, iq: 90 } },
     { name: "Vince Carter", era: "'00s", a: { height: 78, shooting: 84, finishing: 92, handles: 84, passing: 76, defense: 78, rebounding: 68, athleticism: 98, iq: 82 } },
     { name: "Ray Allen", era: "'00s", a: { height: 77, shooting: 98, finishing: 80, handles: 82, passing: 74, defense: 76, rebounding: 60, athleticism: 84, iq: 88 } },
     { name: "Reggie Miller", era: "'90s Pacers", a: { height: 79, shooting: 97, finishing: 76, handles: 78, passing: 72, defense: 74, rebounding: 58, athleticism: 78, iq: 88 } },

@@ -1601,7 +1601,7 @@ const teamEras = [
     note: "Dwight Howard's defense anchored the 2009 Finals run, with Hedo, Rashard Lewis, and Jameer spacing the floor; T-Mac scored early in the decade.",
     players: [
       player("Dwight Howard", 6, 11, 12, { height: 96, shooting: 54, finishing: 88, handles: 60, passing: 64, defense: 96, rebounding: 96, athleticism: 96, iq: 74 }),
-      player("Tracy McGrady", 6, 8, 1, { height: 86, shooting: 88, finishing: 90, handles: 90, passing: 82, defense: 78, rebounding: 72, athleticism: 92, iq: 84 }),
+      player("Tracy McGrady", 6, 8, 1, { height: 86, shooting: 88, finishing: 90, handles: 90, passing: 82, defense: 78, rebounding: 72, athleticism: 92, iq: 90 }),
       player("Rashard Lewis", 6, 10, 9, { height: 94, shooting: 88, finishing: 80, handles: 74, passing: 70, defense: 72, rebounding: 72, athleticism: 78, iq: 82 }),
       player("Hedo Turkoglu", 6, 10, 15, { height: 94, shooting: 82, finishing: 82, handles: 82, passing: 82, defense: 70, rebounding: 66, athleticism: 72, iq: 84 }),
       player("Jameer Nelson", 6, 0, 14, { height: 66, shooting: 82, finishing: 80, handles: 88, passing: 84, defense: 74, rebounding: 54, athleticism: 82, iq: 82 }),
@@ -1622,7 +1622,7 @@ const teamEras = [
     team: "Rockets",
     note: "Yao and T-Mac headlined a star-crossed contender; Battier and Scola added two-way toughness.",
     players: [
-      player("Tracy McGrady", 6, 8, 1, { height: 86, shooting: 88, finishing: 90, handles: 90, passing: 82, defense: 76, rebounding: 70, athleticism: 90, iq: 84 }),
+      player("Tracy McGrady", 6, 8, 1, { height: 86, shooting: 88, finishing: 90, handles: 90, passing: 82, defense: 76, rebounding: 70, athleticism: 90, iq: 90 }),
       player("Yao Ming", 7, 6, 11, { height: 100, shooting: 78, finishing: 88, handles: 60, passing: 72, defense: 84, rebounding: 88, athleticism: 70, iq: 82 }),
       player("Steve Francis", 6, 3, 3, { height: 74, shooting: 80, finishing: 86, handles: 90, passing: 84, defense: 74, rebounding: 64, athleticism: 92, iq: 82 }),
       player("Shane Battier", 6, 8, 31, { height: 86, shooting: 80, finishing: 76, handles: 70, passing: 74, defense: 90, rebounding: 66, athleticism: 78, iq: 88 }),
@@ -2701,7 +2701,7 @@ const teamEras = [
     note: "The expansion Raptors found their identity fast — Damon Stoudamire's spark, then the high-flying arrival of Vince Carter and a teenage Tracy McGrady.",
     players: [
       player("Vince Carter", 6, 6, 15, { height: 82, shooting: 82, finishing: 85, handles: 84, passing: 74, defense: 74, rebounding: 64, athleticism: 96, iq: 84 }),
-      player("Tracy McGrady", 6, 8, 1, { height: 86, shooting: 74, finishing: 84, handles: 82, passing: 78, defense: 74, rebounding: 68, athleticism: 92, iq: 78 }),
+      player("Tracy McGrady", 6, 8, 1, { height: 86, shooting: 74, finishing: 84, handles: 82, passing: 78, defense: 74, rebounding: 68, athleticism: 92, iq: 82 }),
       player("Damon Stoudamire", 5, 10, 20, { height: 62, shooting: 80, finishing: 80, handles: 90, passing: 88, defense: 66, rebounding: 54, athleticism: 84, iq: 80 }),
       player("Doug Christie", 6, 6, 13, { height: 82, shooting: 78, finishing: 80, handles: 80, passing: 78, defense: 88, rebounding: 64, athleticism: 84, iq: 78 }),
       player("Marcus Camby", 6, 11, 21, { height: 96, shooting: 56, finishing: 80, handles: 60, passing: 68, defense: 90, rebounding: 82, athleticism: 88, iq: 72 }),
