@@ -1910,7 +1910,7 @@ const teamEras = [
     players: [
       player("Luka Doncic", 6, 7, 77, { height: 84, shooting: 94, finishing: 83, handles: 96, passing: 98, defense: 66, rebounding: 87, athleticism: 74, iq: 96 }),
       player("Kyrie Irving", 6, 2, 11, { height: 72, shooting: 94, finishing: 98, handles: 98, passing: 80, defense: 76, rebounding: 56, athleticism: 92, iq: 92 }),
-      player("PJ Washington", 6, 8, 25, { height: 88, shooting: 84, finishing: 80, handles: 70, passing: 70, defense: 82, rebounding: 80, athleticism: 80, iq: 78 }),
+      player("PJ Washington", 6, 8, 25, { height: 88, shooting: 84, finishing: 80, handles: 70, passing: 70, defense: 85, rebounding: 80, athleticism: 80, iq: 78 }),
       player("Daniel Gafford", 6, 11, 12, { height: 96, shooting: 64, finishing: 82, handles: 52, passing: 58, defense: 90, rebounding: 88, athleticism: 90, iq: 70 }),
       player("Derrick Jones Jr.", 6, 7, 55, { height: 84, shooting: 76, finishing: 80, handles: 72, passing: 66, defense: 84, rebounding: 68, athleticism: 94, iq: 72 }),
       player("Maxi Kleber", 6, 9, 42, { height: 90, shooting: 82, finishing: 72, handles: 64, passing: 66, defense: 82, rebounding: 72, athleticism: 74, iq: 70 }),
@@ -2135,7 +2135,7 @@ const teamEras = [
       player("Terry Rozier", 6, 1, 3, { height: 68, shooting: 80, finishing: 82, handles: 86, passing: 76, defense: 74, rebounding: 60, athleticism: 82, iq: 80 }),
       player("Gordon Hayward", 6, 7, 20, { height: 84, shooting: 80, finishing: 82, handles: 80, passing: 78, defense: 70, rebounding: 64, athleticism: 74, iq: 78 }),
       player("Mark Williams", 7, 0, 5, { height: 98, shooting: 54, finishing: 84, handles: 56, passing: 60, defense: 82, rebounding: 84, athleticism: 86, iq: 72 }),
-      player("P.J. Washington", 6, 7, 25, { height: 84, shooting: 78, finishing: 82, handles: 70, passing: 68, defense: 80, rebounding: 72, athleticism: 82, iq: 74 }),
+      player("P.J. Washington", 6, 7, 25, { height: 84, shooting: 78, finishing: 82, handles: 70, passing: 68, defense: 83, rebounding: 72, athleticism: 82, iq: 74 }),
       player("Devonte' Graham", 6, 1, 4, { height: 68, shooting: 80, finishing: 78, handles: 84, passing: 82, defense: 66, rebounding: 52, athleticism: 78, iq: 80 }),
       player("Nick Richards", 7, 0, 4, { height: 98, shooting: 54, finishing: 82, handles: 54, passing: 58, defense: 80, rebounding: 82, athleticism: 82, iq: 68 }),
       player("Cody Martin", 6, 5, 11, { height: 80, shooting: 70, finishing: 78, handles: 74, passing: 72, defense: 84, rebounding: 64, athleticism: 84, iq: 72 }),
