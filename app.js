@@ -532,7 +532,7 @@ const teamEras = [
       player("Norris Cole", 6, 2, 30, { height: 71, shooting: 74, finishing: 76, handles: 82, passing: 78, defense: 78, rebounding: 54, athleticism: 82, iq: 76 }),
       player("Goran Dragic", 6, 3, 7, { height: 74, shooting: 80, finishing: 84, handles: 88, passing: 84, defense: 72, rebounding: 56, athleticism: 82, iq: 82 }),
       player("Hassan Whiteside", 7, 0, 21, { height: 98, shooting: 56, finishing: 84, handles: 52, passing: 54, defense: 86, rebounding: 88, athleticism: 84, iq: 70 }),
-      player("Bam Adebayo", 6, 9, 13, { height: 90, shooting: 64, finishing: 84, handles: 74, passing: 82, defense: 84, rebounding: 82, athleticism: 84, iq: 88 }),
+      player("Bam Adebayo", 6, 9, 13, { height: 90, shooting: 64, finishing: 84, handles: 74, passing: 82, defense: 88, rebounding: 82, athleticism: 84, iq: 88 }),
       player("Josh Richardson", 6, 6, 0, { height: 82, shooting: 80, finishing: 80, handles: 78, passing: 74, defense: 84, rebounding: 60, athleticism: 84, iq: 78 }),
       player("Justise Winslow", 6, 6, 20, { height: 82, shooting: 70, finishing: 80, handles: 80, passing: 80, defense: 84, rebounding: 70, athleticism: 84, iq: 74 }),
       player("Mike Miller", 6, 8, 13, { height: 86, shooting: 88, finishing: 78, handles: 74, passing: 76, defense: 68, rebounding: 66, athleticism: 72, iq: 82 }),
@@ -720,7 +720,7 @@ const teamEras = [
     team: "Grizzlies",
     note: "Grit and Grind. The toughest points in the league — earned in the post, in the mud.",
     players: [
-      player("Marc Gasol", 7, 1, 33, { height: 99, shooting: 78, finishing: 88, handles: 70, passing: 80, defense: 89, rebounding: 86, athleticism: 66, iq: 88 }),
+      player("Marc Gasol", 7, 1, 33, { height: 99, shooting: 78, finishing: 88, handles: 70, passing: 80, defense: 92, rebounding: 86, athleticism: 66, iq: 88 }),
       player("Zach Randolph", 6, 9, 50, { height: 90, shooting: 78, finishing: 83, handles: 70, passing: 70, defense: 72, rebounding: 92, athleticism: 66, iq: 82 }),
       player("Mike Conley", 6, 1, 11, { height: 68, shooting: 84, finishing: 82, handles: 90, passing: 88, defense: 84, rebounding: 56, athleticism: 82, iq: 90 }),
       player("Tony Allen", 6, 4, 9, { height: 77, shooting: 66, finishing: 76, handles: 72, passing: 68, defense: 94, rebounding: 70, athleticism: 86, iq: 76 }),
@@ -906,7 +906,7 @@ const teamEras = [
       player("Bismack Biyombo", 6, 9, 8, { height: 90, shooting: 52, finishing: 68, handles: 50, passing: 56, defense: 86, rebounding: 86, athleticism: 80, iq: 60 }),
       player("Kawhi Leonard", 6, 7, 2, { height: 84, shooting: 82, finishing: 90, handles: 82, passing: 74, defense: 94, rebounding: 74, athleticism: 86, iq: 90 }),
       player("Pascal Siakam", 6, 9, 43, { height: 90, shooting: 74, finishing: 84, handles: 78, passing: 72, defense: 84, rebounding: 76, athleticism: 88, iq: 78 }),
-      player("Marc Gasol", 6, 11, 33, { height: 96, shooting: 78, finishing: 80, handles: 66, passing: 84, defense: 84, rebounding: 80, athleticism: 64, iq: 80 }),
+      player("Marc Gasol", 6, 11, 33, { height: 96, shooting: 78, finishing: 80, handles: 66, passing: 84, defense: 88, rebounding: 80, athleticism: 64, iq: 80 }),
       player("Fred VanVleet", 6, 1, 23, { height: 68, shooting: 80, finishing: 76, handles: 84, passing: 80, defense: 84, rebounding: 54, athleticism: 78, iq: 84 }),
       player("Danny Green", 6, 6, 14, { height: 82, shooting: 84, finishing: 74, handles: 70, passing: 68, defense: 86, rebounding: 60, athleticism: 78, iq: 80 }),
       player("DeMarre Carroll", 6, 8, 5, { height: 86, shooting: 78, finishing: 78, handles: 70, passing: 68, defense: 84, rebounding: 66, athleticism: 82, iq: 74 }),
@@ -1578,7 +1578,7 @@ const teamEras = [
     team: "76ers",
     note: "Allen Iverson carried a defense-and-grit roster to the 2001 Finals; later Iguodala's two-way athleticism led the way.",
     players: [
-      player("Allen Iverson", 6, 0, 3, { height: 66, shooting: 82, finishing: 90, handles: 100, passing: 82, defense: 73, rebounding: 54, athleticism: 94, iq: 82 }),
+      player("Allen Iverson", 6, 0, 3, { height: 66, shooting: 82, finishing: 90, handles: 100, passing: 82, defense: 76, rebounding: 54, athleticism: 94, iq: 82 }),
       player("Dikembe Mutombo", 7, 2, 55, { height: 100, shooting: 54, finishing: 80, handles: 54, passing: 60, defense: 96, rebounding: 92, athleticism: 82, iq: 78 }),
       player("Andre Iguodala", 6, 6, 9, { height: 82, shooting: 74, finishing: 78, handles: 82, passing: 82, defense: 90, rebounding: 70, athleticism: 92, iq: 78 }),
       player("Andre Miller", 6, 2, 88, { height: 71, shooting: 74, finishing: 84, handles: 90, passing: 90, defense: 78, rebounding: 64, athleticism: 80, iq: 88 }),
@@ -1689,7 +1689,7 @@ const teamEras = [
     note: "Carmelo's scoring and a 2009 conference finals run, supercharged when Chauncey Billups came home; Camby and Nene anchored the paint.",
     players: [
       player("Carmelo Anthony", 6, 7, 15, { height: 84, shooting: 88, finishing: 90, handles: 84, passing: 76, defense: 72, rebounding: 74, athleticism: 84, iq: 80 }),
-      player("Allen Iverson", 6, 0, 3, { height: 66, shooting: 82, finishing: 86, handles: 100, passing: 84, defense: 72, rebounding: 54, athleticism: 92, iq: 82 }),
+      player("Allen Iverson", 6, 0, 3, { height: 66, shooting: 82, finishing: 86, handles: 100, passing: 84, defense: 75, rebounding: 54, athleticism: 92, iq: 82 }),
       player("Chauncey Billups", 6, 3, 1, { height: 74, shooting: 84, finishing: 82, handles: 86, passing: 84, defense: 82, rebounding: 58, athleticism: 80, iq: 90 }),
       player("Marcus Camby", 6, 11, 23, { height: 96, shooting: 58, finishing: 78, handles: 60, passing: 70, defense: 92, rebounding: 90, athleticism: 86, iq: 72 }),
       player("Nene", 6, 11, 31, { height: 96, shooting: 64, finishing: 86, handles: 68, passing: 70, defense: 80, rebounding: 80, athleticism: 86, iq: 76 }),
@@ -2843,7 +2843,7 @@ const teamEras = [
     team: "76ers",
     note: "Allen Iverson crossed up the league as a rookie — a 165-pound scoring hurricane who dragged a thin Philadelphia roster into relevance.",
     players: [
-      player("Allen Iverson", 6, 0, 3, { height: 66, shooting: 84, finishing: 90, handles: 98, passing: 80, defense: 70, rebounding: 56, athleticism: 96, iq: 80 }),
+      player("Allen Iverson", 6, 0, 3, { height: 66, shooting: 84, finishing: 90, handles: 98, passing: 80, defense: 73, rebounding: 56, athleticism: 96, iq: 80 }),
       player("Jerry Stackhouse", 6, 6, 42, { height: 82, shooting: 78, finishing: 86, handles: 82, passing: 76, defense: 74, rebounding: 66, athleticism: 90, iq: 78 }),
       player("Theo Ratliff", 6, 10, 42, { height: 94, shooting: 56, finishing: 80, handles: 58, passing: 60, defense: 90, rebounding: 80, athleticism: 86, iq: 74 }),
       player("Derrick Coleman", 6, 10, 44, { height: 94, shooting: 78, finishing: 84, handles: 74, passing: 76, defense: 76, rebounding: 84, athleticism: 82, iq: 74 }),
