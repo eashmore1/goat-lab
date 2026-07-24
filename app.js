@@ -610,7 +610,7 @@ const teamEras = [
     team: "Mavericks",
     note: "The Trio never quite clicked, but this pool is full of scoring options and young upside.",
     players: [
-      player("Jason Kidd", 6, 4, 5, { height: 77, shooting: 74, finishing: 82, handles: 90, passing: 93, defense: 82, rebounding: 74, athleticism: 88, iq: 95 }),
+      player("Jason Kidd", 6, 4, 5, { height: 77, shooting: 74, finishing: 82, handles: 90, passing: 93, defense: 86, rebounding: 74, athleticism: 88, iq: 95 }),
       player("Jim Jackson", 6, 6, 24, { height: 82, shooting: 84, finishing: 84, handles: 82, passing: 78, defense: 74, rebounding: 68, athleticism: 82, iq: 80 }),
       player("Jamal Mashburn", 6, 8, 32, { height: 86, shooting: 84, finishing: 86, handles: 82, passing: 76, defense: 70, rebounding: 72, athleticism: 80, iq: 82 }),
       player("Popeye Jones", 6, 8, 43, { height: 86, shooting: 62, finishing: 72, handles: 56, passing: 62, defense: 74, rebounding: 90, athleticism: 66, iq: 72 }),
@@ -654,7 +654,7 @@ const teamEras = [
     team: "Nets",
     note: "Kidd's Nets ran back-to-back Finals on pure playmaking and team defense.",
     players: [
-      player("Jason Kidd", 6, 4, 5, { height: 77, shooting: 74, finishing: 80, handles: 90, passing: 99, defense: 84, rebounding: 76, athleticism: 84, iq: 95 }),
+      player("Jason Kidd", 6, 4, 5, { height: 77, shooting: 74, finishing: 80, handles: 90, passing: 99, defense: 88, rebounding: 76, athleticism: 84, iq: 95 }),
       player("Vince Carter", 6, 6, 15, { height: 82, shooting: 86, finishing: 85, handles: 82, passing: 76, defense: 72, rebounding: 66, athleticism: 87, iq: 84 }),
       player("Richard Jefferson", 6, 7, 24, { height: 84, shooting: 78, finishing: 86, handles: 74, passing: 72, defense: 76, rebounding: 68, athleticism: 86, iq: 78 }),
       player("Kenyon Martin", 6, 9, 6, { height: 90, shooting: 66, finishing: 82, handles: 62, passing: 64, defense: 88, rebounding: 86, athleticism: 90, iq: 76 }),
@@ -698,7 +698,7 @@ const teamEras = [
     team: "Clippers",
     note: "Lob City ran on CP3's genius and Griffin/Jordan's rim gravity. Style points required.",
     players: [
-      player("Chris Paul", 6, 0, 3, { height: 67, shooting: 86, finishing: 76, handles: 93, passing: 99, defense: 85, rebounding: 60, athleticism: 86, iq: 98 }),
+      player("Chris Paul", 6, 0, 3, { height: 67, shooting: 86, finishing: 76, handles: 93, passing: 99, defense: 87, rebounding: 60, athleticism: 86, iq: 98 }),
       player("Blake Griffin", 6, 10, 32, { height: 94, shooting: 74, finishing: 89, handles: 80, passing: 80, defense: 76, rebounding: 84, athleticism: 93, iq: 84 }),
       player("DeAndre Jordan", 6, 11, 6, { height: 96, shooting: 38, finishing: 86, handles: 48, passing: 54, defense: 90, rebounding: 96, athleticism: 90, iq: 56 }),
       player("Jamal Crawford", 6, 5, 11, { height: 80, shooting: 86, finishing: 84, handles: 95, passing: 74, defense: 62, rebounding: 56, athleticism: 78, iq: 78 }),
@@ -816,7 +816,7 @@ const teamEras = [
       player("Cedric Ceballos", 6, 7, 23, { height: 84, shooting: 84, finishing: 84, handles: 72, passing: 66, defense: 68, rebounding: 80, athleticism: 82, iq: 78 }),
       player("Mark West", 6, 10, 41, { height: 94, shooting: 54, finishing: 70, handles: 50, passing: 56, defense: 82, rebounding: 82, athleticism: 72, iq: 62 }),
       player("Frank Johnson", 6, 1, 10, { height: 68, shooting: 72, finishing: 70, handles: 80, passing: 80, defense: 76, rebounding: 50, athleticism: 74, iq: 72 }),
-      player("Jason Kidd", 6, 4, 32, { height: 77, shooting: 74, finishing: 82, handles: 90, passing: 93, defense: 82, rebounding: 74, athleticism: 88, iq: 95 }),
+      player("Jason Kidd", 6, 4, 32, { height: 77, shooting: 74, finishing: 82, handles: 90, passing: 93, defense: 88, rebounding: 74, athleticism: 88, iq: 95 }),
       player("Danny Manning", 6, 10, 25, { height: 94, shooting: 80, finishing: 86, handles: 80, passing: 80, defense: 78, rebounding: 78, athleticism: 84, iq: 80 }),
       player("Wesley Person", 6, 6, 7, { height: 82, shooting: 90, finishing: 80, handles: 76, passing: 72, defense: 74, rebounding: 62, athleticism: 82, iq: 80 }),
       player("A.C. Green", 6, 9, 45, { height: 90, shooting: 70, finishing: 80, handles: 62, passing: 68, defense: 78, rebounding: 86, athleticism: 80, iq: 78 }),
@@ -839,7 +839,7 @@ const teamEras = [
       player("Eduardo Najera", 6, 8, 14, { height: 88, shooting: 66, finishing: 70, handles: 64, passing: 64, defense: 82, rebounding: 78, athleticism: 80, iq: 68 }),
       player("Shawn Bradley", 7, 6, 44, { height: 100, shooting: 58, finishing: 66, handles: 50, passing: 60, defense: 76, rebounding: 76, athleticism: 56, iq: 56 }),
       player("Josh Howard", 6, 7, 5, { height: 84, shooting: 80, finishing: 84, handles: 78, passing: 72, defense: 82, rebounding: 72, athleticism: 86, iq: 80 }),
-      player("Jason Kidd", 6, 4, 2, { height: 77, shooting: 78, finishing: 78, handles: 92, passing: 96, defense: 84, rebounding: 72, athleticism: 78, iq: 95 }),
+      player("Jason Kidd", 6, 4, 2, { height: 77, shooting: 78, finishing: 78, handles: 92, passing: 96, defense: 87, rebounding: 72, athleticism: 78, iq: 95 }),
       player("Shawn Marion", 6, 7, 0, { height: 84, shooting: 74, finishing: 84, handles: 74, passing: 70, defense: 86, rebounding: 80, athleticism: 90, iq: 78 }),
       player("Jerry Stackhouse", 6, 6, 42, { height: 82, shooting: 80, finishing: 84, handles: 80, passing: 76, defense: 72, rebounding: 60, athleticism: 82, iq: 82 }),
       player("Erick Dampier", 6, 11, 25, { height: 96, shooting: 58, finishing: 80, handles: 54, passing: 60, defense: 82, rebounding: 84, athleticism: 78, iq: 70 }),
@@ -1666,7 +1666,7 @@ const teamEras = [
     team: "Hornets",
     note: "Chris Paul's brilliance drove a 56-win New Orleans team, with David West's mid-range and Tyson Chandler's lob threat.",
     players: [
-      player("Chris Paul", 6, 0, 3, { height: 66, shooting: 82, finishing: 84, handles: 96, passing: 98, defense: 86, rebounding: 58, athleticism: 88, iq: 98 }),
+      player("Chris Paul", 6, 0, 3, { height: 66, shooting: 82, finishing: 84, handles: 96, passing: 98, defense: 88, rebounding: 58, athleticism: 88, iq: 98 }),
       player("David West", 6, 9, 30, { height: 90, shooting: 82, finishing: 86, handles: 72, passing: 74, defense: 78, rebounding: 80, athleticism: 80, iq: 84 }),
       player("Baron Davis", 6, 3, 1, { height: 74, shooting: 83, finishing: 86, handles: 92, passing: 90, defense: 82, rebounding: 62, athleticism: 92, iq: 82 }),
       player("Peja Stojakovic", 6, 10, 16, { height: 94, shooting: 92, finishing: 78, handles: 72, passing: 72, defense: 66, rebounding: 70, athleticism: 64, iq: 84 }),
@@ -1711,7 +1711,7 @@ const teamEras = [
     note: "James Harden scored 60 points while barely leaving the three-point line. Nobody solved the step-back.",
     players: [
       player("James Harden", 6, 5, 13, { height: 80, shooting: 94, finishing: 88, handles: 96, passing: 92, defense: 68, rebounding: 74, athleticism: 82, iq: 94 }),
-      player("Chris Paul", 6, 0, 3, { height: 67, shooting: 86, finishing: 76, handles: 93, passing: 99, defense: 85, rebounding: 60, athleticism: 82, iq: 98 }),
+      player("Chris Paul", 6, 0, 3, { height: 67, shooting: 86, finishing: 76, handles: 93, passing: 99, defense: 87, rebounding: 60, athleticism: 82, iq: 98 }),
       player("Clint Capela", 6, 10, 15, { height: 94, shooting: 62, finishing: 84, handles: 54, passing: 58, defense: 88, rebounding: 96, athleticism: 90, iq: 70 }),
       player("Eric Gordon", 6, 4, 10, { height: 77, shooting: 88, finishing: 82, handles: 78, passing: 70, defense: 72, rebounding: 54, athleticism: 80, iq: 84 }),
       player("Trevor Ariza", 6, 8, 1, { height: 88, shooting: 80, finishing: 76, handles: 72, passing: 72, defense: 84, rebounding: 68, athleticism: 82, iq: 74 }),
@@ -1887,7 +1887,7 @@ const teamEras = [
     note: "Phoenix hadn't been to the Finals in 28 years. CP3 and Booker nearly ended that drought in 2021.",
     players: [
       player("Devin Booker", 6, 6, 1, { height: 82, shooting: 96, finishing: 88, handles: 86, passing: 80, defense: 76, rebounding: 62, athleticism: 82, iq: 84 }),
-      player("Chris Paul", 6, 0, 3, { height: 67, shooting: 86, finishing: 78, handles: 96, passing: 98, defense: 86, rebounding: 58, athleticism: 76, iq: 98 }),
+      player("Chris Paul", 6, 0, 3, { height: 67, shooting: 86, finishing: 78, handles: 96, passing: 98, defense: 88, rebounding: 58, athleticism: 76, iq: 98 }),
       player("Deandre Ayton", 6, 11, 22, { height: 96, shooting: 78, finishing: 88, handles: 66, passing: 72, defense: 84, rebounding: 94, athleticism: 88, iq: 78 }),
       player("Mikal Bridges", 6, 7, 25, { height: 84, shooting: 84, finishing: 80, handles: 76, passing: 72, defense: 90, rebounding: 64, athleticism: 84, iq: 78 }),
       player("Cameron Johnson", 6, 8, 23, { height: 88, shooting: 88, finishing: 76, handles: 72, passing: 70, defense: 72, rebounding: 64, athleticism: 78, iq: 78 }),
