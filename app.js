@@ -5644,6 +5644,17 @@ updateBody(null);
   const LB_CACHE_MS = 60000;
   let _lbToken = 0;
 
+  // Guests still count in the daily total (the aggregate playerCount + histogram
+  // are untouched), but from this date FORWARD they no longer take a visible
+  // top-75 row — they must sign in to appear. Dates before it (today and earlier
+  // at ship time) render exactly as they always did, so shipping this never
+  // disturbs a board that's already live.
+  const GUEST_HIDE_FROM = "2026-07-25";
+  const lbHidesGuests = (dateStr) => (dateStr || getTodayStr()) >= GUEST_HIDE_FROM;
+  // Over-fetch when hiding guests so the board still fills 75 real rows after the
+  // anon entries are filtered out.
+  const lbFetchN = (dateStr) => (lbHidesGuests(dateStr) ? 120 : 75);
+
   // Warm-up: quietly prefetch today's board shortly after page load. Two wins —
   // the leaderboard opens instantly from cache, and Firestore's FIRST connection
   // (by far the flakiest request) happens in the background instead of on the
@@ -5653,7 +5664,7 @@ updateBody(null);
       const d = getTodayStr();
       if (_lbCache[d] && Date.now() - _lbCache[d].ts < LB_CACHE_MS) return;
       const aggP = retryFetch(() => Auth.getDailyAggregate(d), 3, 8000).catch(() => null);
-      const rows = await retryFetch(() => Auth.getDailyLeaderboard(d, 75), 3, 8000);
+      const rows = await retryFetch(() => Auth.getDailyLeaderboard(d, lbFetchN(d)), 3, 8000);
       const agg = await aggP;
       const hist = agg && agg.hist ? agg.hist : {};
       // Only cache a useful snapshot — otherwise let the tap path do the full
@@ -5694,7 +5705,7 @@ updateBody(null);
         // Up to 3 silent attempts before bothering the user — the first query on a
         // cold/flaky connection often fails once and succeeds right after (the
         // "close it and re-open" fix, done automatically).
-        rows = await retryFetch(() => Auth.getDailyLeaderboard(targetDate, 75), 3, 8000);
+        rows = await retryFetch(() => Auth.getDailyLeaderboard(targetDate, lbFetchN(targetDate)), 3, 8000);
       } catch (e) {
         console.error("[lb] load failed:", e);
         if (myToken === _lbToken) {
@@ -5721,18 +5732,24 @@ updateBody(null);
     if (myToken !== _lbToken) return;
     const isMine = (r) => me && r.uid === me.uid;
 
-    // Render the main board immediately once top-75 arrives.
-    if (!rows.length) {
+    // Hide anonymous (guest) entries from the visible board on the governed dates.
+    // They still count in the histogram + total (that's the aggregate doc, which
+    // we never touch) — they just don't take a row. Raw `rows` stays in the cache.
+    const hideGuests = lbHidesGuests(targetDate);
+    const visibleRows = hideGuests ? rows.filter((r) => !r.anon) : rows;
+
+    // Render the main board immediately once the top rows arrive.
+    if (!visibleRows.length) {
       lbList.innerHTML = isToday
         ? '<p class="lb-empty">No scores yet today. Be the first — play the Daily!</p>'
         : '<p class="lb-empty">No scores recorded for yesterday.</p>';
     } else {
-      const top = rows.slice(0, 3);
+      const top = visibleRows.slice(0, 3);
       const order = [top[1], top[0], top[2]];
       const place = [2, 1, 3];
       lbPodium.innerHTML = order.map((r, i) => r ? podiumCard(r, place[i], isMine(r)) : "").join("");
       lbList.hidden = false;
-      const rest = rows.slice(3);
+      const rest = visibleRows.slice(3);
       lbList.innerHTML = rest.length
         ? rest.map((r, i) => {
             const mine = isMine(r);
@@ -5751,16 +5768,18 @@ updateBody(null);
     histPromise.then((hist) => {
       if (myToken !== _lbToken) return;
       renderDistBar(hist);
-      renderRankBanner(hist, rows, me, isToday, targetDate);
+      renderRankBanner(hist, visibleRows, me, isToday, targetDate);
     });
 
     // Top-build reveal for the viewed day (pass holders) / unlock teaser.
-    renderLbOptimal(targetDate, rows);
+    renderLbOptimal(targetDate, visibleRows);
 
     // Pin the user's own row at the bottom when they're off the fetched board —
     // on BOTH Today and Yesterday. Score comes from local history for the viewed
     // date, falling back to the cloud entry if this device has no record for it.
-    if (me && !rows.some((r) => r.uid === me.uid)) {
+    const meIsGuest = !!(me && Auth.isGuest && Auth.isGuest());
+    // A hidden guest gets the sign-in CTA below instead of a pinned "(you)" row.
+    if (me && !(hideGuests && meIsGuest) && !visibleRows.some((r) => r.uid === me.uid)) {
       let myScore = null;
       try { myScore = getDailyHistory()[targetDate]?.score ?? null; } catch (e) {}
       if (myScore == null) {
@@ -5783,15 +5802,37 @@ updateBody(null);
       }
     }
 
-    // Guest nudge: their score is on the board under a "Guest #####" name — invite
-    // them to sign in to claim it with their real name (and save their progress).
-    // Signing in links the guest account, so their entry carries over and just
-    // takes their new name.
-    if (me && Auth.isGuest && Auth.isGuest()) {
-      const gname = lbName(Auth.displayName());
+    // Guest sign-in nudge. On the governed dates the guest is NOT on the board, so
+    // we tease their would-be rank ("you'd be #12 — sign in to claim it"); on older
+    // dates they're still shown, so we keep the "that's you, claim your name" copy.
+    if (me && meIsGuest) {
+      let gtxt;
+      if (hideGuests) {
+        let myScore = null;
+        try { myScore = getDailyHistory()[targetDate]?.score ?? null; } catch (e) {}
+        if (myScore == null) {
+          try {
+            const mine = await retryFetch(() => Auth.getMyEntry(targetDate), 2, 8000);
+            if (myToken !== _lbToken) return;
+            if (mine && typeof mine.score === "number") myScore = mine.score;
+          } catch (e) {}
+        }
+        if (myScore != null) {
+          const realAbove = visibleRows.filter((r) => (r.score || 0) > myScore).length;
+          const wouldRank = realAbove + 1;
+          gtxt = wouldRank <= 75
+            ? `🔥 Your score would rank <strong>#${wouldRank}</strong> today — sign in to <strong>claim your spot</strong> on the board.`
+            : `You're not on the board yet — sign in to put your <strong>name on the leaderboard</strong> and save your streak.`;
+        } else {
+          gtxt = `Sign in to put your <strong>name on the leaderboard</strong> and save your streak.`;
+        }
+      } else {
+        const gname = lbName(Auth.displayName());
+        gtxt = `That's you on the board — <strong>${gname}</strong>. Sign in to show your <strong>real name</strong> and save your progress.`;
+      }
       lbList.insertAdjacentHTML("afterbegin", `
         <div class="lb-guest-cta">
-          <p class="lb-guest-txt">That's you on the board — <strong>${gname}</strong>. Sign in to show your <strong>real name</strong> and save your progress.</p>
+          <p class="lb-guest-txt">${gtxt}</p>
           <button type="button" class="account-btn account-btn-google lb-guest-btn" id="lbGuestSignIn"><span class="g-mark" aria-hidden="true">G</span> Sign in with Google</button>
         </div>`);
       const gbtn = document.getElementById("lbGuestSignIn");
@@ -6340,6 +6381,8 @@ updateBody(null);
     const token = _lbToken; // bail if the board is switched while we fetch below
     const total = histTotal(hist);
     if (!me || !total) { lbRankBanner.hidden = true; return; }
+    // Hidden guests get the sign-in CTA instead of a rank teaser — one clear ask.
+    if (lbHidesGuests(targetDate) && me.isAnonymous) { lbRankBanner.hidden = true; return; }
     let myScore = null;
     // Use the player's ACTUAL ordinal position on the sorted board when they're on
     // it, so the banner matches the row they see when they scroll. histAbove() gives
