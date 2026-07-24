@@ -5602,9 +5602,6 @@ updateBody(null);
   // carries the auto-generated "Guest #####" name (catches guests who played
   // earlier today, before the tag existed, so the board cleans up fully).
   const isGuestRow = (r) => !!(r && (r.anon === true || /^Guest \d{5}$/.test(stripGoatEmoji(r.name || "").trim())));
-  // Over-fetch when hiding guests so the board still fills 75 real rows after the
-  // anon entries are filtered out.
-  const lbFetchN = (dateStr) => (lbHidesGuests(dateStr) ? 120 : 75);
 
   // Warm-up: quietly prefetch today's board shortly after page load. Two wins —
   // the leaderboard opens instantly from cache, and Firestore's FIRST connection
@@ -5615,7 +5612,7 @@ updateBody(null);
       const d = getTodayStr();
       if (_lbCache[d] && Date.now() - _lbCache[d].ts < LB_CACHE_MS) return;
       const aggP = retryFetch(() => Auth.getDailyAggregate(d), 3, 8000).catch(() => null);
-      const rows = await retryFetch(() => Auth.getDailyLeaderboard(d, lbFetchN(d)), 3, 8000);
+      const rows = await retryFetch(() => Auth.getDailyLeaderboard(d, 75, { excludeGuests: lbHidesGuests(d) }), 3, 8000);
       const agg = await aggP;
       const hist = agg && agg.hist ? agg.hist : {};
       // Only cache a useful snapshot — otherwise let the tap path do the full
@@ -5656,7 +5653,7 @@ updateBody(null);
         // Up to 3 silent attempts before bothering the user — the first query on a
         // cold/flaky connection often fails once and succeeds right after (the
         // "close it and re-open" fix, done automatically).
-        rows = await retryFetch(() => Auth.getDailyLeaderboard(targetDate, lbFetchN(targetDate)), 3, 8000);
+        rows = await retryFetch(() => Auth.getDailyLeaderboard(targetDate, 75, { excludeGuests: lbHidesGuests(targetDate) }), 3, 8000);
       } catch (e) {
         console.error("[lb] load failed:", e);
         if (myToken === _lbToken) {
