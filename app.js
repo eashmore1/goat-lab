@@ -4102,57 +4102,6 @@ function makeArchetype(values) {
   return `${first}-${second} superbuild`;
 }
 
-// ============================================================
-// Monetization — gentle: one result-screen ad slot + smart tip CTA
-// ------------------------------------------------------------
-// To turn ads ON:
-//   1. Create a Google AdSense account and submit playgoatlab.com for review.
-//   2. Once approved, create a "Display" ad unit for the result screen.
-//   3. Paste your publisher ID + that ad unit's slot ID below.
-// While these stay blank, NO ad scripts load (a labelled placeholder shows
-// only on localhost so you can see where the slot lives).
-// ============================================================
-const ADSENSE_CLIENT = "ca-pub-9736995109176734"; // live publisher ID
-const ADSENSE_SLOT_RESULT = "";  // set after approval: create a Display ad unit, paste its slot ID
-
-let adsenseLoaded = false;
-function loadAdSense() {
-  if (adsenseLoaded || !ADSENSE_CLIENT) return;
-  adsenseLoaded = true;
-  // The loader is already in each page's <head> (for AdSense verification);
-  // only inject as a fallback if that static tag is somehow missing.
-  if (document.querySelector('script[src*="adsbygoogle.js"]')) return;
-  const s = document.createElement("script");
-  s.async = true;
-  s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + ADSENSE_CLIENT;
-  s.crossOrigin = "anonymous";
-  document.head.appendChild(s);
-}
-
-let resultAdRendered = false;
-function showResultAd() {
-  const slot = document.getElementById("resultAd");
-  if (!slot) return;
-  const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
-  // Not configured yet — show a placeholder locally, nothing in production.
-  if (!ADSENSE_CLIENT || !ADSENSE_SLOT_RESULT) {
-    if (isLocal) {
-      slot.hidden = false;
-      slot.innerHTML = '<span class="result-ad-label">Advertisement</span>' +
-        '<div class="result-ad-placeholder">Ad slot — AdSense not configured yet</div>';
-    }
-    return;
-  }
-  loadAdSense();
-  slot.hidden = false;
-  if (resultAdRendered) return; // render the unit once; reuse on replay
-  slot.innerHTML = '<span class="result-ad-label">Advertisement</span>' +
-    '<ins class="adsbygoogle" style="display:block" data-ad-client="' + ADSENSE_CLIENT +
-    '" data-ad-slot="' + ADSENSE_SLOT_RESULT + '" data-ad-format="auto" data-full-width-responsive="true"></ins>';
-  try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
-  resultAdRendered = true;
-}
-
 function finish() {
   roundLocked = false;
   if (respinBar) respinBar.hidden = true;
@@ -4310,7 +4259,6 @@ function finish() {
     hideResultCountdown();
   }
 
-  showResultAd();
   if (window.GoatA2HS) window.GoatA2HS.maybe();
 }
 
@@ -5408,7 +5356,6 @@ window.addEventListener("beforeunload", (e) => {
 });
 
 updateDailyCard();
-loadAdSense(); // no-op until ADSENSE_CLIENT is set; present on load for AdSense verification
 setInterval(tickCountdown, 60000);
 
 renderBuildList();

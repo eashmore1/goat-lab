@@ -37,6 +37,7 @@
 [data-theme="dark"] .build-chip.filled strong,
 [data-theme="dark"] .build-chip.filled span,
 [data-theme="dark"] .share-btn-copy,
+[data-theme="dark"] .share-btn-leaderboard,
 [data-theme="dark"] .jersey,
 [data-theme="dark"] .lb-row-me,
 [data-theme="dark"] .lb-row-me .lb-name,
@@ -385,10 +386,10 @@ h1 {
   overflow: hidden;
   border: 4px solid var(--ink);
   background:
-    repeating-linear-gradient(0deg, rgba(56, 182, 255, 0.035) 0 1px, transparent 1px 4px),
-    linear-gradient(rgba(56, 182, 255, 0.055) 1px, transparent 1px) 0 0 / 28px 28px,
-    linear-gradient(90deg, rgba(56, 182, 255, 0.055) 1px, transparent 1px) 0 0 / 28px 28px,
-    #091420;
+    repeating-linear-gradient(0deg, rgba(230, 184, 67, 0.04) 0 1px, transparent 1px 4px),
+    linear-gradient(rgba(230, 184, 67, 0.06) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, rgba(230, 184, 67, 0.06) 1px, transparent 1px) 0 0 / 28px 28px,
+    #17110a;
   box-shadow: var(--shadow);
 }
 
@@ -405,23 +406,23 @@ h1 {
 .body-card::before {
   top: 10px;
   left: 10px;
-  border-top: 2px solid rgba(56, 182, 255, 0.75);
-  border-left: 2px solid rgba(56, 182, 255, 0.75);
+  border-top: 2px solid rgba(230, 184, 67, 0.7);
+  border-left: 2px solid rgba(230, 184, 67, 0.7);
 }
 .body-card::after {
   bottom: 10px;
   right: 10px;
-  border-bottom: 2px solid rgba(56, 182, 255, 0.75);
-  border-right: 2px solid rgba(56, 182, 255, 0.75);
+  border-bottom: 2px solid rgba(230, 184, 67, 0.7);
+  border-right: 2px solid rgba(230, 184, 67, 0.7);
 }
 
 .halo {
   position: absolute;
   width: 220px;
   height: 220px;
-  border: 1px solid rgba(56, 182, 255, 0.28);
+  border: 1px solid rgba(230, 184, 67, 0.26);
   border-radius: 50%;
-  box-shadow: 0 0 0 8px rgba(56, 182, 255, 0.05), inset 0 0 0 8px rgba(56, 182, 255, 0.05);
+  box-shadow: 0 0 0 8px rgba(230, 184, 67, 0.05), inset 0 0 0 8px rgba(230, 184, 67, 0.05);
 }
 
 .goat-body {
@@ -438,8 +439,8 @@ h1 {
   --part-transform: none;
   --tier-color: var(--gold);
   --tier-glow: rgba(230, 184, 67, 0.45);
-  background: rgba(56, 182, 255, 0.07);
-  border: 1.5px solid rgba(56, 182, 255, 0.28);
+  background: rgba(230, 184, 67, 0.06);
+  border: 1.5px solid rgba(230, 184, 67, 0.24);
   box-shadow: none;
   transform: var(--part-transform);
   transition: background 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
@@ -575,16 +576,16 @@ h1 {
   bottom: 12px;
   left: 12px;
   padding: 7px 10px;
-  color: rgba(220, 240, 255, 1);
-  background: rgba(9, 20, 32, 0.88);
-  border: 1px solid rgba(56, 182, 255, 0.3);
+  color: rgba(245, 236, 216, 1);
+  background: rgba(23, 17, 10, 0.88);
+  border: 1px solid rgba(230, 184, 67, 0.3);
   font: 700 0.72rem/1.25 "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
 .body-label[data-empty="true"] {
-  color: rgba(56, 182, 255, 0.45);
+  color: rgba(230, 184, 67, 0.55);
   font-style: italic;
   font-weight: 400;
   letter-spacing: 0.02em;
@@ -698,7 +699,7 @@ h1 {
 #resetButton,
 #shareButton {
   flex: 0 0 auto;
-  min-height: 36px;
+  min-height: 44px;
   padding: 0 12px;
   border: 2px solid var(--ink);
   background: var(--green);
@@ -841,6 +842,11 @@ h1 {
   text-align: center;
 }
 #prompt.is-golden .roll-team {
+  /* Gold-foil shimmer for the rare golden roll — a purposeful, earned effect,
+     not a generic gradient heading. #8a6400 is the solid fallback for browsers
+     without background-clip and for reduced-motion (see media query below). */
+  color: #8a6400;
+  font-weight: 900;
   background: linear-gradient(90deg, #8a6400, #e6b843, #fff1c0, #e6b843, #8a6400);
   background-size: 200% 100%;
   -webkit-background-clip: text;
@@ -879,14 +885,11 @@ h1 {
   font: 700 0.72rem/1 "Space Mono", monospace;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--gold);
+  color: #8a6400; /* deep gold — legible on the light card grid (~4.8:1) */
   margin: 4px 0 0;
-  animation: goldenShimmer 2.4s linear infinite;
-  background: linear-gradient(90deg, #8a6400, #e6b843, #fff1c0, #e6b843, #8a6400);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+}
+[data-theme="dark"] .wildcard-hint {
+  color: var(--gold);
 }
 .wildcard-picker {
   grid-column: 1 / -1;
@@ -951,6 +954,11 @@ h1 {
   .wildcard-hint,
   #prompt.is-golden .roll-team {
     animation: none;
+  }
+  /* No motion → drop the foil gradient for a solid, high-contrast gold. */
+  #prompt.is-golden .roll-team {
+    background: none;
+    -webkit-text-fill-color: #8a6400;
   }
 }
 
@@ -1323,32 +1331,6 @@ h1 {
 }
 .footer-support-subtle:hover { opacity: 1; }
 
-/* Result-screen ad slot — gentle, clearly labelled, no layout shift (hidden until filled) */
-.result-ad {
-  margin: 10px auto 18px;
-  max-width: 360px;
-  padding: 0 16px;
-  text-align: center;
-}
-.result-ad-label {
-  display: block;
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 6px;
-}
-.result-ad-placeholder {
-  border: 1.5px dashed var(--muted);
-  border-radius: 12px;
-  padding: 26px 16px;
-  font-size: 0.82rem;
-  color: var(--muted);
-}
-.result-ad .adsbygoogle {
-  display: block;
-}
-
 /* "Next Daily in …" countdown on the result screen */
 .result-countdown {
   margin: 10px 0 0;
@@ -1533,7 +1515,7 @@ h1 {
 
 #backButton {
   flex: 0 0 auto;
-  min-height: 36px;
+  min-height: 44px;
   padding: 0 12px;
   border: 2px solid var(--ink);
   background: var(--surface);
@@ -1815,6 +1797,12 @@ h1 {
 .share-btn-copy {
   background: var(--gold);
   color: var(--ink);
+}
+.share-btn-leaderboard {
+  grid-column: 1 / -1;
+  background: var(--gold);
+  color: var(--ink);
+  font-weight: 800;
 }
 
 /* How to Play link */
@@ -2132,9 +2120,13 @@ h1 {
   }
 }
 
-/* Focus states — keyboard + accessibility */
+/* Focus states — keyboard + accessibility.
+   --ink is the neutral foreground and always contrasts with the page in both
+   themes (~13:1 on paper, ~8:1 on court/gold buttons), so the ring stays clearly
+   visible. Gold failed here — ~1.5:1 on the cream paper. On-dark/colored buttons
+   that need a light ring are handled by the --chalk override below. */
 :focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
 
@@ -2226,7 +2218,7 @@ h1 {
 
 #viewLeaderboardBtn {
   flex: 0 0 auto;
-  min-height: 36px;
+  min-height: 44px;
   padding: 0 14px;
   border: 2px solid var(--ink);
   background: var(--gold);
@@ -2486,7 +2478,7 @@ h1 {
 /* ===== My Builds + handle modals ===== */
 #saveBuildButton {
   flex: 0 0 auto;
-  min-height: 36px;
+  min-height: 44px;
   padding: 0 14px;
   border: 2px solid var(--ink);
   background: var(--surface);

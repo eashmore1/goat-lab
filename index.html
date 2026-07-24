@@ -34,13 +34,10 @@
     <meta name="twitter:description" content="Can you build the perfect basketball player? Pick the GOAT at every stat in this free daily game." />
     <meta name="twitter:image" content="https://playgoatlab.com/og-image.png?v=2" />
 
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9736995109176734" crossorigin="anonymous"></script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=63" />
+    <link rel="stylesheet" href="styles.css?v=65" />
     <script defer src="error-monitor.js"></script>
     <script defer src="/_vercel/speed-insights/script.js"></script>
 
@@ -65,7 +62,7 @@
         <button class="hero-logo-btn" id="logoHome" type="button" aria-label="Return to home">
           <picture>
             <source srcset="GOATLABLOGO.webp" type="image/webp" />
-            <img src="GOATLABLOGO.png" alt="" class="hero-logo" />
+            <img src="GOATLABLOGO.png" alt="" class="hero-logo" width="400" height="364" />
           </picture>
         </button>
         <div>
@@ -265,7 +262,6 @@
           <button id="playAgainBtn" type="button" class="play-again-btn" title="Start a new run">Play Again</button>
         </div>
         <div class="goat-pass-result" id="goatPassResult" hidden></div>
-        <div class="result-ad" id="resultAd" hidden></div>
       </section>
 
       <section class="leaderboard-page" id="leaderboardPage" hidden aria-label="Daily leaderboard">
@@ -326,13 +322,13 @@
       </section>
     </main>
 
-    <footer class="site-footer">
+    <nav class="site-footer" aria-label="Community links">
       <a href="https://discord.gg/c4ek2mnBK" target="_blank" rel="noopener" class="footer-discord">💬 Join the GOAT Lab Discord</a>
       <span class="footer-sep" aria-hidden="true">·</span>
       <a href="https://www.instagram.com/playgoatlab" target="_blank" rel="noopener" class="footer-support-subtle">📸 Instagram</a>
       <span class="footer-sep" aria-hidden="true">·</span>
       <a href="https://ko-fi.com/goatlab" target="_blank" rel="noopener" class="footer-support-subtle">☕ Support</a>
-    </footer>
+    </nav>
 
     <div class="push-nudge" id="pushNudge" hidden role="dialog" aria-label="Daily reminder">
       <span class="push-nudge-txt">🔔 Get a reminder when tomorrow's Daily drops?</span>
@@ -405,7 +401,7 @@
           </div>
         </div>
         <div class="share-buttons">
-          <button class="share-btn share-btn-leaderboard" id="shareBtnLeaderboard" type="button" hidden style="grid-column:1/-1;background:#d9a441;color:#151413;font-weight:800">🏆 View Daily Leaderboard</button>
+          <button class="share-btn share-btn-leaderboard" id="shareBtnLeaderboard" type="button" hidden>🏆 View Daily Leaderboard</button>
           <button class="share-btn share-btn-image" id="shareBtnImage" type="button">Share Image</button>
           <button class="share-btn share-btn-text" id="shareBtnText" type="button">Share</button>
           <button class="share-btn share-btn-x" id="shareBtnX" type="button">X&thinsp;/&thinsp;Twitter</button>
