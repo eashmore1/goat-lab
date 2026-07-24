@@ -501,12 +501,34 @@ window.GoatAuth = (() => {
         });
       } catch (e) { console.warn("[GoatAuth] seedModeStats (merge) failed:", e); }
     },
-    async getDailyLeaderboard(dateStr, topN = 100) {
+    async getDailyLeaderboard(dateStr, topN = 100, opts = {}) {
       if (!enabled) return [];
-      const snap = await entriesRef(dateStr).orderBy("score", "desc").limit(topN).get();
-      const rows = snap.docs.map((d) => ({ uid: d.id, ...d.data() }));
+      const excludeGuests = !!(opts && opts.excludeGuests);
+      // A guest entry is either tagged anon, or (for entries written before that
+      // tag existed) carries the auto-generated "Guest #####" name.
+      const isGuestEntry = (r) => r.anon === true || /^Guest \d{5}$/.test(String(r.name || "").trim());
+      const base = entriesRef(dateStr).orderBy("score", "desc");
+      const kept = [];
+      let cursor = null;
+      // Without guest-exclusion this is one page (the original behavior). WITH it,
+      // we page through in score order and TOP UP past any guests filling the early
+      // rows — so a full top-N of real players always shows even when guests
+      // dominate the field, instead of the board coming up short.
+      const PAGE = excludeGuests ? 100 : topN;
+      for (let i = 0; i < 8; i++) {
+        let q = cursor ? base.startAfter(cursor).limit(PAGE) : base.limit(PAGE);
+        const snap = await q.get();
+        if (snap.empty) break;
+        for (const d of snap.docs) {
+          const row = { uid: d.id, ...d.data() };
+          if (excludeGuests && isGuestEntry(row)) continue;
+          kept.push(row);
+        }
+        cursor = snap.docs[snap.docs.length - 1];
+        if (kept.length >= topN || snap.docs.length < PAGE) break;
+      }
       if (dateStr >= "2026-06-17") {
-        rows.sort((a, b) => {
+        kept.sort((a, b) => {
           if (b.score !== a.score) return b.score - a.score;
           const bestA = Array.isArray(a.picks) ? Math.max(...a.picks.map(p => p.score ?? 0)) : 0;
           const bestB = Array.isArray(b.picks) ? Math.max(...b.picks.map(p => p.score ?? 0)) : 0;
@@ -516,7 +538,7 @@ window.GoatAuth = (() => {
           return tA - tB;
         });
       }
-      return rows;
+      return kept.slice(0, topN);
     },
 
     // --- XP / rank system --------------------------------------------------
