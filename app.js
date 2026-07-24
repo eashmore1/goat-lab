@@ -5596,8 +5596,12 @@ updateBody(null);
   // top-75 row — they must sign in to appear. Dates before it (today and earlier
   // at ship time) render exactly as they always did, so shipping this never
   // disturbs a board that's already live.
-  const GUEST_HIDE_FROM = "2026-07-25";
+  const GUEST_HIDE_FROM = "2026-07-24";
   const lbHidesGuests = (dateStr) => (dateStr || getTodayStr()) >= GUEST_HIDE_FROM;
+  // A guest row is either tagged anon (entries written since the tag shipped) OR
+  // carries the auto-generated "Guest #####" name (catches guests who played
+  // earlier today, before the tag existed, so the board cleans up fully).
+  const isGuestRow = (r) => !!(r && (r.anon === true || /^Guest \d{5}$/.test(stripGoatEmoji(r.name || "").trim())));
   // Over-fetch when hiding guests so the board still fills 75 real rows after the
   // anon entries are filtered out.
   const lbFetchN = (dateStr) => (lbHidesGuests(dateStr) ? 120 : 75);
@@ -5683,7 +5687,7 @@ updateBody(null);
     // They still count in the histogram + total (that's the aggregate doc, which
     // we never touch) — they just don't take a row. Raw `rows` stays in the cache.
     const hideGuests = lbHidesGuests(targetDate);
-    const visibleRows = hideGuests ? rows.filter((r) => !r.anon) : rows;
+    const visibleRows = hideGuests ? rows.filter((r) => !isGuestRow(r)) : rows;
 
     // Render the main board immediately once the top rows arrive.
     if (!visibleRows.length) {
