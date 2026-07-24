@@ -342,6 +342,7 @@ window.GoatAuth = (() => {
         franchiseTeam: data.franchiseTeam || null,
         picks: data.picks || null, // stored for auditability (detect/purge fake scores)
         goatPass: passCache === true, // drives the 🐐 badge; rules verify it's real
+        anon: !!user.isAnonymous, // guest entries still COUNT but are hidden from the visible board
         // Current rank name (e.g. "All-Star") so the leaderboard can show a rank
         // chip next to pass holders without an extra read per row.
         rank: (typeof window !== "undefined" && window.GoatXP && window.GoatXP.rankName)
