@@ -1404,7 +1404,7 @@ const teamEras = [
     players: [
       player("Dominique Wilkins", 6, 8, 21, { height: 86, shooting: 87, finishing: 92, handles: 82, passing: 74, defense: 74, rebounding: 74, athleticism: 92, iq: 80 }),
       player("Dikembe Mutombo", 7, 2, 55, { height: 100, shooting: 54, finishing: 80, handles: 54, passing: 60, defense: 96, rebounding: 94, athleticism: 84, iq: 78 }),
-      player("Mookie Blaylock", 6, 0, 10, { height: 66, shooting: 78, finishing: 78, handles: 88, passing: 88, defense: 92, rebounding: 58, athleticism: 88, iq: 80 }),
+      player("Mookie Blaylock", 6, 0, 10, { height: 66, shooting: 83, finishing: 78, handles: 88, passing: 88, defense: 92, rebounding: 58, athleticism: 88, iq: 80 }),
       player("Steve Smith", 6, 8, 8, { height: 86, shooting: 84, finishing: 82, handles: 82, passing: 80, defense: 78, rebounding: 64, athleticism: 82, iq: 84 }),
       player("Kevin Willis", 7, 0, 42, { height: 98, shooting: 74, finishing: 82, handles: 64, passing: 64, defense: 78, rebounding: 92, athleticism: 84, iq: 76 }),
       player("Stacey Augmon", 6, 8, 2, { height: 86, shooting: 68, finishing: 84, handles: 78, passing: 74, defense: 88, rebounding: 68, athleticism: 90, iq: 76 }),
